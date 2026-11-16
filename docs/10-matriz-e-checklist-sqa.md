@@ -88,7 +88,7 @@ Para os RFs, os critérios `CA-xxx.n` estão descritos em [03 - Requisitos funci
 | SQA-012 | Consistência com itens relacionados | Issue #88, comentários, PR #131 e épicos #79/#80/#86 consultados. Também foram lidos o README de ADRs e ADR-003/004/006/008/010 da Issue #89. Há referências de RNF desatualizadas em ADR-004 (sessões/credenciais), ADR-006 (autorização/auditoria) e ADR-008 (segurança de anexos/retensão). | BLOCKED — não alterar documentos da Issue #89 neste escopo; solicitar correção de rastreabilidade no PR #133 antes de declarar consistência integral |
 | SQA-013 | Escopo de alterações | Alterações limitadas a arquivos Markdown em `docs/`; nenhum código, dependência ou configuração alterado | PASS |
 | SQA-014 | Validação funcional da aplicação | Fora do escopo documental; nenhuma alteração de código | N/A |
-| SQA-015 | CI documental do repositório | GitHub Actions CI run #47 e #50 para o commit-base consultado concluíram com sucesso; status Vercel reportou failure | PASS para CI observado; falha Vercel registrada separadamente, sem alterar configuração |
+| SQA-015 | CI documental do repositório | GitHub Actions CI run #61, associado ao commit `88fea4d`, concluiu com sucesso. O status Vercel Preview associado à PR reportou failure. | PASS para CI observado; falha Vercel registrada separadamente, sem alterar configuração ou dependências |
 | SQA-016 | Aprovação final da baseline | Aprovação formal da FORD/PO, TI, Segurança e Jurídico/Privacidade não encontrada na Issue/PR consultadas | FAIL — baseline não pode ser aprovada nesta revisão |
 
 ## 5. Inconformidades encontradas na inspeção inicial
