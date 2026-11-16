@@ -10,14 +10,14 @@ As regras representam decisões de negócio conhecidas. A coluna Estado diferenc
 | RN-004 | **Provisionamento de contas.** A criação de conta é realizada pelo TI. Não há convite nem auto cadastro de usuário. | Confirmado | RF-001; RF-003 |
 | RN-005 | **Credencial e entrega.** O TI cria usuário e senha e entrega individualmente ao destinatário junto com o link da aplicação. O formato do identificador e o canal de entrega não foram definidos. | Processo geral confirmado; detalhes pendentes | RF-001; RF-003; RNF-003 |
 | RN-006 | **Mensagens individuais.** Um usuário pode iniciar conversa com qualquer outro usuário ativo, sem depender do cargo corporativo. | Confirmado | RF-009 |
-| RN-007 | **Grupos.** O TI cria grupos e adiciona pessoas. Regras de envio, saída, remoção e encerramento de grupo não foram especificadas. | Criação e inclusão confirmadas; restante pendente | RF-005; RF-006; RF-010 |
+| RN-007 | **Grupos.** O TI cria grupos e adiciona participantes; mensagens em grupo fazem parte do escopo. Regras de saída voluntária, encerramento e histórico após remoção ainda não foram especificadas. | Criação, inclusão e comunicação em grupo confirmadas; ciclo de vida complementar pendente | RF-005; RF-006; RF-010; RF-019 |
 | RN-008 | **Tipos de arquivo.** Os anexos permitidos são PDF e JPEG. Limite por arquivo, tamanho total e quantidade não foram informados. | Formatos confirmados; limites pendentes | RF-011; RF-012; RNF-010 |
 | RN-009 | **Uso interno.** O Polychat destina-se exclusivamente à FORD na primeira versão; fornecedores e agentes externos estão fora do público informado. | Confirmado | RF-001; RF-009 |
 | RN-010 | **Interface principal.** A experiência deve ser simples e fluida, exibindo conversas recentes após o login, em estilo familiar a mensageiros. | Direção confirmada; detalhes de UX pendentes | RF-007; RF-008; RNF-006 |
-| RN-011 | **Captura e gravação.** A aplicação não deve oferecer captura de foto nem gravação de áudio/vídeo. A forma de permitir JPEG sem acesso à câmera precisa ser esclarecida. | Intenção confirmada; ambiguidade registrada | RF-011 a RF-013 |
+| RN-011 | **Captura e gravação.** A aplicação não deve oferecer controles próprios de captura de foto nem gravação de áudio/vídeo. Deve permitir selecionar arquivo JPEG existente sem invocar API própria de câmera; o seletor nativo pode expor recursos do sistema operacional. | Restrição da aplicação confirmada; comportamento do seletor depende do dispositivo homologado | RF-011 a RF-013 |
 | RN-012 | **Análise de conteúdo.** Mensagens devem ser verificadas automaticamente para identificar conteúdo suspeito, incluindo palavrões conforme critérios a aprovar. | Intenção confirmada; critérios pendentes | RF-014; RNF-002 |
 | RN-013 | **Alerta ao TI.** Mensagens identificadas como suspeitas devem gerar alerta ao TI. Canal, severidade e fluxo de resposta não foram definidos. | Intenção confirmada; operação pendente | RF-015 |
-| RN-014 | **Consulta administrativa de conversas.** O TI pode consultar qualquer conversa, individual ou em grupo. Escopo temporal, justificativa, registro, exportação e transparência não foram definidos. | Acesso confirmado; salvaguardas pendentes | RF-016; RNF-004; RNF-011 |
+| RN-014 | **Consulta administrativa de conversas.** O TI pode consultar conversas individuais e em grupo, mas somente por operadores autorizados e conforme política aprovada que defina finalidade, hipótese, justificativa, transparência, revisão e limites. Consulta não concede automaticamente permissão de editar, excluir ou exportar. | Capacidade confirmada; política e escopo operacional pendentes | RF-016; RNF-004; RNF-011; RNF-018 |
 | RN-015 | **Dispositivo por perfil.** Usuário utiliza celular; TI utiliza computador. Sistemas operacionais, navegadores, tablets e detecção de dispositivo ainda precisam ser definidos. | Confirmado em nível de intenção | RF-017; RF-018; RNF-005 |
 | RN-016 | **Prioridade de qualidade.** Segurança deve ter prioridade sobre velocidade nas decisões de produto e implementação. | Confirmado; métricas pendentes | RNF-001 a RNF-003; RNF-007 |
 | RN-017 | **Integrações.** Não haverá integração com outros aplicativos ou funções externas nesta versão. | Confirmado | OBJ-001 |
@@ -48,9 +48,10 @@ As regras representam decisões de negócio conhecidas. A coluna Estado diferenc
 
 ## Recomendações sujeitas a aprovação
 
-- Registrar toda consulta de conversa e ação administrativa realizada pelo TI, com operador, data/hora, alvo e justificativa; acesso aos logs restrito e protegido.
 - Usar credenciais iniciais temporárias, entrega por canal aprovado e troca no primeiro acesso.
-- Proteger conteúdo em trânsito e em armazenamento; validar arquitetura por análise de ameaças e testes independentes.
-- Aplicar validação de conteúdo real dos anexos e verificação antimalware.
-- Definir política de retenção e descarte de mensagens, arquivos, alertas e registros de auditoria.
+- Selecionar e testar controles de proteção em trânsito e em armazenamento por análise de ameaças.
+- Definir limites de anexos, política de análise antimalware e tratamento de arquivos em quarentena.
+- Definir prazos de retenção e descarte de mensagens, arquivos, alertas, logs e backups.
 - Não interpretar a existência de servidor/aplicação própria como garantia de imunidade a solicitações legais dirigidas à FORD ou a prestadores de infraestrutura.
+
+Os registros de auditoria de consultas e ações administrativas não são mera recomendação: são requisitos documentados em RF-016, RNF-004 e RNF-018; a política operacional e os parâmetros permanecem pendentes.
