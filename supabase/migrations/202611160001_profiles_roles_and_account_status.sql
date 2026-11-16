@@ -8,18 +8,28 @@ create table if not exists public.profiles (
 );
 alter table public.profiles enable row level security;
 
+-- SECURITY DEFINER avoids recursive RLS evaluation when checking the TI role.
+create or replace function public.is_active_ti()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1 from public.profiles p
+    where p.id = (select auth.uid())
+      and p.role = 'ti'
+      and p.is_active = true
+  );
+$$;
+revoke all on function public.is_active_ti() from public;
+grant execute on function public.is_active_ti() to authenticated;
+
 drop policy if exists "profiles_select_self_or_ti" on public.profiles;
 create policy "profiles_select_self_or_ti"
 on public.profiles for select to authenticated
-using (
-  id = (select auth.uid())
-  or exists (
-    select 1 from public.profiles current_profile
-    where current_profile.id = (select auth.uid())
-      and current_profile.role = 'ti'
-      and current_profile.is_active = true
-  )
-);
+using (id = (select auth.uid()) or (select public.is_active_ti()));
 
 -- No client write policies: only trusted server-side administration can mutate.
 create or replace function public.prevent_client_profile_privilege_changes()
