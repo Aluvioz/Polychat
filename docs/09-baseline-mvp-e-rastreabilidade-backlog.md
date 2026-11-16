@@ -1,7 +1,7 @@
 # 09 - Baseline do MVP e rastreabilidade com o backlog
 
 **Identificador:** POLY-REQ-001  
-**Versão:** 0.4 (minuta revisada por SQA; pendências mantidas)  
+**Versão:** 0.5 (minuta revisada por SQA com conferência do documento de visão v0.1)  
 **Data:** 16/11/2026  
 **Status:** decisões do levantamento refletidas; aprovação formal do cliente/PO e validações técnicas/jurídicas/QA pendentes  
 **Issue de acompanhamento:** [#88 — Consolidar baseline de requisitos e escopo MVP](https://github.com/Aluvioz/Polychat/issues/88)
@@ -35,6 +35,31 @@ O épico [#79 — Fundação técnica, Vercel e Supabase](https://github.com/Alu
 
 Essa direção está registrada no backlog do projeto, mas as decisões de implementação, trade-offs, configuração e limites devem ser detalhados nas ADRs da [#89](https://github.com/Aluvioz/Polychat/issues/89). A escolha de fornecedores de infraestrutura não contradiz a exclusão de integrações funcionais com aplicativos externos: a exclusão refere-se às integrações oferecidas ao usuário final.
 
+## 2.2 Equipe e responsabilidades informadas
+
+O Documento de Visão e Plano Inicial v0.1 informa uma equipe de cinco integrantes: **1 UX/UI Designer, 1 Analista de SQA e 3 Desenvolvedores**. As responsabilidades descritas na fonte são contexto de organização do projeto, não requisitos funcionais do produto nem comprovação de alocação nominal:
+
+| Papel / quantidade | Responsabilidades registradas no documento de visão |
+|---|---|
+| UX/UI Designer — 1 | Fluxos e arquitetura de informação; wireframes e protótipos; identidade visual e design system; validação de usabilidade; especificação das interfaces. |
+| Analista de SQA — 1 | Estratégia de qualidade; análise de testabilidade; plano e casos de teste; testes funcionais, regressão, integração e segurança em colaboração; gestão de defeitos; validação dos critérios de aceite. |
+| Desenvolvedores — 3 | Backend e frontend; autenticação, contas, mensagens, grupos, monitoramento e auditoria; mecanismos de segurança; integração de componentes; correção de defeitos; documentação técnica e preparação da implantação. |
+
+A divisão interna das atividades entre os três desenvolvedores deve ser definida pela equipe conforme competências e necessidades. Nomes, disponibilidade, dedicação e responsáveis nominais não foram fornecidos.
+
+## 2.3 Etapas do planejamento inicial
+
+O documento de visão organiza o desenvolvimento em seis etapas indicativas, sem datas ou duração aprovadas:
+
+1. **Iniciação e definição:** formalizar visão, refinar requisitos e regras, identificar riscos, definir critérios de aceite e priorizar backlog.
+2. **UX/UI e arquitetura:** fluxos, protótipos, design system, arquitetura de software, mecanismos de segurança e modelagem inicial de dados.
+3. **Fundação técnica:** estrutura inicial, autenticação, gestão de contas, controle de acesso e auditoria inicial.
+4. **Comunicação:** mensagens individuais, conversas recentes, grupos e compartilhamento de arquivos.
+5. **Segurança:** monitoramento, alertas, investigação administrativa, proteção de dados e testes de segurança.
+6. **Qualidade e entrega:** testes funcionais, integração e regressão, correções, validação do cliente e implantação inicial.
+
+Essas etapas são um plano inicial de referência, não um cronograma, compromisso de entrega ou autorização para iniciar funções sensíveis antes das aprovações aplicáveis. O documento de origem não fornece duração, marcos, dependências detalhadas nem critérios de saída por etapa.
+
 ## 3. Escopo proposto para o MVP
 
 ### 3.1 Núcleo funcional
@@ -56,8 +81,8 @@ Essa direção está registrada no backlog do projeto, mas as decisões de imple
 - Senhas não podem ser armazenadas em texto puro e devem usar hash apropriado; sessão e gestão de chaves seguem RNF-003, RNF-016 e RNF-017.
 - Acesso do TI às conversas deve ser governado e auditável antes de produção (RNF-004, RNF-011, RNF-014 e RNF-018).
 - Anexos devem validar o conteúdo real (RNF-010) e ter armazenamento privado, autorização por conversa e limites aprovados (RNF-019).
-- Ambientes, segredos, CI, deploy e recuperação devem ser tratados conforme RNF-009, RNF-013, RNF-016, RNF-020 e RNF-023; a stack registrada no backlog requer ADR e aprovação.
-- Segurança tem prioridade sobre velocidade, mas metas mensuráveis de desempenho e carga ainda precisam ser aprovadas (RNF-007 e RNF-008).
+- Ambientes, segredos, CI, deploy e recuperação devem ser tratados conforme RNF-009, RNF-013, RNF-016, RNF-020, RNF-023 e RNF-024; a stack registrada no backlog requer ADR e aprovação.
+- Segurança tem prioridade sobre velocidade, mas metas mensuráveis de desempenho e carga ainda precisam ser aprovadas (RNF-007, RNF-008 e RNF-026).
 
 ### 3.3 Fora do MVP informado
 
@@ -262,7 +287,7 @@ PDF/JPEG exigem validação do conteúdo real, limites aprovados, armazenamento 
 | RNF-001 | Testes negativos de API, URL direta e autorização server-side |
 | RNF-014 | Política LGPD/monitoramento aprovada e transparência demonstrável |
 | RNF-015/RNF-016 | ADR de criptografia e chaves aprovada com impactos de acesso TI/análise explícitos |
-| RNF-019/RNF-020/RNF-023 | Testes de anexos, infraestrutura, backup/restauração e retenção/descarte |
+| RNF-019/RNF-020/RNF-023/RNF-024/RNF-025 | Testes de anexos, infraestrutura, backup/restauração e retenção/descarte |
 
 Limites de arquivo, concorrência, retenção, RPO/RTO, navegadores e severidade ainda não foram informados; critérios que dependem deles não estão totalmente testáveis até decisão formal.
 
@@ -278,14 +303,14 @@ Limites de arquivo, concorrência, retenção, RPO/RTO, navegadores e severidade
 | Detecção e alertas | RF-014, RF-015 | RN-012, RN-013 | #86 |
 | Consulta TI e auditoria | RF-016 | RN-014, RN-026 | #85, #86 |
 | Dispositivos | RF-017, RF-018 | RN-015, RN-025 | #91, #92 |
-| Segurança e operação | RNF-001 a RNF-023 | RN-016, RN-026 | #79, #80, #86, #89 |
+| Segurança e operação | RNF-001 a RNF-027 | RN-016, RN-026 | #79, #80, #86, #89 |
 | Testes e release | Todos os RF/RNF/CA | Regras aplicáveis | #87 |
 
 Vínculos são rastreabilidade de planejamento, não declaração de conclusão ou dependência formal no GitHub.
 
 ## 17. Glossário, questões pendentes e riscos
 
-O glossário e as questões Q-001 a Q-032 estão no capítulo 08. Priorizar: composição dos 25 usuários; governança dos administradores TI; ciclo de vida de grupos; identificador/recuperação de credenciais; critérios e falsos positivos; auditoria TI; limites PDF/JPEG; matriz de dispositivos; criptografia/chaves; retenção/backups; infraestrutura; acessibilidade; identidade visual; orçamento e metas operacionais.
+O glossário e as questões Q-001 a Q-032 estão no capítulo 08. Priorizar: composição dos 25 usuários; governança dos administradores TI; ciclo de vida de grupos; identificador/recuperação de credenciais; critérios e falsos positivos; auditoria TI; limites PDF/JPEG; matriz de dispositivos; criptografia/chaves; retenção/backups; infraestrutura; acessibilidade; identidade visual (RNF-027); orçamento e metas operacionais (RNF-026).
 
 Riscos principais: conflito E2EE/consulta TI; abuso de privilégio; falso positivo; seletor JPEG expondo câmera do SO; contorno de detecção de dispositivo; vazamento por anexos/URLs; retenção inadequada; comprometimento de infraestrutura; orçamento sem composição.
 
