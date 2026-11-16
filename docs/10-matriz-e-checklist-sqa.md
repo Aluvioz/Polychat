@@ -69,37 +69,44 @@ Para os RFs, os critérios `CA-xxx.n` estão descritos em [03 - Requisitos funci
 | RNF-021 | Limitações de identificação de dispositivo | CV-RNF-021 | Testar tentativas de contorno e verificar que não substituem autorização server-side | PASS — limitação e proibição de uso como fronteira de segurança explícitas |
 | RNF-022 | Detecção automatizada e falsos positivos | CV-RNF-022 | Avaliar corpus aprovado, falsos positivos/negativos e revisão humana | BLOCKED — política e limiares não aprovados |
 | RNF-023 | Retenção, backup e descarte | CV-RNF-023 | Testar restauração, retenção e descarte de dados primários/réplicas/backups | BLOCKED — prazos e política de ciclo de vida não definidos |
+| RNF-024 | Integridade de mensagens, arquivos, credenciais e registros | CV-RNF-024 | Testar autorização e integridade de alteração/exclusão; revisar detecção de modificação indevida | BLOCKED — controles e evidências técnicas não disponíveis |
+| RNF-025 | Confidencialidade e acesso autorizado | CV-RNF-025 | Testes negativos por perfil/participação e revisão dos fluxos de transmissão/armazenamento e consulta TI | BLOCKED — modelo criptográfico e política de acesso pendentes |
+| RNF-026 | Desempenho adequado sem reduzir segurança | CV-RNF-026 | Testes de tarefas e carga contra metas quantitativas aprovadas | BLOCKED — metas e perfil de carga não definidos |
+| RNF-027 | Identidade visual FORD | CV-RNF-027 | Revisão de telas/design system contra manual e ativos oficiais aprovados | BLOCKED — manual e ativos oficiais não fornecidos |
 
 ## 4. Checklist de validação documental
 
 | ID | Verificação | Evidência / escopo | Resultado |
 |---|---|---|---|
-| SQA-001 | Identificação e versão da baseline | POLY-REQ-001 identificada como revisão documental 0.4, derivada da minuta 0.3 | PASS |
+| SQA-001 | Identificação e versão da baseline | POLY-REQ-001 identificada como revisão documental 0.5, derivada da minuta 0.3 e confrontada com o Documento de Visão e Plano Inicial v0.1 | PASS |
 | SQA-002 | Integridade/estrutura dos documentos | Capítulos 00 a 09 e índice docs/README.md consultados; novo capítulo 10 adicionado. Um caminho inexistente `docs/02-atores-e-contexto.md` foi testado e não pertence ao índice; o documento correto é `02-objetivos.md`. | PASS |
 | SQA-003 | Integridade dos links internos | Verificação de links Markdown dos documentos alterados contra o conjunto de caminhos da baseline | PASS após verificação final no branch |
 | SQA-004 | Formatação Markdown | Revisão estrutural de headings, tabelas, listas e links; nenhum validador Markdown externo foi executado | BLOCKED — validação automatizada não disponível nesta execução |
 | SQA-005 | Unicidade e estabilidade dos IDs | Catálogos canônicos OBJ, RF, RNF, RN, CA e CV-RNF; referências em outros capítulos não criam novos IDs | PASS |
 | SQA-006 | Ausência de duplicidades conflitantes | Escopos RNF-003/017, RNF-004/018, RNF-010/019 e RNF-011/014 separados e explicitados | PASS |
-| SQA-007 | Critérios de aceitação por requisito | CA para RF-001 a RF-020 e CV-RNF para RNF-001 a RNF-023 | PASS |
+| SQA-007 | Critérios de aceitação por requisito | CA para RF-001 a RF-020 e CV-RNF para RNF-001 a RNF-027 | PASS |
 | SQA-008 | Rastreabilidade objetivo → requisito → critério → teste | Capítulo 07 e matrizes das seções 2 e 3 deste documento | PASS |
 | SQA-009 | Terminologia | USER (rótulo Usuário) e TI padronizados como perfis; níveis organizacionais separados | PASS |
-| SQA-010 | Requisitos não funcionais | 23 RNFs possuem critério de verificação e estado explícito | PASS documental; parâmetros pendentes individualizados |
+| SQA-010 | Requisitos não funcionais | 27 RNFs possuem critério de verificação e estado explícito | PASS documental; parâmetros pendentes individualizados |
 | SQA-011 | Segurança, privacidade e governança | Criptografia, E2EE, acesso TI, monitoramento, anexos, sessões, logs e retenção registrados | BLOCKED — aprovações e parâmetros críticos ausentes |
 | SQA-012 | Consistência com itens relacionados | Issue #88, comentários, PR #131 e épicos #79/#80/#86 consultados. Também foram lidos o README de ADRs e ADR-003/004/006/008/010 da Issue #89. Há referências de RNF desatualizadas em ADR-004 (sessões/credenciais), ADR-006 (autorização/auditoria) e ADR-008 (segurança de anexos/retensão). | BLOCKED — não alterar documentos da Issue #89 neste escopo; solicitar correção de rastreabilidade no PR #133 antes de declarar consistência integral |
 | SQA-013 | Escopo de alterações | Alterações limitadas a arquivos Markdown em `docs/`; nenhum código, dependência ou configuração alterado | PASS |
 | SQA-014 | Validação funcional da aplicação | Fora do escopo documental; nenhuma alteração de código | N/A |
 | SQA-015 | CI documental do repositório | GitHub Actions CI run #61, associado ao commit `88fea4d`, concluiu com sucesso. O status Vercel Preview associado à PR reportou failure. | PASS para CI observado; falha Vercel registrada separadamente, sem alterar configuração ou dependências |
 | SQA-016 | Aprovação final da baseline | Aprovação formal da FORD/PO, TI, Segurança e Jurídico/Privacidade não encontrada na Issue/PR consultadas | FAIL — baseline não pode ser aprovada nesta revisão |
+| SQA-017 | Aderência ao Documento de Visão e Plano Inicial v0.1 | Conferência dos objetivos, escopo, equipe, responsabilidades, orçamento, diretrizes de qualidade e seis etapas iniciais; itens de contexto foram incorporados sem convertê-los em requisitos funcionais. | PASS |
+| SQA-018 | Cobertura explícita dos atributos não funcionais da fonte | Integridade, confidencialidade, desempenho adequado e identidade visual possuem RNF e critério CV-RNF próprios, com parâmetros pendentes identificados. | PASS documental; execução técnica depende da implementação e aprovações |
+| SQA-019 | Contexto de equipe e planejamento | Quantidades/papéis e etapas foram registrados como referência, sem inventar nomes, prazos ou compromissos. | PASS |
 
 ## 5. Inconformidades encontradas na inspeção inicial
 
-Foram registradas **18 inconformidades** antes e durante a conferência cruzada:
+Foram registradas **23 inconformidades** na auditoria acumulada: 18 na revisão inicial e mais 5 na conferência específica com o Documento de Visão e Plano Inicial v0.1.
 
 | Severidade | Quantidade | Temas |
 |---|---:|---|
 | Crítica | 4 | Governança de consulta TI; conflito E2EE/inspeção server-side; retenção/exclusão/backups; política de monitoramento automatizado |
 | Alta | 5 | Classificação de dispositivos sem matriz; ciclo de vida de credenciais/sessões; ciclo de vida de grupos; limites/segurança de anexos; catálogo e autorização das funções administrativas de segurança |
-| Média | 7 | Estados contraditórios de RNF-003/RNF-017 e RNF-004/RNF-018; sobreposição RNF-010/RNF-019 e RNF-011/RNF-014; rastreabilidade/checklist SQA ausente; nomenclatura de perfis inconsistente; referências RNF desatualizadas nos ADRs relacionados da Issue #89 |
+| Média | 12 | Cinco achados adicionais da conferência com a fonte: quatro atributos não funcionais (integridade, confidencialidade, desempenho adequado e identidade visual) sem critério próprio e ausência do contexto de equipe/etapas do plano inicial. Também: estados contraditórios de RNF-003/RNF-017 e RNF-004/RNF-018; sobreposição RNF-010/RNF-019 e RNF-011/RNF-014; rastreabilidade/checklist SQA ausente; nomenclatura de perfis inconsistente; referências RNF desatualizadas nos ADRs relacionados da Issue #89 |
 | Baixa | 2 | Navegação/descoberta da documentação; links para artefatos PDF preexistentes não revalidados nesta revisão |
 
 As inconsistências documentais de severidade média e parte das altas foram corrigidas ou explicitamente desambiguadas nos capítulos 00, 01, 02, 03, 04, 05, 07, 08, 09 e neste capítulo. As lacunas críticas e as dependências de aprovação não podem ser resolvidas pela equipe SQA sem decisão dos responsáveis.
@@ -133,6 +140,6 @@ As inconsistências documentais de severidade média e parte das altas foram cor
 
 **Classificação: REPROVADO para aprovação final da baseline.**
 
-A revisão documental corrigiu conflitos internos e ampliou a rastreabilidade e os critérios de verificação. A conferência cruzada identificou referências RNF a corrigir nos ADRs da Issue #89; elas foram registradas, sem modificar arquivos fora do escopo #88. Entretanto, os requisitos críticos de acesso administrativo, privacidade, monitoramento, criptografia e retenção continuam bloqueados por decisões e aprovações que não existem no material consultado. A especificação pode seguir como minuta de trabalho, mas não deve ser declarada baseline aprovada nem usada para liberar funções sensíveis em produção.
+A revisão documental 0.5 corrigiu conflitos internos, incorporou os atributos e o contexto do Documento de Visão v0.1 e ampliou a rastreabilidade e os critérios de verificação. A conferência cruzada identificou referências RNF a corrigir nos ADRs da Issue #89; elas foram registradas, sem modificar arquivos fora do escopo #88. Entretanto, os requisitos críticos de acesso administrativo, privacidade, monitoramento, criptografia e retenção continuam bloqueados por decisões e aprovações que não existem no material consultado. A especificação pode seguir como minuta de trabalho, mas não deve ser declarada baseline aprovada nem usada para liberar funções sensíveis em produção.
 
 A PR #131 deve permanecer Draft. Não houve aprovação formal, merge ou fechamento da Issue #88 nesta revisão.
