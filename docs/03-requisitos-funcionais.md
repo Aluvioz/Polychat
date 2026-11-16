@@ -24,6 +24,8 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 | RF-016 | Consultar qualquer conversa como TI | TI | Alta (provisória) | Confirmado; salvaguardas pendentes |
 | RF-017 | Restringir perfil Usuário a celular | Sistema | Alta (provisória) | Confirmado; critério técnico pendente |
 | RF-018 | Restringir perfil TI a computador | Sistema | Alta (provisória) | Confirmado; critério técnico pendente |
+| RF-019 | Remover usuários de grupos | TI | Alta (provisória) | Confirmado |
+| RF-020 | Administrar medidas de segurança disponibilizadas | TI | Alta (provisória) | Responsabilidade confirmada; catálogo pendente |
 
 ## 3.2 Especificação e critérios de aceitação
 
@@ -156,13 +158,14 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 ### RF-013 - Não oferecer captura/gravação de mídia
 
-**Descrição:** Não oferecer captura/gravação de mídia. **Ator/origem:** Sistema. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-011. **Estado:** Confirmado, com ambiguidade sobre câmera/JPEG.
+**Descrição:** Não oferecer captura/gravação de mídia. **Ator/origem:** Sistema. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-011. **Estado:** Confirmado; a aplicação não oferece captura própria. O comportamento do seletor nativo depende do sistema operacional.
 
 **Critérios de aceitação:**
 
 - CA-013.1 - A aplicação não oferece controles próprios para gravar áudio ou vídeo.
 - CA-013.2 - A aplicação não oferece controle próprio para tirar foto.
-- CA-013.3 - O fluxo de anexar JPEG deve ser validado para esclarecer se arquivos existentes podem ser selecionados e se a câmera do dispositivo deve ser bloqueada.
+- CA-013.3 - O fluxo de anexo permite selecionar arquivo JPEG existente, sem invocar API própria de câmera ou solicitar permissão de captura.
+- CA-013.4 - A documentação informa que a aplicação não consegue impedir screenshots, gravação externa ou captura acionada diretamente pelo sistema operacional.
 
 ### RF-014 - Analisar mensagens em busca de conteúdo suspeito
 
