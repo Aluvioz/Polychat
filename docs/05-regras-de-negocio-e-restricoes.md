@@ -4,8 +4,8 @@ As regras representam decisões de negócio conhecidas. A coluna Estado diferenc
 
 | ID | Regra | Estado | Requisitos relacionados |
 |---|---|---|---|
-| RN-001 | **Perfis da aplicação.** Existem somente dois perfis no produto: Usuário e TI. | Confirmado | RF-002 |
-| RN-002 | **Permissões dos usuários comuns.** Todo funcionário fora da área de TI utiliza o perfil Usuário; não há diferença de permissão por cargo corporativo. | Confirmado | RF-002 |
+| RN-001 | **Perfis da aplicação.** Existem somente dois identificadores de perfil no produto: `USER` (rótulo Usuário) e `TI`. | Confirmado | RF-002 |
+| RN-002 | **Permissões do perfil USER.** Todo funcionário fora da área de TI utiliza `USER`; não há diferença de permissão por cargo corporativo. | Confirmado | RF-002 |
 | RN-003 | **Administração pelo TI.** O perfil TI é responsável pelas funções administrativas definidas para o sistema, incluindo contas, grupos, segurança e consulta de conversas. | Confirmado em princípio; catálogo completo de operações pendente | RF-002 a RF-006; RF-014 a RF-016 |
 | RN-004 | **Provisionamento de contas.** A criação de conta é realizada pelo TI. Não há convite nem auto cadastro de usuário. | Confirmado | RF-001; RF-003 |
 | RN-005 | **Credencial e entrega.** O TI cria usuário e senha e entrega individualmente ao destinatário junto com o link da aplicação. O formato do identificador e o canal de entrega não foram definidos. | Processo geral confirmado; detalhes pendentes | RF-001; RF-003; RNF-003 |
@@ -38,7 +38,7 @@ As regras representam decisões de negócio conhecidas. A coluna Estado diferenc
 
 ## Restrições explícitas
 
-- Somente dois perfis de aplicação: Usuário e TI.
+- Somente dois perfis de aplicação: `USER` (rótulo Usuário) e `TI`.
 - Administração centralizada no TI; não oferecer cadastro aberto ou convites.
 - Público inicial exclusivo da FORD; não incluir fornecedores ou agentes externos.
 - Mensagens e anexos PDF/JPEG; não oferecer chamadas ou gravações de áudio/vídeo.
