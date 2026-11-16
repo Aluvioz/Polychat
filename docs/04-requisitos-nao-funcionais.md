@@ -27,6 +27,10 @@ Este catálogo separa requisitos de segurança, qualidade e restrições técnic
 | RNF-021 | Limitação de identificação de dispositivo | Sinais de navegador, user-agent, viewport ou características do cliente não devem ser tratados isoladamente como prova de identidade nem como fronteira de segurança. | CV-RNF-021: testes de classificação e tentativas de contorno; autorização server-side permanece obrigatória. | Limitação técnica conhecida |
 | RNF-022 | Análise automatizada | A detecção deve usar critérios versionados e aprovados, associar o alerta à regra acionada e permitir revisão humana de falsos positivos. Nenhuma punição, bloqueio ou suspensão automática está autorizada nesta baseline. | CV-RNF-022: conjunto de casos aprovado, avaliação de falsos positivos/negativos e evidência de revisão humana. | Intenção confirmada; política e limiares pendentes |
 | RNF-023 | Backup / retenção / exclusão | Mensagens, anexos, alertas, logs e backups devem obedecer prazos de retenção, proteção, acesso, restauração e descarte seguro aprovados. A exclusão deve considerar réplicas e ciclo de vida dos backups. | CV-RNF-023: teste de restauração, controle de acesso e evidência de retenção/descarte conforme política. | Pendente crítico |
+| RNF-024 | Integridade das informações | Mensagens, anexos, credenciais e registros administrativos devem ser protegidos contra alteração, corrupção ou exclusão não autorizada durante transmissão, armazenamento, processamento e auditoria. | CV-RNF-024: testes de integridade e autorização de alteração/exclusão; revisão de controles e evidências de detecção de modificação indevida. | Requisito obrigatório; controles técnicos pendentes |
+| RNF-025 | Confidencialidade | Mensagens, arquivos, credenciais e registros devem ser acessíveis somente a identidades autorizadas, conforme perfil, participação na conversa e política formal de consulta administrativa; transmissão e armazenamento devem ser protegidos. | CV-RNF-025: testes negativos de acesso por perfil/não participante, inspeção de fluxos e armazenamento e validação da política de consulta TI. | Requisito obrigatório; modelo de acesso/criptografia pendente |
+| RNF-026 | Desempenho adequado ao uso cotidiano | O sistema deve oferecer resposta adequada às tarefas cotidianas do público inicial sem comprometer controles de segurança. Metas quantitativas de latência, concorrência e volume devem ser definidas e aprovadas antes do aceite de desempenho. | CV-RNF-026: testes de desempenho com carga, tarefas e metas aprovadas; evidência de que controles de segurança permanecem ativos. | Direção confirmada; metas e perfil de carga pendentes |
+| RNF-027 | Identidade visual institucional | A interface deve seguir a identidade visual FORD, com predominância de azul e branco, respeitando manual de marca, logotipo, tipografia e ativos oficiais quando fornecidos e aprovados. | CV-RNF-027: revisão das telas e do design system contra manual/ativos oficiais aprovados pela FORD. | Direção confirmada; manual e ativos oficiais pendentes |
 
 ## Critérios de verificação dos requisitos não funcionais
 
@@ -55,12 +59,16 @@ Este catálogo separa requisitos de segurança, qualidade e restrições técnic
 | CV-RNF-021 | RNF-021 | Testes registram limitações e contornos de sinais de dispositivo; nenhuma autorização de dados/funções depende exclusivamente desses sinais. |
 | CV-RNF-022 | RNF-022 | Casos aprovados geram alertas esperados; falsos positivos/negativos são medidos contra limites aprovados e há revisão humana documentada. |
 | CV-RNF-023 | RNF-023 | Política cobre dados primários, réplicas e backups; testes demonstram restauração e descarte conforme prazos aprovados. |
+| CV-RNF-024 | RNF-024 | Testes e revisão demonstram que alterações e exclusões em mensagens, anexos e registros são autorizadas e que modificações indevidas são impedidas ou detectáveis. |
+| CV-RNF-025 | RNF-025 | Testes demonstram que apenas usuários autorizados acessam mensagens, anexos, credenciais e logs; consulta TI respeita política formal e os canais de transmissão/armazenamento estão protegidos. |
+| CV-RNF-026 | RNF-026 | Testes de desempenho usam tarefas, carga e metas aprovadas; a solução atende aos limites definidos sem desabilitar controles de segurança. |
+| CV-RNF-027 | RNF-027 | Telas e design system são comparados com manual, logotipo, paleta, tipografia e ativos oficiais aprovados pela FORD. |
 
 ## Observações de consistência e aprovação
 
 - RNF-003 torna obrigatório o armazenamento seguro de senhas; o algoritmo e os parâmetros permanecem decisão técnica, não recomendação opcional.
-- RNF-004 define governança e escopo da auditoria; RNF-018 define os campos e controles de integridade dos eventos. Não são requisitos alternativos.
+- RNF-004 define governança e escopo da auditoria; RNF-018 define os campos e controles de integridade dos eventos. RNF-024 amplia a integridade para mensagens, anexos, credenciais e registros do produto. Não são requisitos alternativos.
 - RNF-010 trata de formato e integridade do arquivo; RNF-019 trata de armazenamento, autorização, URL, limites e análise de malware.
 - RNF-011 trata da política de monitoramento e consulta administrativa; RNF-014 trata do programa de privacidade e tratamento de dados.
-- RNF-017 trata do ciclo de vida da sessão; RNF-003 trata exclusivamente da proteção de credenciais.
+- RNF-017 trata do ciclo de vida da sessão; RNF-003 trata exclusivamente da proteção de credenciais. RNF-025 explicita confidencialidade e acesso autorizado, sem substituir RNF-001 nem a política de consulta TI.
 - Os critérios CV-RNF não são evidência de implementação. Sua execução técnica depende do produto implementado e das decisões pendentes.
