@@ -15,7 +15,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 | RF-007 | Exibir conversas recentes | Usuário | Alta (provisória) | Confirmado em nível conceitual |
 | RF-008 | Abrir e ler conversas | Usuário | Alta (provisória) | Derivado |
 | RF-009 | Enviar mensagem individual | Usuário | Alta (provisória) | Confirmado |
-| RF-010 | Enviar mensagem em grupo | Usuário participante | Alta (provisória) | Derivado; validar com cliente |
+| RF-010 | Enviar mensagem em grupo | Usuário participante | Alta (provisória) | Necessidade de mensagens em grupo confirmada; regras de participação detalhadas como derivadas |
 | RF-011 | Anexar arquivos PDF e JPEG | Usuário | Alta (provisória) | Confirmado; limites pendentes |
 | RF-012 | Rejeitar formatos não permitidos | Sistema | Alta (provisória) | Confirmado |
 | RF-013 | Não oferecer captura/gravação de mídia | Sistema | Alta (provisória) | Confirmado, com ambiguidade sobre câmera/JPEG |
@@ -71,7 +71,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 - CA-004.1 - O TI consegue desativar uma conta existente.
 - CA-004.2 - Após a desativação, a conta não consegue iniciar nova sessão.
-- CA-004.3 - A desativação não concede ao usuário a capacidade de reativar a própria conta.
+- CA-004.3 - A desativação não concede ao usuário a capacidade de reativar a própria conta.\n- CA-004.4 - Após a desativação, sessões já existentes deixam de autorizar novas operações protegidas; o mecanismo e o prazo técnico devem cumprir a política de sessão aprovada.
 
 ### RF-005 - Criar grupos de conversa
 
@@ -127,13 +127,13 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 ### RF-010 - Enviar mensagem em grupo
 
-**Descrição:** Enviar mensagem em grupo. **Ator/origem:** Usuário participante. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-006; RN-007. **Estado:** Derivado; validar com cliente.
+**Descrição:** Enviar mensagem em grupo. **Ator/origem:** Usuário participante. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-006; RN-007. **Estado:** Necessidade de comunicação em grupo confirmada; regras operacionais de participação derivadas e sujeitas à validação.
 
 **Critérios de aceitação:**
 
 - CA-010.1 - Um membro ativo de um grupo consegue enviar mensagem ao grupo.
 - CA-010.2 - A mensagem fica visível aos participantes autorizados do grupo.
-- CA-010.3 - Uma conta que não pertence ao grupo não consegue enviar nem ler mensagens do grupo.
+- CA-010.3 - Uma conta que não pertence ao grupo não consegue enviar nem ler mensagens do grupo.\n- CA-010.4 - A remoção de participante segue RF-019; não se deve duplicar neste requisito a regra de administração de membros.
 
 ### RF-011 - Anexar arquivos PDF e JPEG
 
@@ -220,7 +220,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 - CA-018.1 - Uma conta TI em ambiente classificado como celular não consegue utilizar as funções administrativas.
 - CA-018.2 - O bloqueio é aplicado também às operações administrativas, não apenas à interface.
 - CA-018.3 - Uma conta TI em celular é bloqueada antes de acessar qualquer função administrativa.
-- CA-018.4 - A definição de tablet, tela dobrável, modo desktop e emulação deve ser validada.
+- CA-018.4 - Cada classe de dispositivo definida na matriz homologada deve possuir resultado de teste permitido/bloqueado documentado. A matriz ainda não foi fornecida.
 
 ### RF-019 - Remover usuários de grupos
 
@@ -253,8 +253,8 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 ## 3.4 Limites técnicos e pontos que impedem o aceite final
 
-- Distribuição das 25 pessoas entre Usuário e TI; se os 25 incluem administradores.
-- Confirmação de que usuários podem escrever em grupos e se existem outros controles de participação.
+- Distribuição das 25 pessoas entre perfis USER e TI; confirmar se os 25 incluem administradores.
+- Regras complementares do ciclo de vida de grupos (saída voluntária, encerramento, histórico após remoção); o envio de mensagens em grupo integra o escopo informado.
 - Definição dos dispositivos/navegadores homologados e comportamento do seletor nativo de JPEG. A aplicação pode omitir controles próprios de captura e não solicitar permissões de câmera/microfone; não consegue impedir captura realizada por ferramentas do sistema operacional ou hardware externo.
 - Política de senha inicial, redefinição e canal de entrega.
 - Definição da lista/regras de suspeição, falsos positivos, severidade, notificação e ação após alerta.
