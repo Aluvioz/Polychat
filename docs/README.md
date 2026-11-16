@@ -14,6 +14,7 @@
 8. [Rastreabilidade e critérios de aceitação](07-rastreabilidade-e-criterios-de-aceitacao.md)
 9. [Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md)
 10. [Baseline do MVP e rastreabilidade com o backlog](09-baseline-mvp-e-rastreabilidade-backlog.md)
+11. [Índice de ADRs](adr/README.md)
 
 ## Como interpretar esta versão
 
