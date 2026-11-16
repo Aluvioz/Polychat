@@ -25,6 +25,17 @@ As regras representam decisões de negócio conhecidas. A coluna Estado diferenc
 | RN-019 | **Identidade visual.** A interface deve seguir a identidade visual da Ford, utilizando azul e branco. Os códigos oficiais, tipografia e ativos de marca devem ser fornecidos/aprovados. | Direção confirmada; especificação visual pendente | OBJ-007; RNF-006 |
 | RN-020 | **Orçamento.** Foi informado o valor de R$ 450.000,00. Não foi confirmado se é teto, estimativa, valor aprovado ou se inclui infraestrutura/operação. | Valor informado; natureza pendente | - |
 
+## Regras adicionais consolidadas em 16/11/2026
+
+| ID | Regra | Estado | Requisitos relacionados |
+|---|---|---|---|
+| RN-021 | **Organização única.** O produto atende exclusivamente à FORD no escopo atual; não há suporte de negócio a múltiplas empresas/tenants. O isolamento dos dados da FORD continua obrigatório. | Confirmado | OBJ-001; RNF-001; RNF-020 |
+| RN-022 | **Níveis organizacionais não são perfis.** Operacional, Técnico e Estratégico são níveis organizacionais; o sistema reconhece apenas TI e Usuário. Todo funcionário fora da equipe de TI recebe o mesmo perfil Usuário, sem hierarquia de permissões entre cargos. | Confirmado | RF-002; RNF-001 |
+| RN-023 | **Conteúdo permitido.** Mensagens de texto e anexos PDF/JPEG são os únicos conteúdos de comunicação explicitamente permitidos no MVP. Não oferecer envio ou gravação de áudio/vídeo, nem outros formatos. | Confirmado | RF-011 a RF-013; RNF-019 |
+| RN-024 | **Administração de grupos.** TI cria grupos, adiciona e remove participantes. Usuários não criam grupos, convites ou auto inclusão. | Confirmado | RF-005; RF-006; RF-019 |
+| RN-025 | **Bloqueio de dispositivo.** Usuário em computador recebe a mensagem exata “só pode ser usado em celular”; TI em celular é bloqueado. A detecção de dispositivo por navegador é contornável e não constitui garantia isolada. | Comportamento confirmado; mecanismo pendente | RF-017; RF-018; RNF-021 |
+| RN-026 | **Conformidade.** Monitoramento e acesso administrativo devem respeitar LGPD, transparência, finalidade, governança, rastreabilidade e demais obrigações legais aplicáveis. | Obrigação aplicável; política operacional pendente | RF-016; RNF-014; RNF-018 |
+
 ## Restrições explícitas
 
 - Somente dois perfis de aplicação: Usuário e TI.
