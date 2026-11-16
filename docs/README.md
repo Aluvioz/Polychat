@@ -1,6 +1,6 @@
-# Polychat - Documentação de requisitos (versão 0.2)
+# Polychat - Documentação de requisitos (versão 0.3)
 
-**Status:** minuta consolidada para revisão; aprovação final de escopo, arquitetura, política de segurança e tratamento de dados permanece pendente. Esta versão relaciona os requisitos existentes ao backlog técnico e explicita conflitos/questões em aberto.
+**Status:** minuta consolidada para validação; decisões do levantamento de 16/11/2026 refletidas. Aprovação formal do cliente/PO, decisões arquiteturais, validação jurídica/privacidade, técnica e QA permanecem pendentes.
 
 ## Navegação
 
@@ -27,7 +27,7 @@ Identificadores OBJ, RF, RNF, RN e CA são únicos nesta linha de base e devem s
 
 ## Situação de aprovação
 
-A versão 0.2 não é uma aprovação do cliente. A identificação do representante da FORD e do PO, as respostas às questões críticas, a validação técnica/QA e a revisão por PR ainda são necessárias para fechar a baseline.
+A versão 0.3 não é uma aprovação do cliente. A identificação do representante da FORD e do PO, as respostas às questões críticas, a validação técnica/QA, a revisão por PR e a aprovação formal ainda são necessárias para fechar a baseline.
 
 ## Aviso sobre diagramas
 
