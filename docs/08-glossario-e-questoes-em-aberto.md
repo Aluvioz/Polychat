@@ -47,14 +47,30 @@
 | Q-022 | Orçamento | R$ 450.000,00 é teto aprovado, estimativa ou orçamento total? Inclui infraestrutura, licenças, suporte, manutenção e operação? | O valor foi informado sem composição ou status de aprovação. | Cliente / Financeiro |
 | Q-023 | Idioma e notificações | A interface será somente em português? Haverá notificação no próprio aplicativo, push ou outro mecanismo? | Não foram descritos idioma nem notificações fora do alerta de segurança. | Cliente / UX / TI |
 | Q-024 | Edição e exclusão de mensagens | Usuários podem editar ou apagar mensagens? Mensagens apagadas continuam disponíveis para auditoria do TI? | O ciclo de vida da mensagem não foi especificado. | Cliente / TI |
+| Q-025 | Modelo de criptografia | As mensagens/anexos serão criptografados em trânsito e em armazenamento? Será adotada criptografia ponta a ponta? Como compatibilizar E2EE com consulta pelo TI e análise automática no servidor? | Há conflito arquitetural entre confidencialidade ponta a ponta e leitura/análise server-side. | Cliente / TI / Segurança / PO |
+| Q-026 | Gestão de chaves | Quem gera, armazena, acessa, rotaciona, revoga e recupera chaves? Haverá chave por usuário, conversa ou organização? Como impedir acesso indevido de operadores? | A segurança depende do ciclo de vida e da separação de chaves. | Líder técnico / Segurança / TI |
+| Q-027 | Auditoria do acesso TI | Qual justificativa é exigida para consultar conversa? Quem revisa os logs? Qual retenção e quem pode consultar/exportar os registros? | O acesso administrativo amplo precisa ser rastreável, revisável e proporcional. | Cliente / TI / Jurídico / Privacidade |
+| Q-028 | Detecção e falsos positivos | Qual lista inicial de palavrões e categorias suspeitas? A regra considera contexto? Qual taxa de falso positivo aceitável? Quem revisa alertas e como contestar? | Sem política e dados de avaliação não é possível validar o mecanismo. | Cliente / Segurança / TI |
+| Q-029 | Backups, retenção e exclusão | Quais prazos para mensagens, anexos, alertas, logs e backups? Como propagar exclusão para réplicas e backups expirados? | Impacta LGPD, custo, recuperação e auditoria. | Cliente / Jurídico / TI |
+| Q-030 | Segurança da infraestrutura | Qual modelo de hospedagem, região, rede, hardening, monitoramento, resposta a incidentes, gestão de vulnerabilidades e acesso de fornecedores será aprovado? | Aplicação própria não elimina riscos de provedor ou infraestrutura. | TI / Segurança / Líder técnico |
+| Q-031 | Limites de captura no dispositivo | A aplicação não deve invocar câmera/microfone nem oferecer captura; o cliente aceita que não é tecnicamente possível impedir screenshots, gravação externa ou captura pelo sistema operacional? | Navegador não controla integralmente o sistema operacional/hardware. | Cliente / Segurança / TI |
+| Q-032 | Sessões e credenciais | Qual política de senha, expiração de sessão, MFA, troca inicial, recuperação, revogação e resposta a credencial comprometida? | Necessário para autenticação segura e operação do TI. | Cliente / TI / Segurança |
 
 ## 8.3 Decisões e premissas que não devem ser tratadas como aprovadas
 
 - Não está definido se a plataforma será hospedada em infraestrutura própria ou em nuvem.
-- Não está definido que o sistema terá criptografia ponta a ponta; isso pode entrar em conflito com a consulta administrativa de mensagens e precisa ser arquiteturalmente analisado.
+- Não está definido o modelo de criptografia. E2EE pode impedir a consulta de conteúdo pelo TI e a análise automática no servidor sem desenho especial de chaves/arquitetura; criptografia em trânsito e em armazenamento não equivale a E2EE.
 - Não está definido que os TIs poderão alterar, apagar ou exportar conversas; foi informado apenas que poderão consultá-las.
 - Não está definido que mensagens suspeitas serão bloqueadas. A necessidade confirmada é gerar alertas ao TI.
 - Não está definido nenhum prazo de entrega, cronograma, concorrência ou data de lançamento.
 - O orçamento de R$ 450.000,00 foi informado, mas não há composição nem confirmação de aprovação.
 - Não está definida a lista de sistemas operacionais ou navegadores homologados.
 - Não foram selecionados tipos de diagrama UML para a nova especificação.
+
+
+## 8.4 Limitações técnicas que devem permanecer explícitas
+
+- Identificação por user-agent, tamanho de viewport ou sinais do navegador pode ser falsificada, alterada ou contornada por modo desktop, emulação, proxy ou ferramentas de desenvolvedor. Não usar esse sinal isoladamente como controle de autorização.
+- Uma aplicação web pode não disponibilizar controles próprios de câmera/microfone e pode evitar solicitar permissões, mas não impede screenshots, gravação de tela, fotografia por outro dispositivo ou captura pelo sistema operacional.
+- A análise automática de conteúdo pode errar por contexto, ironia, citação, idioma ou vocabulário corporativo. O alerta deve ser revisável; não presumir bloqueio/punição automática.
+- Hospedagem própria ou aplicação própria não impede acesso por administradores privilegiados, comprometimento de endpoints, fornecedores de infraestrutura ou cumprimento de ordens legais válidas.
