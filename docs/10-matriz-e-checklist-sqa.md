@@ -80,9 +80,9 @@ Para os RFs, os critérios `CA-xxx.n` estão descritos em [03 - Requisitos funci
 |---|---|---|---|
 | SQA-001 | Identificação e versão da baseline | POLY-REQ-001 identificada como revisão documental 0.5, derivada da minuta 0.3 e confrontada com o Documento de Visão e Plano Inicial v0.1 | PASS |
 | SQA-002 | Integridade/estrutura dos documentos | Capítulos 00 a 09 e índice docs/README.md consultados; novo capítulo 10 adicionado. Um caminho inexistente `docs/02-atores-e-contexto.md` foi testado e não pertence ao índice; o documento correto é `02-objetivos.md`. | PASS |
-| SQA-003 | Integridade dos links internos | Verificação de links Markdown dos documentos alterados contra o conjunto de caminhos da baseline | PASS após verificação final no branch |
+| SQA-003 | Integridade dos links internos | Verificação estática dos links Markdown relativos nos 12 documentos dos capítulos 00–10 e índice; nenhum destino interno ausente no conjunto documental consultado. | PASS |
 | SQA-004 | Formatação Markdown | Revisão estrutural de headings, tabelas, listas e links; nenhum validador Markdown externo foi executado | BLOCKED — validação automatizada não disponível nesta execução |
-| SQA-005 | Unicidade e estabilidade dos IDs | Catálogos canônicos OBJ, RF, RNF, RN, CA e CV-RNF; referências em outros capítulos não criam novos IDs | PASS |
+| SQA-005 | Unicidade e estabilidade dos IDs | Catálogos canônicos OBJ, RF, RNF, RN, CA e CV-RNF; conferência de 27 RNFs e 27 CV-RNFs sequenciais, sem duplicidades no catálogo RNF/CV-RNF. | PASS |
 | SQA-006 | Ausência de duplicidades conflitantes | Escopos RNF-003/017, RNF-004/018, RNF-010/019 e RNF-011/014 separados e explicitados | PASS |
 | SQA-007 | Critérios de aceitação por requisito | CA para RF-001 a RF-020 e CV-RNF para RNF-001 a RNF-027 | PASS |
 | SQA-008 | Rastreabilidade objetivo → requisito → critério → teste | Capítulo 07 e matrizes das seções 2 e 3 deste documento | PASS |
