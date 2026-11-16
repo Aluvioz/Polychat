@@ -85,7 +85,7 @@ Para os RFs, os critérios `CA-xxx.n` estão descritos em [03 - Requisitos funci
 | SQA-009 | Terminologia | USER (rótulo Usuário) e TI padronizados como perfis; níveis organizacionais separados | PASS |
 | SQA-010 | Requisitos não funcionais | 23 RNFs possuem critério de verificação e estado explícito | PASS documental; parâmetros pendentes individualizados |
 | SQA-011 | Segurança, privacidade e governança | Criptografia, E2EE, acesso TI, monitoramento, anexos, sessões, logs e retenção registrados | BLOCKED — aprovações e parâmetros críticos ausentes |
-| SQA-012 | Consistência com itens relacionados | Issue #88, comentários, PR #131, épicos #79/#80/#86 consultados; ADRs da Issue #89 exigem conferência independente | BLOCKED — não declarar compatibilidade arquitetural integral sem validação da Issue #89 |
+| SQA-012 | Consistência com itens relacionados | Issue #88, comentários, PR #131 e épicos #79/#80/#86 consultados. Também foram lidos o README de ADRs e ADR-003/004/006/008/010 da Issue #89. Há referências de RNF desatualizadas em ADR-004 (sessões/credenciais), ADR-006 (autorização/auditoria) e ADR-008 (segurança de anexos/retensão). | BLOCKED — não alterar documentos da Issue #89 neste escopo; solicitar correção de rastreabilidade no PR #133 antes de declarar consistência integral |
 | SQA-013 | Escopo de alterações | Alterações limitadas a arquivos Markdown em `docs/`; nenhum código, dependência ou configuração alterado | PASS |
 | SQA-014 | Validação funcional da aplicação | Fora do escopo documental; nenhuma alteração de código | N/A |
 | SQA-015 | CI documental do repositório | GitHub Actions CI run #47 e #50 para o commit-base consultado concluíram com sucesso; status Vercel reportou failure | PASS para CI observado; falha Vercel registrada separadamente, sem alterar configuração |
@@ -93,13 +93,13 @@ Para os RFs, os critérios `CA-xxx.n` estão descritos em [03 - Requisitos funci
 
 ## 5. Inconformidades encontradas na inspeção inicial
 
-Foram registradas **16 inconformidades** antes das correções documentais:
+Foram registradas **18 inconformidades** antes e durante a conferência cruzada:
 
 | Severidade | Quantidade | Temas |
 |---|---:|---|
 | Crítica | 4 | Governança de consulta TI; conflito E2EE/inspeção server-side; retenção/exclusão/backups; política de monitoramento automatizado |
 | Alta | 5 | Classificação de dispositivos sem matriz; ciclo de vida de credenciais/sessões; ciclo de vida de grupos; limites/segurança de anexos; catálogo e autorização das funções administrativas de segurança |
-| Média | 5 | Estados contraditórios de RNF-003/RNF-017 e RNF-004/RNF-018; sobreposição RNF-010/RNF-019 e RNF-011/RNF-014; rastreabilidade/critério SQA ausente; nomenclatura de perfis inconsistente |
+| Média | 7 | Estados contraditórios de RNF-003/RNF-017 e RNF-004/RNF-018; sobreposição RNF-010/RNF-019 e RNF-011/RNF-014; rastreabilidade/checklist SQA ausente; nomenclatura de perfis inconsistente; referências RNF desatualizadas nos ADRs relacionados da Issue #89 |
 | Baixa | 2 | Navegação/descoberta da documentação; links para artefatos PDF preexistentes não revalidados nesta revisão |
 
 As inconsistências documentais de severidade média e parte das altas foram corrigidas ou explicitamente desambiguadas nos capítulos 00, 01, 02, 03, 04, 05, 07, 08, 09 e neste capítulo. As lacunas críticas e as dependências de aprovação não podem ser resolvidas pela equipe SQA sem decisão dos responsáveis.
@@ -133,6 +133,6 @@ As inconsistências documentais de severidade média e parte das altas foram cor
 
 **Classificação: REPROVADO para aprovação final da baseline.**
 
-A revisão documental corrigiu conflitos internos e ampliou a rastreabilidade e os critérios de verificação. Entretanto, os requisitos críticos de acesso administrativo, privacidade, monitoramento, criptografia e retenção continuam bloqueados por decisões e aprovações que não existem no material consultado. A especificação pode seguir como minuta de trabalho, mas não deve ser declarada baseline aprovada nem usada para liberar funções sensíveis em produção.
+A revisão documental corrigiu conflitos internos e ampliou a rastreabilidade e os critérios de verificação. A conferência cruzada identificou referências RNF a corrigir nos ADRs da Issue #89; elas foram registradas, sem modificar arquivos fora do escopo #88. Entretanto, os requisitos críticos de acesso administrativo, privacidade, monitoramento, criptografia e retenção continuam bloqueados por decisões e aprovações que não existem no material consultado. A especificação pode seguir como minuta de trabalho, mas não deve ser declarada baseline aprovada nem usada para liberar funções sensíveis em produção.
 
 A PR #131 deve permanecer Draft. Não houve aprovação formal, merge ou fechamento da Issue #88 nesta revisão.
