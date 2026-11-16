@@ -34,11 +34,11 @@ Polychat é uma aplicação web de comunicação interna da FORD. A experiência
 - Dois perfis: USER (rótulo Usuário) e TI. Não há diferenciação de permissões entre cargos corporativos dentro do perfil USER.
 - Autenticação por identificador de usuário e senha criados pelo TI.
 - Administração centralizada pelo TI: criação e desativação de contas, criação de grupos e inclusão de pessoas em grupos.
-- Conversas individuais entre usuários ativos e conversas em grupo, sujeitas à confirmação do fluxo de mensagens em grupos.
+- Conversas individuais entre usuários ativos e mensagens em grupos criados e administrados pelo TI; regras complementares do ciclo de vida dos grupos (saída voluntária, encerramento e histórico após remoção) permanecem pendentes.
 - Listagem de conversas recentes e interface simples.
 - Mensagens de texto e anexos PDF/JPEG.
 - Análise automática de mensagens consideradas suspeitas e alerta ao TI.
-- Possibilidade de o TI consultar qualquer conversa.
+- Capacidade de o TI consultar conversas individuais e em grupo para fins autorizados, condicionada à política formal de governança, transparência, justificativa, auditoria e retenção antes da liberação em produção.
 - Acesso do perfil Usuário por celular e do perfil TI por computador.
 - Identidade visual alinhada à Ford, com predominância de azul e branco; códigos oficiais de cor ainda não foram fornecidos.
 
