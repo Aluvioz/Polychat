@@ -4,7 +4,7 @@
 
 | Objetivo | Requisitos funcionais | Requisitos não funcionais | Critérios de aceitação | Diagramas UML |
 |---|---|---|---|---|
-| OBJ-001 | RF-001; RF-003; RF-004 | RNF-001; RNF-002; RNF-003 | CA-001.x; CA-003.x; CA-004.x | Pendente de seleção |
+| OBJ-001 | RF-001; RF-003; RF-004 | RNF-001; RNF-002; RNF-003; RNF-014; RNF-020 | CA-001.x; CA-003.x; CA-004.x | Pendente de seleção |
 | OBJ-002 | RF-007; RF-008; RF-009 | RNF-001; RNF-006; RNF-007 | CA-007.x a CA-009.x | Pendente de seleção |
 | OBJ-003 | RF-005; RF-006; RF-010 | RNF-001; RNF-006 | CA-005.x; CA-006.x; CA-010.x | Pendente de seleção |
 | OBJ-004 | RF-002; RF-003; RF-004; RF-005; RF-006; RF-016; RF-019; RF-020 | RNF-001; RNF-004; RNF-011; RNF-018 | CA-002.x a CA-006.x; CA-016.x; CA-019.x; CA-020.x | Pendente de seleção |
@@ -12,7 +12,6 @@
 | OBJ-006 | RF-017; RF-018 | RNF-001; RNF-005; RNF-021 | CA-017.x; CA-018.x | Pendente de seleção |
 | OBJ-007 | RF-007; RF-008 | RNF-006 | CA-007.x; CA-008.x | Pendente de seleção |
 
-| OBJ-001 | RF-001; RF-003; RF-004 | RNF-001; RNF-002; RNF-003; RNF-014; RNF-020 | CA-001.x; CA-003.x; CA-004.x | Pendente de seleção |
 
 ## 7.2 Catálogo de critérios de aceitação
 
