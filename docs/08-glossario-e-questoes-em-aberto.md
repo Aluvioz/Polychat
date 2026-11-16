@@ -6,7 +6,7 @@
 |---|---|
 | Polychat | Aplicação web de comunicação interna proposta para a FORD. |
 | FORD | Organização cliente e público organizacional do sistema. |
-| Usuário | Perfil para funcionários fora da área de TI; todos os cargos corporativos não alocados em TI compartilham as mesmas permissões de aplicação. |
+| USER (rótulo: Usuário) | Identificador do perfil de aplicação para funcionários fora da área de TI; todos os cargos corporativos não alocados em TI compartilham as mesmas permissões. |
 | TI | Perfil administrativo destinado a pessoas alocadas na área de Tecnologia da Informação. |
 | Grupo | Conversa coletiva criada pelo TI e composta por contas adicionadas por ele. |
 | Conversa individual | Troca de mensagens entre dois usuários. |
@@ -25,13 +25,13 @@
 |---|---|---|---|---|
 | Q-001 | Público inicial | As 25 pessoas citadas incluem os administradores de TI ou são 25 usuários finais além da equipe de TI? | Afeta criação de contas, dimensionamento e testes de carga. | Cliente / TI |
 | Q-002 | Perfis e administração | Quem pode criar, alterar ou desativar contas que tenham o perfil TI? Existe administrador principal ou todos os profissionais de TI têm poderes iguais? | Evita circularidade e define controle de privilégios. | Cliente / TI |
-| Q-003 | Mensagens em grupo | Usuários adicionados a um grupo podem enviar mensagens? Podem sair, remover mensagens ou solicitar remoção? | Define RF-010 e ciclo de vida do grupo. | Cliente |
+| Q-003 | Ciclo de vida de grupos | Além de enviar mensagens (incluído no escopo), usuários podem sair voluntariamente? Quem encerra grupos? O que ocorre com o histórico após saída ou remoção? | Fecha regras de ciclo de vida sem alterar a permissão de envio em grupo já confirmada. | Cliente / TI |
 | Q-004 | JPEG e câmera | JPEG deve ser anexado como arquivo existente. A aplicação não oferece captura própria; como tratar seletores nativos que podem abrir câmera conforme o sistema operacional? | Há ambiguidade entre permitir JPEG e não permitir tirar fotos. | Cliente / UX |
 | Q-005 | Identificador de login | O nome de usuário será e-mail institucional, matrícula, login escolhido pelo TI ou outro identificador? “Primary Key” é um identificador interno do banco e não define, por si só, a credencial apresentada ao usuário. | Afeta autenticação, unicidade e provisionamento. | Cliente / TI |
 | Q-006 | Senha inicial e recuperação | Como a senha será entregue? Será temporária, expirará, deverá ser trocada no primeiro acesso? Como ocorrerá redefinição sem auto cadastro? | A entrega individual foi informada, mas canal e ciclo de vida não. | Cliente / TI / Segurança |
 | Q-007 | Detecção de mensagens suspeitas | Quais termos/categorias serão monitorados? Basta uma lista de palavras, haverá análise contextual ou modelo automático? Palavrões sempre geram alerta? | Sem regra aprovada não é possível testar detecção ou controlar falsos positivos. | Cliente / Segurança |
 | Q-008 | Resposta a alertas | O alerta apenas informa o TI ou bloqueia mensagem/conta? Qual severidade, prazo, responsável e fluxo de investigação? | Define consequência da sinalização. | Cliente / TI |
-| Q-009 | Acesso do TI às conversas | Qual equipe/cargos de TI podem consultar qualquer conversa? É necessário motivo? A consulta fica registrada? Há notificação ao funcionário? Pode haver exportação? | Acesso irrestrito é sensível e precisa de governança. | Cliente / TI / Jurídico / Privacidade |
+| Q-009 | Acesso do TI às conversas | Quais operadores TI, papéis ou equipes podem consultar conversas? Em quais hipóteses, com qual justificativa e escopo? Haverá notificação ao funcionário, acesso emergencial e revisão independente? | A capacidade de consulta está confirmada, mas não pode ser liberada sem política de finalidade, autorização, transparência e responsabilização. | FORD / TI / PO / Jurídico / Privacidade |
 | Q-010 | Retenção e exclusão | Por quanto tempo mensagens, anexos, alertas e logs serão mantidos? Quem pode excluir? Mensagens apagadas continuam acessíveis ao TI? | Afeta armazenamento, auditoria e privacidade. | Cliente / Jurídico / TI |
 | Q-011 | Arquivos | Qual tamanho máximo por PDF/JPEG? Há limite por usuário, conversa ou armazenamento total? Como tratar arquivos maliciosos? | Afeta arquitetura, custos e critérios de aceite. | Cliente / TI |
 | Q-012 | Dispositivos | Quais sistemas operacionais e navegadores devem ser homologados? Tablets são considerados celular ou computador? Como tratar modo desktop, emuladores e telas dobráveis? | Afeta RF-017/RF-018 e RNF-005. | Cliente / TI |
@@ -49,7 +49,7 @@
 | Q-024 | Edição e exclusão de mensagens | Usuários podem editar ou apagar mensagens? Mensagens apagadas continuam disponíveis para auditoria do TI? | O ciclo de vida da mensagem não foi especificado. | Cliente / TI |
 | Q-025 | Modelo de criptografia | As mensagens/anexos serão criptografados em trânsito e em armazenamento? Será adotada criptografia ponta a ponta? Como compatibilizar E2EE com consulta pelo TI e análise automática no servidor? | Há conflito arquitetural entre confidencialidade ponta a ponta e leitura/análise server-side. | Cliente / TI / Segurança / PO |
 | Q-026 | Gestão de chaves | Quem gera, armazena, acessa, rotaciona, revoga e recupera chaves? Haverá chave por usuário, conversa ou organização? Como impedir acesso indevido de operadores? | A segurança depende do ciclo de vida e da separação de chaves. | Líder técnico / Segurança / TI |
-| Q-027 | Auditoria do acesso TI | Qual justificativa é exigida para consultar conversa? Quem revisa os logs? Qual retenção e quem pode consultar/exportar os registros? | O acesso administrativo amplo precisa ser rastreável, revisável e proporcional. | Cliente / TI / Jurídico / Privacidade |
+| Q-027 | Governança dos logs de auditoria | Qual justificativa é obrigatória? Qual função independente revisa os registros e com que periodicidade? Qual prazo de retenção? Quem pode consultar ou exportar os próprios logs? | A geração dos eventos é requisito; revisão, acesso e retenção dos registros ainda precisam de política aprovada. | FORD / TI / Jurídico / Privacidade |
 | Q-028 | Detecção e falsos positivos | Qual lista inicial de palavrões e categorias suspeitas? A regra considera contexto? Qual taxa de falso positivo aceitável? Quem revisa alertas e como contestar? | Sem política e dados de avaliação não é possível validar o mecanismo. | Cliente / Segurança / TI |
 | Q-029 | Backups, retenção e exclusão | Quais prazos para mensagens, anexos, alertas, logs e backups? Como propagar exclusão para réplicas e backups expirados? | Impacta LGPD, custo, recuperação e auditoria. | Cliente / Jurídico / TI |
 | Q-030 | Segurança da infraestrutura | Qual modelo de hospedagem, região, rede, hardening, monitoramento, resposta a incidentes, gestão de vulnerabilidades e acesso de fornecedores será aprovado? | Aplicação própria não elimina riscos de provedor ou infraestrutura. | TI / Segurança / Líder técnico |
@@ -60,11 +60,11 @@
 
 - Não está definido se a plataforma será hospedada em infraestrutura própria ou em nuvem.
 - Não está definido o modelo de criptografia. E2EE pode impedir a consulta de conteúdo pelo TI e a análise automática no servidor sem desenho especial de chaves/arquitetura; criptografia em trânsito e em armazenamento não equivale a E2EE.
-- Não está definido que os TIs poderão alterar, apagar ou exportar conversas; foi informado apenas que poderão consultá-las.
+- A consulta de conversas pelo TI não autoriza edição, exclusão ou exportação. Essas capacidades não integram o escopo confirmado.
 - Não está definido que mensagens suspeitas serão bloqueadas. A necessidade confirmada é gerar alertas ao TI.
 - Não está definido nenhum prazo de entrega, cronograma, concorrência ou data de lançamento.
 - O orçamento de R$ 450.000,00 foi informado, mas não há composição nem confirmação de aprovação.
-- Não está definida a lista de sistemas operacionais ou navegadores homologados.
+- Não está definida a matriz de celulares/computadores, sistemas operacionais, navegadores, tablets, modo desktop e emulação homologados.
 - Não foram selecionados tipos de diagrama UML para a nova especificação.
 
 
