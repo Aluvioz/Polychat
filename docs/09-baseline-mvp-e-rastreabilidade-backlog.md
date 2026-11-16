@@ -1,7 +1,7 @@
 # 09 - Baseline do MVP e rastreabilidade com o backlog
 
 **Identificador:** POLY-REQ-001  
-**Versão:** 0.3 (minuta consolidada para validação)  
+**Versão:** 0.4 (minuta revisada por SQA; pendências mantidas)  
 **Data:** 16/11/2026  
 **Status:** decisões do levantamento refletidas; aprovação formal do cliente/PO e validações técnicas/jurídicas/QA pendentes  
 **Issue de acompanhamento:** [#88 — Consolidar baseline de requisitos e escopo MVP](https://github.com/Aluvioz/Polychat/issues/88)
@@ -16,6 +16,7 @@ Use os seguintes estados:
 
 - **Confirmado:** declarado expressamente nas informações de levantamento registradas nos capítulos 01, 03 e 05.
 - **Derivado:** comportamento necessário para tornar o fluxo coerente/testável, ainda sujeito à validação indicada.
+- **Bloqueado (BLOCKED):** critério não pode ser validado até que uma decisão, parâmetro ou evidência indicada seja fornecida.
 - **Proposto para MVP:** recomendação de organização do primeiro incremento, não compromisso aprovado.
 - **Pendente de decisão:** falta informação ou aprovação para fechar o requisito.
 - **Fora do MVP informado:** explicitamente excluído do escopo atual.
@@ -44,7 +45,7 @@ Essa direção está registrada no backlog do projeto, mas as decisões de imple
 | Aplicar os perfis Usuário e TI e negar acesso não autorizado | RF-002, RF-016 | Dois perfis confirmados; matriz detalhada e salvaguardas pendentes | [#80 Modelo de dados, autorização e RLS](https://github.com/Aluvioz/Polychat/issues/80), [#86 Segurança](https://github.com/Aluvioz/Polychat/issues/86) |
 | Administrar contas e grupos pelo TI | RF-003 a RF-006 | Criação/desativação de contas, criação de grupos e inclusão de participantes confirmadas | [#83 Grupos](https://github.com/Aluvioz/Polychat/issues/83), [#85 Console TI](https://github.com/Aluvioz/Polychat/issues/85) |
 | Listar, abrir e utilizar conversas individuais | RF-007 a RF-009 | Conversa individual confirmada; listagem recente e leitura detalhadas como derivadas | [#82 Conversas e mensagens](https://github.com/Aluvioz/Polychat/issues/82), UX [#91](https://github.com/Aluvioz/Polychat/issues/91) |
-| Utilizar conversas em grupo | RF-005, RF-006, RF-010 | Criação e inclusão confirmadas; envio, saída e remoção de membros pendentes de validação | [#83 Grupos](https://github.com/Aluvioz/Polychat/issues/83) |
+| Utilizar conversas em grupo | RF-005, RF-006, RF-010 | Criação, inclusão e envio de mensagens em grupo confirmados; saída voluntária e demais regras de ciclo de vida pendentes | [#83 Grupos](https://github.com/Aluvioz/Polychat/issues/83) |
 | Anexar somente PDF/JPEG | RF-011, RF-012, RF-013 | Formatos confirmados; limite, validação de conteúdo e regra da câmera pendentes | [#84 Arquivos e anexos](https://github.com/Aluvioz/Polychat/issues/84) |
 | Sinalizar mensagens suspeitas e alertar TI | RF-014, RF-015 | Intenção confirmada; regras, canal, severidade e resposta pendentes | [#86 Segurança](https://github.com/Aluvioz/Polychat/issues/86) |
 | Restringir Usuário a celular e TI a computador | RF-017, RF-018 | Intenção confirmada; matriz de dispositivos e método de enforcement pendentes | UX [#91](https://github.com/Aluvioz/Polychat/issues/91) e [#92](https://github.com/Aluvioz/Polychat/issues/92) |
@@ -52,10 +53,10 @@ Essa direção está registrada no backlog do projeto, mas as decisões de imple
 ### 3.2 Requisitos transversais para qualquer release
 
 - Autorização no servidor e políticas RLS testadas; esconder controles na interface não é suficiente (RNF-001).
-- Proteção de credenciais, sessões, mensagens e anexos em trânsito e em armazenamento, com arquitetura e gestão de chaves documentadas (RNF-002 e RNF-003).
-- Acesso do TI às conversas deve ser governado e auditável antes de produção (RNF-004 e RNF-011).
-- Anexos devem validar o conteúdo real, não apenas a extensão, e ter acesso privado/autorizado (RNF-010).
-- Ambientes, segredos, CI, deploy e recuperação devem ser tratados no trabalho de fundação técnica (RNF-009 e RNF-013).
+- Senhas não podem ser armazenadas em texto puro e devem usar hash apropriado; sessão e gestão de chaves seguem RNF-003, RNF-016 e RNF-017.
+- Acesso do TI às conversas deve ser governado e auditável antes de produção (RNF-004, RNF-011, RNF-014 e RNF-018).
+- Anexos devem validar o conteúdo real (RNF-010) e ter armazenamento privado, autorização por conversa e limites aprovados (RNF-019).
+- Ambientes, segredos, CI, deploy e recuperação devem ser tratados conforme RNF-009, RNF-013, RNF-016, RNF-020 e RNF-023; a stack registrada no backlog requer ADR e aprovação.
 - Segurança tem prioridade sobre velocidade, mas metas mensuráveis de desempenho e carga ainda precisam ser aprovadas (RNF-007 e RNF-008).
 
 ### 3.3 Fora do MVP informado
@@ -77,10 +78,10 @@ A tabela indica onde o trabalho técnico está organizado. Os vínculos são **r
 |---|---|---|
 | OBJ-001; RF-001 a RF-004 | #81; #103–#106 | Identidade, provisionamento e ciclo de sessão |
 | RF-002; RNF-001 a RNF-003 | #80; #100–#101; #86 | Autorização, matriz de permissões e RLS |
-| RF-005, RF-006, RF-010 | #83; #111–#113; #85 | Grupos, membros e administração |
+| RF-005, RF-006, RF-010, RF-019 | #83; #111–#113; #85 | Grupos, mensagens, membros e administração; regras complementares de ciclo de vida pendentes |
 | OBJ-002; RF-007 a RF-009 | #82; #107, #109, #110; #91 | Conversas individuais, mensagens, histórico e interface |
 | RF-011 a RF-013; RNF-010 | #84; #114–#116 | Anexos privados, validação e política de formatos |
-| RF-014, RF-015, RF-016; RNF-004, RNF-011 | #86; #121–#124; #85 | Detecção, alertas, consulta administrativa, auditoria e governança |
+| RF-014, RF-015, RF-016; RNF-004, RNF-011, RNF-014, RNF-018, RNF-022 | #86; #121–#124; #85 | Detecção, alertas, consulta administrativa, privacidade, auditoria e governança |
 | RF-017, RF-018; RNF-005, RNF-006 | #78; #91–#94 | Jornada mobile/desktop, design system e validação UX |
 | RNF-007 a RNF-009, RNF-013 | #79; #96–#98 | Ambientes, deploy, continuidade e operação |
 | Todos os RF/RNF e critérios CA | #87; #126–#130 | Estratégia de testes, homologação e release |
@@ -136,12 +137,12 @@ Não marcar requisito como aprovado apenas porque existe issue correspondente ou
 
 ## 8. Verificação documental realizada nesta revisão
 
-- Conferidos os capítulos 00 a 08 existentes no repositório e o README acadêmico.
+- Conferidos os capítulos 00 a 09, o índice docs/README.md, a Issue #88, seus comentários e a PR #131.
 - Conferidos os épicos #77 e #79–#87 e as issues #88–#94 disponíveis durante a revisão.
 - Conferida a relação de sub-issues explicitada nos corpos dos épicos.
 - A matriz deste capítulo foi feita por correspondência de escopo; não altera relações formais de dependência do GitHub.
 - Esta alteração é documental. Não foram executados testes automatizados de aplicação porque nenhum código funcional foi alterado.
-- A aprovação do cliente/PO, revisão por PR e validação das questões abertas permanecem pendentes.
+- A revisão SQA documental e seus resultados estão em [10 - Matriz e checklist SQA](10-matriz-e-checklist-sqa.md). Aprovação do cliente/PO, revisão técnica/segurança e respostas às questões abertas permanecem pendentes.
 
 ## 9. Critério de saída da baseline
 
@@ -314,4 +315,4 @@ Checklist:
 - [ ] QA revisou critérios e evidências; revisão do PR concluída.
 - [ ] Baseline POLY-REQ-001 v0.3 formalmente aprovada.
 
-**Status:** documentação atualizada para revisão; baseline não aprovada. A Issue #88 deve permanecer aberta até que as pendências obrigatórias sejam evidenciadas.
+**Status:** revisão documental v0.4 registrada; baseline não aprovada. A classificação final SQA e os bloqueios constam no documento 10. A Issue #88 deve permanecer aberta até que as pendências obrigatórias sejam evidenciadas.
