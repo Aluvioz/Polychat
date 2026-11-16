@@ -46,7 +46,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 **Critérios de aceitação:**
 
-- CA-002.1 - O sistema reconhece somente os perfis Usuário e TI.
+- CA-002.1 - O sistema reconhece somente os identificadores de perfil USER e TI; “Usuário” é apenas o rótulo textual de USER.
 - CA-002.2 - Uma conta Usuário não acessa funções administrativas do TI.
 - CA-002.3 - Uma conta TI acessa as funções administrativas autorizadas ao perfil.
 - CA-002.4 - Dois usuários comuns com cargos corporativos diferentes possuem o mesmo conjunto de permissões da aplicação.
@@ -71,7 +71,8 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 - CA-004.1 - O TI consegue desativar uma conta existente.
 - CA-004.2 - Após a desativação, a conta não consegue iniciar nova sessão.
-- CA-004.3 - A desativação não concede ao usuário a capacidade de reativar a própria conta.\n- CA-004.4 - Após a desativação, sessões já existentes deixam de autorizar novas operações protegidas; o mecanismo e o prazo técnico devem cumprir a política de sessão aprovada.
+- CA-004.3 - A desativação não concede ao usuário a capacidade de reativar a própria conta.
+- CA-004.4 - Após a desativação, sessões já existentes deixam de autorizar novas operações protegidas; o mecanismo e o prazo técnico devem cumprir a política de sessão aprovada.
 
 ### RF-005 - Criar grupos de conversa
 
@@ -92,7 +93,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 - CA-006.1 - O TI consegue incluir uma conta ativa em um grupo existente.
 - CA-006.2 - Um usuário comum não consegue adicionar participantes por convite ou auto inclusão.
 - CA-006.3 - Uma conta desativada não pode ser adicionada como participante ativo.
-- CA-006.4 - O TI consegue remover um participante de um grupo; a remoção impede novos acessos e envios após a efetivação, sem apagar automaticamente o histórico já retido.
+- CA-006.4 - A remoção de participantes é especificada e validada exclusivamente em RF-019/CA-019.1 a CA-019.3; este requisito cobre a inclusão.
 
 ### RF-007 - Exibir conversas recentes
 
@@ -133,7 +134,8 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 - CA-010.1 - Um membro ativo de um grupo consegue enviar mensagem ao grupo.
 - CA-010.2 - A mensagem fica visível aos participantes autorizados do grupo.
-- CA-010.3 - Uma conta que não pertence ao grupo não consegue enviar nem ler mensagens do grupo.\n- CA-010.4 - A remoção de participante segue RF-019; não se deve duplicar neste requisito a regra de administração de membros.
+- CA-010.3 - Uma conta que não pertence ao grupo não consegue enviar nem ler mensagens do grupo.
+- CA-010.4 - A remoção de participante segue RF-019; não se deve duplicar neste requisito a regra de administração de membros.
 
 ### RF-011 - Anexar arquivos PDF e JPEG
 
@@ -190,7 +192,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 ### RF-016 - Consultar qualquer conversa como TI
 
-**Descrição:** Consultar qualquer conversa como TI. **Ator/origem:** TI. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-003; RN-013; RN-014. **Estado:** Confirmado; salvaguardas pendentes.
+**Descrição:** Consultar qualquer conversa como TI. **Ator/origem:** TI. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-003; RN-013; RN-014. **Estado:** Capacidade confirmada; política operacional e autorização dos operadores pendentes.
 
 **Critérios de aceitação:**
 
@@ -209,7 +211,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 - CA-017.1 - Uma conta Usuário em ambiente classificado como computador não consegue utilizar as funções da aplicação.
 - CA-017.2 - A tela bloqueada apresenta a mensagem exata: “só pode ser usado em celular”.
-- CA-017.3 - O bloqueio não pode depender apenas de ocultar componentes visuais; as rotas e operações devem continuar protegidas.
+- CA-017.3 - O bloqueio não pode depender apenas de ocultar componentes visuais; as rotas e operações devem continuar protegidas.\n- CA-017.4 - A classificação de celular/computador deve seguir a matriz homologada; tentativas de contorno por user-agent, viewport ou modo desktop devem ser registradas como limitações, não tratadas como prova de identidade.
 
 ### RF-018 - Restringir perfil TI a computador
 
