@@ -90,6 +90,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 - CA-006.1 - O TI consegue incluir uma conta ativa em um grupo existente.
 - CA-006.2 - Um usuário comum não consegue adicionar participantes por convite ou auto inclusão.
 - CA-006.3 - Uma conta desativada não pode ser adicionada como participante ativo.
+- CA-006.4 - O TI consegue remover um participante de um grupo; a remoção impede novos acessos e envios após a efetivação, sem apagar automaticamente o histórico já retido.
 
 ### RF-007 - Exibir conversas recentes
 
@@ -193,7 +194,9 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 - CA-016.1 - Uma conta TI autorizada consegue consultar conversas individuais e de grupo, mesmo sem ser participante.
 - CA-016.2 - Uma conta Usuário não consegue usar a função de consulta administrativa.
 - CA-016.3 - O sistema não deve alterar mensagens apenas pelo ato de consulta.
-- CA-016.4 - Registro de quem consultou, quando e por qual motivo é recomendado e depende de aprovação do cliente.
+- CA-016.4 - Cada consulta administrativa registra, no mínimo, identidade do operador, data/hora, conversa consultada, ação executada e justificativa, com acesso aos logs restrito e protegido contra alteração indevida.
+- CA-016.5 - A consulta administrativa só fica disponível a contas TI autenticadas e autorizadas; o acesso e sua finalidade devem ser comunicados aos funcionários por política transparente aprovada pela FORD.
+- CA-016.6 - O TI não pode editar, apagar ou exportar conversas apenas por possuir permissão de consulta; essas ações não foram autorizadas pelo levantamento.
 
 ### RF-017 - Restringir perfil Usuário a celular
 
@@ -213,7 +216,28 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 - CA-018.1 - Uma conta TI em ambiente classificado como celular não consegue utilizar as funções administrativas.
 - CA-018.2 - O bloqueio é aplicado também às operações administrativas, não apenas à interface.
-- CA-018.3 - A definição de tablet, tela dobrável, modo desktop e emulação deve ser validada.
+- CA-018.3 - Uma conta TI em celular é bloqueada antes de acessar qualquer função administrativa.
+- CA-018.4 - A definição de tablet, tela dobrável, modo desktop e emulação deve ser validada.
+
+### RF-019 - Remover usuários de grupos
+
+**Descrição:** Permitir que o TI remova participantes de grupos existentes. **Ator:** TI. **Estado:** Confirmado pelo escopo administrativo definido pelo cliente.
+
+**Critérios de aceitação:**
+
+- CA-019.1 - Somente TI consegue remover um participante de grupo.
+- CA-019.2 - Após a remoção, a conta deixa de ler e enviar novas mensagens no grupo.
+- CA-019.3 - A operação é registrada em auditoria, com operador, horário, grupo e participante afetado.
+
+### RF-020 - Administrar medidas de segurança
+
+**Descrição:** O TI administra as medidas e configurações de segurança disponibilizadas pelo produto, conforme políticas aprovadas pela FORD. O catálogo exato de configurações é uma decisão técnica/operacional pendente e não autoriza TI a alterar controles fora do escopo implementado.
+
+**Critérios de aceitação:**
+
+- CA-020.1 - Somente conta TI autorizada acessa as funções administrativas de segurança.
+- CA-020.2 - Alterações de configuração registram operador, horário, valor anterior/novo quando aplicável e justificativa.
+- CA-020.3 - O sistema não permite desabilitar controles mínimos de segurança ou auditoria definidos como obrigatórios pela política aprovada.
 
 ## 3.3 Fluxos alternativos e tratamento de erros transversais
 
@@ -224,11 +248,11 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 - **Acesso a grupo ou conversa sem autorização:** negar a leitura e a escrita, inclusive por URL direta ou chamada de API.
 - **Falha da análise automática:** política de contingência pendente. O cliente deve decidir se a mensagem fica retida, é enviada com alerta de falha ou se o envio é temporariamente bloqueado.
 
-## 3.4 Pontos que impedem o aceite final
+## 3.4 Limites técnicos e pontos que impedem o aceite final
 
 - Distribuição das 25 pessoas entre Usuário e TI; se os 25 incluem administradores.
 - Confirmação de que usuários podem escrever em grupos e se existem outros controles de participação.
-- Definição de como anexar JPEG sem habilitar captura pela câmera.
+- Definição dos dispositivos/navegadores homologados e comportamento do seletor nativo de JPEG. A aplicação pode omitir controles próprios de captura e não solicitar permissões de câmera/microfone; não consegue impedir captura realizada por ferramentas do sistema operacional ou hardware externo.
 - Política de senha inicial, redefinição e canal de entrega.
 - Definição da lista/regras de suspeição, falsos positivos, severidade, notificação e ação após alerta.
 - Definição do critério de classificação de celular/computador e tratamento de tablets.
