@@ -48,7 +48,7 @@ As regras representam decisões de negócio conhecidas. A coluna Estado diferenc
 
 ## Recomendações sujeitas a aprovação
 
-- Registrar toda consulta de conversa e ação administrativa realizada pelo TI.
+- Registrar toda consulta de conversa e ação administrativa realizada pelo TI, com operador, data/hora, alvo e justificativa; acesso aos logs restrito e protegido.
 - Usar credenciais iniciais temporárias, entrega por canal aprovado e troca no primeiro acesso.
 - Proteger conteúdo em trânsito e em armazenamento; validar arquitetura por análise de ameaças e testes independentes.
 - Aplicar validação de conteúdo real dos anexos e verificação antimalware.
