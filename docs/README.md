@@ -1,6 +1,6 @@
-# Polychat - Documentação de requisitos (versão 0.4)
+# Polychat - Documentação de requisitos (versão 0.5)
 
-**Status:** minuta revisada por SQA; inconsistências documentais corrigidas e bloqueios de negócio, segurança, privacidade e validação técnica explicitados. Aprovação formal do cliente/PO e decisões críticas permanecem pendentes.
+**Status:** minuta revisada por SQA e confrontada com o Documento de Visão e Plano Inicial v0.1; atributos não funcionais e contexto de planejamento rastreados; bloqueios de negócio, segurança, privacidade e validação técnica explicitados. Aprovação formal do cliente/PO e decisões críticas permanecem pendentes.
 
 ## Navegação
 
@@ -24,11 +24,11 @@
 - **Recomendação:** controle sugerido pela equipe para discussão, não aprovado pelo cliente.
 - **Pendente:** informação ainda não fornecida ou decisão ainda não tomada.
 
-Identificadores OBJ, RF, RNF, RN, CA e CV-RNF são únicos nesta linha de base e devem ser preservados em revisões posteriores. O perfil de autorização é identificado como `USER` (rótulo Usuário) ou `TI`. Não reutilize identificadores removidos.
+Identificadores OBJ, RF, RNF (001–027), RN, CA e CV-RNF são únicos nesta linha de base e devem ser preservados em revisões posteriores. O perfil de autorização é identificado como `USER` (rótulo Usuário) ou `TI`. Não reutilize identificadores removidos.
 
 ## Situação de aprovação
 
-A versão 0.4 não é uma aprovação do cliente. A identificação do representante da FORD e do PO, as respostas às questões críticas, a validação técnica/QA, a revisão por PR e a aprovação formal ainda são necessárias para fechar a baseline.
+A versão 0.5 não é uma aprovação do cliente. A identificação do representante da FORD e do PO, as respostas às questões críticas, a validação técnica/QA, a revisão por PR e a aprovação formal ainda são necessárias para fechar a baseline.
 
 ## Aviso sobre diagramas
 
