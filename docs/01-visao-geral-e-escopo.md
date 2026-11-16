@@ -12,7 +12,7 @@ Registrar uma linha de base inicial, clara e verificável, para orientar descobe
 
 ## 1.3 Visão do produto
 
-Polychat é uma aplicação web de comunicação interna da FORD. A experiência dos usuários deve ser simples, com autenticação e uma área de conversas recentes, em modelo de interação semelhante a aplicativos conhecidos de mensagens. O uso inicial foi informado para 25 pessoas do nível técnico da organização. O acesso será segmentado por dois perfis: **Usuário** e **TI**.
+Polychat é uma aplicação web de comunicação interna da FORD. A experiência dos usuários deve ser simples, com autenticação e uma área de conversas recentes, em modelo de interação semelhante a aplicativos conhecidos de mensagens. O uso inicial foi informado para 25 pessoas do setor técnico, dentro de uma organização com aproximadamente 900 funcionários e níveis organizacionais Operacional, Técnico e Estratégico. Somente o setor técnico integra o primeiro lançamento. O acesso será segmentado por dois perfis: **Usuário** e **TI**.
 
 ## 1.4 Público-alvo e atores
 
@@ -51,7 +51,7 @@ Polychat é uma aplicação web de comunicação interna da FORD. A experiência
 - Uso do perfil Usuário em computador e uso do perfil TI em celular.
 - Expansão para os demais funcionários da organização sem nova decisão de escopo.
 
-A política de captura de fotos precisa de esclarecimento porque JPEG foi permitido como formato de anexo, mas o cliente também declarou que não deseja permitir tirar fotos dentro da aplicação.
+JPEG deve ser aceito como arquivo selecionado/fornecido pelo usuário, mas a aplicação não deve iniciar captura de foto. O navegador e o sistema operacional podem expor recursos de câmera no seletor nativo; a aplicação não consegue impedir capturas externas feitas pelo próprio sistema operacional. O comportamento exato do seletor deve ser validado nos dispositivos homologados.
 
 ## 1.6 Premissas e restrições
 
@@ -104,3 +104,18 @@ A política de captura de fotos precisa de esclarecimento porque JPEG foi permit
 ## 1.9 Limites da especificação
 
 Esta versão não define arquitetura, linguagem, banco de dados, algoritmo criptográfico, provedor de hospedagem, prazo, estimativa de esforço ou solução de detecção automática. Tais decisões dependem de validação e análise técnica posteriores.
+
+
+## 1.10 Decisões adicionais consolidadas em 16/11/2026
+
+- **Organização:** o produto é exclusivo da FORD. Não há requisito de múltiplas empresas/organizações no MVP; a arquitetura não deve introduzir multi-tenancy como necessidade de produto sem nova decisão. Isolamento lógico de dados da FORD continua obrigatório.
+- **Perfis:** somente Usuário e TI. TI abrange as pessoas alocadas à equipe de Tecnologia da Informação e concentra as funções administrativas. Usuário abrange todos os demais cargos, sem distinção de permissão por nível Operacional, Técnico ou Estratégico.
+- **Público:** somente 25 funcionários do setor técnico no primeiro lançamento. A população total aproximada de 900 funcionários não autoriza ampliar o público do MVP.
+- **Credenciais:** TI cria contas e define usuário/senha; entrega individualmente as credenciais e o link de acesso. Não existe cadastro público, convite ou autoatendimento.
+- **Administração:** TI cria/desativa contas, cria grupos, adiciona e remove participantes e administra as medidas de segurança. A consulta de conversas é permitida funcionalmente, mas deve obedecer governança, transparência, autorização e auditoria.
+- **Comunicação:** texto e anexos PDF/JPEG. Não oferecer envio ou gravação de áudio/vídeo, nem captura de fotos pela aplicação. Não há integrações com aplicativos/serviços externos.
+- **Dispositivos:** Usuário somente em celular; TI somente em computador. Em computador, Usuário recebe exatamente “só pode ser usado em celular”. TI em celular deve ser bloqueado. Detecção por navegador é sinal auxiliar e pode ser contornada.
+- **Segurança e conformidade:** segurança prevalece sobre velocidade, sem dispensar LGPD, transparência, governança, minimização, retenção e demais obrigações legais aplicáveis.
+- **Identidade:** azul e branco da FORD; manual, logotipo e valores oficiais ainda precisam ser fornecidos.
+
+O orçamento de R$ 450.000,00 permanece informação de planejamento sem composição ou autorização automática de arquitetura/fornecedores.
