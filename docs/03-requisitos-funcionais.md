@@ -1,6 +1,6 @@
 # 03 - Requisitos funcionais
 
-Os requisitos abaixo foram separados por necessidade. As prioridades são preliminares. **Alta (provisória)** indica que o comportamento foi apresentado como parte central do produto, não que exista prazo ou aprovação formal.
+Os identificadores de perfil são `USER` (rótulo textual: Usuário) e `TI`. Os requisitos abaixo foram separados por necessidade. As prioridades são preliminares. **Alta (provisória)** indica que o comportamento foi apresentado como parte central do produto, não que exista prazo ou aprovação formal.
 
 ## 3.1 Catálogo resumido
 
@@ -211,7 +211,8 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 - CA-017.1 - Uma conta Usuário em ambiente classificado como computador não consegue utilizar as funções da aplicação.
 - CA-017.2 - A tela bloqueada apresenta a mensagem exata: “só pode ser usado em celular”.
-- CA-017.3 - O bloqueio não pode depender apenas de ocultar componentes visuais; as rotas e operações devem continuar protegidas.\n- CA-017.4 - A classificação de celular/computador deve seguir a matriz homologada; tentativas de contorno por user-agent, viewport ou modo desktop devem ser registradas como limitações, não tratadas como prova de identidade.
+- CA-017.3 - O bloqueio não pode depender apenas de ocultar componentes visuais; as rotas e operações devem continuar protegidas.
+- CA-017.4 - A classificação de celular/computador deve seguir a matriz homologada; tentativas de contorno por user-agent, viewport ou modo desktop devem ser registradas como limitações, não tratadas como prova de identidade.
 
 ### RF-018 - Restringir perfil TI a computador
 
