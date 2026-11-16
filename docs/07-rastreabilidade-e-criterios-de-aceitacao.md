@@ -44,3 +44,8 @@ Os critérios individuais estão registrados ao final de cada requisito no docum
 - Requisitos com parâmetros ausentes são explicitamente marcados como incompletos ou pendentes.
 - A rastreabilidade liga objetivos, requisitos e critérios; a ligação com diagramas permanece pendente.
 - Nenhum requisito deve ser considerado aprovado sem validação do cliente e dos responsáveis de produto/técnicos.
+
+
+## 7.6 Matriz detalhada e resultado da revisão SQA
+
+A rastreabilidade detalhada requisito → critério → método de validação → resultado da revisão documental foi separada no documento [10 - Matriz de rastreabilidade e checklist SQA](10-matriz-e-checklist-sqa.md). O resultado `PASS` nessa matriz confirma apenas a qualidade documental do requisito para derivação de testes; não comprova conformidade de software implementado. Itens dependentes de decisões do cliente ou evidência técnica permanecem `BLOCKED`.
