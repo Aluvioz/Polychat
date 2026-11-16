@@ -6,7 +6,7 @@ Os objetivos abaixo traduzem as necessidades relatadas. São objetivos propostos
 |---|---|---|---|
 | OBJ-001 | Disponibilizar um canal de comunicação corporativa próprio para uso interno da FORD. | O público aprovado utiliza o Polychat sem depender de um aplicativo de mensagens de terceiros para as conversas cobertas pelo escopo. | Confirmado em intenção; limites técnicos e jurídicos a validar. |
 | OBJ-002 | Permitir comunicação direta entre usuários ativos. | Um usuário consegue iniciar uma conversa e trocar mensagens com qualquer outro usuário ativo. | Confirmado. |
-| OBJ-003 | Permitir comunicação em grupos geridos pelo TI. | O TI cria grupos e adiciona participantes; os membros conseguem utilizar os grupos conforme regra a validar. | Criação e inclusão confirmadas; fluxo de mensagens em grupo derivado. |
+| OBJ-003 | Permitir comunicação em grupos geridos pelo TI. | O TI cria grupos e adiciona participantes; membros autorizados trocam mensagens no grupo. | Comunicação em grupo confirmada; ciclo de vida complementar pendente. |
 | OBJ-004 | Centralizar no TI a administração do ambiente. | Somente o TI cria e desativa contas, cria grupos e inclui participantes. | Confirmado. |
 | OBJ-005 | Aumentar o controle de segurança e identificar mensagens suspeitas. | Mensagens passam por análise automática e ocorrências definidas geram alertas ao TI. | Intenção confirmada; critérios e ações pendentes. |
 | OBJ-006 | Restringir o ambiente de acesso conforme perfil. | Usuário utiliza celular; TI utiliza computador. | Confirmado; mecanismo técnico pendente. |
