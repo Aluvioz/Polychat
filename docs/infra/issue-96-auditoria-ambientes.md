@@ -2,7 +2,7 @@
 
 **Data da auditoria:** 17/11/2026  
 **Base inspecionada:** `main`  
-**Estado:** parcial; identidade do projeto Supabase confirmada pelo responsável; operação do Vercel confirmada pelo responsável; segregação e configuração detalhada dos ambientes ainda não documentadas.
+**Estado:** parcial; projeto Supabase oficial confirmado pelo responsável; projeto Vercel e Preview Deployment da PR #145 observados pelo evento automático do Vercel; finalidade do projeto Supabase por estágio e configuração detalhada dos ambientes ainda não documentadas.
 
 ## 1. Escopo e critérios originais
 
@@ -21,11 +21,11 @@ Esta auditoria não altera nem amplia os critérios da issue.
 
 | Ambiente lógico | Vercel | Supabase | Situação |
 |---|---|---|---|
-| Desenvolvimento | Não verificado | Não associado | Pendente |
-| Preview/homologação | Não verificado | Não associado | Pendente |
-| Produção | Não verificado | Não associado | Pendente |
+| Desenvolvimento | Não identificado | Projeto oficial Polyford, estágio não especificado | Pendente |
+| Preview/homologação | Preview da PR #145 observado como `Ready` | Projeto Supabase associado ao preview não comprovado | Parcial |
+| Produção | Branch `main` indicada pela documentação; deployment de produção não auditado nesta execução | Projeto oficial Polyford, estágio não especificado | Pendente |
 
-Nenhum ambiente lógico foi associado a um projeto ou deployment sem evidência suficiente.
+A evidência automática do Vercel confirma um Preview Deployment `Ready` para a PR #145, mas não demonstra por si só a segregação de dados entre os estágios nem identifica qual projeto Supabase está conectado a cada deployment.
 
 ## 3. Supabase
 
@@ -41,13 +41,17 @@ A integração Supabase disponível para consulta retornou:
 | Estado observado | `ACTIVE_HEALTHY` |
 | Criação | 13/11/2026 |
 
-**Limite de identificação:** o projeto Polyford pertence à organização denominada Polychat, mas não foi encontrada documentação que declare sua finalidade como desenvolvimento, preview/homologação ou produção do repositório Aluvioz/Polychat. A semelhança/associação nominal não é suficiente para atribuir-lhe um ambiente.
+**Identidade:** o responsável confirmou explicitamente que Polyford é o projeto Supabase oficial do Polychat; o nome diferente é intencional. A consulta atual também encontrou somente esse projeto na organização acessível.
 
-Não foram consultados dados de negócio nem executadas operações de escrita. Nenhuma migration foi aplicada. A associação do projeto permanece bloqueada até confirmação explícita do responsável pelo ambiente.
+**Limite de segregação:** não há evidência suficiente para classificá-lo como desenvolvimento, preview/homologação ou produção, nem para concluir que os três estágios estejam segregados por projetos Supabase distintos. A existência de um único projeto listado não prova que não existam outros projetos fora do escopo de acesso desta integração.
+
+Não foram consultados dados de negócio nem executadas operações de escrita. Nenhuma migration foi aplicada.
 
 ## 4. Vercel
 
-Não foi possível consultar a conta/projeto Vercel por uma integração autenticada nesta execução. Portanto, os itens abaixo permanecem **não verificados**:
+A integração Vercel não está disponível para inspeção administrativa direta nesta execução. Entretanto, um comentário automático do `vercel[bot]` na PR #145 confirmou o projeto Vercel `polyford` e um Preview Deployment com estado **Ready** para a branch `docs/issue-96-environments-audit`, com URL `https://polyford-git-docs-issue-96-environments-audit-polychat1.vercel.app`. O repositório também declara `https://polyford.vercel.app` como homepage. Isso comprova a geração do preview desta PR, não a configuração completa de produção.
+
+Permanecem **não verificados**:
 
 - organização/equipe e projeto proprietário;
 - repositório Git conectado;
@@ -58,7 +62,7 @@ Não foi possível consultar a conta/projeto Vercel por uma integração autenti
 - configurações de build e deploy;
 - integração efetiva com projetos Supabase.
 
-O README contém instruções esperadas para importar o repositório, usar Next.js, Root Directory `./` e branch de produção `main`. Essas instruções documentais não comprovam detalhes internos da configuração. A confirmação do responsável prevalece quanto ao funcionamento operacional informado; não se propõe alteração no Vercel.
+O README contém instruções esperadas para importar o repositório, usar Next.js, Root Directory `./` e branch de produção `main`. Essas instruções documentais não comprovam detalhes internos da configuração. O responsável também confirmou que o Vercel está funcionando perfeitamente. Não foi realizada nem é proposta qualquer alteração no Vercel.
 
 ## 5. Repositório e GitHub
 
@@ -103,22 +107,24 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 | Consulta à Epic 02 (#79) e issues #97/#98 | Validado | Limites de responsabilidade confirmados |
 | Organização/projeto Supabase acessíveis | Validado | Organização e projeto listados; identidade oficial confirmada pelo responsável; ambiente lógico não especificado |
 | Estado/ região do projeto encontrado | Validado | Metadados retornados pela API Supabase |
-| Operação do Vercel | Confirmado pelo responsável | Plataforma informada como funcionando perfeitamente; detalhes internos não auditados independentemente |
-| Variáveis Vercel/GitHub | Não validado | Valores e estados externos não acessíveis |
+| Preview Vercel da PR #145 | Validado | Evento automático do `vercel[bot]` registra deployment `Ready` e URL de Preview |
+| Operação do Vercel | Confirmado pelo responsável | Responsável informa funcionamento perfeito; produção e configuração interna não auditadas integralmente |
+| Variáveis Vercel/GitHub | Não validado | Valores e inventário completo externos não acessíveis |
 | Proteção da branch e required checks | Não validado | Exige consulta administrativa ao GitHub |
 | Proteção local de arquivos .env | Validado documentalmente | Regra presente em `.gitignore`; não equivale a auditoria histórica de todos os commits |
 | Segredos fora do código | Parcial | Exemplo não contém segredos; secrets externos e histórico completo não auditados |
-| Testes de integração Supabase/Vercel | Não executados | Não há ambiente associado confirmado |
+| CI da PR #145 | Aprovado na consulta | Dois workflow runs `CI` associados ao commit `6df34ab1...` concluíram com `success`; isso valida os workflows executados, não testes de integração hospedada |
+| Testes de integração Supabase/Vercel | Não executados | Não há associação de ambiente Supabase por estágio confirmada |
 | Migrations | Não aplicável nesta issue | Nenhuma migration foi aplicada |
 | Regressão funcional | Não validada | Esta alteração é documental; fluxos hospedados não foram exercitados |
 
 ## 8. Pendências e confirmações necessárias
 
-1. **Identidade/finalidade do projeto Supabase Polyford:** confirmar se o projeto `oixifpdfvrenlhvycszy` pertence ao Polychat e, em caso afirmativo, qual ambiente lógico representa. Informar também se existem outros projetos Supabase oficiais.
-2. **Acesso Vercel:** disponibilizar integração autenticada ou evidências administrativas do projeto, equipe, repositório conectado, branch de produção, previews, domínios e variáveis por escopo.
-3. **Secrets e Variables do GitHub:** verificar nomes e escopos sem revelar valores; confirmar ambientes e permissões de leitura necessários aos workflows.
-4. **Decisões de ambiente pendentes na ADR-009:** TI/Tech Lead devem confirmar projetos/regiões, acessos, gestão de segredos e requisitos operacionais antes de qualquer associação ou configuração definitiva.
-5. **Revisão:** PR desta documentação deve receber revisão independente e checks aplicáveis antes de integração.
+1. **Segregação Supabase:** Polyford é o projeto oficial, mas a finalidade por estágio e a existência de projetos adicionais não foram documentadas. A aprovação global do Tech Lead foi informada pelo responsável nesta conversa; a atribuição concreta de cada projeto a desenvolvimento, preview/homologação e produção ainda precisa constar de evidência operacional para ser auditável.
+2. **Vercel:** há evidência de Preview Deployment `Ready` para esta PR. Organização, branch de produção efetiva, domínios, variáveis por escopo e ligação Supabase de cada estágio não foram auditados administrativamente. Não houve alteração no Vercel.
+3. **Secrets e Variables do GitHub:** verificar nomes, escopos e permissões no GitHub UI sem revelar valores. A integração utilizada não oferece leitura das famílias de endpoints de secrets/variables.
+4. **ADR-009:** a aprovação global do Tech Lead foi informada pelo responsável, mas a ADR enumera decisões operacionais específicas (projetos/regiões, identidades autorizadas, backup/restore, RPO/RTO, janela de manutenção, release e rollback). Não vou marcar a ADR como `Accepted` sem registrar essas definições concretas e a evidência da aprovação.
+5. **Revisão:** PR #145 ainda não tem reviews registradas. É necessária revisão independente por pessoa diferente do autor antes do merge.
 
 ## 9. Limites respeitados
 
@@ -131,4 +137,4 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 
 ## 10. Status da Issue #96
 
-**Parcialmente concluída.** A identidade do projeto Supabase Polyford foi confirmada pelo responsável, e o funcionamento do Vercel também foi confirmado pelo responsável. Permanecem pendentes a documentação da finalidade/segregação lógica dos ambientes, a verificação de secrets e permissões no GitHub e as decisões operacionais ainda abertas na ADR-009. A issue não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
+**Parcialmente concluída.** Polyford foi confirmado como projeto Supabase oficial; o projeto Vercel `polyford` e um Preview Deployment `Ready` para a PR #145 foram observados; dois workflows CI associados ao commit atual concluíram com sucesso. Permanecem sem evidência suficiente a segregação Supabase por estágio, a auditoria administrativa de secrets/variables e permissões, as definições operacionais específicas da ADR-009 e a revisão independente da PR. A Issue #96 não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
