@@ -29,12 +29,17 @@ Abra [http://localhost:3000](http://localhost:3000).
 ## Validação
 
 ```bash
+npm test
 npm run lint
 npm run typecheck
 npm run build
 ```
 
-O GitHub Actions executa lint, verificação de tipos e build em atualizações da `main` e em Pull Requests direcionadas à `main`.
+O GitHub Actions executa testes automatizados, lint, verificação de tipos e build em atualizações da `main` e em Pull Requests direcionadas à `main`.
+
+## Governança do desenvolvimento
+
+Os critérios de Definition of Ready (DoR) e Definition of Done (DoD), convenções de branches e commits, processo de Pull Request, revisão, CI e evidências estão documentados em [Governança do desenvolvimento](docs/10-governanca-desenvolvimento.md).
 
 ## Deploy na Vercel
 
