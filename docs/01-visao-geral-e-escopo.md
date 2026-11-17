@@ -34,7 +34,7 @@ Polychat é uma aplicação web de comunicação interna da FORD. A experiência
 - Dois perfis: Usuário e TI. Não há diferenciação de permissões entre cargos corporativos dentro do perfil Usuário.
 - Autenticação por identificador de usuário e senha criados pelo TI.
 - Administração centralizada pelo TI: criação e desativação de contas, criação de grupos e inclusão de pessoas em grupos.
-- Conversas individuais entre usuários ativos e conversas em grupo, sujeitas à confirmação do fluxo de mensagens em grupos.
+- Conversas individuais entre usuários ativos e conversas em grupo; o documento de visão confirma que membros incluídos pelo TI podem enviar mensagens nos grupos.
 - Listagem de conversas recentes e interface simples.
 - Mensagens de texto e anexos PDF/JPEG.
 - Análise automática de mensagens consideradas suspeitas e alerta ao TI.
@@ -62,7 +62,7 @@ A política de captura de fotos precisa de esclarecimento porque JPEG foi permit
 3. Existem apenas dois perfis de aplicação: Usuário e TI.
 4. O TI é responsável pela administração e os usuários comuns apenas utilizam os recursos de comunicação.
 5. Não haverá integrações com outros aplicativos nesta versão.
-6. Segurança tem prioridade sobre velocidade.
+6. Segurança tem prioridade sobre velocidade e privacidade individual no contexto corporativo, sem afastar a necessidade de governança, transparência e cumprimento das obrigações legais aplicáveis.
 7. O orçamento informado foi de R$ 450.000,00. Não foi esclarecido se é teto aprovado, estimativa ou orçamento global do projeto.
 
 ### Restrições
@@ -75,9 +75,10 @@ A política de captura de fotos precisa de esclarecimento porque JPEG foi permit
 
 ### Premissas de trabalho a validar
 
-- O sistema deve permitir mensagens em grupos aos membros incluídos pelo TI; essa permissão é coerente com a criação de grupos, mas o fluxo não foi descrito integralmente.
+- Membros incluídos pelo TI podem enviar mensagens nos grupos (POLYCHAT — FORD v0.1, seção 4.1). Regras de saída, remoção de mensagens e encerramento do grupo permanecem pendentes.
 - A aplicação deve apresentar os alertas dentro da área administrativa do TI, evitando pressupor integração externa; o canal e a urgência dos alertas ainda precisam ser aprovados.
-- O número 25 representa o público inicial total, mas não está confirmado se inclui ou não os administradores de TI.
+- O público inicial de 25 pessoas é do setor técnico. A composição entre Usuário e TI, inclusive se os administradores estão incluídos nesse número, permanece pendente.
+- A definição do perfil Usuário abrange funcionários fora de TI independentemente do cargo, mas isso não amplia automaticamente o público inicial de 25 pessoas do setor técnico.
 
 ## 1.7 Dependências
 
@@ -101,6 +102,8 @@ A política de captura de fotos precisa de esclarecimento porque JPEG foi permit
 | RSK-07 | Limite/tamanho de anexos e retenção não definidos. | Custos, indisponibilidade ou armazenamento excessivo. | Definir limites, quotas, retenção, backup e descarte. |
 | RSK-08 | Capacidade simultânea não está definida. | Desempenho inadequado em uso concorrente. | Definir número de sessões simultâneas e testes de carga. |
 
-## 1.9 Limites da especificação
+## 1.9 Limites da especificação e arquitetura da Issue #88
 
-Esta versão não define arquitetura, linguagem, banco de dados, algoritmo criptográfico, provedor de hospedagem, prazo, estimativa de esforço ou solução de detecção automática. Tais decisões dependem de validação e análise técnica posteriores.
+O documento de visão v0.1 não escolhe stack, banco de dados ou provedor de hospedagem. Para a execução da Issue #88, o escopo da issue determina Supabase + Vercel como arquitetura de referência. Essa determinação é uma restrição de execução desta issue, não uma decisão arquitetural detalhada do documento de visão nem autorização para presumir configuração, serviços, regiões, políticas de segurança ou implantação já aprovadas. O repositório ainda não contém aplicação Vercel/Next.js integrada na branch principal; a integração efetiva permanece pendente de implementação e validação.
+
+Esta especificação não define algoritmo criptográfico, configuração operacional, prazo, estimativa de esforço ou solução de detecção automática. Tais decisões dependem de análise técnica e/ou aprovação específica.
