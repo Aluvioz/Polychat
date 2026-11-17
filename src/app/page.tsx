@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const capabilities = [
   {
     number: "01",
@@ -23,12 +25,12 @@ export default function Home() {
   return (
     <main className="page-shell">
       <header className="topbar">
-        <a className="wordmark" href="/" aria-label="Polychat início">
+        <Link className="wordmark" href="/" aria-label="Polychat início">
           <span className="wordmark-symbol" aria-hidden="true">
             P
           </span>
           <span>polychat</span>
-        </a>
+        </Link>
         <span className="topbar-context">AMBIENTE CORPORATIVO</span>
       </header>
 
