@@ -1,0 +1,155 @@
+# Polychat Design System — proposta v0.1 (Issue #93)
+
+> **Estado:** proposta de UX/UI, **não aprovada** pela FORD/PO/Tech Lead.  
+> **Issue:** https://github.com/Aluvioz/Polychat/issues/93  
+> **Autor da branch:** conta GitHub `ponde-web`, colaboração prevista com `Dante-Davi`.  
+> **Data:** 17/11/2026.  
+> **Escopo:** dois perfis independentes — **Usuário web mobile** (#91) e **TI desktop** (#92). Não altera a aplicação atual.
+
+## 1. Artefatos entregues
+
+- [Tokens e componentes demonstrativos CSS](./issue-93-design-tokens.css) — arquivo isolado em `docs/ux`; não é importado pela aplicação.
+- [Galeria de componentes HTML](./issue-93-galeria.html) — demonstração estática com estados, controles e padrões do produto. Abrir o HTML localmente com o CSS no mesmo diretório para visualização. Botões não realizam operações reais.
+- Este documento — linguagem visual, princípios, catálogo, acessibilidade, responsividade, critérios de revisão e pendências.
+
+Os tokens tomam como **ponto de partida provisório** cores existentes em `src/app/globals.css` na `main`: `#003478`, `#001f4d`, `#1769aa`, `#10243e`, `#64748b`, `#ffffff`, `#f4f7fb`. Não representam códigos oficiais da Ford. **Não utilizar logotipo oficial sem fornecimento e autorização (Q-019, RN-019)**. O símbolo textual P da demonstração é um placeholder.
+
+## 2. Princípios de UX
+
+1. **Simplicidade:** operações de mensagem e leitura devem ser reconhecíveis; não adicionar recursos fora do escopo confirmado.
+2. **Perfis separados:** Usuário em celular; TI em computador. A restrição visual/dispositivo **não substitui permissão e autorização no servidor**.
+3. **Ação segura:** operações administrativas críticas exigem descrição de consequência e confirmação explícita; informações administrativas dependem de política e finalidade aprovadas.
+4. **Feedback inequívoco:** distinguir sucesso, erro, carregamento, sem dados, sem conexão e sessão expirada, sempre com texto além da cor.
+5. **Acessibilidade progressiva:** projetar teclado, foco, contraste, rótulos e ordem de leitura desde a biblioteca, sujeitos à validação da política corporativa (Q-020).
+
+## 3. Tokens propostos
+
+| Token CSS | Valor | Uso | Fonte |
+|---|---|---|---|
+| `--pc-brand-700` | `#003478` | Botões primários, links, títulos de marca | Existente na landing page |
+| `--pc-brand-900` | `#001F4D` | Hover e superfícies azuis profundas | Existente |
+| `--pc-brand-600` | `#1769AA` | Acentos, **não** texto pequeno sem teste | Existente |
+| `--pc-brand-050` | `#EDF4FB` | Fundo informativo | Proposta |
+| `--pc-ink` | `#10243E` | Texto principal | Existente |
+| `--pc-text-secondary` | `#475569` | Texto secundário | Proposta |
+| `--pc-text-muted` | `#64748B` | Metadados em fundo branco | Existente |
+| `--pc-surface` | `#FFFFFF` | Cards/formulários | Existente |
+| `--pc-background` | `#F4F7FB` | Fundo da aplicação | Existente |
+| `--pc-border` | `#CBD5E1` | Delimitadores, entradas | Proposta |
+| `--pc-success` | `#027A48` | Sucesso textual em fundo branco | Proposta |
+| `--pc-error` | `#B42318` | Erro e ação destrutiva | Proposta |
+| `--pc-warning-text` | `#854D0E` | Texto de cautela | Proposta |
+| `--pc-focus` | `#B45309` | Anel de foco de 3px, deslocamento 3px | Proposta |
+| `--pc-space-*` | 4, 8, 12, 16, 24, 32, 48px | Escala de espaçamento | Proposta |
+| `--pc-radius-*` | 6, 10, 16px | Bordas | Proposta |
+| `--pc-font` | Arial, Helvetica, sans-serif | Substituto até manual de marca | Proposta |
+
+**Tipografia:** base 16px/entrelinha 1,5; apoio 14px; títulos de componente 20px; título de seção 28px; título principal responsivo. Pesos 400, 700 e 800, conforme necessidade; evitar variações sem propósito. Textos de erro nunca menores que 14px.
+
+**Espaçamento:** adotar escala em múltiplos de 4px, com toques e controles de pelo menos 44px de altura na galeria. Não depender apenas de área colorida para indicar clique.
+
+## 4. Contraste — verificação numérica preliminar
+
+Razões calculadas com luminância relativa sRGB e fórmula `(L_clara + 0,05) / (L_escura + 0,05)`. **Avaliadas apenas nestes pares exatos**, não como homologação de todas as combinações ou estados da interface.
+
+| Primeiro plano / fundo | Razão | WCAG 2.2 AA texto normal (≥ 4,5:1) |
+|---|---:|---|
+| `#003478` / `#FFFFFF` | 11,92:1 | Passa |
+| `#FFFFFF` / `#003478` | 11,92:1 | Passa |
+| `#001F4D` / `#FFFFFF` | 16,11:1 | Passa |
+| `#1769AA` / `#FFFFFF` | 5,77:1 | Passa |
+| `#10243E` / `#FFFFFF` | 15,63:1 | Passa |
+| `#64748B` / `#FFFFFF` | 4,76:1 | Passa, margem estreita |
+| `#475569` / `#FFFFFF` | 7,58:1 | Passa |
+| `#B42318` / `#FFFFFF` | 6,57:1 | Passa |
+| `#027A48` / `#FFFFFF` | 5,41:1 | Passa |
+| `#003478` / `#EDF4FB` | 10,74:1 | Passa |
+
+**Restrições da evidência:** não foi feito teste automatizado de navegador, imagem renderizada, zoom, inversão de cor, contraste não textual, leitor de tela, mobile ou navegação completa por teclado. O par `#64748B` tem pouca margem e deve ser reavaliado se houver mudança de fundo/opacity. Não use códigos sem conferir o fundo efetivo.
+
+## 5. Catálogo de componentes e contratos
+
+| Componente | Variantes/estados mínimos | Comportamento esperado |
+|---|---|---|
+| Botão | Primário, secundário, destrutivo; normal, hover, foco, desabilitado, carregando | Ação explícita; foco visível; desabilitar ação duplicada durante processamento quando necessário |
+| Input / select / textarea | Padrão, foco, inválido, desabilitado, ajuda | Rótulo associado; erro em texto junto ao campo, associado via `aria-describedby` |
+| Lista de conversas | Com conteúdo, vazio, carregando, erro, offline | Exibir título/participante e resumo, navegação por teclado, sem revelar conversas não autorizadas |
+| Tela de mensagem | Própria/recebida, enviando, enviada, falha, anexo | Ordenação e distinção textual; PDF/JPEG apenas; sem áudio, vídeo ou câmera embutida |
+| Badges | Neutro, sucesso, pendente | Sempre incluir texto, não codificar status só com cor |
+| Aviso / feedback | Sucesso, erro, cautela, informação | Mensagem compreensível com solução quando houver; usar `role=status`/`alert` adequadamente |
+| Estado vazio | Conversas, grupos, alertas, busca | Explicar ausência de dados, sem ação não autorizada |
+| Modal de confirmação | Desativação de conta e outras ações críticas aprovadas | Consequência clara, botão Cancelar, confirmação separada; em implementação, gerir foco e retorno ao acionador |
+| Navegação | Mobile Usuário, desktop TI | Mostrar funções permitidas; controle real de permissões obrigatoriamente no servidor |
+| Alertas de TI | Pendente, em revisão, encaminhado **se política permitir** | Não presumir bloqueio ou punição automática |
+| Consulta/auditoria TI | Permissão, ausência de registros, erro | Visibilidade, rastreabilidade e retenção dependem de governança aprovada |
+| Anexo | PDF, JPEG, inválido, excedente (limite a definir) | Verificar extensão, conteúdo e tamanho no servidor; não inventar limite aprovado |
+
+### Uso correto por perfil
+
+- **Usuário mobile:** login por credenciais fornecidas pela TI, lista de conversas, chat individual e de grupo, anexos PDF/JPEG, estados offline e sessão expirada. **Não incluir cadastro aberto, criação de grupos ou convite de participantes.**
+- **TI desktop:** login, dashboard, criação/desativação de contas, criação de grupos, inclusão de participantes, consulta administrativa, alertas e opções administrativas autorizadas. **Remoção de integrantes, exclusão/exportação de conversas, ações em alertas e catálogo de configurações continuam pendentes de política.**
+
+## 6. Layout, responsividade e navegação
+
+Proposta de **breakpoints de desenvolvimento**, não homologação de dispositivos:
+- Até 560px: uma coluna, controles largos, espaçamento reduzido e navegação mobile clara.
+- Entre 561 e 860px: duas colunas quando houver espaço e conteúdo.
+- Acima de 860px: até três colunas de componentes, com largura de conteúdo limitada a 1120px.
+
+A galeria inclui media queries para os pontos acima. **Não usar apenas viewport para decidir se alguém é Usuário ou TI**; RF-017 e RF-018 exigem regra específica, e a validação de perfis precisa ocorrer no servidor.
+
+Iconografia: recomendar uma única família de ícones vetoriais para toda interface; tamanho 20–24px, traço regular, rótulo acessível quando a ação for representada só por ícone. Nenhuma biblioteca ou licença de ícones foi selecionada nesta proposta.
+
+## 7. Checklist de acessibilidade para revisão
+
+| Critério de design | Situação / evidência |
+|---|---|
+| Contraste texto/tema principal | **Amostras calculadas** na seção 4 |
+| Label ligado a input | **Exemplo presente** no HTML com `for/id` |
+| Erro comunicado por texto | **Exemplo presente** via `aria-invalid`/`aria-describedby` |
+| Foco visível | **CSS definido** com `:focus-visible`, ainda sem validação em navegador |
+| Alvo de controle 44px | **CSS definido** em botões e campos de formulário |
+| Mensagens não dependem só de cor | **Exemplos presentes** com rótulos |
+| Movimento reduzido | **CSS definido** via `prefers-reduced-motion` |
+| Sequência de Tab/Shift+Tab | **Pendente de teste manual** |
+| Modal funcional, escape e retorno de foco | **Pendente de implementação e teste** — galeria é apenas estática |
+| Leitor de tela, zoom 200%/400%, reflow | **Pendente** |
+| Contraste de bordas/indicadores e estados desabilitados | **Pendente de verificação completa** |
+| QA em navegadores/dispositivos homologados | **Pendente de definição Q-012 e execução #129** |
+
+### Plano mínimo para teste humano (não executado)
+
+1. Abrir `issue-93-galeria.html` com o CSS no mesmo diretório e percorrer botões/inputs usando **Tab**, **Shift+Tab** e **Enter/Espaço** quando aplicáveis.
+2. Conferir a visibilidade do foco, o vínculo de rótulos e leitura de erros.
+3. Testar viewport 320px, 390px, 768px e 1280px, além de zoom 200%/400%, observando rolagem lateral e quebra de layout.
+4. Executar axe/Lighthouse e leitor de tela, registrar evidências e defeitos; corrigir antes da aprovação.
+5. Para o modal de produção, validar foco inicial, contenção, Escape e retorno ao elemento acionador.
+
+## 8. Decisões pendentes e dependências
+
+| Ponto | Referência | Dono sugerido |
+|---|---|---|
+| Azul oficial, logotipo, tipografia e manual da marca Ford | RN-019; Q-019 | Cliente / Comunicação / PO |
+| Obrigações de acessibilidade e evidências de homologação | Q-020; #129 | PO / Jurídico / QA |
+| Navegadores e dispositivos oficiais; tablet e modo desktop | Q-012 | TI / QA |
+| Exatas páginas, ações e configurações do produto | Q-018 | PO / UX |
+| Câmara/JPEG, anexos e limites | Q-004; Q-011 | PO / TI |
+| Remover integrantes, editar/apagar mensagens | Q-003; Q-024 | PO / TI |
+| Política de alertas e acesso a conversas | Q-007, Q-008, Q-009 | PO / TI / Segurança |
+| Identidade/recuperação de credenciais | Q-005, Q-006 | PO / TI |
+| Escolha definitiva de biblioteca de ícones e tecnologia dos componentes | Arquitetura/ADR pendente | Tech Lead |
+
+## 9. Critérios de aceite da #93 — situação honesta
+
+| Critério | Estado |
+|---|---|
+| Biblioteca e documentação entregues | **Proposta entregue** como HTML + CSS + este documento |
+| Contraste avaliado | **Amostras numéricas verificadas**; testes amplos pendentes |
+| Teclado avaliado | **Checklist e estilos preparados**, teste manual pendente |
+| Testes relevantes automatizados ou evidência documentada | **Evidência documental parcial**, testes de navegador não executados |
+| Revisão por PR concluída | **Pendente** |
+| Ausência de regressões | **Não demonstrada**; arquivos ficam isolados em `docs/ux`, sem alterar produção |
+
+**O que falta antes de fechar:** revisão por Dante/PO/Tech Lead, validação de marca, inspeção acessível e testes documentados, eventual ajuste de tokens conforme manual oficial e aceite formal. Referência à Epic #78. Não fechar a issue sem satisfazer os critérios.
+
+*Esta biblioteca não contém permissões funcionais ou sistemas reais e não deve ser vendida como implementação pronta do design system de produção.*
