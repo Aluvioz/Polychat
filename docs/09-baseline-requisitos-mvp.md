@@ -2,7 +2,7 @@
 
 **Issue:** #88 — Consolidar baseline de requisitos e escopo MVP  
 **Identificador:** POLY-REQ-001  
-**Versão:** 0.2 — 16/11/2026  
+**Versão:** 0.3 — 17/11/2026  
 **Fonte primária:** POLYCHAT — FORD: Documento de Visão do Produto e Plano Inicial de Desenvolvimento, versão 0.1, confirmado pelo solicitante como referência aprovada para este trabalho.  
 **Escopo técnico desta issue:** Supabase + Vercel, autorização server-side, comportamento de erro, documentação, evidências, rastreabilidade e ausência de regressão.
 
@@ -141,45 +141,60 @@ Preservar RN-001..RN-020 em 05. Correções de estado consolidadas:
 
 ### 5.1 Restrição da Issue #88
 
-O documento de visão v0.1 não escolhe stack, banco ou hospedagem. A Issue #88 determina Supabase + Vercel como arquitetura de referência para sua execução. Isso é uma restrição da issue, não uma ADR detalhada aprovada pelo cliente.
+O documento de visão v0.1 não escolhe stack, banco ou hospedagem. A Issue #88 determina Supabase + Vercel como arquitetura de referência para sua execução. Isso é uma restrição da issue, não uma ADR detalhada aprovada pelo cliente. As decisões arquiteturais e os respectivos limites estão registradas em `docs/adr/README.md`.
 
-### 5.2 Estado do repositório inspecionado
+### 5.2 Estado atual do repositório `main` — 17/11/2026
 
-- A branch principal main contém documentação, diagramas e workflow; não foi encontrado package.json, aplicação Next.js, rotas Vercel ou runtime integrado ao Supabase.
-- A camada de autorização e migration Supabase foram localizadas em branch de implementação separada e estão presentes nesta branch de trabalho: src/auth/authorization.mjs, supabase/migrations/202611160001_profiles_roles_and_account_status.sql, tests/authorization.test.mjs e docs/authorization-user-ti.md.
-- O middleware valida token com supabase.auth.getUser(token), lê role/estado em public.profiles, aceita somente user e ti, bloqueia conta inativa e falha fechada quando consulta de perfil falha.
-- requireRole restringe handlers depois da autenticação.
-- A migration cria profiles, habilita RLS, restringe leitura ao próprio perfil ou TI ativo e revoga escrita direta de anon/authenticated. Operações privilegiadas precisam ocorrer em contexto confiável no servidor.
-- O módulo é compatível com middleware Express-style, mas não está conectado a rotas reais de uma aplicação Vercel/Next.js.
-- A service-role key nunca pode ser exposta ao browser, em variável NEXT_PUBLIC_*, bundle cliente ou logs. A configuração real de deployment/segredos não foi observada.
-- Não foram localizadas políticas RLS de domínio para mensagens, grupos ou anexos.
+- A branch `main` contém uma aplicação Next.js 16 com React 19, TypeScript e App Router, além de configuração para deploy Vercel.
+- `src/app/page.tsx` apresenta apenas uma página institucional. Não foram encontradas telas/rotas de login, conversas, mensagens, grupos, anexos ou administração.
+- `src/auth/authorization.mjs` contém middleware Express-compatible que recebe um cliente Supabase server-side, valida JWT por `supabase.auth.getUser(token)`, consulta `profiles`, aceita `user` e `ti`, bloqueia perfis ausentes/desconhecidos e contas inativas e falha fechada.
+- O módulo de autorização não está conectado a handlers/rotas reais do App Router. O repositório não configura nem instancia atualmente o cliente Supabase e o SDK Supabase não aparece nas dependências do `package.json`.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `public.profiles`, habilita RLS, permite leitura do próprio perfil ou por TI ativo, revoga escrita direta de `anon` e `authenticated`, protege alterações de papel/status e cria perfil padrão `user`.
+- A migration versionada não comprova que foi aplicada ou homologada em um projeto Supabase hospedado.
+- Não foram encontradas migrations/políticas RLS de domínio para conversas, participantes, mensagens, anexos ou auditoria.
+- `.env.example` contém somente placeholders para URL pública e anon key do Supabase. Não há credenciais reais. O README declara que a integração Supabase ainda não foi conectada.
+- O workflow CI executa testes, ESLint, verificação TypeScript e build em push para `main` e em PRs direcionadas à `main`.
 
-**Conclusão: alinhamento parcial, não concluído.** A camada isolada de autorização e migration são coerentes com Supabase e validação server-side. A aplicação Vercel e a integração a rotas/handlers não existem na branch principal examinada. Não declarar arquitetura de ponta a ponta implementada até existir integração executável e testes no runtime real.
+**Conclusão: fundação técnica parcial; arquitetura ponta a ponta ainda não concluída.** A stack Next.js está instalada e versionada; a direção Supabase + Vercel está registrada na Issue #88; o middleware e a migration de perfil existem. Ainda faltam configuração real do Supabase, integração de autenticação/autorização com rotas da aplicação, RLS de domínio, funcionalidades de conversa, realtime, storage, auditoria e homologação de ambientes.
+
+### 5.3 Limites de segurança
+
+- A service-role key nunca pode ser exposta ao browser, em variável `NEXT_PUBLIC_*`, bundle cliente ou logs.
+- A anon key é pública por desenho e não substitui políticas RLS.
+- Middleware server-side não substitui RLS em tabelas expostas nem validação de participação em conversas/grupos.
+- Detecção de dispositivo/viewport é regra de experiência, não mecanismo confiável de autorização.
+- Não declarar integração ou configuração hospedada somente porque há arquivo de migration ou variável de exemplo.
 
 ## 6. Autorização server-side e comportamento de erro
 
-Comportamentos a validar e preservar:
+O contrato implementado no módulo isolado e coberto por testes simulados é:
 
-- Token ausente, inválido ou expirado: HTTP 401; handler protegido não executa.
-- Perfil ausente, role desconhecida ou conta inativa: HTTP 403; handler não executa.
-- Falha ao consultar autenticação/perfil ou exceção de infraestrutura: falhar fechado, sem conceder acesso.
-- Usuário em rota exclusiva TI: HTTP 403.
-- Falha interna: resposta genérica, sem stack trace, token, chave, mensagem interna ou detalhe de banco.
-- Identidade, role e estado não podem ser aceitos de body/query/header controlados pelo cliente; devem vir do token validado e do banco.
-- Executar autenticação antes de requireRole em todas as rotas protegidas.
-- Middleware não substitui RLS nas tabelas de domínio nem validação de participação em conversas/grupos.
+- Token ausente: HTTP 401; handler não deve prosseguir.
+- Token inválido/expirado ou usuário não retornado pelo provedor: HTTP 401.
+- Perfil ausente, papel diferente de `user`/`ti` ou conta inativa: HTTP 403.
+- Falha ao consultar perfil ou exceção de infraestrutura: HTTP 503 genérico e falha fechada.
+- Rota restrita a TI chamada por usuário comum: HTTP 403, desde que o middleware de autenticação tenha sido executado antes de `requireRole`.
+- Identidade, papel e estado são obtidos do token validado e da tabela `profiles`, não de body/query fornecidos pelo cliente.
+- Respostas de erro não devem revelar stack trace, tokens, chaves ou mensagens internas de banco.
+
+**Limitação:** esses comportamentos são implementados no módulo isolado e testados com Supabase simulado. Ainda não há handlers reais no App Router demonstrando sua aplicação a endpoints de produto. A RLS existente cobre somente `profiles`.
 
 ## 7. Testes e evidências
 
-Os testes existentes em tests/authorization.test.mjs cobrem usuário ativo, token ausente, sessão inválida, conta inativa, falha de consulta, role desconhecida, acesso TI e bloqueio de usuário em rota TI.
+A suíte `tests/authorization.test.mjs` contém 11 testes com Supabase simulado: usuário ativo, ausência de token, sessão inválida, conta inativa, falha de consulta, papel desconhecido, acesso TI, bloqueio de usuário em rota TI, perfil ausente, exceção do provedor e rota TI sem autenticação.
 
-Comando previsto:
+Comandos disponíveis:
 
 ~~~bash
-node --test tests/*.test.mjs
+npm test
+npm run lint
+npm run typecheck
+npm run build
 ~~~
 
-Execução local com Node.js v22.16.0: 11 testes automatizados aprovados (11 pass, 0 fail), via `node --test tests/*.test.mjs`. Os testes usam Supabase simulado; não comprovam integração com Supabase hospedado, políticas RLS reais, Vercel ou regressão de fluxos de mensagens/anexos ainda não encontrados no repositório.
+O workflow `.github/workflows/ci.yml` executa as quatro etapas. A execução mais recente consultada para a `main` em 17/11/2026 concluiu com sucesso: [GitHub Actions run #44115773963](https://github.com/Aluvioz/Polychat/actions/runs/44115773963). O status Vercel associado ao commit consultado também estava como success.
+
+Essas evidências não comprovam integração com Supabase hospedado, aplicação real da migration, RLS de domínio, realtime, storage, login pela interface ou regressão de fluxos de chat/anexos, que ainda não foram encontrados na aplicação.
 
 ## 8. Questões sem decisão
 
@@ -207,7 +222,7 @@ Nenhuma lacuna foi preenchida por suposição.
 
 | Alteração | Fonte/motivo | Impacto em requisitos | Impacto em implementação/testes |
 |---|---|---|---|
-| Baseline consolidada v0.2 | Visão v0.1 confirmada pelo solicitante | Nenhum ID removido/renumerado | Revisão documental |
+| Baseline consolidada v0.2 | Visão v0.1 confirmada pelo solicitante | Nenhum ID removido/renumerado | Revisão documental |\n| Revisão técnica v0.3 | Inspeção da branch main em 17/11/2026 e ADRs da Issue #89 | Nenhuma alteração de requisito ou identificador | Atualiza o snapshot de implementação, testes, CI e limites de evidência; não equivale a homologação de produção |
 | RF-010 e OBJ-003 classificados como confirmados | Visão v0.1, seção 4.1 | Corrige estado; preserva CA-010.x | Exige teste de membro/não membro |
 | RNF-004/RN-014 registram auditoria como requisito confirmado | Visão v0.1, seção 7.1 e RF-08 | Corrige estado | Trilha e política de retenção ainda não evidenciadas |
 | Público inicial esclarecido | Visão v0.1, seção 3.1 | Evita ampliação indevida do MVP | Provisionamento deve respeitar elegibilidade aprovada |
