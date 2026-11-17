@@ -15,13 +15,13 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 | RF-007 | Exibir conversas recentes | Usuário | Alta (provisória) | Confirmado em nível conceitual |
 | RF-008 | Abrir e ler conversas | Usuário | Alta (provisória) | Derivado |
 | RF-009 | Enviar mensagem individual | Usuário | Alta (provisória) | Confirmado |
-| RF-010 | Enviar mensagem em grupo | Usuário participante | Alta (provisória) | Derivado; validar com cliente |
+| RF-010 | Enviar mensagem em grupo | Usuário participante | Alta (provisória) | Confirmado pela visão v0.1, seção 4.1; ciclo de vida do grupo pendente |
 | RF-011 | Anexar arquivos PDF e JPEG | Usuário | Alta (provisória) | Confirmado; limites pendentes |
 | RF-012 | Rejeitar formatos não permitidos | Sistema | Alta (provisória) | Confirmado |
 | RF-013 | Não oferecer captura/gravação de mídia | Sistema | Alta (provisória) | Confirmado, com ambiguidade sobre câmera/JPEG |
 | RF-014 | Analisar mensagens em busca de conteúdo suspeito | Sistema | Alta (provisória) | Intenção confirmada; regras pendentes |
 | RF-015 | Alertar o TI sobre mensagens sinalizadas | Sistema; TI | Alta (provisória) | Confirmado em intenção; canal pendente |
-| RF-016 | Consultar qualquer conversa como TI | TI | Alta (provisória) | Confirmado; salvaguardas pendentes |
+| RF-016 | Consultar qualquer conversa como TI | TI | Alta (provisória) | Confirmado; acesso deve ser registrado em auditoria; política e salvaguardas complementares pendentes |
 | RF-017 | Restringir perfil Usuário a celular | Sistema | Alta (provisória) | Confirmado; critério técnico pendente |
 | RF-018 | Restringir perfil TI a computador | Sistema | Alta (provisória) | Confirmado; critério técnico pendente |
 
@@ -124,7 +124,7 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 ### RF-010 - Enviar mensagem em grupo
 
-**Descrição:** Enviar mensagem em grupo. **Ator/origem:** Usuário participante. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-006; RN-007. **Estado:** Derivado; validar com cliente.
+**Descrição:** Enviar mensagem em grupo. **Ator/origem:** Usuário participante. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-006; RN-007. **Estado:** Confirmado pela visão v0.1, seção 4.1; regras de saída/remoção/encerramento permanecem pendentes.
 
 **Critérios de aceitação:**
 
@@ -186,14 +186,14 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 
 ### RF-016 - Consultar qualquer conversa como TI
 
-**Descrição:** Consultar qualquer conversa como TI. **Ator/origem:** TI. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-003; RN-013; RN-014. **Estado:** Confirmado; salvaguardas pendentes.
+**Descrição:** Consultar qualquer conversa como TI. **Ator/origem:** TI. **Prioridade:** Alta (provisória). **Regras relacionadas:** RN-003; RN-013; RN-014. **Estado:** Confirmado; a visão v0.1, seção 5 (RF-08), determina registro de auditoria do acesso; política detalhada e salvaguardas complementares pendentes.
 
 **Critérios de aceitação:**
 
 - CA-016.1 - Uma conta TI autorizada consegue consultar conversas individuais e de grupo, mesmo sem ser participante.
 - CA-016.2 - Uma conta Usuário não consegue usar a função de consulta administrativa.
 - CA-016.3 - O sistema não deve alterar mensagens apenas pelo ato de consulta.
-- CA-016.4 - Registro de quem consultou, quando e por qual motivo é recomendado e depende de aprovação do cliente.
+- CA-016.4 - O acesso administrativo à conversa deve gerar registro de auditoria. A identidade do operador e o momento do acesso devem ser registrados; justificativa obrigatória, campos adicionais, proteção e retenção dos registros permanecem pendentes de política.
 
 ### RF-017 - Restringir perfil Usuário a celular
 
@@ -227,7 +227,8 @@ Os requisitos abaixo foram separados por necessidade. As prioridades são prelim
 ## 3.4 Pontos que impedem o aceite final
 
 - Distribuição das 25 pessoas entre Usuário e TI; se os 25 incluem administradores.
-- Confirmação de que usuários podem escrever em grupos e se existem outros controles de participação.
+- O uso do perfil Usuário por funcionários fora do setor técnico não deve ser presumido: a população inicial expressa na visão v0.1 é de 25 pessoas do setor técnico.
+- Regras complementares do ciclo de vida dos grupos (saída voluntária, remoção de mensagens, remoção de participantes e encerramento); o envio por membros incluídos pelo TI já está confirmado.
 - Definição de como anexar JPEG sem habilitar captura pela câmera.
 - Política de senha inicial, redefinição e canal de entrega.
 - Definição da lista/regras de suspeição, falsos positivos, severidade, notificação e ação após alerta.
