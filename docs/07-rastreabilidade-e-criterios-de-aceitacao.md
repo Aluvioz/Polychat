@@ -30,4 +30,6 @@ Os critérios individuais estão registrados ao final de cada requisito no docum
 - Cada requisito tem identificador único, ator/origem, prioridade preliminar, regras relacionadas e critérios observáveis quando há informação suficiente.
 - Requisitos com parâmetros ausentes são explicitamente marcados como incompletos ou pendentes.
 - A rastreabilidade liga objetivos, requisitos e critérios; a ligação com diagramas permanece pendente.
-- Nenhum requisito deve ser considerado aprovado sem validação do cliente e dos responsáveis de produto/técnicos.
+- A visão POLYCHAT — FORD v0.1 foi confirmada pelo solicitante como referência aprovada para esta consolidação. Essa confirmação não substitui aprovação formal do representante do cliente, PO, liderança técnica ou SQA.
+- Os identificadores `OBJ-001..007`, `RF-001..018`, `RNF-001..013`, `RN-001..020` e `CA-xxx.n` são preservados. A origem e o status de cada requisito são detalhados em [09 - Baseline consolidada da Issue #88](09-baseline-requisitos-mvp.md).
+- Nenhum requisito derivado, recomendação ou item pendente deve ser promovido a confirmado sem decisão registrada.
