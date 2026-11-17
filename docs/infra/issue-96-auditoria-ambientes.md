@@ -2,7 +2,7 @@
 
 **Data da auditoria:** 17/11/2026  
 **Base inspecionada:** `main`  
-**Estado:** parcial; configuração efetiva dos ambientes não comprovada.
+**Estado:** parcial; identidade do projeto Supabase confirmada pelo responsável; operação do Vercel confirmada pelo responsável; segregação e configuração detalhada dos ambientes ainda não documentadas.
 
 ## 1. Escopo e critérios originais
 
@@ -58,7 +58,7 @@ Não foi possível consultar a conta/projeto Vercel por uma integração autenti
 - configurações de build e deploy;
 - integração efetiva com projetos Supabase.
 
-O README contém instruções esperadas para importar o repositório, usar Next.js, Root Directory `./` e branch de produção `main`. Essas instruções documentais não comprovam a configuração efetiva na conta Vercel.
+O README contém instruções esperadas para importar o repositório, usar Next.js, Root Directory `./` e branch de produção `main`. Essas instruções documentais não comprovam detalhes internos da configuração. A confirmação do responsável prevalece quanto ao funcionamento operacional informado; não se propõe alteração no Vercel.
 
 ## 5. Repositório e GitHub
 
@@ -101,9 +101,9 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 |---|---|---|
 | Consulta à Issue #96 | Validado | Objetivo, escopo e critérios lidos diretamente no GitHub |
 | Consulta à Epic 02 (#79) e issues #97/#98 | Validado | Limites de responsabilidade confirmados |
-| Organização/projeto Supabase acessíveis | Validado | Organização e projeto listados; associação ambiental não validada |
+| Organização/projeto Supabase acessíveis | Validado | Organização e projeto listados; identidade oficial confirmada pelo responsável; ambiente lógico não especificado |
 | Estado/ região do projeto encontrado | Validado | Metadados retornados pela API Supabase |
-| Configuração Vercel | Não validado | Sem acesso autenticado à conta/projeto nesta execução |
+| Operação do Vercel | Confirmado pelo responsável | Plataforma informada como funcionando perfeitamente; detalhes internos não auditados independentemente |
 | Variáveis Vercel/GitHub | Não validado | Valores e estados externos não acessíveis |
 | Proteção da branch e required checks | Não validado | Exige consulta administrativa ao GitHub |
 | Proteção local de arquivos .env | Validado documentalmente | Regra presente em `.gitignore`; não equivale a auditoria histórica de todos os commits |
@@ -123,7 +123,7 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 ## 9. Limites respeitados
 
 - Nenhum projeto Supabase foi criado, renomeado, pausado ou modificado.
-- Nenhum domínio, branch de produção ou configuração Vercel foi alterado.
+- Nenhum domínio, branch de produção ou configuração Vercel foi alterado; a operação do Vercel foi aceita com base na confirmação do responsável.
 - Nenhuma variável, secret ou credencial foi criada, substituída ou exibida.
 - Nenhuma migration foi aplicada.
 - Nenhuma issue diferente da #96 foi modificada ou encerrada.
@@ -131,4 +131,4 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 
 ## 10. Status da Issue #96
 
-**Parcialmente concluída.** A auditoria documental e o inventário das evidências disponíveis foram registrados. A segregação efetiva dos ambientes, a confirmação do projeto Supabase, a configuração Vercel/GitHub e a validação de acessos continuam pendentes. A issue não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
+**Parcialmente concluída.** A identidade do projeto Supabase Polyford foi confirmada pelo responsável, e o funcionamento do Vercel também foi confirmado pelo responsável. Permanecem pendentes a documentação da finalidade/segregação lógica dos ambientes, a verificação de secrets e permissões no GitHub e as decisões operacionais ainda abertas na ADR-009. A issue não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
