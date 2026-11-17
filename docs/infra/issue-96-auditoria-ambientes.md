@@ -21,9 +21,9 @@ Esta auditoria não altera nem amplia os critérios da issue.
 
 | Ambiente lógico | Vercel | Supabase | Situação |
 |---|---|---|---|
-| Desenvolvimento | Não identificado | Projeto oficial Polyford, estágio não especificado | Pendente |
-| Preview/homologação | Preview da PR #145 observado como `Ready` | Projeto Supabase associado ao preview não comprovado | Parcial |
-| Produção | Branch `main` indicada pela documentação; deployment de produção não auditado nesta execução | Projeto oficial Polyford, estágio não especificado | Pendente |
+| Desenvolvimento | Projeto Supabase Polyford confirmado pelo responsável como ambiente de desenvolvimento | Projeto Vercel `polyford`; Preview da PR #145 observado como `Ready` | Confirmado quanto à finalidade Supabase e ao preview; configuração administrativa detalhada pendente |
+| Preview/homologação | Preview Vercel da PR #145 observado como `Ready`; não equivale a homologação formal | Polyford é desenvolvimento; projeto Supabase específico para preview/homologação não identificado | Parcial |
+| Produção | Branch `main` indicada pela documentação; deployment de produção não auditado nesta execução | Projeto Supabase de produção não identificado | Pendente |
 
 A evidência automática do Vercel confirma um Preview Deployment `Ready` para a PR #145, mas não demonstra por si só a segregação de dados entre os estágios nem identifica qual projeto Supabase está conectado a cada deployment.
 
@@ -41,9 +41,9 @@ A integração Supabase disponível para consulta retornou:
 | Estado observado | `ACTIVE_HEALTHY` |
 | Criação | 13/11/2026 |
 
-**Identidade:** o responsável confirmou explicitamente que Polyford é o projeto Supabase oficial do Polychat; o nome diferente é intencional. A consulta atual também encontrou somente esse projeto na organização acessível.
+**Identidade e finalidade:** o responsável confirmou explicitamente que Polyford é o projeto Supabase oficial do Polychat e que sua finalidade é **desenvolvimento**; o nome diferente é intencional. A consulta atual também encontrou somente esse projeto na organização acessível.
 
-**Limite de segregação:** não há evidência suficiente para classificá-lo como desenvolvimento, preview/homologação ou produção, nem para concluir que os três estágios estejam segregados por projetos Supabase distintos. A existência de um único projeto listado não prova que não existam outros projetos fora do escopo de acesso desta integração.
+**Limite de segregação:** o projeto de desenvolvimento está identificado. Não há evidência suficiente nesta auditoria para identificar os projetos Supabase de homologação/preview e produção, caso existam. A existência de um único projeto listado não prova que não existam outros projetos fora do escopo de acesso desta integração.
 
 Não foram consultados dados de negócio nem executadas operações de escrita. Nenhuma migration foi aplicada.
 
@@ -120,7 +120,7 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 
 ## 8. Pendências e confirmações necessárias
 
-1. **Segregação Supabase:** Polyford é o projeto oficial, mas a finalidade por estágio e a existência de projetos adicionais não foram documentadas. A aprovação global do Tech Lead foi informada pelo responsável nesta conversa; a atribuição concreta de cada projeto a desenvolvimento, preview/homologação e produção ainda precisa constar de evidência operacional para ser auditável.
+1. **Segregação Supabase:** Polyford está confirmado como desenvolvimento. Permanecem não identificados os projetos Supabase de homologação/preview e produção, se existentes. A aprovação do Tech Lead foi informada pelo responsável; isso não substitui a identificação técnica dos projetos e conexões por ambiente.
 2. **Vercel:** há evidência de Preview Deployment `Ready` para esta PR. Organização, branch de produção efetiva, domínios, variáveis por escopo e ligação Supabase de cada estágio não foram auditados administrativamente. Não houve alteração no Vercel.
 3. **Secrets e Variables do GitHub:** verificar nomes, escopos e permissões no GitHub UI sem revelar valores. A integração utilizada não oferece leitura das famílias de endpoints de secrets/variables.
 4. **ADR-009:** a aprovação global do Tech Lead foi informada pelo responsável, mas a ADR enumera decisões operacionais específicas (projetos/regiões, identidades autorizadas, backup/restore, RPO/RTO, janela de manutenção, release e rollback). Não vou marcar a ADR como `Accepted` sem registrar essas definições concretas e a evidência da aprovação.
@@ -137,4 +137,4 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 
 ## 10. Status da Issue #96
 
-**Parcialmente concluída.** Polyford foi confirmado como projeto Supabase oficial; o projeto Vercel `polyford` e um Preview Deployment `Ready` para a PR #145 foram observados; dois workflows CI associados ao commit atual concluíram com sucesso. Permanecem sem evidência suficiente a segregação Supabase por estágio, a auditoria administrativa de secrets/variables e permissões, as definições operacionais específicas da ADR-009 e a revisão independente da PR. A Issue #96 não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
+**Parcialmente concluída.** Polyford foi confirmado como projeto Supabase oficial de desenvolvimento; o projeto Vercel `polyford` e um Preview Deployment `Ready` para a PR #145 foram observados; dois workflows CI associados ao commit anterior concluíram com sucesso. Permanecem sem evidência suficiente a segregação Supabase por estágio, a auditoria administrativa de secrets/variables e permissões, as definições operacionais específicas da ADR-009 e a revisão independente da PR. A Issue #96 não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
