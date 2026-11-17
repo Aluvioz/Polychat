@@ -1,6 +1,6 @@
-# Polychat - Documentação de requisitos (versão 0.1)
+# Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** minuta para validação do cliente. Esta documentação foi consolidada com as informações disponíveis em 13/11/2026. Não representa aprovação final de escopo, arquitetura, política de segurança ou tratamento de dados.
+**Status:** baseline consolidada na execução da Issue #88, com base na visão POLYCHAT — FORD v0.1 confirmada pelo solicitante. A confirmação do solicitante não equivale à aprovação formal do representante da FORD, PO, liderança técnica ou SQA. Políticas de monitoramento/privacidade, decisões técnicas detalhadas e questões listadas em `08-glossario-e-questoes-em-aberto.md` continuam pendentes.
 
 ## Navegação
 
@@ -13,6 +13,7 @@
 7. [Diagramas UML](06-diagramas-uml.md)
 8. [Rastreabilidade e critérios de aceitação](07-rastreabilidade-e-criterios-de-aceitacao.md)
 9. [Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md)
+10. [Baseline consolidada e rastreabilidade da Issue #88](09-baseline-requisitos-mvp.md)
 
 ## Como interpretar esta versão
 
