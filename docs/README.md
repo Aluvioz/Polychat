@@ -14,10 +14,11 @@
 8. [Rastreabilidade e critérios de aceitação](07-rastreabilidade-e-criterios-de-aceitacao.md)
 9. [Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md)
 10. [Baseline consolidada e rastreabilidade da Issue #88](09-baseline-requisitos-mvp.md)
+11. [Índice de decisões arquiteturais (ADRs) — Issue #89](adr/README.md)
 
 ## Como interpretar esta versão
 
-- **Confirmado:** informação declarada pelo cliente.
+- **Confirmado:** informação declarada pelo cliente ou restrição explicitamente registrada em issue aprovada.
 - **Derivado:** detalhamento necessário para tornar uma informação verificável; requer validação quando indicado.
 - **Recomendação:** controle sugerido pela equipe para discussão, não aprovado pelo cliente.
 - **Pendente:** informação ainda não fornecida ou decisão ainda não tomada.
@@ -27,3 +28,7 @@ Identificadores `OBJ`, `RF`, `RNF`, `RN` e `CA` são únicos nesta linha de base
 ## Aviso sobre diagramas
 
 A documentação não cria nem seleciona diagramas UML nesta versão, pois o tipo de diagrama deve ser escolhido expressamente pela pessoa responsável pelo prompt. A seção 06 registra os arquivos de diagramas já existentes em `docs/`, sem declará-los aprovados ou atualizados.
+
+## Decisões arquiteturais
+
+O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
