@@ -7,13 +7,14 @@
   <link rel="stylesheet" href="./issue-93-design-tokens.css">
 </head>
 <body>
+<a class="pc-skip-link" href="#conteudo">Pular para o conteúdo principal</a>
 <header class="pc-header">
   <div class="pc-header-inner">
     <div class="pc-logo">P · Polychat UI Kit</div>
     <span class="pc-meta">ISSUE #93 · PROPOSTA UX · NÃO É MARCA OFICIAL FORD</span>
   </div>
 </header>
-<main class="pc-shell">
+<main class="pc-shell" id="conteudo" tabindex="-1">
   <h1 class="pc-heading">Design System Polychat <span class="pc-badge pc-badge-pending">v0.1 · em revisão</span></h1>
   <p class="pc-lead">Biblioteca demonstrativa de componentes para duas experiências: Usuário em web mobile e TI em desktop. Exemplos são fictícios, estáticos e não executam operações reais.</p>
   <section class="pc-section" aria-labelledby="colors">
@@ -49,7 +50,7 @@
         <button type="button" class="pc-button pc-button-danger">Desativar conta (TI)</button>
         <button type="button" class="pc-button pc-button-primary" disabled>Indisponível</button>
       </div>
-      <p>Altura mínima de 44 px; foco visível ao usar Tab. Não interpretar os botões de exemplo como controles reais de conta.</p>
+      <p>Altura mínima de 44 px; foco visível ao usar Tab. Botões de exemplo sem ações reais; servem exclusivamente à avaliação visual e do foco.</p>
     </div>
   </section>
   <section class="pc-section" aria-labelledby="fields">
@@ -104,10 +105,10 @@
       </div>
       <div class="pc-card">
         <h3>Confirmação crítica · TI</h3>
-        <div class="pc-modal-demo" aria-label="Exemplo estático de confirmação">
+        <div class="pc-modal-demo" role="group" aria-label="Exemplo estático de confirmação — não funcional">
           <strong>Desativar conta?</strong>
           <p>Esta operação impedirá o próximo acesso da conta. Confirme antes de prosseguir.</p>
-          <div class="pc-stack"><button class="pc-button pc-button-secondary" type="button">Cancelar</button><button class="pc-button pc-button-danger" type="button">Confirmar</button></div>
+          <div class="pc-stack"><span class="pc-button pc-button-secondary" aria-hidden="true">Cancelar</span><span class="pc-button pc-button-danger" aria-hidden="true">Confirmar</span></div><p><small>Prévia visual, sem ações reais. Em produção, este diálogo exige controle de foco e comportamento de teclado.</small></p>
         </div>
         <p>Em um diálogo real, usar foco inicial adequado, Esc para sair quando permitido e devolução do foco ao acionador.</p>
       </div>
