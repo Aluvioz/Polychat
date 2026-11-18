@@ -105,16 +105,27 @@ button{cursor:pointer}
 @media(max-width:560px){.pc-shell{padding:var(--pc-space-6) var(--pc-space-3)}.pc-grid{grid-template-columns:1fr}.pc-header-inner{flex-wrap:wrap}.pc-list-item{align-items:flex-start}.pc-swatch span{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
+
+/* A11y: skip link, forced colors and resilient zoom/reflow */
+.pc-skip-link{position:absolute;left:12px;top:-100px;z-index:1000;padding:12px 16px;background:#ffffff;color:#003478;border:3px solid #b45309;border-radius:6px;font-weight:700}
+.pc-skip-link:focus{top:12px}
+.pc-stack>*,.pc-list-item>*{min-width:0}
+.pc-card,.pc-field,.pc-list-item,.pc-modal-demo{overflow-wrap:anywhere}
+.pc-list-item{flex-wrap:wrap}
+@media (forced-colors:active){.pc-button,.pc-badge,.pc-alert,.pc-field input{border:2px solid CanvasText}.pc-button:focus-visible{outline:3px solid Highlight}.pc-button:disabled{color:GrayText}}
+@media(max-width:420px){.pc-swatches{grid-template-columns:1fr}.pc-header-inner{display:block}.pc-header-inner .pc-meta{display:block;margin-top:8px}}
+
 </style>
 </head>
 <body>
+<a class="pc-skip-link" href="#conteudo">Pular para o conteúdo principal</a>
 <header class="pc-header">
   <div class="pc-header-inner">
     <div class="pc-logo">P · Polychat UI Kit</div>
     <span class="pc-meta">ISSUE #93 · PROPOSTA UX · NÃO É MARCA OFICIAL FORD</span>
   </div>
 </header>
-<main class="pc-shell">
+<main class="pc-shell" id="conteudo" tabindex="-1">
   <h1 class="pc-heading">Design System Polychat <span class="pc-badge pc-badge-pending">v0.1 · em revisão</span></h1>
   <p class="pc-lead">Biblioteca demonstrativa de componentes para duas experiências: Usuário em web mobile e TI em desktop. Exemplos são fictícios, estáticos e não executam operações reais.</p>
   <section class="pc-section" aria-labelledby="colors">
@@ -150,7 +161,7 @@ button{cursor:pointer}
         <button type="button" class="pc-button pc-button-danger">Desativar conta (TI)</button>
         <button type="button" class="pc-button pc-button-primary" disabled>Indisponível</button>
       </div>
-      <p>Altura mínima de 44 px; foco visível ao usar Tab. Não interpretar os botões de exemplo como controles reais de conta.</p>
+      <p>Altura mínima de 44 px; foco visível ao usar Tab. Botões de exemplo sem ações reais; servem exclusivamente à avaliação visual e do foco.</p>
     </div>
   </section>
   <section class="pc-section" aria-labelledby="fields">
@@ -205,10 +216,10 @@ button{cursor:pointer}
       </div>
       <div class="pc-card">
         <h3>Confirmação crítica · TI</h3>
-        <div class="pc-modal-demo" aria-label="Exemplo estático de confirmação">
+        <div class="pc-modal-demo" role="group" aria-label="Exemplo estático de confirmação — não funcional">
           <strong>Desativar conta?</strong>
           <p>Esta operação impedirá o próximo acesso da conta. Confirme antes de prosseguir.</p>
-          <div class="pc-stack"><button class="pc-button pc-button-secondary" type="button">Cancelar</button><button class="pc-button pc-button-danger" type="button">Confirmar</button></div>
+          <div class="pc-stack"><span class="pc-button pc-button-secondary" aria-hidden="true">Cancelar</span><span class="pc-button pc-button-danger" aria-hidden="true">Confirmar</span></div><p><small>Prévia visual, sem ações reais. Em produção, este diálogo exige controle de foco e comportamento de teclado.</small></p>
         </div>
         <p>Em um diálogo real, usar foco inicial adequado, Esc para sair quando permitido e devolução do foco ao acionador.</p>
       </div>
