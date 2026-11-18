@@ -21,6 +21,7 @@
 
 - [Auditoria de ambientes Supabase e Vercel — Issue #96](infra/issue-96-auditoria-ambientes.md)
 - [Auditoria de Preview, produção e rollback — Issue #98](infra/issue-98-deploy-preview-production-rollback.md)
+- [Runbook de smoke test e rollback de aplicação — Issue #98](infra/issue-98-smoke-test-rollback-runbook.md)
 
 ## Como interpretar esta versão
 
