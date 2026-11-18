@@ -141,6 +141,8 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 
 **Funcionalidades que existem somente no código:** não foi identificada função de negócio completa sem correspondência documental. Existem detalhes técnicos implementados — validação JWT, respostas 401/403/503, bloqueio fail-closed, leitura de `profiles`, policies RLS da tabela e criação automática de perfil padrão — que são mecanismos de autorização documentados em ADR-006, não novas transações de negócio. A página inicial (`src/app/page.tsx`) contém texto promocional de capacidades futuras, mas não implementa essas capacidades.
 
+**Artefatos PDF legados:** a árvore do repositório contém `docs/Diagrama_Casos_de_Uso.pdf`, `docs/Polychat_Requisitos_Funcionais.pdf` e `docs/Polychat_Requisitos_Nao_Funcionais.pdf`. Nesta execução, a integração de leitura retornou esses arquivos como conteúdo binário/base64, sem extração textual confiável; por isso, não foram usados como fonte independente para identificar requisitos. A contagem foi baseada nos documentos Markdown consolidados (em especial `docs/03`, `docs/04` e `docs/09`). Antes da contagem final, deve-se cotejar o conteúdo integral desses PDFs com a baseline Markdown e registrar qualquer requisito mais recente ou divergente. Esta é uma limitação explícita do levantamento preliminar.
+
 **Documentos de UX:** `docs/ux/issue-91-jornada-mobile.md` e `docs/ux/issue-92-console-ti-desktop.md` são propostas de jornada/wireframe, não telas implementadas nem aceite formal de produto. Não foram usados para inventar transações. `docs/06-diagramas-uml.md` cataloga diagramas sem declará-los aprovados. A documentação de governança em `docs/10-governanca-desenvolvimento.md` rege PR/revisão/CI, mas não adiciona funções de negócio.
 
 ## 4. Método de estimativa e premissas
@@ -606,6 +608,7 @@ As perguntas abaixo devem ser respondidas antes de transformar esta estimativa e
 | Q-024 | Usuários podem editar/apagar mensagens? Mensagens apagadas permanecem em auditoria? | Dados, transações e retenção |
 
 ### Pendências específicas de APF
+- Extrair/revisar o conteúdo integral dos PDFs legados de requisitos e casos de uso e compará-los à baseline Markdown; confirmar se há requisito vigente ausente ou divergente.
 
 - Aprovar fronteira de Supabase Auth e confirmar ou retirar o AIE FD-08.
 - Aprovar o modelo de dados da Issue #99 e identificar DET/RET reais por ALI/AIE.
