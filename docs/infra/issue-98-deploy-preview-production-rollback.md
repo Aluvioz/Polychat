@@ -82,6 +82,7 @@ Foram observados eventos automáticos do `vercel[bot]`:
 |---|---|---|---|---|
 | [#145](https://github.com/Aluvioz/Polychat/pull/145) | Auditoria da Issue #96; PR posteriormente integrada | `polyford` | `Ready` no evento registrado | [Preview #145](https://polyford-git-docs-issue-96-environments-audit-polychat1.vercel.app) |
 | [#147](https://github.com/Aluvioz/Polychat/pull/147) | Trabalho da Issue #95; PR aberta como Draft na consulta | `polyford` | `Ready` no evento registrado em 18/11/2026 | [Preview #147](https://polyford-git-chore-issue-95-project-tooling-polychat1.vercel.app) |
+| [#148](https://github.com/Aluvioz/Polychat/pull/148) | Esta auditoria da Issue #98 | `polyford` | `Ready` no evento registrado em 18/11/2026 | [Preview #148](https://polyford-git-docs-issue-98-deploy-rollback-audit-polychat1.vercel.app) |
 
 A evidência da PR #147 demonstra que a integração Git/Vercel gerou um Preview Deployment para aquela PR. Ela não demonstra, por si só, a associação ao projeto Supabase correto, a homologação funcional ou o comportamento de produção.
 
@@ -104,7 +105,7 @@ A documentação da Issue #96 registra `https://polyford.vercel.app` como homepa
 | DNS | Não verificado | Sem consulta administrativa ao provedor/DNS |
 | HTTPS/certificado | Não verificado | Não foi possível obter evidência de certificado no painel ou resposta HTTP confiável |
 
-Foram tentadas requisições HTTP GET para o hostname declarado e para o Preview da PR #147 a partir do ambiente desta auditoria. Ambas falharam antes de estabelecer conexão, por falha de resolução DNS no ambiente de execução. Isso **não** demonstra indisponibilidade do site nem falha do DNS público; significa apenas que o smoke test HTTP não pôde ser concluído a partir desta sessão.
+Foram tentadas requisições HTTP GET para o hostname declarado e para os Previews das PRs #147 e #148 a partir do ambiente desta auditoria. Ambas falharam antes de estabelecer conexão, por falha de resolução DNS no ambiente de execução. Isso **não** demonstra indisponibilidade do site nem falha do DNS público; significa apenas que o smoke test HTTP não pôde ser concluído a partir desta sessão.
 
 Não foram alterados DNS, domínio, certificado ou roteamento.
 
