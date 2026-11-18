@@ -63,6 +63,7 @@ O workflow versionado `.github/workflows/ci.yml` executa em push para `main` e e
 2. `npm run lint`
 3. `npm run typecheck`
 4. `npm run build`
+5. Inicializa o build com `npm run start` e valida HTTP 200/HTML esperado na rota `/` (smoke test local do artefato).
 
 Para o commit de baseline `3e749397ff535d81fb3bfb055a127120515752e2`, o workflow `CI` concluiu com sucesso no run [44193728427](https://github.com/Aluvioz/Polychat/actions/runs/44193728427). Os passos de testes, ESLint, TypeScript e build aparecem como `completed/success`.
 
@@ -164,7 +165,7 @@ A ADR-009 permanece **Proposed** e registra que critérios de release/rollback, 
 
 Rollback de aplicação não equivale à restauração de banco de dados. Nenhuma afirmação de reversão de migrations/dados, backup, restore, RPO ou RTO é feita.
 
-Para concluir o ensaio, o responsável operacional/Tech Lead precisa indicar o ambiente seguro, deployment válido de referência, mecanismo efetivamente disponível e autorização do exercício. O ensaio deve ser registrado após execução real, não por simulação documental.
+Para concluir o ensaio, o responsável operacional/Tech Lead precisa indicar o ambiente seguro, deployment válido de referência, mecanismo efetivamente disponível e autorização do exercício. O ensaio deve ser registrado após execução real, não por simulação documental. O procedimento proposto está em [runbook de smoke test e rollback](issue-98-smoke-test-rollback-runbook.md) e aguarda aprovação.
 
 ## 9. Testes, smoke tests e regressão
 
@@ -177,7 +178,8 @@ Para concluir o ensaio, o responsável operacional/Tech Lead precisa indicar o a
 | CI da PR #148 no HEAD `15931d6579337288d0762e3ea6afd0dadf7a3306` | Sucesso | Run [44395417631](https://github.com/Aluvioz/Polychat/actions/runs/44395417631): testes, lint, typecheck e build concluídos com sucesso |
 | Preview Vercel | `Ready` observado para PRs #145 e #147 | Eventos automáticos do Vercel; não equivalem a teste funcional |
 | Vercel no commit `main` | Status `success`, `Deployment has completed` | [Status do commit](https://github.com/Aluvioz/Polychat/commit/3e749397ff535d81fb3bfb055a127120515752e2) |
-| Smoke test HTTP | Não concluído | Falha de resolução DNS no ambiente desta auditoria; sem resposta HTTP |
+| Smoke test local do build Next.js | Automatizado no workflow desta PR; resultado aguardando CI do HEAD atualizado | Valida somente a rota institucional `/` no runner, não o deployment hospedado |
+| Smoke test HTTP hospedado | Não concluído | Falha de resolução DNS no ambiente desta auditoria; sem resposta HTTP |
 | Smoke test autenticado/funcional | Não executado | Autenticação/fluxos de produto não comprovados como integrados ao App Router |
 | Integração Supabase hospedada | Não testada | Projeto de desenvolvimento existe, mas runtime do app não está conectado comprovadamente |
 | Ensaio de rollback | Não executado | Sem painel, target e autorização/ambiente de ensaio comprovados |
@@ -197,8 +199,9 @@ Os comandos npm não foram executados localmente nesta sessão. Além do CI da b
 
 ## 11. Alterações realizadas por esta entrega
 
-- Esta PR adiciona somente este documento de auditoria e seu link no índice `docs/README.md`.
-- Não altera a Issue #98, ADRs, configuração Vercel/Supabase, secrets, variáveis, DNS, certificados, banco, migrations, workflows ou código de runtime.
+- Esta PR adiciona este documento de auditoria, um runbook proposto de smoke test/rollback, seus links no índice `docs/README.md` e um step de smoke test local do build no workflow `.github/workflows/ci.yml`.
+- O novo step testa apenas a rota institucional atual no runner do GitHub Actions; não é smoke test de Preview/Production nem valida integração Supabase.
+- Não altera a Issue #98, ADRs, configuração administrativa Vercel/Supabase, secrets, variáveis, DNS, certificados, banco, migrations ou código de runtime.
 - Não declara deploy de produção, smoke test funcional ou rollback ensaiado.
 - Não marca critérios de aceite como concluídos.
 
