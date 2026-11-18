@@ -419,7 +419,7 @@ Cálculo:
 
 ### 10.4 MVP × versão completa
 
-**MVP — R$ 520.800,00 (124 PF)**  
+**MVP — R$ 520.900,00 (124 PF)**  
 Inclui todas as funções da baseline confirmada em uma primeira entrega operacional: autenticação, dois perfis, contas, grupos, mensagens, anexos, alerta básico ao TI, consulta administrativa auditada e controles essenciais de segurança. Não significa “protótipo” sem controles essenciais. Pressupõe política de monitoramento mínima aprovada, limites de arquivo e dispositivos definidos e homologação funcional.
 
 **Versão completa — R$ 622.500,00 (124 PF + 4,0 PM de hardening não funcional)**  
