@@ -457,11 +457,11 @@ O desenvolvimento é cobrado como projeto, separado da operação recorrente:
 | Marco | Percentual | MVP | Completo |
 |---|---:|---:|---:|
 | Assinatura e kickoff | 20% | R$ 104.180,00 | R$ 124.500,00 |
-| Aprovação de requisitos, arquitetura e protótipos | 20% | R$ 104.160,00 | R$ 124.500,00 |
+| Aprovação de requisitos, arquitetura e protótipos | 20% | R$ 104.180,00 | R$ 124.500,00 |
 | Entrega de autenticação, perfis e administração | 25% | R$ 130.225,00 | R$ 155.625,00 |
-| Entrega de mensageria, grupos, anexos, alertas e auditoria | 25% | R$ 130.200,00 | R$ 155.625,00 |
+| Entrega de mensageria, grupos, anexos, alertas e auditoria | 25% | R$ 130.225,00 | R$ 155.625,00 |
 | Homologação, documentação e implantação | 10% | R$ 52.090,00 | R$ 62.250,00 |
-| **Total** | **100%** | **R$ 520.800,00** | **R$ 622.500,00** |
+| **Total** | **100%** | **R$ 520.900,00** | **R$ 622.500,00** |
 
 Os marcos serão faturados após evidência de entrega e aceite do respectivo marco, com prazo de pagamento contratual a definir. Valores não incluem serviços de terceiros cujo consumo seja variável e contratado diretamente pela FORD.
 
