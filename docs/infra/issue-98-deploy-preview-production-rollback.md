@@ -178,14 +178,14 @@ Para concluir o ensaio, o responsável operacional/Tech Lead precisa indicar o a
 | CI da PR #148 no HEAD `15931d6579337288d0762e3ea6afd0dadf7a3306` | Sucesso | Run [44395417631](https://github.com/Aluvioz/Polychat/actions/runs/44395417631): testes, lint, typecheck e build concluídos com sucesso |
 | Preview Vercel | `Ready` observado para PRs #145 e #147 | Eventos automáticos do Vercel; não equivalem a teste funcional |
 | Vercel no commit `main` | Status `success`, `Deployment has completed` | [Status do commit](https://github.com/Aluvioz/Polychat/commit/3e749397ff535d81fb3bfb055a127120515752e2) |
-| Smoke test local do build Next.js | Automatizado no workflow desta PR; resultado aguardando CI do HEAD atualizado | Valida somente a rota institucional `/` no runner, não o deployment hospedado |
+| Smoke test local do build Next.js | Sucesso | Step `Smoke test built Next.js application` do run [44396441649](https://github.com/Aluvioz/Polychat/actions/runs/44396441649), no commit `b8d911309deb708526f4170da39317ce89d4f714`; valida somente a rota institucional `/` no runner |
 | Smoke test HTTP hospedado | Não concluído | Falha de resolução DNS no ambiente desta auditoria; sem resposta HTTP |
 | Smoke test autenticado/funcional | Não executado | Autenticação/fluxos de produto não comprovados como integrados ao App Router |
 | Integração Supabase hospedada | Não testada | Projeto de desenvolvimento existe, mas runtime do app não está conectado comprovadamente |
 | Ensaio de rollback | Não executado | Sem painel, target e autorização/ambiente de ensaio comprovados |
 | Regressão funcional de produção | Não verificada | CI cobre testes/build existentes; não substitui smoke/regressão funcional |
 
-Os comandos npm não foram executados localmente nesta sessão. Além do CI da baseline, o CI da PR #148 no HEAD indicado acima concluiu com sucesso para testes, lint, typecheck e build. Esses resultados são execuções do GitHub Actions, não execução local.
+Os comandos npm não foram executados localmente nesta sessão. O run [44396441649](https://github.com/Aluvioz/Polychat/actions/runs/44396441649) concluiu com sucesso no commit `b8d911309deb708526f4170da39317ce89d4f714`, incluindo testes, lint, typecheck, build e o novo smoke test local. O commit `319d505f8835964fa17c42b17b7383fe4968f40e`, HEAD subsequente, altera somente este documento de auditoria (comparação GitHub: 1 arquivo documental, 7 adições e 4 remoções). Esses resultados são execuções do GitHub Actions, não execução local nem validação de deployment hospedado.
 
 ## 10. Pendências operacionais
 
