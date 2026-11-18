@@ -24,7 +24,7 @@ A documentação do repositório é a fonte primária. A inspeção do código c
 | Prazo indicativo | **5 meses** | **6 a 6,5 meses** |
 | Custo interno estimado | **R$ 340.891,67** | **R$ 407.416,67** |
 | Preço mínimo calculado | **R$ 520.806,71** | **R$ 622.442,13** |
-| Preço comercial sugerido (arredondado) | **R$ 520.800,00** | **R$ 622.500,00** |
+| Preço comercial sugerido (arredondado) | **R$ 520.900,00** | **R$ 622.500,00** |
 | Preço de referência a R$ 488/PF | R$ 60.512,00 | R$ 60.512,00 |
 
 **Leitura executiva:** o valor de referência de R$ 488,00/PF é tratado exclusivamente como preço unitário de mercado informado para comparação. Aplicado aos 124 PF, produz R$ 60.512,00 e não cobre o custo interno hipotético estimado. O preço proposto decorre da triangulação de custo, tributos, margem e reserva de risco, e não da multiplicação automática dos PF por uma taxa de custo.
@@ -262,12 +262,12 @@ A inclusão e remoção de participantes são processos distintos porque alteram
 |---|---:|---:|---:|---:|
 | ALI | 7 × 7 = 49 | 0 | 0 | 49 |
 | AIE | 1 × 5 = 5 | 0 | 0 | 5 |
-| EE | 1 × 3 = 3 | 4 × 4 = 16 | 4 × 6 = 24 | 43 |
+| EE | 1 × 3 = 3 | 5 × 4 = 20 | 3 × 6 = 18 | 41 |
 | SE | 0 | 1 × 5 = 5 | 0 | 5 |
-| CE | 0 | 4 × 4 = 16 | 1 × 6 = 6 | 22 |
+| CE | 0 | 3 × 4 = 12 | 2 × 6 = 12 | 24 |
 | **Total** | **57** | **37** | **30** | **124** |
 
-**Correção aritmética:** o subtotal de EE na tabela de processos é 41 PF. Na matriz, portanto, a composição correta é **EE: 1 baixa (3 PF), 4 médias (16 PF) e 3 altas (18 PF) = 37 PF**. O total transacional é 37 + 5 + 22 = **64 PF** e o total geral correto é 54 + 64 = **118 PF**. Para evitar qualquer ambiguidade, a contagem-base consolidada desta proposta é **118 PF**, não 124 PF. O valor de referência comercial correto é **118 × R$ 488,00 = R$ 57.584,00**. As tabelas de esforço, custo e preço abaixo usam **118 PF**.
+Conferência: funções de dados = 49 + 5 = **54 PF**; funções transacionais = EE 41 + SE 5 + CE 24 = **70 PF**; total não ajustado = 54 + 70 = **124 PF**. A distribuição por complexidade também fecha: 57 + 37 + 30 = **124 PF**.
 
 ### 7.2 Total por tipo
 
@@ -280,7 +280,7 @@ A inclusão e remoção de participantes são processos distintos porque alteram
 | CE | 5 | 24 |
 | **Total** | **23** | **124** |
 
-**Reconciliação obrigatória antes da aprovação:** há inconsistência na matriz de complexidade da EE: as nove linhas EE-01 a EE-09 totalizam 41 PF (4+4+4+4+3+6+6+6+4). Isso corresponde a 1 EE baixa (3), 6 EEs médias (24) e 2 EEs altas (12), ou seja, **39 PF**, não 41. A soma linha a linha correta é **41 PF**; portanto, a matriz precisa ser fechada com a revisão dos pesos/complexidades de EE. Para esta proposta, adota-se a soma das linhas individuais, com **124 PF provisórios**, e o preço de referência de **R$ 60.512,00**. A validação formal do analista de métricas deve resolver essa diferença antes da assinatura.
+A quantidade de funções (23) e a soma de PF (124) reconciliam com as tabelas detalhadas. A contagem permanece preliminar porque as complexidades dependem da confirmação dos DET/RET/ALR hipotéticos e da fronteira do AIE.
 
 ### 7.3 PF por módulo — base comercial provisória
 
@@ -402,7 +402,7 @@ Cálculo:
 2. Base a recuperar = R$ 340.891,67 + R$ 34.089,17 = **R$ 374.980,84**.
 3. Parcela disponível após tributos e margem = 100% − 8% − 20% = **72%**.
 4. Preço mínimo = R$ 374.980,84 ÷ 0,72 = **R$ 520.806,72**.
-5. Preço mínimo arredondado para proposta = **R$ 520.800,00** (arredondamento comercial; ajustar alguns reais na composição final para preservar a margem calculada).
+5. Preço comercial sugerido, arredondado para cima = **R$ 520.900,00**, preservando o piso calculado.
 
 ### 10.3 Comparação com R$ 488/PF
 
@@ -449,18 +449,18 @@ O orçamento de R$ 450.000,00 registrado em RN-020 é referência sem composiç�
 ### 11.1 Investimento inicial de desenvolvimento
 
 O desenvolvimento é cobrado como projeto, separado da operação recorrente:
-- MVP: **R$ 520.800,00**.
+- MVP: **R$ 520.900,00**.
 - Completo: **R$ 622.500,00**.
 
 ### 11.2 Pagamento por marcos — exemplo comercial
 
 | Marco | Percentual | MVP | Completo |
 |---|---:|---:|---:|
-| Assinatura e kickoff | 20% | R$ 104.160,00 | R$ 124.500,00 |
+| Assinatura e kickoff | 20% | R$ 104.180,00 | R$ 124.500,00 |
 | Aprovação de requisitos, arquitetura e protótipos | 20% | R$ 104.160,00 | R$ 124.500,00 |
-| Entrega de autenticação, perfis e administração | 25% | R$ 130.200,00 | R$ 155.625,00 |
+| Entrega de autenticação, perfis e administração | 25% | R$ 130.225,00 | R$ 155.625,00 |
 | Entrega de mensageria, grupos, anexos, alertas e auditoria | 25% | R$ 130.200,00 | R$ 155.625,00 |
-| Homologação, documentação e implantação | 10% | R$ 52.080,00 | R$ 62.250,00 |
+| Homologação, documentação e implantação | 10% | R$ 52.090,00 | R$ 62.250,00 |
 | **Total** | **100%** | **R$ 520.800,00** | **R$ 622.500,00** |
 
 Os marcos serão faturados após evidência de entrega e aceite do respectivo marco, com prazo de pagamento contratual a definir. Valores não incluem serviços de terceiros cujo consumo seja variável e contratado diretamente pela FORD.
@@ -477,11 +477,11 @@ Os custos recorrentes não estão incluídos no investimento inicial. Estimativa
 | **Custo recorrente mensal estimado** | **R$ 12.594,76** | **R$ 16.959,68** |
 
 **Mensalidade ilustrativa com recuperação do investimento:** hipótese de 1 cliente (FORD), recuperação do desenvolvimento em 24 meses e churn contratual de 0% durante o prazo mínimo:
-- MVP: R$ 12.594,76 + (R$ 520.800,00 ÷ 24) = **R$ 34.294,76/mês**.
+- MVP: R$ 12.594,76 + (R$ 520.900,00 ÷ 24) = **R$ 34.299,00/mês**.
 - Completo: R$ 16.959,68 + (R$ 622.500,00 ÷ 24) = **R$ 42.897,18/mês**.
 
 Sensibilidade de churn: se for adotado churn hipotético de 2% ao mês e a parcela de recuperação precisar ser protegida por gross-up simples, dividir apenas a parcela de recuperação por 0,98:
-- MVP: R$ 12.594,76 + (R$ 21.700,00 ÷ 0,98) ≈ **R$ 34.737,62/mês**.
+- MVP: R$ 12.594,76 + (R$ 21.704,17 ÷ 0,98) ≈ **R$ 34.741,87/mês**.
 - Completo: R$ 16.959,68 + (R$ 25.937,50 ÷ 0,98) ≈ **R$ 43.426,52/mês**.
 
 Essas mensalidades são simulações, não oferta vinculante. Devem ser recalculadas após cotação real de planos, região, volume de armazenamento/tráfego, retenção, disponibilidade, janela de suporte, SLA e regime tributário. Se o cliente pagar o desenvolvimento integralmente no início, a mensalidade recorrente deve excluir a parcela de recuperação do investimento.
@@ -565,7 +565,7 @@ O aceite técnico da equipe não substitui aceite formal da FORD, aprovação de
 ## 14. Condições comerciais e validade da proposta
 
 - Valores são estimativas hipotéticas em reais, sujeitos à confirmação de tributos, custos de provedores e escopo final.
-- Preço MVP sugerido: **R$ 520.800,00**; preço completo sugerido: **R$ 622.500,00**.
+- Preço MVP sugerido: **R$ 520.900,00**; preço completo sugerido: **R$ 622.500,00**.
 - Prazo-base: 5 meses para MVP; 6 a 6,5 meses para versão completa, contados após kickoff, acesso aos ambientes e aprovação dos requisitos bloqueadores.
 - Pagamentos conforme marcos da seção 11.2.
 - Custos recorrentes, consumo de provedores, licenças e serviços externos são separados do desenvolvimento.
