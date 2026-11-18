@@ -17,6 +17,11 @@
 11. [Índice de decisões arquiteturais (ADRs) — Issue #89](adr/README.md)
 12. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
 
+## Infraestrutura e deploy
+
+- [Auditoria de ambientes Supabase e Vercel — Issue #96](infra/issue-96-auditoria-ambientes.md)
+- [Auditoria de Preview, produção e rollback — Issue #98](infra/issue-98-deploy-preview-production-rollback.md)
+
 ## Como interpretar esta versão
 
 - **Confirmado:** informação declarada pelo cliente ou restrição explicitamente registrada em issue aprovada.
