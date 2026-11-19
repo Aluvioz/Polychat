@@ -1,7 +1,7 @@
 # ADRs — Polychat
 
-**Data de revisão:** 17/11/2026  
-**Baseline funcional:** POLY-REQ-001 v0.2 — `docs/09-baseline-requisitos-mvp.md`  
+**Data de revisão:** 19/11/2026  
+**Baseline funcional:** POLY-REQ-001 v0.3 — `docs/09-baseline-requisitos-mvp.md`  
 **Épico:** #77 · **Issue:** #89  
 **Escopo:** frontend, arquitetura Supabase + Vercel, autenticação, modelo de dados, autorização/RLS, realtime, storage, ambientes, deploy, segurança e auditoria.
 
@@ -9,7 +9,7 @@
 
 - **Accepted:** decisão restrita e já sustentada por requisito explícito da issue ou pela implementação versionada. O escopo aceito é descrito na própria ADR; não significa aprovação formal de produção pela FORD.
 - **Proposed:** proposta técnica documentada, aguardando revisão/aprovação dos responsáveis indicados.
-- **Rejected / Deprecated / Superseded:** alternativas recusadas, retiradas ou substituídas; nenhum ADR está nesses estados nesta revisão.
+- **Rejected / Deprecated / Superseded:** alternativas recusadas, retiradas ou substituídas. Nenhuma ADR está nesses estados nesta revisão; alternativas recusadas podem estar registradas dentro de uma ADR Accepted, sem alterar o status da decisão adotada.
 
 Uma ADR Proposed não deve ser implementada como decisão final sem a aprovação prevista. Uma ADR Accepted com escopo limitado não autoriza extrapolar o escopo descrito.
 
@@ -18,7 +18,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 | ADR | Tema | Status | Escopo do status |
 |---|---|---|---|
 | [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Topologia modular e fronteiras entre camadas aguardam Tech Lead/TI |
-| [ADR-002](ADR-002-frontend-nextjs.md) | Frontend | Accepted | Stack atual do repositório: Next.js 16, React 19 e TypeScript |
+| [ADR-002](ADR-002-frontend-nextjs.md) | Frontend | Accepted | Next.js 16 + React 19 + TypeScript; React + Vite explicitamente recusado para o Polychat |
 | [ADR-003](ADR-003-supabase-vercel.md) | Backend e provedores | Accepted | Supabase + Vercel como direção de execução da Issue #88; não é aceite de produção |
 | [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Fluxo Supabase Auth e políticas de sessão ainda não estão integrados |
 | [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL é a proposta; somente `profiles` está versionada hoje |
@@ -30,7 +30,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 
 ## Decisões registradas para a Issue #89
 
-1. A stack de frontend observada e mantida no repositório é Next.js 16 + React 19 + TypeScript (ADR-002).
+1. A stack de frontend adotada e mantida no repositório é Next.js 16 + React 19 + TypeScript (ADR-002). React + TypeScript + Vite foi explicitamente recusado para o Polychat; não deve ser introduzido nem usado como base de migração sem ADR substitutiva aprovada.
 2. Supabase + Vercel são a direção tecnológica exigida como referência de execução da Issue #88 (ADR-003). A integração Supabase ainda está pendente e não se declara produção homologada.
 3. O contrato de autorização existente aceita apenas os perfis `user` e `ti`, obtém identidade por validação server-side, consulta estado/perfil no banco e falha fechada (ADR-006). A aceitação cobre apenas perfis; não cobre autorização de conversas, grupos ou anexos.
 4. Realtime, Storage, modelo completo de dados e configuração de ambientes permanecem propostas, não funcionalidades entregues.
@@ -77,5 +77,6 @@ Manter as questões Q-001 a Q-024 de `08-glossario-e-questoes-em-aberto.md`. Par
 
 - 16/11/2026 — PR #133 criou uma primeira versão dos ADRs, mas foi encerrada sem merge. Essa versão não integra a `main`.
 - 17/11/2026 — conjunto revisado contra a baseline #88 e o conteúdo efetivo da `main`; substitui a tentativa não integrada da PR #133.
+- 19/11/2026 — ADR-002 e este índice atualizados para registrar expressamente a recusa de React + Vite e alinhar o backlog das Issues #79 e #95 à stack Next.js adotada.
 
 **Regra de fechamento:** a Issue #89 só deve ser fechada depois de a PR desta revisão ser aprovada e integrada, os checks passarem e as pendências de aprovação críticas permanecerem claramente replanejadas com responsáveis. A Epic #77 só deve ser fechada depois que #89 for concluída e seu checklist for atualizado.
