@@ -131,7 +131,8 @@ Todos os administradores do perfil TI possuem os mesmos poderes administrativos.
 - Ações administrativas auditadas incluem login administrativo, criação e alteração de usuários, desativação e reativação de contas, criação e encerramento de grupos, inclusão e remoção de participantes, consulta de conversas, consulta de alertas, download de anexos e alteração de configurações.
 - Somente TI consulta e gerencia os registros de auditoria. Usuários não podem alterá-los ou excluí-los.
 - Registros administrativos e de auditoria não possuem exclusão automática; permanecem enquanto o sistema operar, conforme política detalhada alinhada com Desenvolvimento.
-- Mensagens, anexos e alertas seguem retenção sem exclusão automática enquanto o sistema operar; backups possuem retenção de 12 meses.
+- Mensagens, anexos, alertas, logs de auditoria e registros administrativos não possuem exclusão automática e são mantidos enquanto o sistema operar. Somente TI autoriza exclusões e decide quando preservar ou excluir dados em investigações.
+- Após exclusão autorizada, os dados também devem desaparecer dos backups ao término do ciclo de retenção das cópias. Backups possuem retenção de 12 meses; o descarte é comprovado por registro de auditoria emitido pelo TI.
 - Criptografia em trânsito e em repouso; sem E2EE. As chaves são administradas pelo servidor sob responsabilidade do TI da FORD.
 - O aviso de monitoramento é apresentado no primeiro acesso.
 - A FORD definiu o TI como canal para solicitações de acesso, correção ou exclusão de dados. As respostas do cliente sobre privacidade e LGPD são registradas como posicionamento do projeto, sem significar dispensa de obrigações legais aplicáveis.
