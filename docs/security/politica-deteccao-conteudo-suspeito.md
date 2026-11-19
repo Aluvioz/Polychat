@@ -1,9 +1,9 @@
 # Política de detecção e classificação de conteúdo suspeito
 
 - **Documento:** POLY-SEC-002
-- **Versão:** 0.1 — preliminar
+- **Versão:** 0.2 — comportamento funcional-base validado pelo PO
 - **Data:** 19/11/2026
-- **Status:** Em elaboração; sujeito à aprovação de negócio, TI, Segurança e Jurídico/Privacidade
+- **Status:** comportamento funcional-base validado pelo PO; regras operacionais e aprovação institucional pendentes
 - **Issue principal:** [#122 — Implementar detecção de conteúdo suspeito e palavrões](https://github.com/Aluvioz/Polychat/issues/122)
 - **Épica:** [#86 — Segurança, monitoramento e auditoria](https://github.com/Aluvioz/Polychat/issues/86)
 - **ADR relacionada:** [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md)
@@ -357,6 +357,39 @@ A equipe deve registrar:
 
 Não afirmar que o detector é preciso ou confiável apenas porque os testes unitários passaram; a avaliação depende de conjunto representativo e critérios previamente aprovados.
 
+## 13.3 Parecer do PO — comportamento funcional-base validado
+
+**Validação do Product Owner — 19/11/2026**
+
+O PO valida o comportamento funcional-base descrito neste documento, dentro dos limites dos requisitos RF-014/RF-015 e CA-014.1 a CA-014.4:
+
+1. **Finalidade:** analisar mensagens do Polychat segundo regras explicitamente aprovadas, para sinalizar conteúdo potencialmente suspeito e apoiar a revisão de segurança. A detecção não deve ser usada para avaliação de produtividade ou finalidades distintas.
+2. **Escopo inicial de categorias:** palavrões/termos ofensivos conforme lista fornecida e aprovada pela FORD. A lista concreta ainda não está disponível nesta PR. Outras categorias candidatas — como ameaças e ofensas direcionadas — não entram automaticamente no escopo ativo; exigem definição e aprovação próprias.
+3. **Resultado automático:** quando uma regra ativa corresponder, registrar a ocorrência com motivo, identificador e versão da regra e gerar alerta para revisão pelo TI autorizado. A ocorrência deve ser apresentada como sinalização, nunca como violação ou culpa confirmada.
+4. **Revisão humana:** a ocorrência deve permitir classificação como confirmada, falso positivo ou inconclusiva, com identificação do revisor e registro da decisão. Um falso positivo isolado não altera automaticamente a lista ativa nem treina regras.
+5. **Sem ação punitiva automática:** a detecção não bloqueia, edita ou apaga mensagem, não suspende/desativa conta e não aplica advertência ou sanção. Mudança futura exigirá decisão explícita, justificativa, avaliação e aprovação formal próprias.
+6. **Acesso:** o alerta deve ser restrito aos operadores TI autorizados. A existência do alerta não concede permissão para abrir a conversa; a consulta ao conteúdo segue o controle e a auditoria das Issues #121/#124.
+7. **Minimização:** alertas e logs devem usar referência segura e metadados mínimos. A mensagem integral não deve ser replicada em notificações/logs por padrão.
+8. **Tecnologia:** a política funcional não escolhe fornecedor ou serviço externo. Qualquer envio de conteúdo a terceiro, uso de IA/modelo externo ou mudança de arquitetura exige avaliação e aprovação próprias.
+
+### O que esta validação não aprova
+
+Permanecem pendentes e não podem ser inferidos deste parecer:
+
+- a lista exata de palavras, expressões, idiomas e variações, a ser fornecida/aprovada pela FORD e Segurança (Q-007);
+- a inclusão de categorias além de palavrões/termos expressamente aprovados;
+- normalização, limites de palavra, tratamento de citações/contexto e implementação técnica;
+- limiares, severidades, destinatários específicos, canal de alerta, SLA, escalonamento e distribuição de responsabilidades (Q-008);
+- procedimento e autoridade institucional de investigação, além do papel geral de revisão humana;
+- comportamento de contingência quando o detector estiver indisponível;
+- conteúdo exato que o revisor poderá visualizar, finalidade formal, transparência, retenção e descarte (Q-009/Q-010, #102);
+- aprovação institucional da política de monitoramento e das salvaguardas por FORD, TI, Segurança e Jurídico/Privacidade;
+- schema físico, fornecedor, biblioteca, implantação, testes e evidências de produção.
+
+**Resultado:** o comportamento funcional-base está validado pelo PO para orientar o refinamento e a implementação após as dependências aplicáveis. A política institucional não está integralmente aprovada, e a Issue #122 não pode ser encerrada apenas com esta validação.
+
+---
+
 ## 14. Decisões pendentes e responsáveis sugeridos
 
 | ID | Decisão | Responsável sugerido | Impacto |
@@ -418,3 +451,4 @@ A versão 0.2 deverá incorporar decisões formalmente aprovadas para D-122-01 a
 | Versão | Data | Alteração |
 |---|---|---|
 | 0.1 | 19/11/2026 | Consolida requisitos existentes, propõe modelo de detecção e revisão, registra cenários de teste, dependências e decisões pendentes. Não representa política aprovada nem evidência de implementação. |
+| 0.2 | 19/11/2026 | Registra validação do PO sobre o comportamento funcional-base: sinalização para revisão humana, sem punição/bloqueio automático, acesso restrito e minimização. Preserva pendências de lista, categorias, severidade, canal, contingência e aprovação institucional. |
