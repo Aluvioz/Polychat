@@ -2,7 +2,7 @@
 
 > **Versão:** 0.1 — plano proposto, ainda não executado  
 > **Data:** 19/11/2026  
-> **Status:** aguardando validação do público-alvo, aprovação do plano e preparação das sessões  
+> **Status:** plano aprovado pelo PO em 19/11/2026 para organização e preparação das sessões; execução e resultados pendentes  
 > **Issue:** [#94 — Prototipar e validar UX com usuários representativos](https://github.com/Aluvioz/Polychat/issues/94)  
 > **Epic:** [#78](https://github.com/Aluvioz/Polychat/issues/78)  
 > **Artefatos de referência:** [Issue #91 — Usuário mobile](https://github.com/Aluvioz/Polychat/issues/91) e [Issue #92 — Console TI desktop](https://github.com/Aluvioz/Polychat/issues/92)
@@ -29,15 +29,18 @@ A validação deverá produzir evidências observáveis — tarefas, dificuldade
 
 Os protótipos das Issues #91 e #92 foram aceitos como baseline documental de baixa fidelidade. Esse aceite não significa que sejam interfaces implementadas, protótipos funcionais, nem que tenham passado por teste de usabilidade.
 
-### 2.2 Ponto de atenção sobre o público-alvo
+### 2.2 Público-alvo e decisão do PO
 
-A descrição da Issue #94 menciona “público técnico”, enquanto as jornadas de referência descrevem dois perfis diferentes: **Usuário mobile** e **TI desktop**. Antes do recrutamento, o PO deve confirmar formalmente se:
+A descrição original da Issue #94 utiliza a expressão “público técnico”, enquanto as jornadas aprovadas nas Issues #91 e #92 representam dois perfis distintos. Após alinhamento presencial, o PO valida que a pesquisa contemple **os dois perfis**, em trilhas separadas:
 
-1. a validação abrangerá os dois perfis; ou
-2. “público técnico” significa exclusivamente profissionais da equipe de TI que utilizarão o console; ou
-3. existe outro grupo específico de usuários a ser incluído.
+1. **P-U — Usuário mobile:** participantes que representem os usuários finais do público inicial previsto para o Polychat.
+2. **P-TI — TI desktop:** profissionais de TI que efetivamente utilizarão o console nas atividades administrativas previstas.
 
-**Recomendação do PO:** validar separadamente as duas jornadas já documentadas (#91 e #92), recrutando pessoas que representem os papéis reais de Usuário e TI. Não misturar participantes nem consolidar os resultados como se os perfis tivessem as mesmas necessidades. Caso o escopo de “público técnico” seja mais restrito, registrar a decisão antes das sessões e ajustar a amostra.
+Os participantes não devem ser misturados, e os resultados devem ser analisados separadamente por perfil. A decisão não amplia automaticamente o público inicial para os aproximadamente 900 funcionários da FORD.
+
+**Validação presencial do PO — 19/11/2026:** o PO confirma que o público-alvo, a composição dos grupos de participantes, o dimensionamento proposto, os pilotos e as premissas de autorização e privacidade foram discutidos presencialmente e estão validados para fins de planejamento desta pesquisa. Mantém-se a referência amostral deste documento como recomendação qualitativa, não estatística, sujeita à disponibilidade dos representantes elegíveis e às limitações registradas durante o recrutamento.
+
+A confirmação do PO resolve a ambiguidade de escopo da pesquisa #94. Ela não altera por si só os números da baseline geral nem substitui a observância dos procedimentos institucionais acordados para convite, consentimento e tratamento das evidências.
 
 ### 2.3 Fora do escopo destas sessões
 
@@ -298,7 +301,7 @@ Antes do recrutamento, o PO deve registrar a decisão sobre público-alvo, quant
 
 A Issue #94 somente deverá ser considerada concluída quando houver evidência para todos os critérios abaixo:
 
-- [ ] **Público representativo definido:** perfis e critérios de recrutamento aprovados pelo PO; ambiguidade de “público técnico” resolvida.
+- [x] **Público representativo definido:** perfis P-U e P-TI e critérios de recrutamento aprovados pelo PO em 19/11/2026, após alinhamento presencial; trilhas e resultados separados.
 - [ ] **Sessões realizadas e registradas:** sessões por perfil planejado, com participantes anônimos, versão do protótipo, tarefas e limitações registradas.
 - [ ] **Achados priorizados:** problemas, dúvidas e observações documentados, com severidade e prioridade justificadas.
 - [ ] **Protótipos atualizados:** mudanças pertinentes aplicadas às jornadas #91/#92, com histórico e rastreabilidade.
@@ -322,9 +325,9 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 
 ## 15. Checklist de preparação
 
-- [ ] Confirmar o significado de “público técnico” e os perfis que serão testados.
-- [ ] Aprovar objetivo, escopo, quantidade de participantes e critérios de seleção.
-- [ ] Confirmar autorização institucional para recrutamento e realização das sessões.
+- [x] Confirmar o significado de “público técnico” e os perfis que serão testados — decisão do PO registrada em 19/11/2026.
+- [x] Aprovar objetivo, escopo, quantidade de participantes e critérios de seleção — validação presencial do PO em 19/11/2026.
+- [x] Confirmar as premissas de autorização institucional para recrutamento e realização das sessões — discutidas presencialmente; observar os procedimentos e consentimentos aplicáveis antes da coleta.
 - [ ] Preparar convite, consentimento e orientação de privacidade.
 - [ ] Confirmar que todos os cenários usam dados fictícios.
 - [ ] Identificar versões dos protótipos #91 e #92 e conferir se estão acessíveis.
@@ -336,4 +339,6 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 
 ---
 
-**Parecer do PO — 19/11/2026:** recomenda-se aprovar este documento como plano de trabalho v0.1, condicionado à confirmação do público-alvo, das autorizações e dos responsáveis. A aprovação do plano não equivale à execução da pesquisa nem ao aceite da experiência do produto. A Issue #94 deverá permanecer aberta até que os resultados, melhorias, aprovações e evidências exigidos em seus critérios de aceite sejam apresentados e revisados.
+**Parecer do PO — 19/11/2026:** plano de trabalho v0.1 **APROVADO pelo PO**, após alinhamento presencial sobre público-alvo, dois perfis, dimensionamento, pilotos e premissas de autorização/privacidade. A aprovação autoriza a organização das sessões conforme este plano. Não declara sessões realizadas, achados obtidos, protótipos atualizados ou experiência final aprovada. A execução deve respeitar os procedimentos institucionais acordados, o consentimento aplicável e o uso de dados fictícios/anônimos descrito neste documento.
+
+A Issue #94 permanece aberta até que as sessões sejam realizadas, os achados priorizados, os protótipos atualizados quando necessário e as evidências/revisões previstas nos critérios de aceite sejam apresentadas.
