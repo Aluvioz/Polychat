@@ -31,7 +31,7 @@
 A versão 0.3 substitui, para fins de especificação dos requisitos de produto, as interpretações anteriores baseadas exclusivamente na visão POLYCHAT — FORD v0.1.
 
 A fonte atual é composta por:
-- Questionário de Esclarecimento de Requisitos da FORD atualizado, recebido em 19/11/2026.
+- Questionário de Esclarecimento de Requisitos da FORD v2, recebido em 19/11/2026.
 - Alinhamentos complementares do PO com a equipe de Desenvolvimento, considerados concluídos para limites de armazenamento, regras e severidade dos alertas, metas de desempenho, proteção de credenciais, gestão de chaves, política detalhada de retenção, critérios de homologação e isolamento dos ambientes.
 - Premissas de produto confirmadas pelo PO nesta revisão, inclusive o entendimento de que os administradores de TI da FORD são de extrema confiança e que os riscos ligados aos poderes administrativos já foram avaliados no âmbito do projeto.
 
