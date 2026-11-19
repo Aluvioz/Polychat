@@ -104,6 +104,8 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 
 ## 7. Validações e evidências
 
+**Nota temporal:** os resultados a seguir descrevem as verificações da auditoria original e são complementados pelo registro posterior de encerramento na seção 11.
+
 | Verificação | Resultado | Observação |
 |---|---|---|
 | Consulta à Issue #96 | Validado | Objetivo, escopo e critérios lidos diretamente no GitHub |
@@ -117,6 +119,8 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 | Proteção local de arquivos .env | Validado documentalmente | Regra presente em `.gitignore`; não equivale a auditoria histórica de todos os commits |
 | Segredos fora do código | Parcial | Exemplo não contém segredos; secrets externos e histórico completo não auditados |
 | CI da PR #145 | Aprovado | Dois workflow runs `CI` associados ao HEAD `6808625b5c486b52fa95caa922637276f8497235` concluíram com `success` ([run 44183081305](https://github.com/Aluvioz/Polychat/actions/runs/44183081305), [run 44183081247](https://github.com/Aluvioz/Polychat/actions/runs/44183081247)); isso valida os workflows executados, não testes de integração hospedada |
+| Revisão independente da PR #145 | Aprovada | Review `APPROVED` registrada antes da integração da PR à `main` em 17/11/2026 |
+| Encerramento da Issue #96 | Concluído | Responsável/Tech Lead confirmou a conclusão operacional e autorizou o encerramento em 17/11/2026; ver seção 11 |
 | Testes de integração Supabase/Vercel | Não executados | Não há associação de ambiente Supabase por estágio confirmada |
 | Migrations | Não aplicável nesta issue | Nenhuma migration foi aplicada |
 | Regressão funcional | Não executada independentemente nesta auditoria documental | A auditoria não exercitou fluxos hospedados; no encerramento, o responsável/Tech Lead atestou a conclusão das validações operacionais previstas na issue |
@@ -131,7 +135,9 @@ Os itens abaixo preservam as limitações identificadas no momento da inspeção
 4. **ADR-009:** permanece `Proposed` no índice e no próprio arquivo da ADR consultados nesta atualização. A ADR trata de decisões arquiteturais e operacionais mais amplas que a Issue #96. O encerramento da #96 não altera automaticamente o status da ADR; acompanhar sua revisão no contexto da Issue #89 e das atividades relacionadas, incluindo a #98.
 5. **Revisão da PR #145:** resolvida. A PR recebeu review `APPROVED` e foi integrada à `main` em 17/11/2026. A aprovação foi restrita à documentação e a revisão independente está registrada na própria PR.
 
-## 9. Limites respeitados
+## 9. Limites respeitados na auditoria original
+
+Os limites abaixo descrevem as ações da auditoria original; não restringem a atualização documental por aditivo realizada em 19/11/2026.
 
 - Nenhum projeto Supabase foi criado, renomeado, pausado ou modificado.
 - Nenhum domínio, branch de produção ou configuração Vercel foi alterado; a operação do Vercel foi aceita com base na confirmação do responsável.
