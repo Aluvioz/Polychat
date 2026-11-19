@@ -1,58 +1,84 @@
 # ADR-001 — Arquitetura lógica geral
 
 - **Status:** Proposed
-- **Data:** 17/11/2026
+- **Data de revisão:** 19/11/2026
 - **Issue:** #89
+- **Baseline:** POLY-REQ-001 v0.4
 - **Responsáveis pela decisão:** Tech Lead e TI; PO valida aderência ao escopo
 
 ## Contexto
 
-O Polychat é uma aplicação web interna da FORD. A baseline do MVP contempla público inicial aproximado de 25 pessoas do setor técnico, dois perfis (`user` e `ti`), conversas individuais e em grupo, mensagens textuais, anexos PDF/JPEG, alertas de conteúdo suspeito e consulta de conversas pelo TI sob auditoria. A Issue #88 fixa Supabase + Vercel como direção de execução. O repositório já contém Next.js, um módulo isolado de autorização e uma migration inicial, mas não implementa o chat nem a integração completa com Supabase.
+O Polychat é uma aplicação web interna da FORD. A baseline atual contempla aproximadamente 25 usuários finais do setor técnico e 2 a 3 administradores de TI, com perfis Usuário e TI, conversas individuais e em grupo, mensagens, anexos PDF/JPEG, alertas, consulta administrativa e auditoria.
+
+A FORD v2 estabelece uma restrição arquitetural obrigatória: hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados podem ser utilizadas.
+
+Essa restrição prevalece sobre decisões e registros tecnológicos anteriores incompatíveis. A direção Supabase + Vercel da Issue #88 foi retirada como arquitetura-alvo e está registrada como histórica/depreciada na ADR-003. A escolha da arquitetura operacional compatível ainda precisa ser concluída (Q-025).
+
+O repositório contém Next.js 16, React 19, TypeScript, uma página institucional, um módulo isolado de autorização e uma migration de perfis vinculada ao modelo anterior. Não há implementação funcional ponta a ponta do chat nem comprovação de integração com infraestrutura FORD.
 
 ## Problema
 
-Definir fronteiras de confiança e responsabilidades de cada camada sem tratar controles visuais como segurança, nem confundir a stack de referência com uma arquitetura já integrada e homologada.
+Definir fronteiras de confiança, responsabilidades e componentes lógicos sem presumir provedores externos, tratar controles visuais como segurança ou confundir código existente com arquitetura implementada e homologada.
 
 ## Alternativas consideradas
 
-1. **Aplicação modular com serviços gerenciados:** frontend web, camada server-side, autenticação, banco relacional, storage privado, eventos realtime e auditoria.
-2. **Backend próprio e infraestrutura corporativa:** mais controle operacional, porém maior esforço de implementação, manutenção e disponibilidade.
-3. **Aplicação concentrada em um único componente:** menor configuração inicial, porém aumenta acoplamento e dificulta separar privilégios e testar fronteiras de segurança.
+1. **Arquitetura modular executada em infraestrutura sob controle da FORD:** aplicação, identidade, banco, armazenamento, análise antimalware, auditoria e operação permanecem dentro da fronteira de controle da organização.
+2. **Serviços gerenciados externos para componentes centrais:** recusados para dados da FORD quando o terceiro puder acessar, armazenar ou processar esses dados, em desacordo com a FORD v2.
+3. **Aplicação concentrada em um único componente:** reduz configuração inicial, mas aumenta acoplamento e dificulta separar privilégios, testar fronteiras e evoluir a operação.
 
 ## Decisão proposta
 
-Adotar arquitetura lógica modular, mantendo os seguintes limites:
+Adotar uma arquitetura lógica modular, com todos os componentes que tratam dados da FORD executados em infraestrutura sob controle da própria organização. A ADR permanece Proposed até a revisão técnica e a compatibilização com o ambiente corporativo.
 
-- **Apresentação:** aplicação Next.js, sem credenciais privilegiadas ou regras de autorização confiadas ao browser.
-- **Camada server-side:** handlers/serviços responsáveis por autenticação, autorização, validação de entradas e operações privilegiadas.
-- **Identidade:** provedor de autenticação Supabase, sujeito à aprovação e integração descritas na ADR-004.
-- **Persistência:** PostgreSQL gerenciado pelo Supabase como fonte de verdade para perfis, conversas, membros e mensagens, sujeito ao desenho da ADR-005.
-- **Autorização de dados:** RLS no banco, combinada com verificações server-side, conforme ADR-006.
-- **Arquivos:** storage privado com autorização antes de upload/download, conforme ADR-008.
-- **Atualizações:** canal realtime como mecanismo de notificação; persistência no banco permanece a fonte de verdade, conforme ADR-007.
-- **Operação:** Vercel como destino de deploy definido na ADR-003; ambientes e segredos sob a ADR-009.
-- **Auditoria e segurança:** operações privilegiadas e consulta administrativa devem ser rastreáveis, conforme ADR-010.
+As responsabilidades lógicas são:
 
-Operações sensíveis devem negar por padrão e falhar fechadas. Esta é uma proposta de arquitetura lógica; não autoriza assumir que todos os componentes já existem ou estão aprovados.
+- **Apresentação:** frontend web Next.js 16 + React 19 + TypeScript, conforme ADR-002. O navegador não recebe credenciais privilegiadas nem decide permissões.
+- **Camada server-side:** handlers e serviços da aplicação responsáveis por autenticação, autorização, validação de entradas, regras de negócio e operações privilegiadas.
+- **Identidade e sessões:** mecanismo de autenticação operado dentro da fronteira de controle da FORD, sem provedor externo que acesse ou processe credenciais, identidades ou sessões. Regras funcionais e de credenciais seguem a baseline e a ADR-004.
+- **Persistência:** banco relacional sob controle da FORD. PostgreSQL é a tecnologia proposta na ADR-005, ainda sujeita à validação técnica da implantação.
+- **Autorização de dados:** verificações server-side e políticas no banco, incluindo RLS quando suportada e adequada. As permissões devem refletir os perfis Usuário e TI e as regras de participação em conversas e grupos.
+- **Arquivos:** armazenamento privado na infraestrutura FORD, com autorização no servidor, revogação de acesso e análise antimalware dentro da mesma fronteira. Não utilizar buckets ou serviços externos para dados da organização.
+- **Mensageria em tempo real:** transporte interno/autorizado para notificar participantes; o banco permanece a fonte de verdade. A tecnologia específica não está decidida nesta ADR.
+- **Auditoria e monitoramento:** registros e processamento de alertas dentro da infraestrutura FORD, com acesso administrativo conforme a baseline e trilha auditável.
+- **Operação:** ambientes de desenvolvimento, homologação e produção isolados e sob controle da FORD; backup, restauração, gestão de chaves e monitoramento conforme os requisitos não funcionais consolidados.
+
+Operações sensíveis devem negar por padrão e falhar fechadas. Criptografia em trânsito e em repouso é obrigatória; a solução não deve ser descrita como E2EE, pois o servidor precisa acessar o conteúdo para as funções administrativas e de monitoramento definidas pela FORD.
+
+Nenhum fornecedor, serviço externo ou suboperador pode receber acesso a dados da FORD ou assumir seu armazenamento/processamento. Dependências de software sem acesso a esses dados não são, por si só, proibidas.
 
 ## Justificativa
 
-A separação reduz dependência entre interface e regras de negócio e permite testar autenticação, autorização e acesso a dados de forma independente. Serviços gerenciados aceleram o MVP, mas não transferem a responsabilidade por configuração, acesso, privacidade, continuidade ou segurança.
+A modularidade mantém responsabilidades testáveis e reduz a confiança no cliente. A execução sob controle FORD respeita a restrição de infraestrutura mais recente e permite que autenticação, dados, arquivos, antimalware, auditoria e recuperação permaneçam dentro da fronteira exigida pelo cliente.
+
+A seleção de tecnologias específicas deve considerar compatibilidade com a infraestrutura corporativa, operação, segurança, continuidade e capacidade de homologação, sem reintroduzir serviços externos incompatíveis.
 
 ## Consequências
 
-**Positivas:** fronteiras explícitas; menor confiança no cliente; decisões rastreáveis; componentes substituíveis.
+**Positivas:**
+- Alinhamento com a restrição de soberania e controle de infraestrutura da FORD.
+- Fronteiras claras entre apresentação, regras, identidade, dados e operação.
+- Menor dependência de provedores externos para tratar dados corporativos.
+- Decisões técnicas rastreáveis e passíveis de substituição por componente.
 
-**Negativas:** mais integração e configuração; dependência de provedores; necessidade de testes em cada fronteira; risco de duplicação de regras entre handlers e RLS.
+**Negativas e cuidados:**
+- Maior responsabilidade da FORD/equipe sobre operação, disponibilidade, atualização e recuperação.
+- Necessidade de comprovar capacidade de infraestrutura, observabilidade, backup/restore e suporte.
+- Integração e testes de segurança precisam ocorrer no ambiente operacional real.
 
 ## Riscos
 
-RLS incompleta; credencial privilegiada exposta; autorização esquecida em handler; publicação realtime antes da persistência; configuração divergente entre ambientes; complexidade excessiva para o público inicial.
+Configuração incorreta de autorização; credenciais privilegiadas expostas; RLS incompleta; acesso indevido a anexos; falha no antimalware; perda de histórico; publicação de eventos antes da persistência; segregação inadequada de ambientes; dependência externa que passe a acessar ou processar dados.
 
 ## Evidências e estado atual
 
-A `main` contém Next.js 16/React 19/TypeScript, a página institucional, o módulo `src/auth/authorization.mjs` e a migration de perfis. Ainda não foram encontradas rotas de chat, serviço de domínio, integração executável com Supabase, realtime, buckets de storage ou trilha de auditoria funcional.
+A `main` contém Next.js 16/React 19/TypeScript, página institucional, o módulo `src/auth/authorization.mjs` e uma migration de perfis vinculada ao Supabase. Não foram encontradas rotas funcionais de chat, serviços de domínio, armazenamento de anexos, canais realtime ou trilha de auditoria funcional.
+
+A existência desses artefatos históricos não comprova que Supabase ou Vercel estejam autorizados para produção. A baseline v0.4 registra a restrição FORD e a necessidade de reconciliação arquitetural.
 
 ## Pendências para Accepted
 
-Revisão do Tech Lead e TI sobre arquitetura lógica, responsabilidades operacionais, modelo de ameaça, fronteiras server-side/RLS e viabilidade da solução no ambiente corporativo. Registrar aprovadores, data, versão e condições nesta ADR.
+- Compatibilizar a arquitetura lógica com a infraestrutura efetivamente disponibilizada e controlada pela FORD (Q-025).
+- Revisão do Tech Lead e TI sobre componentes, fronteiras server-side, identidade, banco, armazenamento, antimalware, auditoria, continuidade e operação.
+- Registrar na ADR a solução técnica selecionada, os responsáveis pela aprovação, a data, as evidências de viabilidade e os limites do aceite.
+
+Os parâmetros funcionais e grupos de requisitos técnicos já alinhados com Desenvolvimento permanecem consolidados nos documentos de requisitos; não são reabertos por esta revisão arquitetural.
