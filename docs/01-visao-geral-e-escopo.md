@@ -33,7 +33,7 @@ O console de TI concentra o gerenciamento de contas e grupos, consulta e exporta
 | Desenvolvimento / liderança técnica | Equipe responsável pela solução. | Projetar, implementar e validar os requisitos funcionais e não funcionais alinhados. |
 | TI da FORD | Equipe responsável pela infraestrutura e operação. | Administrar credenciais, segredos, ambientes, operação, recuperação e controles técnicos sob responsabilidade da FORD. |
 
-Todos os administradores do perfil TI possuem os mesmos poderes administrativos. Não existe administrador principal nem exigência de aprovação de uma segunda pessoa para operações privilegiadas. O cliente confirmou confiança na equipe de TI; os riscos relacionados a esse modelo foram considerados avaliados pelo projeto.
+Todos os administradores do perfil TI possuem os mesmos poderes administrativos. Não existe administrador principal nem exigência de aprovação de uma segunda pessoa para operações privilegiadas. A FORD informou que não possui uma área de Segurança da Informação separada; a responsabilidade por segurança fica com o TI. O cliente confirmou confiança na equipe de TI; os riscos relacionados a esse modelo foram considerados avaliados pelo projeto.
 
 ## 1.5 Escopo do MVP
 
@@ -135,7 +135,7 @@ Todos os administradores do perfil TI possuem os mesmos poderes administrativos.
 - Após exclusão autorizada, os dados também devem desaparecer dos backups ao término do ciclo de retenção das cópias. Backups possuem retenção de 12 meses; o descarte é comprovado por registro de auditoria emitido pelo TI.
 - Criptografia em trânsito e em repouso; sem E2EE. As chaves são administradas pelo servidor sob responsabilidade do TI da FORD.
 - O aviso de monitoramento é apresentado no primeiro acesso.
-- A FORD definiu o TI como canal para solicitações de acesso, correção ou exclusão de dados. As respostas do cliente sobre privacidade e LGPD são registradas como posicionamento do projeto, sem significar dispensa de obrigações legais aplicáveis.
+- A FORD definiu o TI como canal operacional para solicitações de acesso, correção ou exclusão de dados. Solicitações legais dirigidas à FORD ou a fornecedores de infraestrutura são tratadas pela própria FORD, que espera ser informada quando isso for juridicamente permitido. O cliente informou não possuir política corporativa específica de privacidade para este programa, não prever participação do Jurídico e não considerar privacidade/LGPD prioridade do projeto. Essas respostas são registradas como posicionamento do cliente, sem significar dispensa de obrigações legais aplicáveis.
 
 ## 1.7 Infraestrutura, operação e restrições tecnológicas
 
