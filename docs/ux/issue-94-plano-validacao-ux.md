@@ -198,7 +198,7 @@ Por se tratar de avaliação qualitativa de wireframes de baixa fidelidade, as m
 | Facilidade percebida | Pergunta pós-tarefa em escala de 1 a 7, em que 1 = muito difícil e 7 = muito fácil |
 | Comentário | Observação ou frase relevante, anonimizada e contextualizada |
 
-Tempo de execução pode ser anotado como indicador exploratório, mas não deve ser comparado a metas de produto enquanto a interação estivertica não for funcional e não houver condições equivalentes de sessão. Não utilizar SUS como indicador de usabilidade do sistema com wireframes estáticos; eventual questionário padronizado deverá ser avaliado após a existência de um protótipo interativo adequado.
+Tempo de execução pode ser anotado como indicador exploratório, mas não deve ser comparado a metas de produto enquanto a interação não for funcional e não houver condições equivalentes de sessão. Não utilizar SUS como indicador de usabilidade do sistema com wireframes estáticos; eventual questionário padronizado deverá ser avaliado após a existência de um protótipo interativo adequado.
 
 ### 9.2 Escala de severidade dos achados
 
