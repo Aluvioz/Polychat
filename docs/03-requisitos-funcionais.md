@@ -316,9 +316,10 @@ A prioridade **Alta** indica que a funcionalidade faz parte do escopo inicial ap
 - CA-022.5 — Gerar registros para inclusão e remoção de participantes.
 - CA-022.6 — Gerar registros para consulta de conversas e consulta de alertas.
 - CA-022.7 — Gerar registros para download de anexos e alteração de configurações.
-- CA-022.8 — Somente TI consegue consultar e gerenciar registros de auditoria.
-- CA-022.9 — Usuários não conseguem alterar ou excluir registros de auditoria.
-- CA-022.10 — Os registros não possuem exclusão automática e são mantidos enquanto o sistema operar, conforme a política de retenção alinhada.
+- CA-022.8 — Gerar registros para exportação de conversas e para edição ou exclusão administrativa de mensagens.
+- CA-022.9 — Somente TI consegue consultar e gerenciar registros de auditoria.
+- CA-022.10 — Usuários não conseguem consultar, alterar ou excluir registros de auditoria.
+- CA-022.11 — Os registros não possuem exclusão automática e são mantidos enquanto o sistema operar. Exclusões autorizadas pelo TI seguem a política de retenção alinhada.
 
 ### RF-023 — Exibir aviso de monitoramento no primeiro acesso
 
