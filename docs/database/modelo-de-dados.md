@@ -1,7 +1,7 @@
 # Modelo de dados — Polychat
 
 - **Identificador:** POLY-DATA-001
-- **Versão:** 0.1 — 18/11/2026
+- **Versão:** 0.2 — 19/11/2026
 - **Status:** Proposta preliminar para revisão
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados
@@ -424,27 +424,31 @@ A política final deve ser documentada na Issue #102 e refletida nas migrations,
 | Q-016 | Concorrência, volume e desempenho esperados. | Índices, paginação, particionamento futuro e dimensionamento. |
 | Q-024 | Edição e exclusão de mensagens. | Campos de edição, exclusão lógica e histórico de versões. |
 
-## 12. Divergência de escopo a resolver antes das migrations
+## 12. Decisão de escopo funcional do PO e alinhamento com ADR-005
 
 Existe uma diferença entre os artefatos de governança:
 
 - **Issue #99:** cita profiles, conversations, memberships, messages, attachments, audit_events e configurações.
-- **ADR-005:** menciona perfis, conversas, participantes, mensagens, anexos, alertas e eventos de auditoria.
+- **ADR-005 (Proposed):** menciona perfis, conversas, participantes, mensagens, anexos, alertas e auditoria.
 
-Recomendação para decisão do PO:
+**Decisão do PO — 19/11/2026, validação do escopo funcional conceitual:**
 
-1. Manter as seis entidades de domínio explicitadas na Issue #99 como núcleo da modelagem desta issue: profiles, conversations, memberships, messages, attachments e audit_events.
-2. Tratar configurações persistentes como item de escopo a detalhar: primeiro inventariar o que será configurado e quem poderá alterar cada item; não criar uma tabela genérica sem requisitos.
-3. Tratar security_alerts como entidade candidata relacionada às Issues #122 e #123. Sua inclusão no schema da #99 precisa ser explicitamente confirmada pelo PO e alinhada à ADR-005.
-4. Após a decisão, atualizar a Issue #99 e a ADR-005 para que ambos descrevam o mesmo conjunto de entidades.
+1. **Núcleo de dados confirmado:** profiles, conversations, memberships, messages, attachments e audit_events representam as necessidades funcionais essenciais do MVP descritas nos requisitos.
+2. **Alertas também fazem parte do domínio do produto:** a análise de mensagens suspeitas e a geração de alertas para revisão do TI estão previstas em RF-014/RF-015. Portanto, `security_alerts` deve permanecer no modelo lógico como entidade relacionada às Issues #122/#123. Seus atributos finais, estados e regras dependem das decisões Q-007/Q-008 e da revisão técnica; esta validação não aprova DDL nem política de alertas.
+3. **Configurações permanecem no escopo funcional do console TI, mas sem tabela genérica aprovada:** a funcionalidade administrativa de configurar parâmetros está indicada na visão do produto. Contudo, não há inventário dos parâmetros persistentes, seus tipos, responsáveis, regras de alteração ou necessidade de histórico. Não criar uma tabela genérica `configs` por suposição. O inventário deve ser produzido e validado com PO/TI; os itens que precisarem ser persistidos devem ser incorporados ao modelo antes das migrations correspondentes. Se forem apenas variáveis de ambiente ou segredos operacionais, devem ficar fora de uma tabela de configurações de negócio.
+4. **Organização e autorização:** o escopo inicial continua sendo uma única organização (FORD), sem `tenant_id` ou multi-tenancy adicional. A aplicação mantém somente os perfis `user` e `ti`; não criar um terceiro papel de participante, proprietário ou moderador em `memberships`.
+5. **Preservação do histórico:** desativação de conta ou encerramento de participação não deve ser interpretado automaticamente como exclusão das mensagens, anexos ou eventos de auditoria relacionados. Exclusão física, retenção e descarte dependem de Q-010 e das aprovações institucionais aplicáveis.
+6. **Anexos:** o banco deve manter metadados e vínculo com a mensagem; o conteúdo binário permanece no armazenamento privado previsto, sujeito à revisão da ADR-008 e às regras de anexos.
 
-Esta é uma recomendação de organização do trabalho, não uma decisão de negócio já aprovada.
+Esta decisão valida o **significado e o limite funcional** das entidades. Não aprova normalização, tipos SQL, constraints, índices, FKs, RLS, cascatas, particionamento, migrações ou a ADR-005; esses itens permanecem sob revisão do Tech Lead, backend, TI, Segurança e SQA conforme aplicável.
+
+**Pendência que permanece na Issue #99:** documentar o inventário de configurações antes de declarar completo o escopo de persistência e antes de encerrar a issue. A ADR-005 deve ser harmonizada com essa delimitação por seus responsáveis técnicos, sem alterar seu status Proposed por esta validação de produto.
 
 ## 13. Plano de validação do modelo
 
 Antes de criar migrations das entidades novas:
 
-- [ ] PO valida o escopo das entidades e a divergência entre configurações e alertas.
+- [x] PO valida o escopo funcional conceitual das seis entidades centrais e de `security_alerts`; configurações persistentes permanecem condicionadas ao inventário descrito na seção 12.
 - [ ] Tech Lead revisa normalização, chaves, cardinalidades, índices e estratégia de exclusão.
 - [ ] Desenvolvimento backend valida viabilidade do modelo com Supabase/PostgreSQL e necessidades das consultas.
 - [ ] TI valida os fluxos administrativos, participantes e consulta de conversas.
@@ -471,6 +475,7 @@ Antes de criar migrations das entidades novas:
 | Versão | Data | Alteração | Estado |
 |---|---|---|---|
 | 0.1 | 18/11/2026 | Primeira proposta do modelo lógico, dicionário preliminar, relacionamentos, rastreabilidade e registro das decisões pendentes. | Em revisão |
+| 0.2 | 19/11/2026 | Registra validação do PO sobre o escopo funcional das entidades, inclui `security_alerts` no domínio lógico e delimita configurações persistentes como dependentes de inventário; não aprova schema físico ou migrations. | Aprovado pelo PO quanto ao escopo funcional; revisão técnica pendente |
 
 ## 16. Referências internas
 
