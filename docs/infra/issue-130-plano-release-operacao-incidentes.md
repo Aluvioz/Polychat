@@ -3,7 +3,7 @@
 **Issue:** #130 — Preparar release, operação e plano de incidentes  
 **Epic:** #87 — SQA, validação e release  
 **Documento:** POLY-OPS-130  
-**Versão:** 0.1 — 19/11/2026  
+**Versão:** 0.2 — 19/11/2026  
 **Estado:** proposta operacional para revisão; não representa aprovação institucional nem comprova execução de procedimentos  
 **Responsáveis pela validação:** Product Owner, Tech Lead, Desenvolvimento, SQA, TI/Operação, Segurança e representantes da FORD, conforme o assunto
 
@@ -142,6 +142,12 @@ Não se deve converter ausência de evidência em aprovação presumida.
 | GO-14 | Runbooks, suporte e escalonamento disponíveis. | Procedimentos e contatos aprovados. | TI/Operação + SQA | Obrigatório |
 | GO-15 | Comunicação e janela de release aprovadas. | Plano de comunicação e responsáveis. | PO + FORD | Obrigatório |
 | GO-16 | Defeitos e riscos residuais registrados e tratados. | Lista de defeitos, severidade, plano e aceite formal quando cabível. | PO + Tech Lead + responsáveis pelo risco | Obrigatório |
+| GO-17 | Público-alvo, escopo do piloto e perfis/dispositivos autorizados confirmados para a versão. | Registro do público incluído, composição Usuário/TI, escopo e matriz de dispositivos/navegadores homologados. | PO + FORD + TI + UX/SQA | Obrigatório |
+| GO-18 | Jornadas críticas de cada perfil incluídas na release aceitas pelo PO. | Matriz requisito/critério/caso e evidências de execução dos fluxos Usuário-mobile e TI-desktop efetivamente incluídos. | PO + SQA + UX | Obrigatório para os fluxos incluídos |
+| GO-19 | Funcionalidades anunciadas ou comprometidas no escopo estão disponíveis, ou limitações são explicitamente excluídas e comunicadas. | Release notes, matriz de escopo, defeitos conhecidos e decisão do PO. | PO + Tech Lead | Obrigatório |
+| GO-20 | Aceite de produto registrado separadamente das aprovações técnica, de qualidade, segurança e operação. | Parecer do PO com versão/commit, escopo, critérios, defeitos conhecidos e ressalvas; aprovações de outros domínios em seus próprios registros. | PO | Obrigatório |
+| GO-21 | Orientações de uso, comunicação inicial e canal de suporte compreensíveis ao público do piloto. | Mensagem de lançamento, instruções mínimas, limitações conhecidas, canal e responsável de suporte confirmados. | PO + UX + TI/Operação + FORD | Obrigatório |
+| GO-22 | Objetivos e indicadores do piloto definidos antes da disponibilização, sem ampliar público automaticamente. | Hipóteses/objetivos, métricas, fonte, responsável, período de acompanhamento aprovado e critério de decisão para expansão. | PO + FORD + TI | Obrigatório para piloto; expansão exige nova decisão |
 
 ### 5.3 Condições que exigem No-Go
 
@@ -172,6 +178,26 @@ A decisão deve registrar separadamente:
 
 A decisão final de publicação deve respeitar a governança de release que a FORD vier a aprovar. Até lá, não presumir que o PO ou o Tech Lead tenha autoridade exclusiva de Go.
 
+### 5.5 Critérios específicos de aceite do produto
+
+A aprovação do PO deve responder se **a versão candidata entrega o escopo prometido ao público definido**, com jornadas utilizáveis, limitações conhecidas e condições de adoção claras. Ela é necessária, mas não substitui as aprovações técnica, de SQA, Segurança, TI/Operação ou da autoridade institucional da FORD.
+
+| Dimensão | Pergunta de aceite do PO | Evidência necessária | Regra de bloqueio |
+|---|---|---|---|
+| Público e rollout | Quem receberá acesso nesta versão? O escopo corresponde à população aprovada? | Lista/grupo de piloto ou critério de provisionamento, composição dos perfis e autorização do responsável da FORD. | Não liberar para público maior por inferência. O contexto do MVP é aproximadamente 25 pessoas do setor técnico; isso não autoriza automaticamente os cerca de 900 funcionários. A composição entre Usuário e TI deve estar confirmada. |
+| Adequação por perfil | O perfil Usuário funciona no contexto móvel e o perfil TI no contexto desktop previsto? | Jornadas e matriz de dispositivos/navegadores homologados por perfil. | Não anunciar suporte a dispositivo/navegador não homologado; resolver ou limitar explicitamente Q-012 antes do aceite. |
+| Jornadas essenciais | Cada fluxo declarado no escopo foi testado de ponta a ponta para o ator correto? | Rastreabilidade RF → CA → teste; evidências por perfil e por ambiente. | Fluxo crítico anunciado mas inoperante, com falha de autorização ou sem evidência confiável impede Go. |
+| Escopo funcional | Release notes correspondem ao que realmente está implementado? | Lista de funcionalidades incluídas, excluídas, parcialmente entregues e dependências. | Não apresentar mock, tela estática, integração parcial ou proposta documental como funcionalidade entregue. |
+| Qualidade percebida | Defeitos conhecidos afetam tarefa essencial, confiança ou integridade do trabalho? | Lista de defeitos com severidade, impacto ao usuário, workaround, responsável e prazo. | Defeito crítico/alto que comprometa segurança, dados ou jornada principal bloqueia; exceções exigem autoridade competente e aceite formal, nunca silêncio do PO. |
+| Informação ao usuário | A pessoa sabe como acessar, usar, reportar problema e compreender limitações? | Instruções, comunicação, release notes e canal oficial de suporte aprovados. | Não liberar piloto sem orientação mínima e caminho de suporte funcional. |
+| Resultado do piloto | Como será avaliado se a versão atende ao propósito e pode ser expandida? | Objetivos, indicadores, fonte, responsável, período de observação e critério de decisão aprovados. | Não ampliar público nem declarar sucesso sem análise e nova autorização. |
+
+**Referência de escopo do MVP:** o contexto de produto registra aproximadamente 25 pessoas do setor técnico como público inicial, dois perfis (Usuário e TI), Usuário em smartphone e TI em desktop. A questão Q-001 ainda exige confirmar a composição entre usuários finais e TI; Q-012 ainda exige definir dispositivos/navegadores. O PO deve preservar esses limites até a confirmação competente.
+
+**Aceite de produto por release:** registrar versão, commit, escopo e público, critérios funcionais atendidos, jornadas testadas, defeitos e limitações conhecidas, orientação ao usuário, riscos de produto e decisão (Aprovado, Reprovado ou Aprovado com ressalvas formalmente autorizadas). O PO não deve aprovar itens não demonstrados nem transformar aprovação de produto em autorização final de produção.
+
+**Expansão do piloto:** qualquer ampliação além do público e dos dispositivos aprovados constitui nova decisão de produto/operação, com revisão de capacidade, segurança, suporte e homologação. Não ocorre automaticamente após um deployment bem-sucedido.
+
 ## 6. Smoke test
 
 ### 6.1 Objetivo e regras
@@ -201,6 +227,7 @@ Somente executar casos correspondentes a funcionalidades efetivamente implementa
 | SMK-13 | Verificar health/observabilidade após deploy. | Métricas e logs mostram serviço operante; sem erro crítico novo. | Painel, intervalo observado e versão. |
 | SMK-14 | Verificar suporte e escalonamento. | Responsável de suporte identificado e canal funcional. | Confirmação do canal de teste. |
 | SMK-15 | Confirmar versão publicada. | Versão/commit publicado coincide com o aprovado. | URL, commit, horário e registro de deployment. |
+| SMK-16 | Confirmar acesso restrito ao público piloto e aos perfis/dispositivos homologados. | Somente contas autorizadas do piloto acessam o produto no contexto aprovado; não há ampliação automática. | Critério do piloto, contas sintéticas por perfil e resultado de acesso permitido/negado. |
 
 ### 6.3 Registro de execução
 
@@ -728,17 +755,24 @@ A issue só deve ser considerada concluída quando:
 - monitoramento, alertas, canais de suporte e escalonamento estiverem operacionais e testados;
 - smoke tests, testes relevantes e regressão tiverem evidências reais na versão candidata;
 - revisão da PR, checks e ausência de regressão impeditiva estiverem comprovadas;
+- o aceite de produto da versão e do público-alvo estiver registrado separadamente dos aceites técnico, SQA, Segurança e operação;
+- as jornadas incluídas por perfil, limitações conhecidas e comunicação de lançamento estiverem evidenciadas;
+- critérios de acompanhamento do piloto e autorização para eventual expansão estiverem definidos;
 - decisões e riscos pendentes estiverem resolvidos ou formalmente replanejados pela autoridade competente.
 
 Não marcar todos os critérios como concluídos apenas pela criação deste documento.
 
 ## 19. Parecer do Product Owner
 
-A proposta organiza o processo necessário para transformar uma entrega de software em uma release controlada e suportável. Ela oferece critérios verificáveis, define a participação esperada de produto e das áreas técnicas, separa decisão de negócio de decisão técnica e evita declarar como existentes procedimentos que ainda não possuem evidência.
+O plano organiza os elementos necessários para transformar uma entrega em release controlada e suportável. A versão 0.1 já cobria o fluxo operacional; a versão 0.2 explicita o que o PO deve aprovar na dimensão do produto: escopo real, público e rollout, adequação das jornadas por perfil, limitações conhecidas, comunicação e critérios de acompanhamento do piloto.
 
-**Parecer:** documento adequado para iniciar revisão conjunta por PO, Tech Lead, SQA, TI/Operação e Segurança. A aprovação do procedimento deve ser complementada pelas decisões institucionais da FORD e, quando aplicável, de Jurídico/Privacidade.
+**Validação do PO (19/11/2026):** aprovo os critérios de release do produto descritos nas seções 5.2, 5.4 e 5.5 como baseline de avaliação de cada versão candidata. O aceite do PO deve ser registrado por release e não pode ser inferido de CI verde, deployment Ready, aceite técnico ou aprovação de uma PR documental.
 
-**Status recomendado da Issue #130 após a integração documental:** parcialmente concluída, aguardando definições operacionais, execução dos procedimentos, evidências de testes e revisão. A Issue #130 deve permanecer aberta até o atendimento de sua Definition of Done.
+A aprovação do PO cobre aderência ao escopo, critérios funcionais, valor e impacto aos usuários, público autorizado e comunicação. Não aprova arquitetura, segurança, privacidade, infraestrutura, recuperação, RPO/RTO, testes técnicos ou autoridade institucional final de publicação.
+
+**Limites atuais:** este documento não demonstra que o produto esteja pronto para uma primeira release. A baseline técnica consultada em 17/11/2026 registrava que a main ainda não continha os fluxos completos de autenticação, conversas, grupos, anexos e administração. O catálogo de smoke tests é aplicável somente às funcionalidades efetivamente implementadas; casos não aplicáveis devem ser registrados como tal, não como aprovados. A liberação de produto permanece condicionada a evidências novas da versão candidata.
+
+**Status recomendado da Issue #130:** validação dos critérios de produto concluída; entrega documental e operacional ainda parcial. Manter a issue aberta até as revisões, decisões de governança, runbooks, backup/restore, rollback, monitoramento, suporte, testes e evidências de uma release real.
 
 ---
 
@@ -747,3 +781,4 @@ A proposta organiza o processo necessário para transformar uma entrega de softw
 | Versão | Data | Alteração |
 |---|---|---|
 | 0.1 | 19/11/2026 | Primeira proposta do plano de release, operação, backup/recuperação, rollback, monitoramento, incidentes, suporte e evidências. |
+| 0.2 | 19/11/2026 | Registra validação do PO dos critérios de release de produto; acrescenta gates para público/rollout, jornadas por perfil, escopo real, limitações, comunicação e acompanhamento do piloto; mantém a distinção entre aceite de produto e autorização final de produção. |
