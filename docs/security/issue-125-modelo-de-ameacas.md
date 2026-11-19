@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.1 — 19/11/2026  
+**Versão:** 0.2 — 19/11/2026  
 **Status:** preliminar; sujeito à revisão do Tech Lead, Segurança, TI, SQA e áreas institucionais competentes  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
@@ -71,16 +71,17 @@ A ausência de evidência no repositório não prova que um controle inexista em
 | [ADR-008 — Storage e anexos](../adr/ADR-008-storage-anexos.md) | Proposta de armazenamento privado e fluxo de validação; permanece Proposed. |
 | [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md) | Trade-offs de monitoramento, consulta administrativa, auditoria e criptografia; permanece Proposed. |
 | [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras, operações permitidas/negadas e lacunas de autorização. Aprovação de negócio/segurança e enforcement de domínio continuam pendentes. |
-| [Modelo de dados — Issue #99](https://github.com/Aluvioz/Polychat/pull/149) | Proposta preliminar para perfis, conversas, memberships, mensagens, anexos e auditoria; PR em Draft e não integrada à main na data desta versão. |
-| [Política de anexos — Issue #117](https://github.com/Aluvioz/Polychat/pull/150) | Proposta preliminar de validação, storage e antimalware; PR em Draft e não integrada à main. |
-| [Política de conteúdo suspeito — Issue #122](https://github.com/Aluvioz/Polychat/pull/151) | Proposta preliminar de detecção, contexto e falsos positivos; PR em Draft e não integrada à main. |
+| [Modelo de dados — Issue #99](https://github.com/Aluvioz/Polychat/pull/149) | PR em Draft; escopo funcional conceitual validado pelo PO na v0.2, mas schema físico, DDL, RLS e migrations seguem sujeitos à revisão técnica. |
+| [Política de anexos — Issue #117](https://github.com/Aluvioz/Polychat/pull/150) | Documento v0.2; comportamento funcional-base validado pelo PO (PDF/JPEG, validação real e fail-closed); decisões operacionais/institucionais e revisão técnica pendentes; PR em Draft. |
+| [Política de conteúdo suspeito — Issue #122](https://github.com/Aluvioz/Polychat/pull/151) | Documento v0.2; comportamento funcional-base de sinalização e revisão humana validado pelo PO; lista, regras operacionais e aprovações institucionais/técnicas pendentes; PR em Draft. |
 | [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação de RLS e testes de isolamento de domínio. |
 | [Issue #102](https://github.com/Aluvioz/Polychat/issues/102) | Estratégia de auditoria, retenção, acesso e proteção contra alteração. |
 | [Issue #105](https://github.com/Aluvioz/Polychat/issues/105) | Integração de autenticação/perfis e bloqueio de contas. |
 | [Issue #117](https://github.com/Aluvioz/Polychat/issues/117) | Limites, retenção e proteção antimalware de anexos. |
 | [Issue #122](https://github.com/Aluvioz/Polychat/issues/122) | Detecção de conteúdo suspeito e falsos positivos. |
 | [Issue #126](https://github.com/Aluvioz/Polychat/issues/126) | Plano de testes e rastreabilidade requisito–caso. |
-| [Issue #129](https://github.com/Aluvioz/Polychat/issues/129) | Homologação, acessibilidade e regressão. |
+| [Issue #129](https://github.com/Aluvioz/Polychat/issues/129) | Homologação de dispositivos/navegadores, acessibilidade e regressão. |
+| [Issue #130](https://github.com/Aluvioz/Polychat/issues/130) | Prontidão de release, operação, continuidade, suporte e resposta a incidentes. |
 
 **Regra de precedência:** este documento não altera requisitos nem aprova propostas presentes em ADRs ou PRs em Draft. Em caso de divergência, prevalecem requisitos e decisões formalmente aprovados pelos responsáveis competentes.
 
@@ -571,6 +572,50 @@ Os riscos técnicos mais prioritários nesta fotografia são: autorização/RLS 
 
 **Decisão do PO:** favorável à continuidade da análise com esta versão preliminar. Não aprovo arquitetura, controles de segurança, políticas de privacidade nem aceitação de riscos residuais por meio deste parecer. A Issue #125 deve permanecer aberta até revisão técnica/institucional, mitigação priorizada, testes e evidências, revisão por PR e formalização das decisões de risco.
 
+### 18.1 Revisão de riscos sob a perspectiva do produto — parecer do PO (19/11/2026)
+
+A estrutura STRIDE e os 27 cenários constituem uma base técnica consistente para a revisão especializada. Contudo, STRIDE não substitui a avaliação de risco do produto. Para o PO, além da possibilidade técnica de exploração, é necessário registrar como o evento afetaria funcionários, confiança, continuidade do trabalho, governança, adoção e compromissos assumidos pela FORD.
+
+A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triagem de produto e condições recomendadas para aceite/go-live do fluxo afetado; **não são cálculo final de probabilidade, severidade técnica ou risco residual**. Tech Lead e Segurança devem validar a classificação, e as áreas institucionais decidem os riscos que lhes competem.
+
+| ID | Risco de produto | Consequência para o produto/negócio | Prioridade preliminar do PO | Tratamento/decisão necessária | Responsáveis e rastreabilidade |
+|---|---|---|---|---|---|
+| PRD-001 | Uso indevido ou amplitude excessiva da consulta administrativa pelo TI | Exposição de comunicações internas, perda de confiança dos funcionários, dano reputacional e possível consequência institucional | P0 — não liberar consulta administrativa sem governança e auditoria comprovadas | Definir quem pode consultar, finalidade, condições, justificativa quando aprovada, auditoria por acesso, revisão periódica e transparência. A role TI, por si só, não significa acesso irrestrito a qualquer operação ou exportação | FORD / TI / Segurança / Jurídico-Privacidade; Q-002/Q-009, #100, #102, #121, #124, THR-002/009/027 |
+| PRD-002 | Monitoramento de mensagens sem finalidade, regra ou resposta institucional aprovadas | Percepção de vigilância indevida, tratamento injusto, falsos positivos, conflito com políticas internas e redução da confiança/adoção | P0 — não ativar monitoramento em produção antes das aprovações | Aprovar finalidade, categorias/termos, transparência, acesso, fluxo e retenção. Uma sinalização não é prova de infração; manter revisão humana e não aplicar bloqueio ou sanção automática sem requisito e aprovação próprios | FORD / Segurança / TI / Jurídico-Privacidade; Q-007/Q-008, ADR-010, #122/#123, THR-015/016/018 |
+| PRD-003 | Falha de autorização permitir leitura, escrita ou administração de conversas alheias | Vazamento de informações, adulteração de comunicações e quebra da confiança no canal institucional | P0 — bloqueia o fluxo afetado | Exigir autorização server-side por operação e objeto, separação entre role e membership, RLS de domínio real e testes negativos com usuários, não membros e TI em ambiente integrado | Tech Lead / Backend / SQA / TI; #99/#100/#101/#105, THR-004/005/012/023/024/025 |
+| PRD-004 | Anexo legítimo ficar bloqueado por erro/indisponibilidade do scanner ou arquivo malicioso ser liberado indevidamente | O primeiro caso interrompe uma atividade legítima; o segundo pode expor usuários e documentos a dano. O fail-closed protege contra liberação insegura, mas cria risco de indisponibilidade funcional | P1 — tratamento obrigatório antes da homologação do fluxo | Preservar fail-closed validado pelo PO; diferenciar estados pendente, rejeitado e erro; informar ao usuário sem atribuir culpa; definir retentativa, prazo, suporte/escalonamento e evidência de análise. Nunca liberar automaticamente por conveniência | Backend / Segurança / TI / UX; #115/#116/#117, Q-011, THR-007/013/020/021 |
+| PRD-005 | Retenção excessiva, descarte prematuro ou divergência entre dados ativos, logs, backups e cópias | Exposição persistente, perda de evidência, impossibilidade de investigação ou retenção além da finalidade aprovada | P0 — política institucional necessária antes de tratar dados reais em produção | Aprovar prazos, eventos de início, descarte, cópias/backups, retenção legal e prova de execução. Separar eliminação de conteúdo da retenção de metadados/auditoria | FORD / TI / Jurídico-Privacidade / Segurança; Q-010/Q-014/Q-017, #102/#130, THR-009/010/015/018/021 |
+| PRD-006 | Conta desativada, funcionário desligado ou dispositivo perdido manter sessão/token utilizável | Acesso persistente por pessoa que já não deveria usar o sistema, especialmente em dispositivo móvel | P0 — bloqueia o ciclo de vida de contas se a revogação não for comprovada | Definir provisioning/offboarding, recuperação e revogação; comprovar que desativação e perda de autorização impedem novas operações e invalidam sessões/tokens conforme o mecanismo escolhido | TI / Segurança / Backend; ADR-004, Q-002/Q-005/Q-006, #105, THR-001/002/003/019/023 |
+| PRD-007 | Indisponibilidade, falha de backup/restore ou resposta a incidente sem papéis e metas acordadas | Perda de histórico, interrupção da comunicação e incapacidade de recuperar o serviço dentro da expectativa da organização | P1 — precisa de plano aprovado antes do Go-Live | Definir disponibilidade esperada, RPO/RTO, backup/restore, rollback, suporte, comunicação, escalonamento e responsáveis. Não prometer continuidade sem teste de recuperação | FORD / TI / Operação / Tech Lead; Q-014/Q-016/Q-017, #98/#130, THR-018/021/022 |
+| PRD-008 | Escopo de público, papéis ou dispositivos ser ampliado por interpretação incorreta | Acesso concedido a pessoas fora do piloto, dimensionamento incorreto, experiência incompatível e falha de homologação | P1 — confirmar escopo antes de ampliar acesso | Preservar o público inicial informado de aproximadamente 25 pessoas do setor técnico; não presumir que os cerca de 900 funcionários serão habilitados. Confirmar composição dos perfis, dispositivos/navegadores e limites de uso; validar UX e regressão | PO / FORD / TI / UX / SQA; Q-001/Q-012, #91/#92/#129, RNF-008, THR-019/020/022 |
+| PRD-009 | Mensagens/anexos serem enviados a fornecedor, suboperador ou região sem avaliação e aprovação | Exposição a terceiros, conflito contratual, jurisdição inadequada, custo e dependência tecnológica | P1 — não contratar/integrar serviço externo antes da análise | Aprovar fornecedor, região, suboperadores, finalidade, retenção, segurança, contrato e plano de saída/migração; evitar envio externo por padrão | FORD / TI / Segurança / Jurídico-Privacidade; Q-013/Q-014/Q-015, #117/#122, ADR-008/010, THR-018 |
+| PRD-010 | Usuários não entenderem falhas, bloqueios, alertas ou canal de suporte | Repetição de tentativas, perda de trabalho, procura de canais não oficiais e baixa confiança no produto | P1 — resolver nos fluxos e no plano de operação | Definir mensagens de erro e estados compreensíveis, orientação de recuperação/reenvio, canal de suporte e comunicação de incidentes; não exibir detalhes técnicos ou dados sensíveis | PO / UX / TI / Operação / SQA; #91/#92/#117/#126/#129/#130, THR-019/020/021 |
+
+#### Decisões de produto e critérios de liberação
+
+1. **Privilégio e confiança:** acesso administrativo precisa ser limitado à finalidade aprovada e rastreável. Um alerta não concede, por si só, permissão para abrir a conversa original.
+2. **Monitoramento justo:** sinalização não é conclusão de culpa. Falso positivo deve poder ser revisto, com decisão humana registrada e sem punição automática não aprovada.
+3. **Falha segura com experiência clara:** o sistema deve proteger dados mesmo que isso mantenha temporariamente um anexo indisponível; o usuário precisa saber o estado e como proceder, sem promessa de prazo que não exista.
+4. **Ciclo de vida coerente:** desativar conta, remover acesso e encerrar vínculo devem refletir-se nas sessões e operações protegidas, não apenas no status visual da interface.
+5. **Continuidade verificável:** backup, rollback e recuperação só podem ser apresentados como proteção disponível após teste e evidência no ambiente relevante.
+6. **Limites do MVP:** o piloto de aproximadamente 25 pessoas e a separação Usuário-mobile/TI-desktop não devem ser convertidos, sem decisão, em acesso geral aos demais funcionários ou suporte universal a todos os dispositivos.
+7. **Transparência:** o produto não deve prometer impedir screenshots, fotos externas ou outras capturas feitas fora do controle do aplicativo. A Epic #86 já ressalva essa limitação; comunicações e critérios de aceite devem permanecer coerentes.
+
+#### Condições de aceite do PO
+
+- [x] Riscos técnicos e principais ativos/fronteiras estão identificados em nível preliminar.
+- [x] Impactos de produto e consequências para funcionários/organização foram acrescentados como camada complementar.
+- [x] Decisões fora da alçada do PO foram atribuídas às áreas responsáveis, sem presumir aprovação.
+- [x] O documento diferencia plano de mitigação, controle implementado, evidência de teste e aceitação de risco residual.
+- [ ] Tech Lead e Segurança confirmam a arquitetura, completude técnica, classificação e priorização final.
+- [ ] TI/Operação valida capacidade, ciclo de vida, continuidade, recuperação e resposta a incidentes.
+- [ ] FORD e Jurídico/Privacidade aprovam governança de consulta administrativa, monitoramento, retenção e processamento por terceiros.
+- [ ] Riscos P0/P1 recebem planos, responsáveis, prazos e evidências; bloqueios de go-live são refletidos no checklist de release.
+- [ ] Testes SEC-01 a SEC-18 aplicáveis são executados e registrados; pentest/auditoria independente, quando exigidos, são tratados como entregáveis próprios.
+- [ ] Aceitações residuais são formalizadas pela autoridade competente, sem aceite presumido pelo PO.
+
+**Parecer do PO (19/11/2026):** a análise documental STRIDE v0.1 é adequada como ponto de partida e a camada de risco de produto desta seção está validada para orientar a priorização e as decisões. Isso não equivale à aprovação técnica do threat model, à certificação dos controles ou à aceitação de riscos residuais. A Issue #125 permanece aberta até as revisões, decisões, mitigações, testes e aceites formais aplicáveis.
+
 ---
 
 ## Histórico de versões
@@ -578,3 +623,4 @@ Os riscos técnicos mais prioritários nesta fotografia são: autorização/RLS 
 | Versão | Data | Alteração |
 |---|---|---|
 | 0.1 | 19/11/2026 | Primeira análise documental STRIDE, inventário de ativos, fronteiras de confiança, registro preliminar de ameaças, plano de mitigação, testes e decisões pendentes. Não representa pentest, aprovação de segurança ou aceite de risco. |
+| 0.2 | 19/11/2026 | Inclui revisão de risco sob perspectiva de produto, impactos em confiança/uso/continuidade, prioridades de triagem e atualização das referências às políticas #117/#122 v0.2. Não representa aprovação técnica ou aceitação de risco residual. |
