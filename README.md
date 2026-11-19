@@ -32,10 +32,17 @@ Abra [http://localhost:3000](http://localhost:3000).
 npm test
 npm run lint
 npm run typecheck
+npm run format:check
 npm run build
 ```
 
-O GitHub Actions executa testes automatizados, lint, verificação de tipos e build em atualizações da `main` e em Pull Requests direcionadas à `main`.
+Para aplicar a formatação configurada ao repositório:
+
+```bash
+npm run format
+```
+
+O GitHub Actions executa testes automatizados, lint, verificação de tipos e build em atualizações da `main` e em Pull Requests direcionadas à `main`. A verificação de formatação está disponível localmente por `npm run format:check`; sua inclusão obrigatória no CI depende de normalizar os arquivos existentes e validar o resultado.
 
 ## Governança do desenvolvimento
 
