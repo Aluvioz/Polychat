@@ -1,6 +1,6 @@
 # Polychat Design System — proposta v0.1 (Issue #93)
 
-> **Estado:** proposta de UX/UI, **não aprovada** pela FORD/PO/Tech Lead.  
+> **Estado:** proposta de UX/UI v0.1; revisão documental preliminar do PO realizada em 19/11/2026. Não constitui aprovação final da FORD, validação SQA/Tech Lead nem homologação de acessibilidade.  
 > **Issue:** https://github.com/Aluvioz/Polychat/issues/93  
 > **Autor da branch:** conta GitHub `ponde-web`, colaboração prevista com `Dante-Davi`.  
 > **Data:** 17/11/2026.  
@@ -153,3 +153,62 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 **O que falta antes de fechar:** revisão por Dante/PO/Tech Lead, validação de marca, inspeção acessível e testes documentados, eventual ajuste de tokens conforme manual oficial e aceite formal. Referência à Epic #78. Não fechar a issue sem satisfazer os critérios.
 
 *Esta biblioteca não contém permissões funcionais ou sistemas reais e não deve ser vendida como implementação pronta do design system de produção.*
+
+
+## 10. Parecer de produto — revisão PO de 19/11/2026
+
+### 10.1 Decisão sobre a versão 0.1
+
+O PO considera a versão 0.1 **adequada como proposta de trabalho e referência para continuidade do design**, pois reúne tokens, padrões de componentes, exemplos por perfil, estados de feedback, responsividade e um roteiro inicial de acessibilidade.
+
+Este parecer é **favorável à continuidade da revisão**, não à homologação final do Design System. A versão atual ainda não deve ser tratada como identidade visual oficial da FORD, biblioteca aprovada para produção ou evidência de conformidade completa.
+
+### 10.2 O que pode ser considerado aceito nesta etapa
+
+- A separação de experiência entre Usuário mobile e TI desktop, mantendo as restrições funcionais já registradas nas Issues #91 e #92.
+- A organização dos tokens em nomes semânticos, com valores provisórios isolados dos estilos da aplicação.
+- O catálogo inicial de botões, campos, listas, avisos, estados vazios e confirmações demonstrativas.
+- A orientação de feedback textual, foco visível, rótulos de formulário, movimento reduzido e alvos de interação ampliados como princípios de design.
+- A distinção explícita entre galeria estática e funcionalidades reais do produto.
+
+Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem autorizar importação dos arquivos de demonstração para o runtime.
+
+### 10.3 O que continua sem aprovação
+
+| Tema | Situação | Condição para aprovação |
+|---|---|---|
+| Paleta, tipografia e logotipo oficiais da FORD | Não aprovado; valores atuais são provisórios | Receber manual/ativos oficiais e registrar validação da FORD/Comunicação (Q-019) |
+| Critérios de acessibilidade aplicáveis | Parcialmente documentados | Definir requisitos corporativos/legais aplicáveis e concluir avaliação correspondente (Q-020) |
+| Contraste de todos os componentes e estados | Parcial; cálculos cobrem pares selecionados | Medir texto, bordas, ícones, foco, hover, desabilitado e fundos efetivamente renderizados |
+| Navegação por teclado | Testes manuais pendentes | Executar Tab/Shift+Tab e validar ordem, foco e operação dos controles |
+| Zoom e reflow | Testes manuais pendentes | Validar 200%/400% e larguras de referência, sem perda de conteúdo ou funcionalidade |
+| Leitor de tela | Teste pendente | Executar e registrar leitor, versão, ambiente, resultados e problemas |
+| Biblioteca de ícones | Não selecionada | Tech Lead definir família, versão, licença e convenção de uso |
+| Navegadores e dispositivos | Matriz não aprovada | TI/QA definir matriz de homologação (Q-012) |
+| Publicação da galeria | Arquivos versionados; acesso hospedado precisa de confirmação manual | Abrir a URL do Preview e registrar resultado, ambiente e data |
+| Aplicação no runtime | Não autorizada por esta proposta | Revisão técnica, acessibilidade, design/brand e aceite da etapa concluídos |
+
+### 10.4 Ações para reavaliação
+
+1. **UX/UI:** corrigir inconsistências visuais e documentar variantes/estados que ainda não estejam demonstrados na galeria.
+2. **PO/FORD/Comunicação:** obter a referência oficial de marca e validar paleta, tipografia e uso de logotipo.
+3. **Tech Lead:** selecionar a biblioteca de ícones e revisar a estratégia de manutenção dos tokens e componentes.
+4. **QA/SQA:** executar os casos manuais M-01 a M-08 aplicáveis no documento \`issue-93-evidencias-acessibilidade.md\`, anexando evidência reproduzível. Casos não executados devem permanecer \`NOT RUN\` ou \`PENDING\`.
+5. **QA/SQA:** complementar a avaliação de contraste para estados e componentes efetivamente renderizados, incluindo foco, bordas e controles desabilitados.
+6. **Responsável pelo deployment:** confirmar que a galeria publicada abre corretamente no Preview e registrar URL, navegador, data e resultado.
+7. **Revisores:** atender aos apontamentos \`CHANGES_REQUESTED\` do Tech Lead e ao parecer SQA antes de solicitar nova avaliação independente.
+
+### 10.5 Critério de decisão para a Issue #93
+
+A Issue #93 deve permanecer aberta e a PR #143 deve permanecer em Draft até que:
+
+- a documentação e a biblioteca demonstrativa estejam revisadas;
+- a direção visual oficial ou a condição provisória de uso esteja formalmente registrada;
+- os testes de teclado, zoom/reflow, leitor de tela e contraste aplicáveis tenham evidências;
+- a seleção de ícones e sua licença estejam documentadas;
+- a galeria hospedada tenha sido verificada;
+- Tech Lead e SQA concluam nova revisão;
+- os checks e a avaliação de regressão aplicáveis estejam registrados.
+
+**Conclusão do PO:** a versão 0.1 pode ser usada como base de discussão e refinamento. Não está aprovada para produção, não substitui homologação de acessibilidade e não autoriza fechar a Issue #93.
+
