@@ -155,6 +155,7 @@ Não criar status, archived_at ou regra de unicidade entre pares como decisão d
 | profile_id | uuid | Sim | FK para profiles.id. | Proposta técnica |
 | added_by_profile_id | uuid | Não | FK para profiles.id; indica quem incluiu o participante. | Proposta técnica |
 | joined_at | timestamptz | Sim | Momento de entrada na conversa. | Proposta técnica |
+| last_read_at | timestamptz | Não | Cursor candidato da última leitura do perfil naquela conversa, para apoiar a contagem de não lidas da Issue #111. A abordagem final deve ser validada tecnicamente. | Proposta técnica; rastreada à #111 |
 | ended_at | timestamptz | Não | Momento de encerramento da participação, se aplicável. | Pendente de Q-003 |
 | ended_by_profile_id | uuid | Não | FK para profiles.id; responsável pelo encerramento, se aplicável. | Pendente de Q-003 |
 
@@ -173,6 +174,7 @@ Não criar status, archived_at ou regra de unicidade entre pares como decisão d
 - Como distinguir saída voluntária, remoção pelo TI e encerramento do grupo (Q-003).
 - Se a remoção deve encerrar a participação sem apagar mensagens anteriores.
 - Se uma conversa individual sempre deve ter exatamente dois participantes ativos.
+- A Issue #111 exige contagem de mensagens não lidas e marcação básica de leitura. O modelo deve permitir registrar o estado de leitura por participante/conversa; `last_read_at` é apenas uma alternativa candidata. Tech Lead/backend devem validar se ela atende aos cenários e à ordenação do histórico ou se será necessário outro cursor/estrutura. Não presumir recibos individuais por mensagem sem requisito adicional.
 
 **Índices candidatos:** índice para localizar as conversas de um perfil (profile_id, conversation_id) e índice para listar participantes de uma conversa (conversation_id, profile_id). Se for aprovado o histórico de participações, revisar a unicidade para impedir mais de uma participação ativa do mesmo perfil na mesma conversa.
 
@@ -402,9 +404,9 @@ A política final deve ser documentada na Issue #102 e refletida nas migrations,
 | Elemento do modelo | Requisitos / regras | Issues e decisões relacionadas |
 |---|---|---|
 | profiles | RF-001 a RF-004; RN-001 a RN-005 | #99, #103, #104, #105; ADR-004 e ADR-006 |
-| conversations | RF-005, RF-007 a RF-010; RN-006, RN-007, RN-010 | #99, #107, #109, #110; Q-003 |
-| memberships | RF-005, RF-006, RF-008, RF-010; RN-007 | #99, #100, #101, #112, #113; Q-003 |
-| messages | RF-008 a RF-010; RN-006, RN-007 | #99, #109, #110; Q-024; ADR-007 |
+| conversations | RF-005, RF-007 a RF-010; RN-006, RN-007, RN-010 | #99, #107, #109, #110, #111; Q-003 |
+| memberships | RF-005, RF-006, RF-008, RF-010; RN-007; contagem não lida/marcação básica de leitura | #99, #100, #101, #111, #112, #113; Q-003 |
+| messages | RF-008 a RF-010; RN-006, RN-007; origem temporal para leitura e ordenação | #99, #109, #110, #111; Q-024; ADR-007 |
 | attachments | RF-011 a RF-013; RN-008, RN-011; RNF-010 | #99, #114, #115, #116, #117; Q-004, Q-010, Q-011; ADR-008 |
 | audit_events | RF-016; RN-014; RNF-004 e RNF-011 | #99, #102, #121, #124; Q-009, Q-010; ADR-010 |
 | security_alerts | RF-014, RF-015; RN-012, RN-013 | #122, #123; Q-007, Q-008; ADR-010 |
@@ -439,6 +441,7 @@ Existe uma diferença entre os artefatos de governança:
 4. **Organização e autorização:** o escopo inicial continua sendo uma única organização (FORD), sem `tenant_id` ou multi-tenancy adicional. A aplicação mantém somente os perfis `user` e `ti`; não criar um terceiro papel de participante, proprietário ou moderador em `memberships`.
 5. **Preservação do histórico:** desativação de conta ou encerramento de participação não deve ser interpretado automaticamente como exclusão das mensagens, anexos ou eventos de auditoria relacionados. Exclusão física, retenção e descarte dependem de Q-010 e das aprovações institucionais aplicáveis.
 6. **Anexos:** o banco deve manter metadados e vínculo com a mensagem; o conteúdo binário permanece no armazenamento privado previsto, sujeito à revisão da ADR-008 e às regras de anexos.
+7. **Leitura e não lidas:** a Issue #111 faz parte do backlog do produto e exige contagem de mensagens não lidas e marcação básica de leitura. O modelo deve suportar estado de leitura por participante/conversa. `memberships.last_read_at` é uma opção preliminar, não decisão técnica aprovada; Tech Lead/backend devem validar sua suficiência e os impactos em paginação, ordenação e Realtime.
 
 Esta decisão valida o **significado e o limite funcional** das entidades. Não aprova normalização, tipos SQL, constraints, índices, FKs, RLS, cascatas, particionamento, migrações ou a ADR-005; esses itens permanecem sob revisão do Tech Lead, backend, TI, Segurança e SQA conforme aplicável.
 
