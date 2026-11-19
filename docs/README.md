@@ -16,6 +16,7 @@
 10. [Baseline consolidada e rastreabilidade da Issue #88](09-baseline-requisitos-mvp.md)
 11. [Índice de decisões arquiteturais (ADRs) — Issue #89](adr/README.md)
 12. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
+13. [Plano de testes e rastreabilidade — Issue #126](qa/issue-126-plano-testes-rastreabilidade.md)
 
 ## Como interpretar esta versão
 
