@@ -219,7 +219,7 @@ As regras RN-001 a RN-020 foram revisadas sem renumeração. Foram acrescentadas
 
 A descrição completa está em [05 — Regras de negócio e restrições](05-regras-de-negocio-e-restricoes.md).
 
-## 5. Arquitetura e implementação observadas
+## 5. Arquitetura oficial e estado do repositório
 
 ### 5.1 Plataformas oficiais e governança de infraestrutura
 
@@ -240,23 +240,23 @@ A decisão de arquitetura deve separar:
 
 Supabase e Vercel são as plataformas oficiais; a FORD mantém governança sobre contas, projetos, acessos, configurações e uso dos dados. A decisão está registrada na ADR-003. Não incluir outros serviços de terceiros sem aprovação explícita. Q-025 registra as validações técnicas ainda necessárias, sem reabrir a escolha das plataformas.
 
-### 5.2 Fotografia técnica do repositório
+### 5.2 Fotografia do scaffold — não há implementação funcional
 
-Snapshot documental consultado na branch main em 19/11/2026:
+Snapshot documental consultado na branch `main` em 19/11/2026. **A implementação funcional do Polychat ainda não começou.** Os itens abaixo são estrutura inicial ou artefatos isolados de scaffold, e não entregas funcionais integradas:
 
-- O repositório contém aplicação Next.js 16 com React 19, TypeScript e App Router, além de instruções e integração de deploy historicamente orientadas à Vercel.
+- Há um projeto scaffold Next.js 16 com React 19, TypeScript e App Router e uma página institucional. Isso não representa a implementação das jornadas do produto.
 - O README atualiza Vercel como hospedagem/deploy e Supabase como backend oficial do projeto; a documentação continua distinguindo essa decisão de integração funcional já concluída.
 - A interface principal é uma página institucional. Não foram encontradas telas completas de login, conversas, mensagens, grupos, anexos ou console administrativo.
-- O módulo src/auth/authorization.mjs contém middleware Express-compatible que recebe um cliente Supabase server-side, valida token por supabase.auth.getUser(token), consulta profiles, aceita user e ti, bloqueia perfil ausente/desconhecido e conta inativa, e falha fechada.
+- O arquivo `src/auth/authorization.mjs` contém um exemplo isolado de middleware Express-compatible. Não está integrado ao App Router, às páginas ou a handlers funcionais; não constitui autenticação/autorização implementada no produto.
 - O middleware não está conectado a handlers/rotas reais do App Router.
-- A migration supabase/migrations/202611160001_profiles_roles_and_account_status.sql cria public.profiles, habilita RLS, permite leitura do próprio perfil ou por TI ativo, revoga escrita direta de anon/authenticated, protege alterações de papel/status e cria perfil padrão user.
+- O arquivo `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` é uma migration de scaffold para `profiles`. Sua presença no repositório não significa que o schema funcional do Polychat foi implementado, aplicado ou integrado aos fluxos do produto.
 - A migration versionada não comprova aplicação ou homologação em ambiente hospedado.
 - Não foram encontradas migrations/políticas RLS de domínio para conversas, participantes, mensagens, anexos ou auditoria.
 - O arquivo .env.example contém placeholders públicos para URL e anon key; não há credenciais reais versionadas.
-- O package.json consultado não incluía SDK Supabase nas dependências.
+- O `package.json` consultado não inclui o SDK Supabase; não existe cliente Supabase inicializado e conectado ao runtime da aplicação.
 - O workflow CI executa testes automatizados, ESLint, TypeScript e build em atualizações da main e em Pull Requests direcionadas à main.
 
-**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. A direção Supabase/Vercel está confirmada como stack oficial; a implementação funcional e a configuração homologada dos ambientes ainda precisam de evidências.
+**Conclusão técnica do snapshot:** o repositório contém scaffold de frontend e artefatos isolados de demonstração técnica. **A implementação funcional real do Polychat ainda não começou.** Não há fluxos de negócio integrados ao runtime, cliente Supabase funcional, modelo de domínio implantado ou funcionalidades homologadas. Supabase e Vercel são as plataformas oficiais; a existência de scaffold não representa início ou conclusão da implementação.
 
 ### 5.3 Limites da evidência técnica
 
@@ -264,11 +264,11 @@ Snapshot documental consultado na branch main em 19/11/2026:
 - O middleware isolado e os testes simulados não comprovam autorização integrada às rotas reais do produto.
 - A RLS existente cobre profiles; não comprova isolamento de conversas, memberships, mensagens, anexos ou auditoria.
 - Build, lint e testes unitários não comprovam fluxos funcionais, homologação de infraestrutura ou atendimento às metas operacionais.
-- A aplicação não deve ser considerada pronta para produção até que as integrações Supabase/Vercel, controles de autorização, segregação de ambientes e critérios de homologação estejam implementados e aprovados.
+- A aplicação permanece em scaffold e não deve ser considerada funcional ou pronta para produção. A implementação real deverá iniciar com integração do runtime à stack oficial, modelo de domínio, autenticação, autorização, RLS, jornadas e critérios de homologação.
 
-## 6. Autorização e comportamento de erro
+## 6. Contrato esperado de autorização e comportamento de erro
 
-O contrato existente no módulo isolado de autorização e coberto por testes simulados é:
+Os comportamentos abaixo são o contrato de produto/segurança a implementar. O módulo isolado e os testes simulados servem apenas como referência de scaffold; não demonstram que o contrato esteja integrado ao Polychat:
 
 - Token ausente: HTTP 401; operação protegida não prossegue.
 - Token inválido/expirado ou identidade não retornada pelo provedor: HTTP 401.
@@ -278,11 +278,11 @@ O contrato existente no módulo isolado de autorização e coberto por testes si
 - Identidade, papel e estado são obtidos de fonte confiável no servidor, não de body/query fornecidos pelo cliente.
 - Respostas não devem revelar stack trace, tokens, chaves ou mensagens internas do banco.
 
-**Limitação:** esses comportamentos foram observados em módulo isolado e testes com serviço simulado. Ainda não comprovam integração com o runtime Next.js e os serviços Supabase/Vercel efetivamente configurados.
+**Limitação:** os casos foram exercitados apenas em módulo isolado e com serviço simulado. Não existe autenticação ou autorização funcional integrada à aplicação; esses testes não comprovam início da implementação, integração com Next.js, Supabase hospedado ou políticas de domínio.
 
 ## 7. Testes e evidências
 
-A suíte de autorização existente contém 11 testes com Supabase simulado: usuário ativo, ausência de token, sessão inválida, conta inativa, falha de consulta, papel desconhecido, acesso TI, bloqueio de Usuário em rota TI, perfil ausente, exceção do provedor e rota TI sem autenticação.
+Há 11 testes unitários de um módulo isolado, executados com Supabase simulado. Esses testes verificam somente o scaffold de middleware e não testam a aplicação Polychat: usuário ativo, ausência de token, sessão inválida, conta inativa, falha de consulta, papel desconhecido, acesso TI, bloqueio de Usuário em rota TI, perfil ausente, exceção do provedor e rota TI sem autenticação.
 
 Comandos locais disponíveis no projeto:
 - npm test
