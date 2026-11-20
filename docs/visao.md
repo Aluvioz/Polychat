@@ -21,7 +21,7 @@ O Polychat é uma aplicação web de comunicação interna para a FORD, com conv
 - **Anexos:** Supabase Storage privado.
 - **Tempo real:** Supabase Realtime é a direção registrada na ADR-007, ainda sujeita à validação técnica.
 
-A escolha de Supabase e Vercel está registrada como Accepted na ADR-003. Essa aprovação não significa que cada módulo esteja implementado ou homologado. Serviços adicionais que acessem ou processem dados exigem aprovação explícita.
+A escolha de Supabase e Vercel está registrada como Accepted na ADR-003. **A implementação funcional do Polychat ainda não começou.** O repositório contém somente scaffold inicial e artefatos isolados; nenhum fluxo de produto está integrado ou homologado. Serviços adicionais que acessem ou processem dados exigem aprovação explícita.
 
 ## Regras de produto centrais
 
