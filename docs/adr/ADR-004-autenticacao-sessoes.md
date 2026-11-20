@@ -50,7 +50,7 @@ Credenciais, identificadores e dados de sessão são tratados pelo Supabase Auth
 
 ## Justificativa
 
-O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. Manter identidade e sessões sob controle da organização respeita a restrição atual de infraestrutura e permite aplicar o ciclo de vida de contas e a autorização server-side sem dependência de um provedor externo incompatível.
+O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. Manter a gestão de identidade e sessões no Supabase Auth, plataforma oficial do projeto, sob governança de contas e acessos da FORD, permite aplicar o ciclo de vida de contas e a autorização server-side. Não adicionar outro provedor externo sem aprovação.
 
 ## Consequências
 
