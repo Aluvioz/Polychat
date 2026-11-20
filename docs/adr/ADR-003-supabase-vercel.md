@@ -56,8 +56,8 @@ A decisão preserva a arquitetura e o trabalho já alinhados no projeto, mantém
 - Issue #88: registra a arquitetura Supabase + Vercel como direção de implementação.
 - Issue #96: registra a configuração de ambientes Supabase e Vercel; o relatório de auditoria documenta quais ambientes foram efetivamente identificados e os limites de acesso à configuração administrativa.
 - Issue #98: registra deploy Preview/Production e rollback pela Vercel; o runbook preserva os limites dos testes executados.
-- O repositório contém migration de perfis ligada ao Supabase e middleware de autorização que utiliza cliente Supabase.
-- Testes com Supabase simulado não comprovam integração real; build e Preview Ready não comprovam homologação funcional de produção.
+- O repositório contém somente artefatos isolados de scaffold: uma migration de exemplo de perfis e um middleware Express-compatible que recebe cliente Supabase por parâmetro; nenhum está integrado ao runtime funcional do produto.
+- A implementação funcional do Polychat ainda não começou. Testes com Supabase simulado, build e Preview Ready não comprovam integração real nem funcionalidade de produto.
 
 ## Pendências de validação
 
