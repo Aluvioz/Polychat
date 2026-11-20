@@ -32,7 +32,7 @@ Estabelecer isolamento de ambientes, gestão de segredos, promoção segura, evi
 
 ## Decisão proposta
 
-Adotar ambientes separados de **desenvolvimento, homologação/Preview e produção**, utilizando Supabase para backend e Vercel para deploy/hospedagem. A separação concreta dos projetos, variáveis, domínios e permissões deve ser validada por TI e Tech Lead (Q-025).
+Manter os ambientes separados de **desenvolvimento, homologação/Preview e produção**, utilizando Supabase para backend e Vercel para deploy/hospedagem, conforme a configuração e o aceite operacional registrados nas Issues #96 e #98. A Q-025 consolida a correspondência documental de projetos, domínios, variáveis e permissões apenas onde a evidência ainda não estiver registrada; não reabre a decisão nem exige refazer a segregação.
 
 ### Isolamento e dados
 
