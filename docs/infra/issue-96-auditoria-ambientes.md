@@ -22,11 +22,11 @@ Critérios de aceite consultados diretamente na issue. A lista abaixo preserva o
 
 **Nota temporal:** a tabela abaixo registra as evidências e limitações observadas na auditoria original em 17/11/2026. Ela não deve ser lida isoladamente como uma lista de bloqueios ainda abertos após o encerramento autorizado pelo responsável/Tech Lead, registrado na seção 11.
 
-| Ambiente lógico | Vercel | Supabase | Situação |
+| Ambiente lógico | Supabase | Vercel | Situação observada na auditoria original |
 |---|---|---|---|
-| Desenvolvimento | Projeto Supabase Polyford confirmado pelo responsável como ambiente de desenvolvimento | Projeto Vercel `polyford`; Preview da PR #145 observado como `Ready` | Confirmado quanto à finalidade Supabase e ao preview; configuração administrativa detalhada pendente |
-| Preview/homologação | Preview Vercel da PR #145 observado como `Ready`; não equivale a homologação formal | Polyford é desenvolvimento; projeto Supabase específico para preview/homologação não identificado | Parcial |
-| Produção | Branch `main` indicada pela documentação; deployment de produção não auditado nesta execução | Projeto Supabase de produção não identificado | Pendente |
+| Desenvolvimento | Projeto Polyford, confirmado pelo responsável como ambiente de desenvolvimento | Projeto `polyford`; Preview da PR #145 observado como `Ready` | Projeto Supabase identificado e finalidade confirmada; detalhes administrativos do Vercel não auditados integralmente |
+| Preview/homologação | Projeto específico não identificado na consulta original; Polyford é desenvolvimento | Preview Vercel da PR #145 observado como `Ready`; não equivale por si só a homologação formal | Evidência parcial no retrato de 17/11 |
+| Produção | Projeto específico não identificado na consulta original | Branch `main` indicada na documentação; deployment e domínio não auditados integralmente naquela execução | Limites da auditoria original, posteriormente complementados pelo aceite do responsável/Tech Lead |
 
 A evidência automática do Vercel confirma um Preview Deployment `Ready` para a PR #145, mas não demonstra por si só a segregação de dados entre os estágios nem identifica qual projeto Supabase está conectado a cada deployment.
 
@@ -96,11 +96,11 @@ Nenhuma variável administrativa/service-role foi encontrada no arquivo de exemp
 
 A documentação consultada estabelece:
 
-- ADR-003: Supabase + Vercel como direção tecnológica exigida pela Issue #88, sem homologação de produção.
-- ADR-009: **Proposed**. Propõe ambientes separados, isolamento de variáveis e segredos e promoção controlada, mas aguarda confirmação de projetos, regiões, acessos, gestão de segredos, backup/restore, RPO/RTO e processo de release.
-- ADR-006: aceita somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios.
+- ADR-003: a direção Supabase + Vercel anteriormente registrada foi depreciada após a FORD v2. O ambiente descrito nesta auditoria é evidência histórica da execução anterior, não arquitetura-alvo vigente.
+- ADR-009: **Proposed**. Ambientes isolados e promoção controlada permanecem requisitos; a solução operacional deve ser compatibilizada com a exigência de infraestrutura sob controle da FORD.
+- ADR-006: o aceite legado cobre somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios nem aprova o Supabase como provedor-alvo.
 
-Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em decisões definitivas nem cria três projetos Supabase por presunção.
+O aceite da Issue #96 atesta a conclusão de seu escopo operacional original. A FORD v2 prevalece para a arquitetura-alvo e impede presumir autorização de serviços externos para dados reais da organização.
 
 ## 7. Validações e evidências
 
