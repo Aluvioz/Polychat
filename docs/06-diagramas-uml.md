@@ -16,7 +16,7 @@ Durante a inspeção do repositório `Aluvioz/Polychat`, foram localizados os se
 - [diagrama_objetos.pdf](https://github.com/Aluvioz/Polychat/blob/main/docs/diagrama_objetos.pdf)
 - [diagrama_pacotes.pdf](https://github.com/Aluvioz/Polychat/blob/main/docs/diagrama_pacotes.pdf)
 
-A presença desses arquivos em `docs/` não comprova que seus tipos foram escolhidos para esta documentação, que estejam atualizados ou que correspondam à linha de base de requisitos desta versão. O conteúdo não foi incorporado nem declarado aprovado nesta minuta.
+A presença desses arquivos em `docs/` não comprova que seus tipos foram escolhidos para esta documentação, que estejam atualizados ou que correspondam à linha de base POLY-REQ-001 v0.4. Eles permanecem materiais preexistentes não validados: não foram inspecionados integralmente nesta revisão, não foram incorporados à rastreabilidade e não devem ser tratados como diagramas aprovados até serem cotejados com a baseline vigente. Nenhum arquivo PDF foi alterado nesta rodada.
 
 ## 6.3 Registro de seleção pendente
 
