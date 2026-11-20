@@ -321,7 +321,10 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 | #93 — Design System | Visual ainda provisório; alterações de identidade e acessibilidade não devem ser consideradas homologadas |
 | #126 — Plano de testes e rastreabilidade | Deve organizar a cobertura de testes de software e sua ligação aos requisitos |
 | #129 — Homologação, acessibilidade e regressão | Deve executar a homologação e os testes técnicos pertinentes após implementação |
-| Q-003, Q-007, Q-008, Q-009, Q-010, Q-012, Q-018, Q-019 e Q-020 | Decisões pendentes que podem limitar o cenário ou a interpretação dos resultados, conforme perfil e tarefa |
+| Q-018 | Refinamento interno de arquitetura da informação, telas e navegação pelo PO/UX; regras de negócio já estão definidas | 
+| Q-019 | Obtenção dos arquivos oficiais de marca (logo, manual e códigos exatos) | 
+| Q-025 | Consolidação de evidências técnicas Supabase/Vercel; não interfere nas regras a avaliar nas sessões de usabilidade | 
+| Q-003, Q-007, Q-008, Q-009, Q-010, Q-012 e Q-020 | Resolvidas pela FORD v2; não são questões abertas da pesquisa. Usar as regras vigentes nos cenários e avaliar somente compreensão da interface |
 
 ## 15. Checklist de preparação
 
