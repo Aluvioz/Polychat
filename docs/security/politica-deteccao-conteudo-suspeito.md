@@ -1,7 +1,7 @@
 # Política de detecção e classificação de conteúdo suspeito
 
 - **Documento:** POLY-SEC-002
-- **Versão:** 0.3 — reconciliada com a FORD v2
+- **Versão:** 0.4 — alinhada à FORD v2 e à Q-025
 - **Data:** 19/11/2026
 - **Status:** requisitos funcionais e operacionais alinhados à FORD v2; implementação funcional ainda não iniciada; permanecem pendentes configuração inicial da lista pelo TI, detalhamento técnico e evidências de teste
 - **Issue principal:** [#122 — Implementar detecção de conteúdo suspeito e palavrões](https://github.com/Aluvioz/Polychat/issues/122)
@@ -140,7 +140,7 @@ A normalização não deve remover sinais ou transformar o texto de modo que alt
 
 ### 7.3 Contexto e análise contextual
 
-A análise contextual não faz parte do escopo aprovado e não deve ser implementada. Não enviar conteúdo de mensagens a serviços adicionais, modelos externos ou IA. Supabase e Vercel permanecem as plataformas oficiais do projeto; a restrição se aplica a serviços adicionais não aprovados.
+A análise contextual não faz parte do escopo aprovado e não deve ser implementada. Não enviar conteúdo de mensagens a serviços adicionais, modelos externos ou IA. A arquitetura-alvo permanece em reconciliação na Q-025: hospedagem e processamento de dados devem permanecer sob controle da FORD. A ADR-003 (Supabase + Vercel) está Deprecated e não deve ser tratada como decisão vigente de arquitetura.
 
 ### 7.4 Limiares e pontuação
 
@@ -345,7 +345,7 @@ As regras abaixo são requisitos confirmados, não propostas aguardando nova apr
 5. **Sem punição/bloqueio automático:** a detecção não bloqueia mensagens, não edita/apaga conteúdo, não suspende contas e não aplica sanções.
 6. **Acesso:** o alerta é visível ao TI. TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação; essa consulta gera auditoria.
 7. **Minimização:** alertas e logs usam referência segura e metadados mínimos; não replicar mensagem integral em notificações/logs por padrão.
-8. **Plataformas:** Supabase e Vercel são as plataformas oficiais do Polychat. Não encaminhar conteúdo a IA, modelo, scanner SaaS ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
+8. **Infraestrutura e processamento:** a arquitetura-alvo deve manter hospedagem e processamento de dados sob controle da FORD, conforme a Q-025. A ADR-003 (Supabase + Vercel) está Deprecated; não declarar esses serviços como plataformas oficiais nem presumir integrações ainda não aprovadas. Não encaminhar conteúdo a IA, modelo, scanner SaaS ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
 
 ### Trabalho técnico/operacional ainda necessário
 
@@ -357,7 +357,7 @@ A implementação funcional do Polychat ainda não começou. Permanecem como tra
 - implementar revisão/encerramento sem justificativa obrigatória;
 - persistir ocorrência e eventos de auditoria conforme baseline v0.4;
 - definir tecnicamente o tratamento de indisponibilidade do detector, sem apresentar falha como resultado limpo nem bloquear automaticamente o envio;
-- implementar, integrar e testar os fluxos no runtime real das plataformas oficiais.
+- implementar, integrar e testar os fluxos no runtime real da arquitetura formalmente definida, sob controle da FORD e compatível com a resolução da Q-025.
 
 A FORD já definiu finalidade, acesso administrativo, auditoria e retenção. O posicionamento institucional sobre ausência de frente de Jurídico/Privacidade não afasta obrigações legais aplicáveis, mas não cria uma etapa de aprovação por uma equipe que o cliente informou não integrar ao projeto.
 
@@ -388,7 +388,7 @@ A FORD já definiu finalidade, acesso administrativo, auditoria e retenção. O 
 
 Os critérios originais da Issue #122 são preservados. Esta tabela especifica as evidências esperadas e não declara nenhum critério concluído. A implementação funcional ainda não começou.
 
-| Critério original | Evidência esperada | Situação na versão 0.3 |
+| Critério original | Evidência esperada | Situação na versão 0.4 |
 |---|---|---|
 | Mensagens sinalizadas com contexto mínimo; falsos positivos revisáveis | Registro com regra/versão e contexto mínimo; fluxo de revisão pelo TI e classificação de falsos positivos | Requisitos definidos; implementação e testes ainda não começaram |
 | Testes relevantes automatizados ou evidência documentada | Execução dos cenários DET-01 a DET-14 com conjunto de teste aprovado | Pendente: cenários propostos; não há evidência de execução |
@@ -420,7 +420,7 @@ A especificação funcional está alinhada à FORD v2. Antes de considerar a Iss
 - TI consegue revisar e encerrar alertas sem justificativa obrigatória, com trilha de auditoria;
 - nenhuma mensagem é bloqueada ou punida automaticamente pela detecção;
 - falhas do detector são registradas e tratadas tecnicamente sem serem apresentadas como resultado limpo nem provocar bloqueio automático de mensagens;
-- o fluxo está integrado ao runtime real da stack oficial Supabase/Vercel e passa por revisão técnica/SQA.
+- o fluxo está integrado ao runtime real da arquitetura-alvo formalmente definida, com processamento sob controle da FORD, e passa por revisão técnica/SQA.
 
 Esses critérios são evidências de implementação e qualidade, não decisões de negócio ainda pendentes. Q-007 a Q-010 estão resolvidas no nível de requisito.
 
@@ -429,5 +429,6 @@ Esses critérios são evidências de implementação e qualidade, não decisões
 | Versão | Data | Alteração |
 |---|---|---|
 | 0.1 | 19/11/2026 | Consolida requisitos existentes, propõe modelo de detecção e revisão, registra cenários de teste, dependências e decisões pendentes. Não representa política aprovada nem evidência de implementação. |
-| 0.2 | 19/11/2026 | Registra validação inicial do PO. Foi superada pela reconciliação com FORD v2 nesta versão 0.3. |
-| 0.3 | 20/11/2026 | Reconcilia regras de detecção, lista TI, palavrões, ausência de análise contextual/IA, fila TI, severidades/prazos, encerramento sem justificativa e critérios de implementação com a FORD v2; registra que a implementação funcional ainda não começou. |
+| 0.2 | 19/11/2026 | Registra validação inicial do PO; parecer posteriormente atualizado para refletir as decisões consolidadas da FORD v2. |
+| 0.3 | 20/11/2026 | Reconcilia regras funcionais e operacionais com a FORD v2, sem declarar implementação. |
+| 0.4 | 20/11/2026 | Alinha as referências de infraestrutura à Q-025 e à ADR-003 Deprecated; preserva as decisões de produto e as pendências de implementação/teste. |
