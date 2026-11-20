@@ -1,8 +1,8 @@
 # Plano de validação de UX com usuários representativos — Issue #94
 
-> **Versão:** 0.1 — plano proposto, ainda não executado  
-> **Data:** 19/11/2026  
-> **Status:** plano aprovado pelo PO em 19/11/2026 para organização e preparação das sessões; execução e resultados pendentes  
+> **Versão:** 0.2 — amostragem e condições de execução revisadas  
+> **Data:** 20/11/2026  
+> **Status:** escopo, perfis e dimensionamento ajustados pelo PO conforme baseline FORD v2 e Issue #130; recrutamento e sessões ainda dependem de autorização operacional formal e das condições de governança descritas neste plano  
 > **Issue:** [#94 — Prototipar e validar UX com usuários representativos](https://github.com/Aluvioz/Polychat/issues/94)  
 > **Epic:** [#78](https://github.com/Aluvioz/Polychat/issues/78)  
 > **Artefatos de referência:** [Issue #91 — Usuário mobile](https://github.com/Aluvioz/Polychat/issues/91) e [Issue #92 — Console TI desktop](https://github.com/Aluvioz/Polychat/issues/92)
@@ -40,7 +40,7 @@ Os participantes não devem ser misturados, e os resultados devem ser analisados
 
 **Validação presencial do PO — 19/11/2026:** o PO confirma o público-alvo dos dois perfis, o dimensionamento qualitativo proposto e a realização de sessões-piloto como pré-teste do roteiro de pesquisa. Essas sessões-piloto são atividades de usabilidade e não constituem piloto de lançamento do produto. A FORD definiu lançamento único após homologação, sem grupo piloto de produto.
 
-A confirmação do PO resolve a ambiguidade de escopo da pesquisa #94. Ela não altera por si só os números da baseline geral nem substitui a observância dos procedimentos institucionais acordados para convite, consentimento e tratamento das evidências.
+A composição do público está confirmada na baseline FORD v2 e na Issue #130: **25 usuários finais do setor técnico, além de aproximadamente 2–3 administradores de TI**. Portanto, Q-001 não permanece como pergunta aberta para a pesquisa. A amostra deve respeitar a dimensão real de cada perfil: não se deve presumir que TI tenha 5–8 participantes nem recrutar pessoas fora do público apenas para atingir uma quota. A decisão de escopo da pesquisa #94 abrange os dois perfis, com resultados separados. A validação do PO não substitui a autorização institucional para recrutamento, realização das sessões, gravação ou armazenamento das evidências.
 
 ### 2.3 Fora do escopo destas sessões
 
@@ -91,9 +91,9 @@ Como os materiais de referência são wireframes e fluxos de baixa fidelidade, a
 
 ### 4.3 Piloto
 
-Realizar inicialmente 1 ou 2 sessões-piloto por perfil, caso ambos sejam confirmados. O piloto deve verificar se as tarefas são compreensíveis, se os protótipos permitem observar o comportamento pretendido e se o roteiro não induz respostas.
+Realizar, quando viável, 1 ou 2 sessões-piloto por perfil para verificar a compreensão das tarefas, a capacidade de observação dos protótipos e a neutralidade do roteiro. **Cada sessão-piloto conta dentro do total previsto para seu perfil; não é uma amostra adicional.** No perfil TI, com população estimada de apenas 2–3 administradores, a quantidade de pré-testes deve respeitar a disponibilidade real e não pode reduzir indevidamente a cobertura dos demais participantes.
 
-As sessões-piloto também devem ser registradas. Se houver alteração relevante no roteiro ou no protótipo após o piloto, identificar a versão utilizada em cada sessão e avaliar se as observações continuam comparáveis.
+As sessões-piloto devem ser registradas nas mesmas condições de consentimento, anonimização e rastreabilidade das demais sessões. Se houver alteração relevante no roteiro ou no protótipo após o piloto, identificar a versão utilizada em cada sessão e avaliar se as observações continuam comparáveis.
 
 ## 5. Participantes e recrutamento
 
@@ -108,9 +108,12 @@ Não selecionar apenas pessoas da equipe que desenhou os protótipos ou que já 
 
 ### 5.2 Tamanho recomendado da amostra
 
-Para uma rodada qualitativa formativa, recomenda-se **5 a 8 participantes por perfil** confirmado, em sessões individuais. Se os dois perfis forem validados, a referência será de 10 a 16 participantes no total, além das sessões-piloto, conforme disponibilidade e autorização.
+Dimensionamento por perfil, conforme a população confirmada na Issue #130:
 
-Essa quantidade é uma recomendação operacional para identificar problemas recorrentes e não representa amostra estatisticamente representativa da organização. Se o recrutamento não atingir a quantidade prevista, documentar a limitação e não generalizar os resultados.
+- **P-U — Usuário mobile:** recomendar **5 a 8 participantes no total**, incluindo 1–2 sessões-piloto quando realizadas. A referência é qualitativa e deve permanecer dentro do público de 25 usuários finais do setor técnico.
+- **P-TI — TI desktop:** convidar todos os **aproximadamente 2–3 administradores TI** que efetivamente utilizarão o console e estiverem disponíveis/autorizados. Eventual sessão-piloto integra esse total; não acrescentar participantes nem recrutar pessoas externas ao perfil para alcançar 5–8.
+
+A quantidade total esperada será, portanto, de aproximadamente **7 a 11 participantes**, caso haja disponibilidade e autorização para todos os perfis. A amostra é formativa, não estatisticamente representativa. Registrar recusas, indisponibilidade e limitações; não generalizar resultados além dos participantes efetivamente avaliados.
 
 ### 5.3 Critérios de recrutamento
 
@@ -123,9 +126,9 @@ Essa quantidade é uma recomendação operacional para identificar problemas rec
 
 ### 5.4 Preparação e consentimento
 
-Antes da sessão, informar objetivo, duração, atividade, forma de registro, acesso às anotações e possibilidade de interromper a participação. Gravação de áudio ou vídeo só poderá ocorrer mediante autorização explícita e conforme as regras institucionais aplicáveis.
+Antes da sessão, informar objetivo, duração, atividade, forma de registro, acesso às anotações e possibilidade de interromper a participação. Gravação de áudio ou vídeo será opcional e somente ocorrerá mediante autorização explícita e conforme as regras institucionais aplicáveis; sem autorização para gravação, utilizar apenas anotações anonimizadas.
 
-Utilizar nomes, conversas, contas, grupos e arquivos fictícios. Não solicitar senha real, não usar conversas de trabalho reais e não capturar informações corporativas confidenciais. Armazenar evidências em local autorizado, com acesso restrito e prazo de retenção definido pelo responsável institucional.
+Utilizar nomes, conversas, contas, grupos e arquivos fictícios. Não solicitar senha real, não usar conversas de trabalho reais e não capturar informações corporativas confidenciais. Antes de qualquer convite ou coleta, a FORD deverá confirmar formalmente o responsável pela autorização/recrutamento, o responsável pela custódia dos registros, o local/ferramenta de armazenamento autorizado, os perfis com acesso e o prazo ou critério institucional de retenção. **Esses dados ainda não estão identificados neste plano e não podem ser presumidos pelo PO.**
 
 ## 6. Roteiro de tarefas — Usuário mobile (P-U)
 
@@ -263,6 +266,7 @@ Copiar e preencher uma linha por problema observado:
 | Perfil | Usuário mobile / TI desktop |
 | Data e facilitador | Preencher após a sessão |
 | Protótipo e versão | Link e identificação da versão utilizada |
+| Roteiro e versão | Identificador/versão exata do roteiro aplicado na sessão |
 | Tarefas realizadas | IDs das tarefas executadas |
 | Interrupções/desvios | Motivo e impacto na interpretação |
 | Evidências autorizadas | Anotações e gravações somente quando autorizadas |
@@ -295,14 +299,27 @@ O protótipo atualizado deverá manter histórico mínimo do que mudou, por que 
 | Representantes FORD / áreas responsáveis | Validar público, políticas, linguagem institucional e decisões de negócio sob sua responsabilidade |
 | Facilitador / observador | Executar o roteiro de forma neutra, registrar fatos e preservar anonimato |
 
-Antes do recrutamento, o PO deve registrar a decisão sobre público-alvo, quantidade de participantes, autorização institucional e responsáveis pelas sessões. A participação de representantes FORD e o uso de ambientes ou dados institucionais dependem de autorização prévia.
+O PO é responsável por validar o escopo de produto, perfis e dimensionamento da amostra. A autorização institucional para recrutamento/coleta, a designação das pessoas responsáveis, o local autorizado de armazenamento e o prazo de retenção devem ser confirmados pela FORD antes do envio de convites. A validação do PO não representa essa autorização operacional.
+
+### 12.1 Condições obrigatórias antes do recrutamento e da coleta
+
+Antes de iniciar o recrutamento, devem estar documentados:
+
+1. autorização institucional para recrutamento e realização das sessões, incluindo quem autorizou e o escopo autorizado;
+2. responsáveis por recrutamento, facilitação, observação e custódia dos registros;
+3. local/ferramenta autorizado para armazenamento, perfis de acesso e prazo/critério de retenção;
+4. forma de consentimento, opção de gravação e alternativa de anotações anonimizadas;
+5. versão vigente do roteiro e dos protótipos que serão utilizados.
+
+Enquanto esses itens não estiverem registrados, o plano pode orientar preparação interna, mas **não autoriza recrutamento nem coleta de evidências**.
 
 ## 13. Critérios de aceite da Issue #94
 
 A Issue #94 somente deverá ser considerada concluída quando houver evidência para todos os critérios abaixo:
 
-- [x] **Público representativo definido:** perfis P-U e P-TI e critérios de recrutamento aprovados pelo PO em 19/11/2026, após alinhamento presencial; trilhas e resultados separados.
-- [ ] **Sessões realizadas e registradas:** sessões por perfil planejado, com participantes anônimos, versão do protótipo, tarefas e limitações registradas.
+- [x] **Público e dimensionamento definidos:** P-U representa 25 usuários finais do setor técnico e P-TI aproximadamente 2–3 administradores TI, conforme Issue #130; P-U: 5–8 participantes no total, P-TI: todos os elegíveis disponíveis, com pilotos incluídos nas respectivas amostras; trilhas e resultados separados.
+- [ ] **Autorização e governança da coleta:** autorização institucional, responsáveis por recrutamento/facilitação/observação/custódia, local autorizado, acesso e retenção definidos antes dos convites.
+- [ ] **Sessões realizadas e registradas:** sessões por perfil planejado, com participantes anônimos, versão do protótipo, versão do roteiro, tarefas e limitações registradas.
 - [ ] **Achados priorizados:** problemas, dúvidas e observações documentados, com severidade e prioridade justificadas.
 - [ ] **Protótipos atualizados:** mudanças pertinentes aplicadas às jornadas #91/#92, com histórico e rastreabilidade.
 - [ ] **Aprovação registrada:** parecer formal do PO e revisão técnica pertinente sobre a versão atualizada; decisões institucionais encaminhadas aos responsáveis.
@@ -323,25 +340,28 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 | #129 — Homologação, acessibilidade e regressão | Deve executar a homologação e os testes técnicos pertinentes após implementação |
 | Q-018 | Refinamento interno de arquitetura da informação, telas e navegação pelo PO/UX; regras de negócio já estão definidas | 
 | Q-019 | Obtenção dos arquivos oficiais de marca (logo, manual e códigos exatos) | 
-| Q-025 | Consolidação de evidências técnicas Supabase/Vercel; não interfere nas regras a avaliar nas sessões de usabilidade | 
+| Q-025 | Compatibilização da arquitetura com a infraestrutura sob controle da FORD; não define o roteiro de usabilidade nem autoriza presumir uma stack ainda não formalizada | 
 | Q-003, Q-007, Q-008, Q-009, Q-010, Q-012 e Q-020 | Resolvidas pela FORD v2; não são questões abertas da pesquisa. Usar as regras vigentes nos cenários e avaliar somente compreensão da interface |
 
 ## 15. Checklist de preparação
 
 - [x] Confirmar o significado de “público técnico” e os perfis que serão testados — decisão do PO registrada em 19/11/2026.
-- [x] Aprovar objetivo, escopo, quantidade de participantes e critérios de seleção — validação presencial do PO em 19/11/2026.
-- [x] Confirmar as premissas de autorização institucional para recrutamento e realização das sessões — discutidas presencialmente; observar os procedimentos e consentimentos aplicáveis antes da coleta.
+- [x] Aprovar objetivo, perfis e dimensionamento da amostra — validação do PO, revisada em 20/11/2026 conforme a população definida na Issue #130.
+- [x] Confirmar a composição de público de Q-001: 25 usuários finais do setor técnico, além de aproximadamente 2–3 administradores TI — Issue #130 / FORD v2.
+- [ ] Obter autorização institucional formal para recrutamento e realização das sessões, identificando quem autorizou e o escopo.
+- [ ] Designar os responsáveis por recrutamento, facilitação, observação e custódia das evidências.
+- [ ] Definir e registrar o local/ferramenta autorizado de armazenamento, os perfis de acesso e o prazo/critério institucional de retenção.
 - [ ] Preparar convite, consentimento e orientação de privacidade.
 - [ ] Confirmar que todos os cenários usam dados fictícios.
 - [ ] Identificar versões dos protótipos #91 e #92 e conferir se estão acessíveis.
-- [ ] Identificar apenas os pontos que continuam em aberto (Q-018 e Q-019) e separar limitações do wireframe de regras de negócio já confirmadas.
-- [ ] Preparar roteiro, planilha/log de tarefas e modelo de achados.
-- [ ] Definir facilitador, observador, local/ferramenta e armazenamento autorizado.
-- [ ] Realizar sessão-piloto de usabilidade (pré-teste do roteiro), ajustar o instrumento se necessário e registrar a versão. Esta atividade não é piloto de lançamento do produto.
+- [x] Usar o catálogo de telas e a navegação consolidados em Q-018; tratar a paleta Q-019 como provisória e não reabrir questões de produto já resolvidas.
+- [ ] Preparar roteiro, planilha/log de tarefas e modelo de achados, com controle de versão do roteiro por sessão.
+- [ ] Confirmar facilitador, observador, local/ferramenta e armazenamento autorizado após designação institucional.
+- [ ] Realizar sessões-piloto como pré-teste, somente após autorização e preparação; incluí-las na amostra total do respectivo perfil, ajustar o roteiro se necessário e registrar sua versão. Não constituem piloto de lançamento do produto.
 - [ ] Após a coleta, consolidar evidências, priorizar achados e atualizar protótipos.
 
 ---
 
-**Parecer do PO — 19/11/2026:** plano de trabalho v0.1 **APROVADO pelo PO** para organizar sessões de usabilidade com os perfis Usuário mobile e TI desktop. A aprovação autoriza sessões de pesquisa, inclusive sessões-piloto para validar o roteiro; não autoriza piloto de lançamento nem altera a regra de lançamento único após homologação. Não declara sessões realizadas, achados obtidos, protótipos atualizados ou experiência final aprovada. Utilizar dados fictícios/anônimos e seguir os procedimentos institucionais aplicáveis ao recrutamento e registro.
+**Parecer atualizado do PO — 20/11/2026:** aprovo o escopo com duas trilhas separadas e o dimensionamento revisado conforme a população confirmada na Issue #130: P-U com 5–8 participantes no total, incluindo os pré-testes; P-TI com convite a todos os aproximadamente 2–3 administradores elegíveis/disponíveis, também incluindo eventual pré-teste no total. Q-001 está esclarecida; não se deve acrescentar os pilotos à amostra nem recrutar fora dos perfis para completar quota. Esta validação é de produto e planejamento. **Não constitui autorização institucional para recrutamento/coleta** e não substitui a identificação dos responsáveis, do armazenamento autorizado e da retenção antes do início. Nenhuma sessão, achado ou atualização de protótipo é declarada concluída.
 
 A Issue #94 permanece aberta até que as sessões sejam realizadas, os achados priorizados, os protótipos atualizados quando necessário e as evidências/revisões previstas nos critérios de aceite sejam apresentadas. A implementação funcional do Polychat ainda não começou; os materiais #91/#92 são wireframes de baixa fidelidade e não podem ser apresentados como telas implementadas ou protótipo funcional.
