@@ -9,7 +9,7 @@
 - **Limites da aprovação:** não equivale a aprovação técnica de arquitetura/implementação, aceite de Segurança/Privacidade, homologação institucional da FORD ou aprovação independente do SQA.
 - **Data desta revisão:** 20/11/2026.
 
-> Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. A arquitetura de infraestrutura e serviços deve respeitar a restrição da FORD consolidada em Q-025 e não é escolhida por esta matriz.
+> Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. A stack prevista para o projeto é Supabase + Vercel, conforme orientação recebida em aula. A compatibilidade dessa stack com as restrições de infraestrutura e tratamento de dados registradas pela FORD deve ser tratada explicitamente na Q-025, sem classificar Supabase/Vercel como arquitetura descartada.
 
 ## 1. Como interpretar a matriz
 
@@ -21,7 +21,7 @@
 
 A matriz separa três elementos que não podem ser confundidos:
 
-1. **Identidade autenticada:** identidade validada por mecanismo de autenticação no servidor, conforme a arquitetura compatível com a infraestrutura da FORD. Identificadores, credenciais e estado de conta enviados pelo cliente não são fontes confiáveis de autorização.
+1. **Identidade autenticada:** identidade validada no servidor pelo Supabase Auth, conforme a stack definida para o projeto. Identificadores, credenciais e estado de conta enviados pelo cliente não são fontes confiáveis de autorização.
 2. **Perfil (role):** um dos dois perfis de aplicação: `user` (Usuário) ou `ti` (TI). Todos os administradores TI têm poderes administrativos equivalentes; não há administrador principal ou segunda aprovação.
 3. **Participação (membership):** vínculo efetivo da pessoa com uma conversa ou grupo. A role, por si só, não torna um Usuário participante. A exceção é o acesso administrativo expressamente concedido ao TI para consulta de qualquer conversa, com auditoria.
 
@@ -33,9 +33,9 @@ A matriz separa três elementos que não podem ser confundidos:
 | RF-001 a RF-023 | Requisitos funcionais e critérios CA-xxx.n, inclusive membership, consulta TI, anexos, alertas, auditoria, dispositivos e edição/exclusão administrativa |
 | RN-001 a RN-025 | Regras de negócio vigentes, incluindo poderes equivalentes do TI, gestão de grupos, monitoramento, retenção e soberania dos dados |
 | Q-001 a Q-024 | Histórico de decisões; questões resolvidas permanecem registradas e não devem ser reabertas como pendências |
-| Q-025 | Reconciliação arquitetural necessária para manter hospedagem e processamento de dados sob controle da FORD |
+| Q-025 | Avaliar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados; não descartar a stack por inferência |
 | POLY-UX-DEC-001 | Catálogo de telas e configurações administrativas restritas, associado à decisão Q-018 |
-| ADR-006 | Referência técnica existente para controles de perfil; seu mecanismo específico deve ser reconciliado com Q-025 antes de ser adotado como arquitetura final |
+| ADR-006 | Referência técnica para autenticação de perfis e RLS com Supabase; detalhes de integração e implantação permanecem sujeitos à revisão técnica |
 | Issue #99 | Modelagem do schema necessário às relações de conversas, memberships, mensagens, anexos e auditoria |
 | Issue #101 | Implementação de enforcement server-side, políticas de acesso/RLS de domínio e testes de isolamento |
 | Issue #102 | Implementação dos eventos de auditoria, proteção, acesso e retenção |
@@ -73,7 +73,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 | Conta | Criar, alterar ou desativar outra conta TI | TI | Todos os TIs têm poderes iguais; não há administrador principal nem segunda aprovação | Permitido | Operação autenticada e auditada; não criar hierarquia | RF-002, RF-003; Q-002; RN-003 |
 | Conta | Desativar/reativar conta e revogar sessões | TI | Desativação encerra sessões e revoga acessos imediatamente; histórico é preservado | Permitido | Enforcement no servidor e preservação de dados históricos | RF-004; CA-004.1 a CA-004.6 |
 | Conta | Autocadastrar-se ou convidar pessoa externa | Usuário | Não existe auto cadastro, convite ou público externo no escopo inicial | Negado | Bloqueio no fluxo de criação e no servidor | RF-003; RN-004; RN-009 |
-| Conta / perfil | Alterar role ou estado por payload ou escrita direta do cliente | Usuário ou TI | Cliente não é fonte confiável de role/status | Negado | Proteção server-side e no banco; não confiar em campos enviados pelo cliente | RF-002; ADR-006 como referência técnica sujeita a Q-025 |
+| Conta / perfil | Alterar role ou estado por payload ou escrita direta do cliente | Usuário ou TI | Cliente não é fonte confiável de role/status | Negado | Proteção server-side e no banco; não confiar em campos enviados pelo cliente | RF-002; Supabase Auth/RLS e ADR-006 |
 | Sessão | Prosseguir sem identidade válida, com sessão expirada ou conta inativa | Qualquer identidade | Identidade deve ser validada no servidor e conta deve estar ativa | Negado | Autenticação/estado centralizados; comportamento fail-closed | RF-001, RF-004; RN-005 |
 | Conversa individual | Iniciar conversa com outro Usuário ativo | Usuário ativo | Não há distinção por cargo corporativo entre usuários comuns | Permitido | Validar situação ativa do remetente/destinatário e persistir vínculo | RF-009; RN-006 |
 | Conversa individual | Abrir/ler histórico | Usuário participante | Só pode acessar conversas das quais participa | Permitido | Verificar membership no servidor e na camada de dados; schema em #99 e enforcement em #101 | RF-008; CA-008.1 a CA-008.5 |
@@ -93,7 +93,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 | Mensagem | Editar ou excluir mensagem | TI | TI pode alterar ou excluir mensagens a qualquer momento; operações são auditadas | Permitido | Ação administrativa autenticada; trilha de auditoria em #102 | RF-020; CA-020.3 a CA-020.5; RN-014 |
 | Mensagem / leitura | Registrar leitura, exibir horário e total de não lidas | Usuário; Sistema | O sistema registra leitura e exibe estado/quantidade conforme RF-019 | Permitido | Detalhamento de granularidade e persistência no schema #99 e implementação técnica; não alterar regra observável do RF-019 | RF-019; CA-019.1 a CA-019.4 |
 | Anexo | Enviar/anexar PDF ou JPEG | Usuário em conversa autorizada | Até 10 MB por arquivo, até cinco por mensagem; quotas individuais e capacidade total definidas pelo TI; PDF protegido por senha é recusado | Permitido, sujeito a validação | Validar conteúdo real, limites, quota e scanner dentro da infraestrutura da FORD | RF-011, RF-012; RN-008; Q-011 |
-| Anexo | Ler/baixar anexo | Participante autorizado | A autorização depende da participação vigente e da conversa; cada download exige autorização vigente | Permitido | Storage privado ou mecanismo equivalente sob controle da FORD; não emitir URL pública; validade máxima de link temporário de cinco minutos | RF-011; CA-011.9 e CA-011.12 |
+| Anexo | Ler/baixar anexo | Participante autorizado | A autorização depende da participação vigente e da conversa; cada download exige autorização vigente | Permitido | Supabase Storage em bucket privado, com autorização verificada no servidor e sem URL pública permanente; validar compatibilidade com Q-014/Q-025 | RF-011; CA-011.9 e CA-011.12 |
 | Anexo | Baixar anexo para investigação | TI | TI pode baixar anexos durante investigação; a ação gera auditoria | Permitido | Fluxo administrativo autenticado e auditado | RF-011; CA-011.11; RN-003 |
 | Anexo | Liberar arquivo bloqueado pelo scanner | TI | TI pode excepcionalmente liberar qualquer arquivo; ação autenticada e auditada | Permitido, como exceção administrativa | Implementar controle restrito e evento de auditoria; Usuário não pode contornar o scanner | RF-011, RF-012; Q-011; baseline v0.5 |
 | Anexo | Disponibilizar arquivo sem resultado antimalware favorável ou com scanner indisponível/inconclusivo | Sistema | Falha, indisponibilidade ou resultado inconclusivo mantém o anexo bloqueado; texto continua funcionando | Negado para disponibilização automática | Fail-closed dentro da infraestrutura da FORD | RF-011; CA-011.6 a CA-011.8; RN-008 |
@@ -112,7 +112,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 
 ## 4. Regras transversais de autorização e segurança
 
-1. **Identidade validada no servidor:** toda operação protegida deve derivar a identidade da sessão autenticada por mecanismo compatível com a arquitetura aprovada para a FORD.
+1. **Identidade validada no servidor:** toda operação protegida deve derivar a identidade da sessão validada pelo Supabase Auth; nunca confiar em identidade, role ou status enviados pelo cliente.
 2. **Role não substitui membership:** o perfil `ti` autoriza as operações administrativas expressas; o perfil `user` não concede acesso a conversa sem participação.
 3. **Acesso TI é exceção explícita:** TI consulta/exporta qualquer conversa sem justificativa prévia; toda consulta/exportação deve gerar auditoria.
 4. **Membership deve estar vigente:** operações de Usuário dependem de participação autorizada e de conta ativa. A remoção revoga imediatamente acesso ao histórico e anexos do grupo.
@@ -121,7 +121,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 7. **IDs e links não são autorização:** conhecer identificadores ou possuir link anteriormente emitido não substitui a verificação de autorização vigente.
 8. **Frontend não é enforcement:** ocultar telas ou botões não substitui autorização no servidor e na camada de persistência/armazenamento.
 9. **Auditoria:** consultas, exportações e demais ações administrativas especificadas devem gerar eventos protegidos, sem registrar credenciais, tokens ou segredos.
-10. **Soberania dos dados:** conteúdo, anexos e dados operacionais devem permanecer sob controle da FORD; não podem ser enviados a serviços de terceiros para processamento. A arquitetura concreta é matéria da Q-025 e das ADRs técnicas.
+10. **Restrições de dados da FORD:** a baseline registra exigências de controle de hospedagem e vedação a terceiros no acesso, armazenamento ou processamento. Essas exigências precisam ser conciliadas na Q-025 com a stack Supabase + Vercel definida para o projeto. Até essa compatibilização, não declarar conformidade institucional nem substituir a stack por outra sem decisão expressa.
 11. **Sem bypass genérico:** operações privilegiadas devem ser explícitas, autenticadas e auditadas. Esta matriz não autoriza chave privilegiada no cliente nem bypass irrestrito de controles.
 
 ## 5. Evidências e limites do estado técnico observado
@@ -130,13 +130,13 @@ A inspeção anterior do repositório identificou artefatos de autenticação/pe
 
 | Área | Evidência conhecida | Limite da evidência |
 |---|---|---|
-| Perfis e estado de conta | Há artefatos/migration anteriores para `profiles` e role `user/ti` | Não comprova arquitetura final compatível com Q-025 nem fluxo completo integrado/homologado |
+| Perfis e estado de conta | Há migration Supabase versionada para `profiles` e role `user/ti` | Evidencia scaffold existente na stack do projeto; ainda não comprova integração completa nem homologação dos fluxos |
 | Middleware de autorização | Existe implementação isolada e testes unitários | Não comprova integração com todos os handlers/rotas reais |
 | Conversas, grupos e memberships | Issue #99 aberta para modelagem | Não há comprovação de schema final ou enforcement de domínio |
 | Mensagens, anexos e auditoria | Dependem das entregas de domínio e issues relacionadas | Não declarar policies, Storage, auditoria ou retenção implementados sem evidência |
 | Testes de autorização | Foram documentados 11 testes unitários com provedor simulado | Não equivalem a testes de banco/RLS real, integração, revogação de links ou isolamento de domínio |
 
-**Nota arquitetural:** artefatos atuais que mencionam Supabase/Vercel representam a direção técnica anterior. A FORD v2 exige hospedagem e processamento sob controle da FORD, sem terceiros acessando, armazenando ou processando os dados. A reconciliação está registrada em Q-025. Esta matriz não escolhe fornecedor, serviço ou plataforma de autenticação.
+**Nota arquitetural:** Supabase + Vercel é a stack definida para o projeto conforme orientação recebida em aula e deve permanecer como referência de implementação. A FORD v2 também registra restrições sobre hospedagem e processamento de dados por terceiros. A compatibilidade entre essas determinações permanece para análise na Q-025; essa pendência não transforma Supabase/Vercel em tecnologias obsoletas nem autoriza sua substituição implícita.
 
 ## 6. Casos positivos e negativos para validação
 
@@ -181,14 +181,14 @@ Os resultados abaixo já estão definidos pelas regras de produto. “Implementa
 | Enforcement e RLS de domínio (#101) | Implementar autorização server-side e políticas de persistência/armazenamento; provar isolamento positivo e negativo | Tech Lead / Dev; validação SQA | Execução posterior à matriz/schema; não é aceite documental da #100 |
 | Auditoria e retenção (#102) | Implementar catálogo de eventos, acesso restrito, proteção e ciclo de retenção | Dev; validação SQA; parâmetros institucionais conforme baseline | A matriz identifica operações auditáveis; #102 implementa |
 | Integração de perfis/contas (#105) | Completar fluxo real de autenticação, provisionamento, desativação e revogação de sessões | Responsáveis da #105; Tech Lead / Dev | A matriz define a regra funcional, sem presumir a integração |
-| Compatibilização arquitetural (Q-025) | Reconciliar ADRs e artefatos Supabase/Vercel com infraestrutura sob controle da FORD | Tech Lead / Desenvolvimento / TI da FORD | Impede que tecnologia antiga seja tratada como plataforma aprovada |
+| Compatibilização arquitetural (Q-025) | Avaliar a compatibilidade da stack obrigatória Supabase + Vercel com as restrições registradas pela FORD, preservando a stack como direção do projeto | Tech Lead / Desenvolvimento / TI da FORD | Impede que uma exigência seja descartada por inferência e registra o conflito a resolver |
 | Revisão independente da matriz | Verificar rastreabilidade, cobertura de cenários e consistência com RF-001 a RF-023 | SQA | Critério pendente para conclusão formal da #100 |
 
 ## 8. Decisões fora do escopo de aprovação desta matriz
 
 Esta aprovação funcional não:
 
-- escolhe fornecedor, banco, serviço de autenticação, Storage, hospedagem ou arquitetura final; isso deve respeitar Q-025 e ser decidido tecnicamente;
+- substitui a stack definida para o projeto (Supabase + Vercel) por outro fornecedor ou arquitetura; os detalhes de configuração, integração, segurança e implantação permanecem sob responsabilidade técnica, com a compatibilidade da Q-025 explicitamente registrada;
 - aprova SQL, schema físico, triggers, funções privilegiadas, grants ou implementação de RLS;
 - declara implementação, integração, teste real ou homologação concluídos;
 - substitui o parecer independente de SQA;
@@ -202,7 +202,7 @@ A equipe técnica pode utilizar esta matriz, após a revisão técnica pertinent
 
 1. utilizar o schema revisado da #99;
 2. mapear cada operação a uma entidade/recurso real e à regra positiva/negativa correspondente;
-3. aplicar autorização server-side e controles na camada de persistência/armazenamento conforme a arquitetura aprovada para a FORD;
+3. aplicar autorização server-side e controles na camada de persistência/armazenamento usando a stack Supabase + Vercel, registrando separadamente a compatibilidade com as restrições da FORD em Q-025;
 4. testar participante, não participante, participante removido, conta inativa, Usuário, TI e tentativa de acesso por identificador conhecido;
 5. demonstrar revogação imediata de acesso a mensagens/anexos e links após remoção;
 6. comprovar que falha de autenticação/autorização e falha do scanner não concedem acesso;
