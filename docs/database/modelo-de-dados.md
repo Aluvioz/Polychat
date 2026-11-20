@@ -294,7 +294,7 @@ A lista e o processamento devem permanecer nos componentes oficiais Supabase/Ver
 
 ### 5.10 Configurações persistentes
 
-Não criar uma tabela genérica `configs` sem inventário. As configurações funcionais confirmadas incluem a lista de termos/regras e parâmetros administrados pelo TI. Outras configurações de UX/deploy ou segredos operacionais não devem ser presumidas como dados de negócio. Segredos e chaves permanecem em mecanismo seguro sob controle da FORD, não em tabela genérica.
+Não criar uma tabela genérica `configs` sem inventário. As configurações funcionais confirmadas incluem a lista de termos/regras e parâmetros administrados pelo TI. Outras configurações de UX/deploy ou segredos operacionais não devem ser presumidas como dados de negócio. Segredos e chaves permanecem em mecanismos seguros de configuração/segredos associados aos serviços oficiais, sob governança da FORD; nunca em tabela genérica ou no repositório.
 
 ## 6. Relacionamentos e invariantes
 
@@ -381,7 +381,7 @@ Propostas para revisão técnica:
 | Q-005 — identificador de login | Respondida | username único, definido/alterado pelo TI |
 | Q-007/Q-008 — regras e alertas | Respondidas/alinhadas | lista de termos do TI; severidade/prazos fixados; sem análise contextual ou bloqueio automático |
 | Q-009/Q-010 — consulta/auditoria/retenção | Respondidas/alinhadas | consulta TI sem justificativa; auditoria catalogada; retenção e backups definidos |
-| Q-011 — anexos | Respondida/alinhada | PDF/JPEG, 10 MB, 5 por mensagem, quotas TI, scanner interno e comportamento fail-closed |
+| Q-011 — anexos | Respondida/alinhada | PDF/JPEG, 10 MB, 5 por mensagem, quotas TI, scanner interno integrado à stack oficial e comportamento fail-closed |
 | Q-016 — desempenho/capacidade | Alinhada com Desenvolvimento | metas e capacidade constam dos requisitos técnicos; não reabrir como pendência de produto |
 | Q-024 — edição/exclusão de mensagens | Respondida | Usuário não edita/exclui; TI pode editar/excluir com auditoria |
 | Q-018/Q-019 | Parcialmente abertos | refinamento de telas/navegação e ativos oficiais de marca |
@@ -406,7 +406,7 @@ A documentação lógica não declara schema aprovado nem migrations executadas.
 |---|---|---|---|
 | 0.1 | 18/11/2026 | Modelo lógico inicial. | Histórico |
 | 0.2 | 19/11/2026 | Escopo funcional de entidades validado pelo PO. | Histórico |
-| 0.3 | 19/11/2026 | Reconciliado com FORD v2, arquitetura sob controle FORD, recibos de leitura, auditoria ampliada, retenção, anexos e alertas. | Modelo lógico atualizado; revisão física pendente |
+| 0.3 | 19/11/2026 | Reconciliado com FORD v2, stack oficial Supabase/Vercel, recibos de leitura, auditoria ampliada, retenção, anexos e alertas. | Modelo lógico atualizado; revisão física pendente |
 
 ## 14. Referências
 
