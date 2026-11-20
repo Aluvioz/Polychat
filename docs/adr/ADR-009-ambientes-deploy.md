@@ -73,11 +73,11 @@ Manter os ambientes separados de **desenvolvimento, homologação/Preview e prod
 
 O encerramento das Issues #96 e #98 permanece válido para seus escopos originais, com base nas confirmações registradas pelos responsáveis. A existência histórica de ambientes e deployments Supabase/Vercel, inclusive a confirmação de smoke tests e rollback no contexto da #98, deve ser preservada como evidência de execução anterior.
 
-A direção Supabase/Vercel permanece oficial após o esclarecimento do PO. A configuração e o uso com dados reais devem, contudo, ser validados: o encerramento das Issues #96 e #98 não substitui a conferência atual de projetos, regiões, variáveis, acessos, domínios, segregação, RLS, backups e testes de integração.
+A direção Supabase/Vercel está definida como oficial na ADR-003. A implementação funcional do Polychat ainda não começou. Os encerramentos #96/#98 cobrem seus escopos operacionais e não devem ser repetidos; Q-025 consolida apenas evidências específicas de configuração/integração ainda não cobertas, sem reabrir a escolha das plataformas.
 
 ## Justificativa
 
-Isolamento e promoção controlada reduzem o risco de contaminação entre estágios e erros de operação. Manter Supabase e Vercel como plataformas oficiais, com projetos, permissões e configurações governados pela FORD, atende ao alinhamento tecnológico registrado na ADR-003. Os encerramentos das issues #96 e #98 demonstram que os escopos operacionais anteriores receberam aceite técnico, mas não substituem a revisão da arquitetura após a atualização de requisitos.
+Isolamento e promoção controlada reduzem o risco de contaminação entre estágios e erros de operação. Manter Supabase e Vercel como plataformas oficiais, com projetos, permissões e configurações governados pela FORD, atende ao alinhamento tecnológico registrado na ADR-003. Os encerramentos das issues #96 e #98 demonstram que os escopos operacionais receberam aceite técnico. Não representam implementação funcional dos módulos do Polychat nem autorizam reabrir/refazer os escopos já aceitos.
 
 ## Consequências
 
@@ -89,7 +89,7 @@ Isolamento e promoção controlada reduzem o risco de contaminação entre está
 
 **Negativas e cuidados:**
 - A FORD/equipe precisa operar a infraestrutura, pipeline de deploy, segredos, backups e recuperação.
-- A migração da configuração externa anterior exige planejamento e validação.
+- A implementação funcional e suas integrações nos ambientes oficiais ainda precisam ser iniciadas e evidenciadas; os aceites operacionais #96/#98 permanecem válidos para seus escopos.
 - As evidências de deploy e rollback das Issues #96 e #98 devem ser preservadas; alterações na configuração oficial também precisam de smoke tests e ensaios controlados.
 
 ## Riscos
