@@ -17,18 +17,18 @@ O repositório não comprova implementação de armazenamento privado, fluxo com
 
 ## Problema
 
-Armazenar, analisar e entregar anexos sem expor objetos publicamente, sem permitir acesso fora das permissões da conversa e sem transferir arquivos ou metadados a provedores externos.
+Armazenar, analisar e entregar anexos sem expor objetos publicamente ou permitir acesso fora das permissões da conversa. O Supabase Storage é a plataforma oficial de armazenamento; o scanner deve integrar o fluxo controlado do Polychat, sem encaminhar arquivos/metadados a fornecedores de análise adicionais não aprovados.
 
 ## Alternativas consideradas
 
 1. **Supabase Storage:** plataforma oficial para objetos privados, com segregação de ambientes e integração server-side.
-2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
+2. **Armazenamento de arquivos em infraestrutura corporativa separada:** não é a direção selecionada; qualquer mudança futura exige ADR substitutiva.
 3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
-4. **Supabase Storage:** opção oficial do projeto para objetos/anexos, com buckets privados, acesso autenticado e links temporários; outros serviços de storage exigem aprovação explícita.
+4. **Outro serviço de storage:** não aprovado para o projeto sem decisão explícita.
 
 ## Decisão proposta
 
-Adotar **Supabase Storage** como opção oficial de armazenamento de anexos, com buckets privados, autorização server-side e URLs temporárias de no máximo 5 minutos. O arquivo só pode ser disponibilizado após resultado antimalware limpo; falhas/inconclusões mantêm o arquivo bloqueado. A configuração de região e ambientes será validada na Q-025.
+Adotar **Supabase Storage** como plataforma oficial de armazenamento de anexos, com buckets privados, autorização server-side e URLs temporárias de no máximo 5 minutos. O arquivo só pode ser disponibilizado após resultado antimalware limpo ou após liberação excepcional pelo TI, autenticada e auditada. Falha/inconclusão mantém o anexo bloqueado no fluxo normal; a liberação administrativa não altera o resultado do scanner. A configuração de região e os vínculos de ambiente serão documentados conforme as evidências já existentes e Q-025.
 
 ### Regras funcionais consolidadas
 
