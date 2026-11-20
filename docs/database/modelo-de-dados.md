@@ -23,7 +23,7 @@ O modelo considera:
 - A ADR-005, atualmente **Proposed**, que deve ser alinhada à stack definida para o projeto: PostgreSQL via Supabase e aplicação hospedada/deployada na Vercel.
 - A baseline vigente **POLY-REQ-001 v0.5 — 20/11/2026**, os requisitos RF-001 a RF-023, as regras RN-001 a RN-025 e as decisões consolidadas da FORD v2.
 - A migration existente de perfis `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`, que constitui o scaffold inicial da integração com Supabase Auth e deve ser avaliada como parte da stack do projeto.
-- A Q-025, que mantém pendente a compatibilização técnica da arquitetura com a exigência de infraestrutura sob controle da FORD.
+- A Q-025, que mantém registrada a análise de compatibilidade entre a stack Supabase + Vercel definida para o projeto e a exigência de infraestrutura sob controle da FORD.
 
 As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinhadas no nível funcional e não devem continuar classificadas como dúvidas de produto. As decisões adicionais de produto tomadas nesta versão estão registradas nas seções 11 e 12.
 
