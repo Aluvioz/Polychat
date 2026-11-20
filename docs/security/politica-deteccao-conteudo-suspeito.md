@@ -1,20 +1,20 @@
 # Política de detecção e classificação de conteúdo suspeito
 
 - **Documento:** POLY-SEC-002
-- **Versão:** 0.2 — comportamento funcional-base validado pelo PO
+- **Versão:** 0.3 — reconciliada com a FORD v2
 - **Data:** 19/11/2026
-- **Status:** comportamento funcional-base validado pelo PO; regras operacionais e aprovação institucional pendentes
+- **Status:** requisitos funcionais e operacionais alinhados à FORD v2; implementação funcional ainda não iniciada; permanecem pendentes configuração inicial da lista pelo TI, detalhamento técnico e evidências de teste
 - **Issue principal:** [#122 — Implementar detecção de conteúdo suspeito e palavrões](https://github.com/Aluvioz/Polychat/issues/122)
 - **Épica:** [#86 — Segurança, monitoramento e auditoria](https://github.com/Aluvioz/Polychat/issues/86)
 - **ADR relacionada:** [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md)
 
-> **Aviso de status:** esta é uma especificação preliminar. Ela consolida requisitos existentes e propõe critérios para refinamento. Não aprova uma lista de termos, categorias, limiares, severidades, prazos, canais de alerta ou medidas disciplinares. Nenhuma proposta deste documento deve ser tratada como política institucional aprovada até a validação formal pelas áreas responsáveis da FORD.
+> **Aviso de status:** este documento registra o comportamento de produto definido pela FORD v2. A lista concreta de termos é mantida/configurada pelo TI na operação; sua configuração e versionamento ainda dependem da implementação. Esta especificação não autoriza análise contextual, IA de terceiros, bloqueio automático ou medidas disciplinares.
 
 ---
 
 ## 1. Objetivo
 
-Definir uma referência funcional e operacional para a identificação de mensagens potencialmente suspeitas no Polychat, incluindo o tratamento de palavrões conforme critérios aprovados pela FORD.
+Registrar o comportamento funcional definido pela FORD para detectar mensagens por regras e lista de termos administrada pelo TI, incluindo palavrões, e gerar alertas para revisão na fila administrativa.
 
 A política deve permitir que mensagens que atendam a regras aprovadas sejam sinalizadas para revisão, com contexto mínimo e rastreabilidade suficiente para compreender o motivo da sinalização. Também deve permitir que falsos positivos sejam identificados, revisados e utilizados para melhorar as regras de forma controlada.
 
@@ -24,49 +24,49 @@ O propósito desta funcionalidade é apoiar a segurança e a investigação auto
 
 Este documento trata de:
 
-- categorias de conteúdo que poderão ser analisadas;
+- regras/lista de termos administrada pelo TI, incluindo palavrões;
 - regras de detecção e classificação;
-- identificação de palavrões segundo lista aprovada;
+- detecção por correspondência com os termos/regras cadastrados pelo TI;
 - contexto mínimo associado a uma sinalização;
 - revisão de falsos positivos;
 - comportamento quando a análise falhar;
 - metadados, versionamento e rastreabilidade das regras;
 - relação entre detecção, alerta e investigação;
 - critérios de teste e evidências;
-- decisões ainda necessárias para concluir a Issue #122.
+- evidências técnicas e testes necessários para concluir a implementação da Issue #122.
 
 ### 2.1 Fora do escopo
 
 Este documento não define nem substitui:
 
-- a política institucional de monitoramento, finalidade, transparência e retenção, tratada na ADR-010 e na Issue #102;
+- a implementação física da auditoria e retenção (Issues #102 e #124), cujas regras de produto já estão consolidadas na baseline;
 - a consulta administrativa de mensagens e conversas, tratada na Issue #121;
 - a interface, fila e fluxo operacional de alertas da Issue #123;
 - a trilha de auditoria de ações privilegiadas da Issue #124;
 - a análise antimalware de arquivos anexados, tratada na Issue #117;
 - uma política disciplinar ou de punição de funcionários;
 - bloqueio automático de mensagens ou contas;
-- a adoção de inteligência artificial, modelos externos ou serviços de terceiros;
+- a adoção de IA, análise contextual ou serviços de terceiros para análise de conteúdo, que não fazem parte do escopo aprovado;
 - uma decisão de criptografia ponta a ponta (E2EE).
 
 ## 3. Fontes e rastreabilidade
 
 | Fonte | O que estabelece | Limite |
 |---|---|---|
-| RF-014 — Analisar mensagens em busca de conteúdo suspeito | Cada mensagem submetida deve passar pela política de análise aprovada; termos/categorias e motivos devem ser definidos | Critérios de detecção e lista de termos dependem de aprovação |
-| CA-014.1 | A análise deve seguir a política aprovada pela FORD | A política ainda não está aprovada |
-| CA-014.2 | Palavrões entram no conjunto monitorado somente conforme lista aprovada | Não existe lista aprovada neste documento |
-| CA-014.3 | Mensagem sinalizada deve ficar associada ao motivo/regra da sinalização | Formato do registro e prazo de retenção dependem de política |
+| RF-014 — Detectar mensagens suspeitas por regras | Verificar mensagens conforme lista/regras mantidas pelo TI, incluindo palavrões; sem análise contextual ou IA externa | Requisito confirmado; implementação e configuração inicial da lista pendentes |
+| CA-014.1 | A detecção deve aplicar as regras/lista vigentes mantidas pelo TI | Requisito confirmado; teste de integração pendente |
+| CA-014.2 | Palavrões fazem parte do conjunto monitorado por meio da lista mantida pelo TI | Requisito confirmado; configuração concreta da lista é operacional do TI |
+| CA-014.3 | Ocorrência deve registrar o motivo/regra correspondente e os dados necessários à auditoria | Regra funcional confirmada; implementação dos registros pendente (#102/#124) |
 | CA-014.4 | Não aplicar bloqueio ou punição automática antes de definição expressa | Qualquer mudança exige decisão específica e rastreável |
-| RF-015 — Alertar o TI | Mensagens sinalizadas devem gerar alerta visível ao TI por mecanismo aprovado | Canal, severidade, prazo e fluxo estão pendentes |
-| CA-015.1 a CA-015.3 | Alerta deve identificar conversa, mensagem, momento e motivo; canal e tratamento devem ser definidos | A exposição do conteúdo deve respeitar acesso administrativo aprovado |
-| RN-012 — Análise de conteúdo | Há intenção confirmada de analisar mensagens, incluindo palavrões conforme critérios a aprovar | Não estabelece lista nem algoritmo |
-| RN-013 — Alerta ao TI | Mensagens identificadas como suspeitas devem gerar alerta ao TI | Canal, severidade e resposta ainda não definidos |
-| RNF-011 — Privacidade e governança | Monitoramento, finalidade, transparência, responsáveis, retenção e resposta legal exigem aprovação das áreas competentes | Pendente de aprovação |
-| Q-007 — Detecção de mensagens suspeitas | Pergunta quais categorias/termos serão analisados e qual técnica será utilizada | Pendente — Cliente / Segurança |
-| Q-008 — Resposta a alertas | Pergunta sobre severidade, responsáveis, prazo e fluxo de investigação | Pendente — Cliente / TI |
-| Q-009 e Q-010 | Definem dependências de governança de consulta, auditoria e retenção | Pendente — Cliente / TI / Jurídico / Privacidade |
-| ADR-010 | Discute monitoramento, consulta de conteúdo, trade-offs de privacidade e salvaguardas | Status Proposed; depende de aprovação expressa |
+| RF-015 — Alertar o TI | Mensagens sinalizadas geram alerta na fila administrativa do console TI | Canal e comportamento definidos; implementação pendente (#123) |
+| CA-015.1 a CA-015.3 | Alerta deve identificar a ocorrência, mensagem/conversa, momento, motivo e severidade; TI revisa e pode encerrar sem justificativa obrigatória | Requisito confirmado; UI e fluxo técnico pendentes |
+| RN-012 — Análise de conteúdo | Detecção por regras/lista de termos mantida pelo TI, incluindo palavrões; sem análise contextual ou IA de terceiros | Confirmado pela FORD v2 |
+| RN-013 — Alerta ao TI | Fila administrativa; alta até 1 hora, média até 1 dia útil e baixa até 3 dias úteis; TI pode encerrar sem justificativa obrigatória | Confirmado pela FORD v2 |
+| RNF-011 — Privacidade e governança | Aviso no primeiro acesso, acesso e retenção conforme baseline; posicionamento da FORD registrado sem dispensar obrigações legais | Requisitos consolidados; implementação/evidência pendente |
+| Q-007 — Detecção de mensagens suspeitas | Respondida: regras/lista de termos mantida pelo TI, incluindo palavrões; sem análise contextual/IA de terceiros | Resolvida pela FORD v2 |
+| Q-008 — Resposta a alertas | Respondida: fila TI; alta imediata/até 1h, média até 1 dia útil, baixa até 3 dias úteis; encerramento sem justificativa obrigatória | Resolvida pela FORD v2 |
+| Q-009 e Q-010 | Regras de consulta, auditoria e retenção foram consolidadas na FORD v2 e alinhadas com Desenvolvimento | Resolvidas no nível de requisito; implementação/auditoria técnica permanece pendente |
+| ADR-010 | Define a decisão de segurança/monitoramento; status Proposed para revisão técnica/arquitetural, não por ausência de resposta às Q-007 a Q-010 | Detalhamento e implementação técnicos pendentes |
 
 As fontes são mantidas sem promover recomendações a requisitos confirmados. O documento não amplia o escopo funcional para punição automática, bloqueio de mensagens ou vigilância fora das finalidades aprovadas.
 
@@ -76,9 +76,9 @@ São usadas três classificações:
 
 - **Confirmado:** consta expressamente dos requisitos ou regras de negócio vigentes.
 - **Proposta:** recomendação de produto ou técnica para avaliação. Não é uma decisão final.
-- **Pendente:** depende de resposta ou aprovação da FORD, TI, Segurança, Jurídico/Privacidade ou responsável indicado.
+- **Pendente:** depende de implementação, configuração operacional ou evidência técnica ainda não concluída. Não reclassificar requisito respondido como pergunta aberta.
 
-A versão 0.1 deve ser entendida como material de refinamento, não como autorização para iniciar monitoramento de conteúdo em produção.
+Esta especificação define o comportamento de produto, mas não comprova implementação. A implementação funcional do Polychat ainda não começou; detecção, alertas e auditoria permanecem por desenvolver.
 
 ## 5. Princípios de funcionamento
 
@@ -97,11 +97,11 @@ A detecção identifica mensagens que correspondem a regras aprovadas e pode ger
 
 ### 5.2 Finalidade e proporcionalidade
 
-**Pendente de aprovação institucional**
+**Regra de produto confirmada; operação sob responsabilidade do TI**
 
-Antes de ativar a análise, a FORD deve aprovar finalidade, categorias, público, responsáveis, transparência, acesso aos resultados e retenção. A prioridade de segurança declarada nos requisitos não elimina as obrigações aplicáveis de privacidade, proteção de dados e governança corporativa.
+A análise deve respeitar a finalidade de segurança e o aviso de monitoramento no primeiro acesso já definidos pela FORD. Não ampliar o monitoramento para produtividade, avaliação de desempenho ou finalidades diferentes. As obrigações legais aplicáveis permanecem válidas, independentemente do posicionamento operacional informado pelo cliente.
 
-A análise deve limitar-se às categorias e finalidades aprovadas. Não ampliar o monitoramento para produtividade, avaliação de desempenho ou assuntos fora do escopo sem decisão e avaliação próprias.
+A análise deve limitar-se às regras/lista de termos mantida pelo TI, incluindo palavrões. Não ampliar o monitoramento para produtividade, avaliação de desempenho ou categorias adicionais não previstas na baseline.
 
 ### 5.3 Acesso restrito
 
@@ -112,32 +112,21 @@ A análise deve limitar-se às categorias e finalidades aprovadas. Não ampliar 
 - A visualização do conteúdo da mensagem deve seguir as regras de consulta administrativa aprovadas e implementadas; o alerta não deve conceder acesso indireto ao conteúdo.
 - A consulta ao conteúdo para investigação deve observar a Issue #121 e gerar os eventos de auditoria definidos para a Issue #124.
 
-## 6. Categorias de detecção
+## 6. Escopo de detecção
 
-Nenhuma lista de termos ou categorias está aprovada nesta versão. As linhas abaixo são itens para decisão, não um catálogo habilitado.
-
-| Categoria candidata | Escopo a esclarecer | Situação |
-|---|---|---|
-| Palavrões | Lista explícita de termos em português e, se aplicável, em outros idiomas; tratamento de variações e expressões | Pendente — Q-007 |
-| Ofensas direcionadas | Se insultos dirigidos a pessoas ou grupos serão abrangidos e como serão definidos | Pendente — Q-007 |
-| Ameaças ou linguagem de risco | Se a categoria fará parte do MVP, quais critérios objetivos se aplicam e qual resposta é esperada | Pendente — Q-007 / Q-008 |
-| Outras categorias | Qualquer categoria adicional deverá ter finalidade, definição e aprovação próprias | Fora do escopo até aprovação |
+A detecção inicial utiliza regras e lista de termos administrada pelo TI, incluindo palavrões. Não há análise contextual, classificação semântica, IA de terceiros ou categorias adicionais implícitas. O conteúdo concreto da lista é uma configuração operacional sob responsabilidade do TI; sua existência/configuração no ambiente dependerá da implementação.
 
 A inclusão de uma categoria deve especificar exemplos de correspondência e não correspondência, limites, justificativa e risco de falsos positivos. Categorias não aprovadas não devem ser ativadas por inferência da equipe técnica.
 
 ## 7. Estratégia de detecção
 
-### 7.1 Abordagem inicial candidata
+### 7.1 Abordagem definida
 
-**Proposta para avaliação técnica e institucional**
-
-Para o primeiro incremento, recomenda-se avaliar regras determinísticas e versionadas, baseadas exclusivamente em termos e padrões aprovados. Essa opção é mais simples de explicar, testar e auditar do que introduzir um modelo probabilístico antes da validação da necessidade.
-
-A proposta não escolhe biblioteca, fornecedor nem tecnologia definitiva.
+A estratégia de produto é determinística: aplicar regras e lista de termos administrada pelo TI. A implementação pode utilizar comparação literal/padrões simples e versionados, mas não deve introduzir análise contextual, modelo probabilístico ou IA externa. Escolhas de biblioteca e implementação permanecem técnicas, sem alterar a regra de negócio.
 
 ### 7.2 Regras e normalização
 
-Caso a abordagem por lista seja aprovada, a equipe técnica deverá avaliar:
+Na implementação da lista, a equipe técnica deve avaliar:
 
 - comparação sem distinção de maiúsculas/minúsculas;
 - normalização Unicode e variações de codificação;
@@ -151,19 +140,11 @@ A normalização não deve remover sinais ou transformar o texto de modo que alt
 
 ### 7.3 Contexto e análise contextual
 
-A análise contextual não está aprovada. Antes de adotá-la, seria necessário definir:
-
-- quais sinais contextuais serão considerados;
-- como será explicada a razão de uma sinalização;
-- como serão testados viés, erros e falsos positivos;
-- quais dados serão enviados a serviços ou modelos externos, se houver;
-- requisitos de segurança, privacidade, hospedagem e retenção.
-
-Não enviar conteúdo de mensagens a serviços externos nem introduzir IA/modelos de terceiros sem avaliação e aprovação próprias.
+A análise contextual não faz parte do escopo aprovado e não deve ser implementada. Não enviar conteúdo de mensagens a serviços adicionais, modelos externos ou IA. Supabase e Vercel permanecem as plataformas oficiais do projeto; a restrição se aplica a serviços adicionais não aprovados.
 
 ### 7.4 Limiares e pontuação
 
-Não há limiar, pontuação ou severidade aprovados. Na versão 0.1, recomenda-se não criar pontuação numérica de risco sem uma necessidade demonstrada e validação de negócio e Segurança.
+Não foi definida pontuação numérica de risco para mensagens. As severidades baixa, média e alta referem-se ao alerta administrativo e devem seguir os critérios operacionais da FORD; não devem ser confundidas com uma nota probabilística do conteúdo.
 
 Se múltiplas regras forem aplicadas, cada correspondência deve ser identificada individualmente por código e versão. Um resultado composto não deve ocultar quais regras efetivamente corresponderam.
 
@@ -198,7 +179,7 @@ O critério da Issue #122 exige contexto mínimo. A finalidade é permitir revis
 
 ### 9.1 Metadados candidatos
 
-**Proposta para avaliação**
+**Diretriz de implementação, sem alterar os requisitos confirmados**
 
 | Campo candidato | Finalidade |
 |---|---|
@@ -213,7 +194,7 @@ O critério da Issue #122 exige contexto mínimo. A finalidade é permitir revis
 | Identificador do revisor e data/hora da revisão | Responsabilizar a ação administrativa |
 | Identificador de correlação | Relacionar logs técnicos sem expor conteúdo |
 
-O formato final, os campos obrigatórios e o prazo de retenção dependem de Q-009 e Q-010 e da política da Issue #102.
+Os campos físicos e a implementação dependem do modelo de dados e da Issue #102. Os requisitos de auditoria e retenção já estão consolidados na baseline v0.4; não são pendências de Q-009/Q-010.
 
 ### 9.2 Minimização de conteúdo
 
@@ -225,7 +206,7 @@ O formato final, os campos obrigatórios e o prazo de retenção dependem de Q-0
 - Não armazenar tokens, credenciais ou dados técnicos sensíveis junto ao evento.
 - Registrar motivo e regra correspondente para que o revisor saiba por que a mensagem foi sinalizada.
 
-A decisão de mostrar trecho, mensagem integral ou somente metadados deve ser aprovada com Segurança e Jurídico/Privacidade.
+A consulta ao conteúdo pelo TI segue a regra já definida: qualquer administrador TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação. O alerta não cria autorização nova nem restringe esse acesso; a consulta e a revisão devem gerar os registros de auditoria previstos.
 
 ## 10. Revisão de falsos positivos
 
@@ -250,7 +231,7 @@ A equipe técnica pode propor outros estados, mantendo a distinção entre resul
 
 **Proposta**
 
-- Registrar a classificação humana e a justificativa mínima conforme política aprovada.
+- Permitir que TI revise e encerre o alerta sem exigir justificativa. O sistema pode registrar operador, horário e estado para fins de auditoria.
 - Permitir que falsos positivos sejam consultados em relatórios restritos para avaliar a qualidade das regras.
 - Não alterar a lista ativa automaticamente a partir de uma única revisão.
 - Fazer mudanças nas regras por processo controlado, com responsável, justificativa, revisão, testes, versão e data de vigência.
@@ -262,23 +243,21 @@ Os indicadores, limiares aceitáveis e periodicidade de revisão precisam de apr
 
 O RF-015 exige alertas visíveis ao TI. A fila e o fluxo operacional pertencem à Issue #123, mas a política deve fornecer os parâmetros necessários.
 
-| Elemento | Definição necessária | Estado |
+| Elemento | Regra definida | Estado |
 |---|---|---|
-| Destinatários e papéis habilitados | Quem pode receber e revisar alertas | Pendente — Q-008 / Q-009 |
-| Canal do alerta | Dentro do aplicativo ou outro canal aprovado | Pendente — Q-008 |
-| Severidade | Critérios objetivos e significado de cada nível | Pendente — Q-008 |
-| Prazo de triagem | Tempo máximo para primeira análise | Pendente — Q-008 |
-| Responsável pela investigação | Papel/equipe responsável e substituição | Pendente — Q-008 |
-| Encerramento | Estados finais, justificativa e registro exigido | Pendente — Q-008 |
-| Escalonamento | Como tratar ocorrência urgente ou sem responsável | Pendente — Q-008 |
-| Acesso ao conteúdo | Como o revisor autorizado abre a mensagem e conversa | Depende da Issue #121 e da Q-009 |
-| Retenção | Prazo de ocorrência, decisão e evidências | Depende da Issue #102 e da Q-010 |
+| Destinatário | Equipe de TI, por fila administrativa no console | Confirmado |
+| Canal | Fila de alertas do console TI | Confirmado; UI ainda não implementada |
+| Severidade | Baixa, média e alta | Confirmado |
+| Prazo de resposta | Alta: imediatamente e até 1 hora; média: até 1 dia útil; baixa: até 3 dias úteis | Confirmado |
+| Revisão/encerramento | TI revisa e pode encerrar sem justificativa obrigatória | Confirmado |
+| Consulta da conversa | TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação; consulta é auditada | Confirmado |
+| Retenção/auditoria | Conforme regras da baseline v0.4 e Issue #102 | Requisito confirmado; implementação pendente |
 
 A notificação não deve conter conteúdo integral da mensagem por padrão. O revisor deve acessar o conteúdo somente após autenticação e autorização conforme a política aprovada.
 
 ## 12. Privacidade, segurança e auditoria
 
-A ativação da detecção depende de aprovação institucional sobre finalidade, transparência, acesso e retenção.
+A operação deve apresentar o aviso de monitoramento no primeiro acesso (RF-023) e respeitar os controles de acesso e retenção definidos pela FORD. A implementação desses controles e sua evidência permanecem pendentes.
 
 ### 12.1 Salvaguardas propostas
 
@@ -386,7 +365,7 @@ Permanecem pendentes e não podem ser inferidos deste parecer:
 - aprovação institucional da política de monitoramento e das salvaguardas por FORD, TI, Segurança e Jurídico/Privacidade;
 - schema físico, fornecedor, biblioteca, implantação, testes e evidências de produção.
 
-**Resultado:** o comportamento funcional-base está validado pelo PO para orientar o refinamento e a implementação após as dependências aplicáveis. A política institucional não está integralmente aprovada, e a Issue #122 não pode ser encerrada apenas com esta validação.
+**Resultado:** o comportamento de produto está definido pela FORD v2 e alinhado com Desenvolvimento. A implementação funcional ainda não começou; a Issue #122 permanece aberta até que a detecção, a fila, a auditoria, os testes e as evidências estejam implementados e revisados.
 
 ---
 
@@ -394,15 +373,15 @@ Permanecem pendentes e não podem ser inferidos deste parecer:
 
 | ID | Decisão | Responsável sugerido | Impacto |
 |---|---|---|---|
-| D-122-01 | Aprovar finalidade, transparência e escopo do monitoramento | Representante da FORD / Jurídico / Privacidade / Segurança | ADR-010, RNF-011 |
-| D-122-02 | Definir categorias de conteúdo que serão analisadas | FORD / Segurança | Q-007, RF-014 |
-| D-122-03 | Fornecer e aprovar a lista de palavrões/termos e suas variações | FORD / Segurança | CA-014.2 |
-| D-122-04 | Definir se o MVP usará lista determinística, expressões ou análise contextual | Segurança / Tech Lead / FORD | Q-007 |
+| D-122-01 | Aplicar o aviso de monitoramento no primeiro acesso e limitar a detecção ao escopo de produto definido | PO / TI | RF-023, ADR-010 |
+| D-122-02 | Implementar a detecção por regras/lista mantida pelo TI, incluindo palavrões | Desenvolvimento / TI | Q-007 resolvida, RF-014 |
+| D-122-03 | Configurar a lista concreta de termos iniciais e o mecanismo de manutenção pelo TI | TI / Desenvolvimento | RF-014 |
+| D-122-04 | Implementar estratégia determinística sem análise contextual ou IA | Desenvolvimento / Tech Lead | RF-014 |
 | D-122-05 | Definir normalização e tratamento de contexto, citações e falsos positivos | Segurança / Tech Lead / Produto | RF-014, Issue #122 |
 | D-122-06 | Definir limiares ou regras de classificação, se necessários | FORD / Segurança / Tech Lead | Q-007 |
-| D-122-07 | Definir destinatários, canal, severidade e prazo de alerta | TI / FORD | Q-008, RF-015, Issue #123 |
-| D-122-08 | Definir responsáveis, procedimento de investigação e encerramento | TI / FORD | Q-008, Issue #123 |
-| D-122-09 | Definir dados de contexto exibidos e retidos | TI / Segurança / Jurídico / Privacidade | Q-009, Q-010, Issue #102 |
+| D-122-07 | Implementar fila de alertas TI com severidade e prazos definidos | Desenvolvimento / TI | Q-008 resolvida, RF-015, Issue #123 |
+| D-122-08 | Implementar revisão/encerramento por TI sem justificativa obrigatória e registrar auditoria | Desenvolvimento / TI | Q-008 resolvida, Issues #123/#124 |
+| D-122-09 | Implementar dados mínimos da ocorrência e retenção/auditoria conforme baseline v0.4 | Desenvolvimento / TI | Q-009/Q-010 resolvidas, Issue #102 |
 | D-122-10 | Aprovar comportamento diante de indisponibilidade do detector | TI / Segurança / Tech Lead | Issue #122 |
 | D-122-11 | Aprovar auditoria e acesso às mensagens durante a investigação | TI / Segurança / Jurídico / Privacidade | Issues #121 e #124 |
 | D-122-12 | Definir critérios de qualidade e revisão periódica das regras | FORD / Segurança / PO | Issue #122 |
@@ -411,7 +390,7 @@ Permanecem pendentes e não podem ser inferidos deste parecer:
 
 Os critérios originais da Issue #122 são preservados. Esta tabela especifica as evidências esperadas e não declara nenhum critério concluído.
 
-| Critério original | Evidência esperada | Situação na versão 0.1 |
+| Critério original | Evidência esperada | Situação na versão 0.3 |
 |---|---|---|
 | Mensagens sinalizadas com contexto mínimo; falsos positivos revisáveis | Registro com regra/versão e contexto mínimo aprovado; fluxo de revisão e classificação de falsos positivos | Parcial: modelo e cenários documentados; política e fluxo precisam de aprovação |
 | Testes relevantes automatizados ou evidência documentada | Execução dos cenários DET-01 a DET-14 com conjunto de teste aprovado | Pendente: cenários propostos; não há evidência de execução |
@@ -451,4 +430,5 @@ A versão 0.2 deverá incorporar decisões formalmente aprovadas para D-122-01 a
 | Versão | Data | Alteração |
 |---|---|---|
 | 0.1 | 19/11/2026 | Consolida requisitos existentes, propõe modelo de detecção e revisão, registra cenários de teste, dependências e decisões pendentes. Não representa política aprovada nem evidência de implementação. |
-| 0.2 | 19/11/2026 | Registra validação do PO sobre o comportamento funcional-base: sinalização para revisão humana, sem punição/bloqueio automático, acesso restrito e minimização. Preserva pendências de lista, categorias, severidade, canal, contingência e aprovação institucional. |
+| 0.2 | 19/11/2026 | Registra validação inicial do PO. Foi superada pela reconciliação com FORD v2 nesta versão 0.3. |
+| 0.3 | 19/11/2026 | Atualiza detecção por lista mantida pelo TI, palavrões, ausência de análise contextual/IA, fila TI, severidades/prazos, encerramento sem justificativa e estado real de implementação ainda não iniciada. |
