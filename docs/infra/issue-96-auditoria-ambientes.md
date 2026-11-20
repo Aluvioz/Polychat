@@ -212,7 +212,7 @@ A tabela e as limitações das seções anteriores são o retrato da auditoria o
 
 Supabase e Vercel são as plataformas oficiais do Polychat, conforme ADR-003 e alinhamento complementar do PO com Desenvolvimento. A configuração dessas plataformas foi o objeto da Issue #96; seu encerramento deve ser preservado como evidência de execução e aceite do escopo original.
 
-A auditoria documental distingue a confirmação do responsável/Tech Lead sobre a conclusão das configurações e validações operacionais daquilo que foi inspecionado diretamente nesta execução. O uso oficial das plataformas não elimina a necessidade de validar projetos, regiões, acessos, variáveis, domínios e segregação por ambiente, conforme Q-025.
+A auditoria documental distingue a confirmação do responsável/Tech Lead sobre a conclusão das configurações e validações operacionais daquilo que foi inspecionado diretamente na auditoria original. O aceite da Issue #96 cobre as configurações e validações operacionais previstas em seu escopo. Q-025 não deve repetir essa conferência; deve apenas consolidar detalhes de integração funcional e evidências específicas que não façam parte dos aceites #96/#98.
 
 ### 12.3 Limites de evidência
 
