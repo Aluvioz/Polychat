@@ -2,13 +2,13 @@
 
 - **Identificador:** POLY-DATA-001
 - **Versão:** 0.3 — 19/11/2026
-- **Status:** modelo lógico atualizado para a baseline FORD v2; revisão física/técnica pendente
+- **Status:** modelo lógico atualizado para FORD v2; implementação física ainda não começou
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados
 - **Tecnologia oficial:** PostgreSQL via Supabase Database
 - **Dependência técnica:** Q-025 — validação de projetos, regiões, ambientes e configuração Supabase/Vercel
 
-> Este documento consolida o modelo lógico à luz da baseline POLY-REQ-001 v0.4. Supabase é a plataforma oficial de backend do Polychat; o documento não aprova por si só DDL, migrations ou RLS de domínio. A migration existente é uma fundação parcial, não evidência de implementação completa. Serviços externos adicionais exigem aprovação explícita.
+> Este documento consolida o modelo lógico à luz da baseline POLY-REQ-001 v0.4. Supabase é a plataforma oficial de backend do Polychat; o documento não aprova por si só DDL, migrations ou RLS de domínio. A migration de `profiles` existente é um artefato de scaffold isolado; não significa que a implementação do modelo de domínio tenha começado. Serviços externos adicionais exigem aprovação explícita.
 
 ## 1. Objetivo
 
@@ -32,7 +32,7 @@ O modelo considera:
 |---|---|
 | **Requisito confirmado** | Regra funcional consolidada na FORD v2 ou alinhamento formal do PO com Desenvolvimento. |
 | **Estrutura lógica proposta** | Entidade/atributo necessário para suportar o requisito; nomes e tipos físicos ainda podem mudar. |
-| **Implementação parcial** | Código ou migration existente na stack oficial, mas ainda sem cobertura funcional completa ou integração comprovada. |
+| **Artefato de scaffold** | Código/migration isolado versionado para orientar a implementação; não integrado ao runtime nem considerado implementação funcional. |
 | **Revisão técnica pendente** | Requer decisão sobre tipos, chaves, índices, constraints, transações, RLS ou implantação. |
 | **Pendente de escopo** | Informação funcional ainda não detalhada, como telas/parametrização persistente não inventariada. |
 
