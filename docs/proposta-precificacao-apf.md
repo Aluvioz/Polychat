@@ -730,7 +730,7 @@ Esta seção é o aditivo vigente para interpretar a proposta histórica acima. 
 | Auditoria | Foco anterior em consulta TI | RF-022 e catálogo ampliado: contas/grupos/membros, consultas, alertas, downloads, liberação, exportações, edição/exclusão de mensagens, configurações | Reavaliar ALI/EE/CE/SE de auditoria e complexidade |
 | Aviso de monitoramento | Não estava na contagem | RF-023: aviso no primeiro acesso | Avaliar se é função independente ou parte de autenticação/onboarding segundo CPM |
 | Anexos | Limites/seleção ainda como pendência | PDF/JPEG; 10 MB; 5 por mensagem; quotas TI; PDF protegido rejeitado; JPEG galeria sem câmera; EXIF/GPS removido | Atualizar DET/regras e processos de upload/download |
-| Antimalware | Scanner/limites pendentes e Supabase Storage proposto | Scanner interno FORD; falha/inconclusão bloqueia; TI pode liberar arquivo com auditoria | Incluir avaliação de processo de liberação e metadados de análise |
+| Antimalware | Scanner/limites pendentes; Storage ainda como proposta | Supabase Storage oficial; scanner integrado ao fluxo da aplicação, falha/inconclusão bloqueia e TI pode liberar com auditoria | Incluir avaliação do processo de liberação e metadados de análise |
 | Monitoramento | Critérios/severidade em aberto | Lista de termos TI, inclui palavrões; sem contexto/IA externa; severidades e prazos definidos; sem bloqueio automático | Revisar alertas, manutenção de termos, revisão/encerramento; não contar controles duplicados |
 | Retenção e continuidade | Regras e prazos pendentes | Sem exclusão automática enquanto sistema opera; TI autoriza exclusões; backups diários 12 meses; RPO/RTO definidos | Custos e esforço técnico/operacional devem ser atualizados; PF depende de transações realmente reconhecidas |
 | UX | Wireframes em proposta sem aceite | Issues #91 e #92 aceitas como wireframes de baixa fidelidade | Usar como artefato de apoio, não como protótipo testado ou tela implementada |
@@ -760,8 +760,8 @@ A inclusão nesta lista significa que o analista deve examinar o processo segund
 
 - Next.js permanece como frontend e Vercel é a plataforma oficial de hospedagem/deploy.
 - Supabase é a plataforma oficial de backend; Auth, Database, Storage e Realtime são avaliados nas ADRs específicas e não devem ser tratados como serviços cancelados.
-- Banco PostgreSQL, identidade, storage, scanner, auditoria, monitoramento, backups e execução/deploy devem ficar sob controle da FORD.
-- O AIE FD-08 da estimativa histórica não representa uma decisão vigente. Reavaliar se existe arquivo lógico mantido fora da fronteira funcional Polychat dentro da própria infraestrutura FORD; a localização interna por si só não resolve a fronteira APF.
+- PostgreSQL, identidade, storage, auditoria, monitoramento e backups usam a stack oficial Supabase/Vercel sob governança da FORD; o scanner antimalware deve permanecer integrado ao fluxo aprovado e sem serviço externo não autorizado.
+- A classificação AIE/FD-08 da estimativa histórica continua como hipótese APF a validar, apesar de Supabase Auth ser a solução oficial de identidade. Reavaliar se existe arquivo lógico mantido fora da fronteira funcional Polychat dentro da própria infraestrutura FORD; a localização interna por si só não resolve a fronteira APF.
 - A stack Supabase/Vercel está escolhida; Q-025 valida projetos, regiões e configurações. Recalcular os planos, limites e mensalidades atuais antes de emitir nova estimativa comercial.
 - Bibliotecas/dependências que não acessem dados FORD podem ser utilizadas conforme as políticas técnicas aplicáveis.
 
