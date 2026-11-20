@@ -9,7 +9,7 @@ A rastreabilidade demonstra a origem e a cobertura documental dos requisitos. N�
 | Objetivo | Requisitos funcionais | Requisitos não funcionais | Critérios de aceitação | Situação dos diagramas UML |
 |---|---|---|---|---|
 | OBJ-001 — Canal corporativo próprio da FORD | RF-001 a RF-006; RF-009 a RF-018; RF-020 a RF-023 | RNF-001 a RNF-005; RNF-007 a RNF-013 | CA-001.x a CA-006.x; CA-009.x a CA-018.x; CA-020.x a CA-023.x | Ver seção 06; não há vínculo UML aprovado nesta matriz |
-| OBJ-002 — Comunicação individual entre usuários | RF-007; RF-008; RF-009; RF-019 | RNF-001; RNF-006; RNF-007; RNF-009 | CA-007.x a CA-009.x; CA-019.x || |
+| OBJ-002 — Comunicação individual entre usuários | RF-007; RF-008; RF-009; RF-019 | RNF-001; RNF-006; RNF-007; RNF-009 | CA-007.x a CA-009.x; CA-019.x | Sem vínculo UML aprovado; consulte a seção 06 |
 | OBJ-003 — Comunicação em grupos administrados pelo TI | RF-005; RF-006; RF-010; RF-019 | RNF-001; RNF-004; RNF-006; RNF-009 | CA-005.x; CA-006.x; CA-010.x; CA-019.x || |
 | OBJ-004 — Administração centralizada no TI | RF-002 a RF-006; RF-016; RF-020; RF-021; RF-022 | RNF-001; RNF-002; RNF-003; RNF-004; RNF-011 | CA-002.x a CA-006.x; CA-016.x; CA-020.x; CA-021.x; CA-022.x || |
 | OBJ-005 — Monitoramento, alertas e investigação | RF-011 a RF-016; RF-020 a RF-023 | RNF-002; RNF-004; RNF-009; RNF-010; RNF-011; RNF-013 | CA-011.x a CA-016.x; CA-020.x a CA-023.x || |
