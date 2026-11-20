@@ -27,10 +27,10 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 
 | Artefato | Uso neste plano |
 |---|---|
-| [03 — Requisitos funcionais](../03-requisitos-funcionais.md) | Fonte dos RF-001 a RF-018 e dos critérios CA-xxx.n |
+| [03 — Requisitos funcionais](../03-requisitos-funcionais.md) | Fonte dos RF-001 a RF-023 e dos critérios CA-xxx.n |
 | [04 — Requisitos não funcionais](../04-requisitos-nao-funcionais.md) | Fonte dos RNF-001 a RNF-013 e respectivos métodos de verificação |
 | [07 — Rastreabilidade e critérios de aceitação](../07-rastreabilidade-e-criterios-de-aceitacao.md) | Relação existente entre objetivos, RFs, RNFs e critérios |
-| [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Registro das decisões pendentes Q-001 a Q-024 |
+| [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Histórico Q-001 a Q-024; somente Q-018, Q-019 e Q-025 permanecem abertas, com Q-025 técnica/operacional |
 | [09 — Baseline consolidada do MVP](../09-baseline-requisitos-mvp.md) | Escopo, estado técnico observado, comandos de CI e evidências existentes |
 | [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de autorização e cenários AUTH-01 a AUTH-20 |
 | [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
@@ -95,18 +95,18 @@ A automação deve ser escolhida pelo risco e pela repetibilidade:
 
 ## 6. Inventário de implementação e evidências preexistentes
 
-A baseline `docs/09-baseline-requisitos-mvp.md` registra o seguinte estado técnico observado na `main` em 17/11/2026:
+A fotografia do repositório registra artefatos iniciais de estrutura, mas a implementação funcional do produto ainda não começou. O que existe não constitui fluxo real integrado ou funcional:
 
 - A aplicação está estruturada em Next.js 16, React 19, TypeScript e App Router.
-- O módulo `src/auth/authorization.mjs` implementa middleware de autorização isolado.
-- O arquivo `tests/authorization.test.mjs` contém 11 testes unitários do middleware com Supabase simulado.
-- Há uma migration versionada para `public.profiles`; sua presença no repositório não comprova aplicação em Supabase hospedado.
-- A baseline não encontrou integração funcional completa de Auth/handlers do App Router nem políticas RLS de domínio para conversas, grupos, mensagens, anexos e auditoria.
+- Existe um módulo isolado de autorização Express-compatible e testes unitários com Supabase simulado; são artefatos de scaffold/estudo, não autenticação nem autorização integradas à aplicação Next.js.
+- Há uma migration de exemplo para `public.profiles`; sua presença versionada não comprova aplicação no projeto Supabase, integração com o runtime ou implementação funcional de perfis.
+- Não há integração funcional de Auth/handlers do App Router, nem migrations/RLS de domínio para conversas, grupos, mensagens, anexos e auditoria.
+- Nenhuma funcionalidade do Polychat — login, conversas, mensagens, grupos, anexos, alertas, console TI ou auditoria — está implementada de ponta a ponta.
 - O pipeline CI disponibiliza `npm test`, `npm run lint`, `npm run typecheck` e `npm run build`.
 
 Os 11 testes existentes cobrem: usuário ativo; ausência de token; sessão inválida; conta inativa; falha na consulta de perfil; papel desconhecido; autorização de TI; bloqueio de usuário em rota TI; perfil ausente; exceção do provedor; e rota TI sem autenticação.
 
-**Limite da evidência:** esta lista documenta artefatos existentes conforme a baseline e o código consultados. Não declara que esses testes foram executados durante a criação deste documento, que passaram em execução atual ou que comprovam RLS, isolamento de domínio ou integração hospedada. A execução deve ser vinculada a um run/commit específico.
+**Limite da evidência:** a existência do middleware, migration e testes unitários simulados não significa que a implementação funcional tenha começado. Esses artefatos não comprovam integração com Supabase real, aplicação da migration, RLS de domínio ou fluxos do produto. Todos os casos deste plano permanecem especificados/não executados até que a implementação real esteja disponível.
 
 ## 7. Matriz de rastreabilidade — requisitos funcionais
 
@@ -118,9 +118,9 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 | RF-001 — CA-001.2 e CA-001.3 | TC-E2E-002, TC-SEC-001 | E2E / Segurança | Especificado; testar credencial inválida e conta desativada separadamente |
 | RF-001 — CA-001.4 | TC-E2E-003 | E2E | Especificado; validar roteamento por perfil |
 | RF-002 — CA-002.1 a CA-002.4 | TC-SEC-002, TC-SEC-003, TC-SEC-004 | Segurança / Integração | Especificado; usar somente os dois perfis aprovados |
-| RF-003 — CA-003.1 a CA-003.4 | TC-E2E-010, TC-INT-003, TC-SEC-005 | Integração / E2E / Segurança | Especificado; hierarquia de administradores TI depende de Q-002 |
-| RF-003 — CA-003.5 | TC-E2E-010 | E2E | Bloqueado para aceite final até definir canal de entrega em Q-006 |
-| RF-004 — CA-004.1 a CA-004.3 | TC-INT-004, TC-E2E-011, TC-SEC-006 | Integração / E2E / Segurança | Especificado; política completa de gestão de contas deve respeitar Q-002 |
+| RF-003 — CA-003.1 a CA-003.4 | TC-E2E-010, TC-INT-003, TC-SEC-005 | Integração / E2E / Segurança | Especificado; todos os administradores TI possuem poderes iguais; Q-002 resolvida |
+| RF-003 — CA-003.5 | TC-E2E-010 | E2E | Especificado; TI cria e envia individualmente a senha inicial e o link; Q-006 resolvida |
+| RF-004 — CA-004.1 a CA-004.3 | TC-INT-004, TC-E2E-011, TC-SEC-006 | Integração / E2E / Segurança | Especificado; testar desativação, revogação de sessão e reativação conforme Q-002 resolvida |
 | RF-005 — CA-005.1 a CA-005.3 | TC-E2E-012, TC-SEC-007 | E2E / Segurança | Especificado; depende de schema e operações administrativas |
 | RF-006 — CA-006.1 a CA-006.3 | TC-INT-005, TC-E2E-013, TC-SEC-008 | Integração / E2E / Segurança | Especificado; depende de membership definido na #99/#101 |
 | RF-007 — CA-007.1 a CA-007.3 | TC-E2E-004 | E2E | Especificado; lista, ordenação e estado vazio |
@@ -128,14 +128,24 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 | RF-009 — CA-009.1 a CA-009.4 | TC-E2E-006, TC-INT-006, TC-SEC-010 | Integração / E2E / Segurança | Especificado; requer conversa e mensagens funcionais |
 | RF-010 — CA-010.1 a CA-010.3 | TC-E2E-007, TC-INT-005, TC-SEC-008 | Integração / E2E / Segurança | Especificado; testar membro e não membro |
 | RF-011 — CA-011.1 a CA-011.3 | TC-INT-007, TC-E2E-008, TC-SEC-011 | Integração / E2E / Segurança | Especificado; PDF/JPEG e validação de conteúdo real |
-| RF-011 — CA-011.4 | TC-INT-007 | Integração | Parcialmente bloqueado; tamanho máximo depende de decisão do cliente |
+| RF-011 — CA-011.4 | TC-INT-007 | Integração | Requisito definido: até 10 MB por arquivo e até 5 arquivos por mensagem; implementação/teste pendentes |
 | RF-012 — CA-012.1 a CA-012.3 | TC-UNIT-003, TC-INT-007, TC-E2E-008 | Unitário / Integração / E2E | Especificado; incluir extensão e assinatura real do arquivo |
-| RF-013 — CA-013.1 a CA-013.3 | TC-E2E-009 | E2E | Parcialmente bloqueado; interação de JPEG/câmera depende de Q-004 |
-| RF-014 — CA-014.1 a CA-014.4 | TC-UNIT-004, TC-INT-008 | Unitário / Integração | Bloqueado para resultado final até aprovação da política Q-007; não presumir bloqueio automático |
-| RF-015 — CA-015.1 a CA-015.3 | TC-INT-009, TC-E2E-014 | Integração / E2E | Bloqueado para aceite até canal, severidade e fluxo serem definidos em Q-008 |
-| RF-016 — CA-016.1 a CA-016.4 | TC-E2E-015, TC-INT-010, TC-SEC-012 | Integração / E2E / Segurança | Regra de consulta e auditoria confirmada; governança e estrutura da auditoria dependem de Q-009/Q-010 e #102 |
-| RF-017 — CA-017.1 a CA-017.3 | TC-COMP-001, TC-SEC-013 | Compatibilidade / Segurança | Parcialmente bloqueado; classificação de dispositivo depende de Q-012 |
-| RF-018 — CA-018.1 a CA-018.3 | TC-COMP-002, TC-SEC-014 | Compatibilidade / Segurança | Parcialmente bloqueado; tablets, modo desktop e emulação dependem de Q-012 |
+| RF-013 — CA-013.1 a CA-013.3 | TC-E2E-009 | E2E | Requisito definido: selecionar JPEG da galeria, sem câmera/gravação, removendo EXIF/GPS; Q-004 resolvida |
+| RF-014 — CA-014.1 a CA-014.4 | TC-UNIT-004, TC-INT-008 | Unitário / Integração | Regra definida: lista/regras mantidas pelo TI, incluindo palavrões; sem análise contextual/IA externa; implementação pendente |
+| RF-015 — CA-015.1 a CA-015.3 | TC-INT-009, TC-E2E-014 | Integração / E2E | Regras definidas: fila TI, severidades e prazos confirmados, encerramento sem justificativa; implementação pendente |
+| RF-016 — CA-016.1 a CA-016.4 | TC-E2E-015, TC-INT-010, TC-SEC-012 | Integração / E2E / Segurança | TI pode consultar qualquer conversa sem justificativa ou segunda aprovação; consultas devem ser auditadas. Q-009 resolvida; implementação #102/#121/#124 pendente |
+| RF-017 — CA-017.1 a CA-017.3 | TC-COMP-001, TC-SEC-013 | Compatibilidade / Segurança | Matriz definida: Usuário Android/iOS, Chrome/Safari móveis atuais; Q-012 resolvida |
+| RF-018 — CA-018.1 a CA-018.5 | TC-COMP-002, TC-SEC-014 | Compatibilidade / Segurança | Matriz definida: TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos; Q-012 resolvida |
+
+### Requisitos funcionais adicionais RF-019 a RF-023
+
+| Requisito / critério | Caso(s) relacionado(s) | Nível principal | Prontidão / observação |
+|---|---|---|---|
+| RF-019 — CA-019.1 a CA-019.4 | TC-INT-011, TC-E2E-016, TC-SEC-017 | Integração / E2E / Segurança | Especificado; testar registro de leitura, horário e contagem de não lidas por usuário/conversa |
+| RF-020 — CA-020.1 a CA-020.5 | TC-INT-012, TC-E2E-017, TC-SEC-018 | Integração / E2E / Segurança | Especificado; usuário negado; TI edita/exclui a qualquer momento; ações auditadas |
+| RF-021 — CA-021.1 a CA-021.4 | TC-INT-013, TC-E2E-018, TC-SEC-019 | Integração / E2E / Segurança | Especificado; TI exporta conversas individuais e grupos, sem justificativa/segunda aprovação, com auditoria |
+| RF-022 — CA-022.1 a CA-022.11 | TC-INT-014, TC-E2E-019, TC-SEC-020 | Integração / E2E / Segurança | Especificado; catálogo de eventos, acesso exclusivo TI, sem exclusão automática e exclusão autorizada auditada |
+| RF-023 — CA-023.1 a CA-023.3 | TC-E2E-020, TC-UX-002 | E2E / UX | Especificado; aviso de monitoramento no primeiro acesso, sem depender de push/browser notification |
 
 ## 8. Matriz de rastreabilidade — requisitos não funcionais
 
@@ -143,17 +153,17 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 |---|---|---|---|
 | RNF-001 — autorização server-side | Casos negativos por perfil, sessão, URL, API e RLS | TC-SEC-002 a TC-SEC-010; cenários AUTH da #100 | Integração real, modelo #99 e RLS #101 |
 | RNF-002 — proteção de dados | Revisão arquitetural, análise de ameaças e testes de segurança | TC-SEC-015; relatório da #125 | Controles criptográficos, chaves, arquitetura e threat model aprovados |
-| RNF-003 — credenciais | Inspeção de armazenamento/tráfego e testes de autenticação/sessão | TC-SEC-001, TC-SEC-016 | Política de senha, MFA e recuperação ainda pendentes |
-| RNF-004 — auditabilidade | Confirmar geração, integridade e consulta autorizada de eventos | TC-INT-010, TC-SEC-012 | Política, campos, integridade e retenção em #102/Q-009/Q-010 |
-| RNF-005 — compatibilidade | Executar matriz aprovada de SO, navegador e dispositivo | TC-COMP-001, TC-COMP-002 | Q-012 |
+| RNF-003 — credenciais | Inspeção de armazenamento/tráfego e testes de autenticação/sessão | TC-SEC-001, TC-SEC-016 | Q-006 resolvida: sem MFA, sem troca obrigatória no primeiro acesso e sem expiração periódica; verificar proteção técnica alinhada e recuperação exclusiva pelo TI |
+| RNF-004 — auditabilidade | Confirmar geração, integridade e consulta autorizada dos eventos definidos | TC-INT-010, TC-INT-014, TC-SEC-012, TC-SEC-020 | Requisitos de eventos, acesso e retenção definidos; implementação e evidências #102/#124 pendentes |
+| RNF-005 — compatibilidade | Executar matriz de SO, navegador e dispositivo definida pela FORD | TC-COMP-001, TC-COMP-002 | Q-012 resolvida; execução/homologação pendente (#129) |
 | RNF-006 — usabilidade | Tarefas com usuários representativos e métricas acordadas | TC-UX-001; protocolo/relatório da #94 | Participantes, métricas e protótipo/fluxos disponíveis |
-| RNF-007 — desempenho | Carga e latência comparadas a metas aprovadas | TC-PERF-001 | Metas, concorrência e volume em Q-016 |
-| RNF-008 — capacidade | Carga com população, simultaneidade e volume aprovados | TC-PERF-002 | Q-001 e Q-016; 25 contas não equivalem a 25 sessões simultâneas |
-| RNF-009 — continuidade | Exercício de backup/restauração e medição RPO/RTO | TC-REC-001 | Política de backup, retenção, RPO/RTO em Q-017 |
-| RNF-010 — segurança de arquivos | Testar formatos, conteúdo real, arquivos corrompidos e antimalware | TC-INT-007, TC-SEC-011 | Limites e política de anexos/antimalware em Q-011 e #117 |
-| RNF-011 — privacidade/governança | Revisão documental e verificação dos controles aprovados | TC-SEC-012; evidência de aprovação das áreas | Q-009, Q-010 e validação jurídico/privacidade |
-| RNF-012 — acessibilidade | Verificação dos critérios legais/corporativos aplicáveis | TC-A11Y-001; evidências das #93/#129 | Q-020; a despriorização de produto não dispensa obrigações aplicáveis |
-| RNF-013 — arquitetura/plataforma | Revisão da integração real, configuração server-only, RLS e deployment | TC-INT-001 a TC-INT-010; CI/deployment | Integração Supabase + Vercel e ADRs aprovadas |
+| RNF-007 — desempenho | Carga e latência comparadas às metas alinhadas com Desenvolvimento | TC-PERF-001 | Requisitos/metas alinhados; execução e evidência de desempenho pendentes |
+| RNF-008 — capacidade | Carga com capacidade inicial definida: até 25 conexões simultâneas de usuários finais, além dos administradores TI | TC-PERF-002 | População e capacidade alinhadas; testar carga real e registrar resultado |
+| RNF-009 — continuidade | Exercício de backup/restauração; verificar backup diário por 12 meses, RPO até 24h em desastre e RTO até 24h | TC-REC-001 | Parâmetros definidos; implementação e evidências de restore pendentes |
+| RNF-010 — segurança de arquivos | Testar PDF/JPEG, 10 MB, 5 arquivos por mensagem, PDF protegido por senha, EXIF/GPS, scanner interno e fail-closed | TC-INT-007, TC-SEC-011 | Requisitos definidos; integração do scanner interno e evidências de execução pendentes (#117) |
+| RNF-011 — privacidade/governança | Verificar aviso no primeiro acesso, acesso TI conforme regras e tratamento de solicitações descrito pela FORD | TC-SEC-012, TC-E2E-020 | Regras definidas; não exigir trilha separada de aprovação jurídica no projeto; obrigações legais aplicáveis permanecem |
+| RNF-012 — acessibilidade | Verificação de obrigações legais/corporativas aplicáveis | TC-A11Y-001; evidências das #93/#129 | Q-020 resolvida: FORD não estabeleceu requisito adicional específico; obrigações aplicáveis permanecem |
+| RNF-013 — arquitetura/plataforma | Revisar integração real, configuração server-only, RLS e deployment | TC-INT-001 a TC-INT-014; CI/deployment | Supabase/Vercel são plataformas oficiais; integração funcional ainda não começou e deve ser evidenciada |
 
 ## 9. Catálogo mínimo de casos de teste
 
@@ -163,20 +173,20 @@ Os casos abaixo são especificações de teste. O executor deve completar pré-c
 
 | ID | Cenário / pré-condição | Resultado esperado | Tipo / estado |
 |---|---|---|---|
-| TC-UNIT-001 | Validar autenticação sem token, token inválido e sessão expirada | Operação negada; não prossegue para handler protegido | Unitário; parcialmente coberto pelo módulo atual |
-| TC-UNIT-002 | Validar conta ativa, inativa, perfil ausente e role desconhecida | Somente conta ativa com perfil permitido prossegue | Unitário; parcialmente coberto pelo módulo atual |
+| TC-UNIT-001 | Validar autenticação sem token, token inválido e sessão expirada | Operação negada; não prossegue para handler protegido | Especificado; testes existentes exercitam apenas módulo isolado/mock, não runtime do produto |
+| TC-UNIT-002 | Validar conta ativa, inativa, perfil ausente e role desconhecida | Somente conta ativa com perfil permitido prossegue | Especificado; artefato isolado/mock não equivale à implementação funcional |
 | TC-UNIT-003 | Submeter PDF/JPEG válidos e arquivos com extensão/MIME incompatíveis | Aceitar apenas formatos permitidos após validar conteúdo real; recusar arquivos falsificados | Unitário; pendente de implementação do fluxo de anexos |
-| TC-UNIT-004 | Aplicar regras de detecção de conteúdo suspeito | Resultado conforme política e lista aprovadas; não inferir bloqueio automático | Unitário; bloqueado por Q-007 |
+| TC-UNIT-004 | Aplicar regras/lista de termos mantidas pelo TI, incluindo palavrões | Resultado sinalizado conforme regra ativa; sem análise contextual/IA e sem bloqueio automático | Especificado; implementação pendente, Q-007 resolvida |
 | TC-INT-001 | Autenticar conta ativa contra Supabase de teste e carregar seu perfil | Identidade e perfil correspondem ao usuário validado pelo provedor | Integração; depende de Auth integrado |
 | TC-INT-002 | Consultar/alterar perfil com RLS em banco de teste | Aplicar exatamente as policies aprovadas; acesso não autorizado negado | Integração; RLS real ainda pendente |
-| TC-INT-003 | TI provisiona conta com identificador e perfil permitidos | Conta criada apenas pelo fluxo administrativo autorizado; duplicidade rejeitada | Integração; detalhes de governança Q-002/Q-006 |
+| TC-INT-003 | TI provisiona conta com username único e perfil permitido | Conta criada apenas pelo fluxo administrativo; duplicidade rejeitada | Integração; Q-002/Q-006 resolvidas; implementação pendente |
 | TC-INT-004 | TI desativa uma conta já existente | Conta fica impedida de iniciar nova sessão; operação não pode ser feita por Usuário | Integração; depende de fluxo administrativo |
 | TC-INT-005 | Incluir conta ativa em grupo e tentar operação como não membro | Membro incluído pelo TI pode participar conforme regra; não membro não lê nem envia | Integração; depende de modelo #99 e RLS #101 |
 | TC-INT-006 | Enviar e recuperar mensagem individual persistida | Mensagem é gravada e disponibilizada somente aos participantes autorizados | Integração; depende de recursos de conversa |
 | TC-INT-007 | Fazer upload/download de PDF e JPEG, incluindo formato falso e arquivo corrompido | Somente formato real permitido é aceito; objeto não é exposto sem autorização | Integração; depende de Storage e #117 |
-| TC-INT-008 | Submeter mensagem à política de análise aprovada | Resultado e justificativa/regra ficam associados segundo a política aprovada | Integração; bloqueado por Q-007 |
-| TC-INT-009 | Gerar alerta para mensagem sinalizada | Alerta segue canal, severidade e fluxo definidos; nenhum bloqueio não aprovado | Integração; bloqueado por Q-008 |
-| TC-INT-010 | TI consulta conversa e o sistema registra auditoria | Consulta permitida segundo RF-016 e evento inclui identidade e momento; demais campos conforme política aprovada | Integração; depende de #102 e Q-009/Q-010 |
+| TC-INT-008 | Submeter mensagem à lista de termos/regras mantidas pelo TI | Ocorrência registra regra/motivo e vínculo com mensagem; não há análise contextual | Integração; Q-007 resolvida, implementação pendente |
+| TC-INT-009 | Gerar alerta para mensagem sinalizada | Alerta aparece na fila TI com severidade e prazo definidos; TI pode encerrar sem justificativa; sem bloqueio automático | Integração; Q-008 resolvida, implementação pendente |
+| TC-INT-010 | TI consulta conversa e o sistema registra auditoria | Consulta permitida a qualquer conversa sem justificativa/segunda aprovação; evento auditado conforme baseline | Integração; regras definidas, implementação #102/#121/#124 pendente |
 
 ### 9.2 Ponta a ponta (E2E)
 
@@ -190,13 +200,13 @@ Os casos abaixo são especificações de teste. O executor deve completar pré-c
 | TC-E2E-006 | Enviar mensagem individual para conta ativa e tentar destinatário inexistente/inativo | Envio válido aparece para os participantes; destinatário inválido recebe tratamento de erro sem criar conversa válida |
 | TC-E2E-007 | Enviar mensagem em grupo como membro e tentar como não membro | Membro autorizado envia; não membro não lê nem envia |
 | TC-E2E-008 | Anexar PDF/JPEG e tentar formato proibido | Anexos permitidos são disponibilizados de forma autorizada; formato proibido é recusado e explicado |
-| TC-E2E-009 | Acessar o fluxo de anexos JPEG e verificar ausência de captura/gravação | Aplicação não oferece captura/gravação proibida; comportamento de seleção de JPEG segue decisão Q-004 |
+| TC-E2E-009 | Selecionar JPEG existente na galeria e verificar ausência de captura/gravação | Aplicação não oferece câmera/gravação; metadados EXIF/GPS removidos |
 | TC-E2E-010 | TI cria conta com identificador, credencial inicial e perfil | Conta criada somente no fluxo administrativo; duplicidade e auto cadastro são impedidos |
 | TC-E2E-011 | TI desativa conta e essa conta tenta autenticar | A conta desativada não inicia nova sessão |
 | TC-E2E-012 | TI cria grupo e administra sua disponibilidade | Grupo é criado e fica disponível para administração por TI |
 | TC-E2E-013 | TI inclui conta ativa em grupo e tenta incluir conta desativada | Inclusão da conta ativa é permitida; conta desativada não se torna participante ativo |
-| TC-E2E-014 | Mensagem sinalizada gera alerta ao TI | Alerta apresenta dados definidos pela política aprovada, sem ação automática não autorizada |
-| TC-E2E-015 | TI consulta conversa da qual não participa | Consulta é permitida ao perfil TI conforme RF-016 e o evento é auditado; usuário comum não recebe essa permissão |
+| TC-E2E-014 | Mensagem sinalizada gera alerta ao TI | Fila mostra severidade e prazo correto; TI revisa/encerra sem justificativa obrigatória; envio da mensagem não é bloqueado automaticamente |
+| TC-E2E-015 | TI consulta conversa da qual não participa | Consulta é permitida a qualquer TI, sem justificativa; evento é auditado; usuário comum não recebe a função administrativa |
 
 ### 9.3 Segurança
 
@@ -218,18 +228,22 @@ Os casos abaixo são especificações de teste. O executor deve completar pré-c
 | TC-SEC-014 | TI tenta utilizar funções administrativas em ambiente classificado como celular | Bloqueio conforme critério aprovado; operações também devem ser protegidas |
 | TC-SEC-015 | Revisar proteção de dados em trânsito/armazenamento e segredos | Evidenciar controles definidos na arquitetura e threat model aprovado; nenhuma chave privilegiada exposta ao cliente |
 | TC-SEC-016 | Inspecionar armazenamento/transmissão de credenciais e sessão | Credenciais nunca aparecem em texto puro; controles correspondem à política aprovada |
+| TC-SEC-017 | Tentar consultar/alterar recibo de leitura de outro usuário | Acesso a estado de leitura é limitado ao contexto autorizado; manipulação de identificador não expõe leitura de terceiros | RF-019; não implementado |
+| TC-SEC-018 | Usuário tenta editar/excluir mensagem; TI executa ação privilegiada | Usuário é negado no servidor; TI é autorizado e a ação é auditada | RF-020; não implementado |
+| TC-SEC-019 | Usuário tenta exportar conversa; TI exporta conversa | Usuário é negado; exportação TI é autorizada e auditada, sem exigir justificativa ou segunda aprovação | RF-021; não implementado |
+| TC-SEC-020 | Usuário tenta consultar/modificar auditoria; TI consulta/gerencia registros | Usuário é negado; TI autorizado; logs não são alteráveis por usuários e não sofrem exclusão automática | RF-022; não implementado |
 
 ### 9.4 Compatibilidade, UX, acessibilidade, carga e recuperação
 
 | ID | Verificação | Resultado esperado / pré-condição |
 |---|---|---|
-| TC-COMP-001 | Executar perfil Usuário na matriz de smartphones aprovada | Fluxos suportados funcionam nos SOs/navegadores homologados; matriz depende de Q-012 |
-| TC-COMP-002 | Executar perfil TI na matriz de computadores aprovada | Fluxos administrativos funcionam nos SOs/navegadores homologados; Q-012 define versões e exceções |
+| TC-COMP-001 | Executar perfil Usuário em Android/iOS com Chrome/Safari móveis atuais | Fluxos suportados funcionam; tablets e desktop não são permitidos para o perfil Usuário |
+| TC-COMP-002 | Executar perfil TI em computador com Chrome/Edge/Firefox atuais | Fluxos administrativos funcionam; smartphones e tablets não são permitidos para o perfil TI |
 | TC-UX-001 | Usuários representativos executam tarefas definidas no plano da #94 | Registrar sucesso, tempo, erros, dúvidas e severidade; métricas devem ser aprovadas antes da avaliação |
-| TC-A11Y-001 | Executar avaliação manual/automatizada dos critérios aplicáveis | Evidenciar teclado, foco, contraste, zoom/reflow e leitor de tela conforme escopo aprovado em Q-020 e #93 |
+| TC-A11Y-001 | Executar avaliação manual/automatizada das obrigações aplicáveis | Evidenciar teclado, foco, contraste, zoom/reflow e leitor de tela conforme #93/#129; Q-020 não adiciona critério específico FORD |
 | TC-PERF-001 | Medir latência das operações críticas | Comparar com metas quantitativas aprovadas em Q-016; sem meta, registrar medição exploratória sem declarar aprovação |
-| TC-PERF-002 | Simular carga e concorrência representativas | Comparar com número de sessões, mensagens e anexos aprovados em Q-001/Q-016 |
-| TC-REC-001 | Executar restauração controlada a partir de backup | Comprovar integridade e medir RPO/RTO versus metas aprovadas em Q-017 |
+| TC-PERF-002 | Simular carga do público inicial | Verificar até 25 conexões simultâneas de usuários finais, além de administradores TI; registrar volumes/latência conforme metas alinhadas |
+| TC-REC-001 | Executar restauração controlada de banco e anexos | Comprovar backup diário, retenção de 12 meses, integridade, RPO até 24h em desastre e RTO até 24h |
 
 ## 10. Regras para execução e registro de resultado
 
@@ -346,14 +360,14 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 | #117 — anexos/antimalware | Política e parâmetros finais pendentes | Usar casos exploratórios sem fixar limites não aprovados; formalizar decisões |
 | #125 — threat modeling | Controles e cenários de ameaça ainda requerem consolidação | Incorporar ameaças aprovadas à suíte de segurança |
 | #129 — homologação | Execução manual e regressão global são trabalho próprio dessa issue | Transferir roteiros e evidências de execução à #129 |
-| Q-002/Q-006 | Governança TI e entrega/recuperação de credenciais | Bloquear aceite completo dos fluxos afetados até decisão |
-| Q-004 | Seleção de JPEG versus captura por câmera | Não assumir comportamento até decisão do cliente |
-| Q-007/Q-008 | Política de conteúdo suspeito e resposta a alertas | Não definir resultado, severidade, canal ou bloqueio por inferência |
-| Q-009/Q-010 | Governança da consulta TI e retenção | Preservar auditoria obrigatória; validar parâmetros adicionais após aprovação |
-| Q-011 | Limites e política de anexos | CA-011.4 permanece parcialmente testável |
-| Q-012 | Classificação de dispositivos e navegadores | Não homologar compatibilidade sem matriz aprovada |
-| Q-016/Q-017 | Carga, desempenho, disponibilidade, RPO e RTO | Não declarar aprovação quantitativa sem metas |
-| Q-020 | Critérios de acessibilidade aplicáveis | Registrar e validar obrigações corporativas/legais; articular com #93/#129 |
+| Q-002/Q-006 | Decisões resolvidas: poderes iguais de TI; TI provisiona username/senha e recupera credenciais | Não são pendências; testar conforme RF-002/RF-003/RNF-003 |
+| Q-004 | Resolvida: JPEG selecionado da galeria; sem câmera/gravação e com EXIF/GPS removidos | Testar conforme RF-013 |
+| Q-007/Q-008 | Resolvidas: regras/lista TI incluindo palavrões; fila, severidades/prazos e encerramento sem justificativa | Testar conforme RF-014/RF-015; implementação #122/#123 pendente |
+| Q-009/Q-010 | Resolvidas: consulta TI sem justificativa, exportação, auditoria e política de retenção | Implementar/evidenciar #102/#121/#124, sem reabrir regra de produto |
+| Q-011 | Resolvida: PDF/JPEG, 10 MB, 5 arquivos/mensagem, quotas TI e regras antimalware | Implementação/testes #115/#116/#117 pendentes |
+| Q-012 | Resolvida: matriz mobile Usuário e desktop TI definida pela FORD | Execução/homologação #129 pendente |
+| Q-016/Q-017 | Resolvidas: 25 conexões simultâneas de usuários finais + TI; 99% disponibilidade, RPO 24h, RTO 24h, backups diários por 12 meses | Requisitos definidos; testes de carga/restore pendentes |
+| Q-020 | Resolvida: FORD não definiu requisito adicional específico; obrigações aplicáveis permanecem | Testes/evidências pertinentes em #93/#129 |
 
 ## 15. Responsabilidades
 
@@ -371,7 +385,7 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 A entrega documental desta issue poderá ser considerada pronta para revisão quando:
 
 - [ ] Este plano estiver versionado e referenciado no índice de documentação.
-- [ ] A matriz cobrir RF-001 a RF-018 e RNF-001 a RNF-013, relacionando critérios e casos ou identificando bloqueios.
+- [ ] A matriz cobrir RF-001 a RF-023 e RNF-001 a RNF-013, relacionando critérios e casos ou identificando bloqueios.
 - [ ] Os casos existentes de autorização da #100 estiverem referenciados, sem duplicação ou contradição.
 - [ ] Os 11 testes de autorização existentes estiverem descritos como evidência preexistente, sem alegação de nova execução.
 - [ ] Houver critérios de entrada e saída, status de execução, severidade e modelo de evidência.
@@ -380,11 +394,11 @@ A entrega documental desta issue poderá ser considerada pronta para revisão qu
 
 ## 17. Parecer do PO
 
-A estratégia proposta é adequada como base de planejamento e rastreabilidade, mas não representa prontidão integral de teste. A existência de critérios e casos documentados não comprova que a implementação esteja disponível, integrada ou homologada.
+A estratégia proposta é adequada como base de planejamento e rastreabilidade, mas não representa prontidão integral de teste. A implementação funcional ainda não começou; existem apenas a estrutura inicial Next.js e artefatos isolados (middleware, migration de perfil e testes simulados). Nenhum desses artefatos comprova fluxo de produto integrado ou homologado.
 
 A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcionalidades e dependências: primeiro a fundação de autenticação/autorização; depois dados, RLS e conversas; em seguida mensagens, grupos, anexos e auditoria; por fim, homologação transversal, compatibilidade, acessibilidade, desempenho e recuperação, conforme decisões aprovadas.
 
-A Issue #126 deve permanecer aberta até revisão documental, validação SQA/Tech Lead e atendimento dos critérios de aceite registrados na issue. A Issue #129 permanece responsável pela homologação, acessibilidade e regressão executadas.
+A implementação funcional do Polychat ainda não começou. A existência de artefatos de scaffold e testes unitários isolados não representa fluxos de produto implementados. A Issue #126 deve permanecer aberta até a matriz cobrir RF-001 a RF-023/RNF-001 a RNF-013, receber revisão SQA/Tech Lead e manter os casos vinculados a evidências reais quando a implementação estiver disponível. A Issue #129 permanece responsável pela homologação, acessibilidade e regressão executadas.
 
 ---
 
