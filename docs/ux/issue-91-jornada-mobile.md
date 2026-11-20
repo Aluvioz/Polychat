@@ -56,13 +56,11 @@ Referências consultadas na branch principal: `docs/01-visao-geral-e-escopo.md`,
 6. **Anexos:** somente PDF e JPEG. O sistema deve explicar formato inválido e falha de upload em estados **distintos**; tamanho máximo e política de seleção de JPEG ainda não estão definidos.
 7. **Feedback:** comunicação visível de carregamento, sessão expirada, acesso negado, ausência de conexão e envio não concluído.
 
-### Decisões que são propostas, não requisitos aprovados
+### Decisões de produto consolidadas em 20/11/2026
 
-- Navegação inferior com `Conversas / Contatos / Perfil`; a existência da tela Perfil e o mapa definitivo de páginas dependem de **Q-018**.
-- Comportamento da aplicação offline (histórico em cache, indicadores de reconexão e reenvio) depende de definição técnica e homologação.
-- Indicadores de mensagem enviada/confirmada e detalhes de carregamento dependem de desenho técnico/QA.
-- Uso de cores azuis e brancas segue orientação geral da FORD; códigos, tipografia e ativos oficiais precisam de aprovação (**Q-019**).
-- Textos definitivos, além do que está expressamente previsto nos critérios, ainda devem passar por revisão.
+- Q-018 está resolvida: a navegação principal do Usuário é **Conversas recentes**. A busca de usuário ativo é um fluxo acionado para iniciar conversa individual; não há abas permanentes de Contatos ou Perfil. O mapa completo está em [POLY-UX-DEC-001](decisoes-produto-q018-q019.md).
+- Q-019 possui paleta cromática provisória definida: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco e neutros. O arquivo autorizado do Ford Oval e a tipografia corporativa permanecem sujeitos ao material oficial da FORD.
+- Comportamento técnico offline, indicadores de envio/confirmado, detalhes de carregamento e textos não fixados em requisitos continuam a ser refinados nas entregas próprias de UX, desenvolvimento e validação; não reabrem Q-018.
 
 ## 4. Checklist de conformidade para revisão
 
@@ -90,8 +88,8 @@ Referências consultadas na branch principal: `docs/01-visao-geral-e-escopo.md`,
 3. Qual será o identificador de login e o procedimento de credencial inicial/recuperação? (**Q-005/Q-006**)
 4. Qual é o limite de tamanho/quantidade de anexos e o comportamento de falha? (**Q-011**)
 5. Quais dispositivos/navegadores são homologados? Como lidar com tablets e modo desktop? (**Q-012**)
-6. A navegação `Conversas / Contatos / Perfil` é desejada? Quais páginas são obrigatórias? (**Q-018**)
-7. Quais são os ativos oficiais de marca, a paleta e os padrões de acessibilidade? (**Q-019/Q-020**)
+6. Q-018 foi resolvida pelo PO em 20/11/2026; consultar o catálogo de telas e fluxos em [POLY-UX-DEC-001](decisoes-produto-q018-q019.md).
+7. A paleta provisória de Q-019 foi definida; resta obter o Ford Oval autorizado e eventuais regras oficiais de tipografia/aplicação. Q-020 permanece sem requisito adicional específico da FORD; obrigações aplicáveis continuam válidas.
 
 ## 6. Evidência e próximos passos
 
