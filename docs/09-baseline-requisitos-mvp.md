@@ -74,7 +74,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Links temporários com validade máxima de 5 minutos e revogação imediata quando o acesso do participante é removido.
 - Download de anexos pelo TI durante investigações, com registro em auditoria.
 - Detecção de mensagens suspeitas por regras e lista de termos mantida pelo TI, incluindo palavrões; sem análise contextual ou IA de terceiros.
-- Conteúdo de mensagens e anexos não pode ser enviado a serviços externos para análise.
+- O conteúdo de mensagens e anexos não pode ser encaminhado a serviços adicionais de análise, IA ou scanner não aprovados; o processamento previsto nos componentes oficiais Supabase/Vercel e no scanner interno integrado é permitido.
 - Fila de alertas no console TI, com severidade baixa, média e alta e prazos de resposta definidos.
 - Encerramento de alertas pelo TI sem justificativa obrigatória.
 - Consulta de qualquer conversa pelo TI a qualquer momento, sem justificativa ou autorização prévia de outra pessoa.
@@ -97,7 +97,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Compartilhamento de formatos diferentes de PDF e JPEG.
 - Notificações push e notificações do navegador.
 - Integrações com outros aplicativos ou serviços externos de comunicação.
-- Serviços externos que acessem, armazenem ou processem dados da FORD.
+- Serviços externos adicionais não aprovados que acessem, armazenem ou processem dados da FORD.
 
 ### 2.3 Público e capacidade
 
