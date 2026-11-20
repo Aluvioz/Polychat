@@ -1,6 +1,6 @@
 # Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** baseline consolidada na execução da Issue #88, com base na visão POLYCHAT — FORD v0.1 confirmada pelo solicitante. A confirmação do solicitante não equivale à aprovação formal do representante da FORD, PO, liderança técnica ou SQA. Políticas de monitoramento/privacidade, decisões técnicas detalhadas e questões listadas em `08-glossario-e-questoes-em-aberto.md` continuam pendentes.
+**Status:** baseline POLY-REQ-001 v0.4, atualizada em 19/11/2026 com base no questionário FORD v2 e nos alinhamentos complementares do PO com Desenvolvimento. A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. A restrição de infraestrutura sob controle da FORD prevalece sobre ADRs e configurações tecnológicas anteriores incompatíveis.
 
 ## Navegação
 
@@ -40,3 +40,10 @@ A documentação não cria nem seleciona diagramas UML nesta versão, pois o tip
 ## Decisões arquiteturais
 
 O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
+
+
+## Atualização arquitetural — 19/11/2026
+
+A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, sem terceiros acessando, armazenando ou processando dados da organização. A direção anterior Supabase + Vercel foi depreciada na ADR-003. Consulte a [baseline v0.4](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md) e a Q-025.
+
+As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica e registram que esses aceites não constituem autorização vigente para serviços externos processarem dados da FORD após a FORD v2.
