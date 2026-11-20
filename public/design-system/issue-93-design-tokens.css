@@ -1,16 +1,16 @@
-/* Polychat UI Kit v0.1 — PROPOSTA UX (#93), não é marca Ford oficial.
-   Isolado em docs/ux; não substitui CSS da aplicação. */
+/* Polychat UI Kit v0.1 — proposta com paleta Ford provisória Q-019.
+   Ford Oval depende de arquivo autorizado; tokens isolados, sem alterar runtime. */
 :root {
   color-scheme: light;
-  --pc-brand-700: #003478;
-  --pc-brand-900: #001f4d;
-  --pc-brand-600: #1769aa;
-  --pc-brand-050: #edf4fb;
-  --pc-ink: #10243e;
+  --pc-brand-700: #00095B;
+  --pc-brand-900: #00142E;
+  --pc-brand-600: #066FEF;
+  --pc-brand-050: #F0F0F0;
+  --pc-ink: #0F0F0F;
   --pc-text-secondary: #475569;
   --pc-text-muted: #64748b;
   --pc-surface: #ffffff;
-  --pc-background: #f4f7fb;
+  --pc-background: #F0F0F0;
   --pc-border: #cbd5e1;
   --pc-success: #027a48;
   --pc-error: #b42318;
@@ -29,7 +29,7 @@
   --pc-radius-sm: 6px;
   --pc-radius-md: 10px;
   --pc-radius-lg: 16px;
-  --pc-elevation: 0 3px 12px rgba(16,36,62,.10);
+  --pc-elevation: 0 3px 12px rgba(15,15,15,.10);
   --pc-font: Arial, Helvetica, sans-serif;
   --pc-font-size-sm: .875rem;
   --pc-font-size-base: 1rem;
@@ -99,7 +99,7 @@ button{cursor:pointer}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
 /* A11y: skip link, forced colors and resilient zoom/reflow */
-.pc-skip-link{position:absolute;left:12px;top:-100px;z-index:1000;padding:12px 16px;background:#ffffff;color:#003478;border:3px solid #b45309;border-radius:6px;font-weight:700}
+.pc-skip-link{position:absolute;left:12px;top:-100px;z-index:1000;padding:12px 16px;background:#ffffff;color:#00095B;border:3px solid #b45309;border-radius:6px;font-weight:700}
 .pc-skip-link:focus{top:12px}
 .pc-stack>*,.pc-list-item>*{min-width:0}
 .pc-card,.pc-field,.pc-list-item,.pc-modal-demo{overflow-wrap:anywhere}
