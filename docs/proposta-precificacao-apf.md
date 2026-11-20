@@ -244,7 +244,7 @@ O FD-08 representa, como hipótese de contagem, o conjunto de identidades/creden
 
 **Subtotal EE:** 4 + 4 + 4 + 4 + 3 + 6 + 6 + 6 + 4 = **41 PF**.
 
-A inclusão e remoção de participantes são processos distintos porque alteram a relação de membership em sentidos diferentes e têm resultados reconhecíveis pelo TI. Não foi contada saída voluntária do usuário, pois Q-003 permanece aberta. Desativar e reativar contas também foram separadas por serem ações administrativas distintas, embora o documento de RF detalhe mais explicitamente a desativação.
+A inclusão e remoção de participantes são processos distintos porque alteram a relação de membership em sentidos diferentes e têm resultados reconhecíveis pelo TI. Não foi contada saída voluntária do usuário, pois Q-003 permanecia aberta na fotografia de 18/11; a FORD v2 posteriormente confirmou que usuários não podem sair voluntariamente. Desativar e reativar contas também foram separadas por serem ações administrativas distintas, embora o documento de RF detalhe mais explicitamente a desativação.
 
 ### 6.2 Saídas Externas (SE)
 
@@ -508,9 +508,9 @@ Essas mensalidades são simulações, não oferta vinculante. Devem ser recalcul
 
 ## 12. Riscos, incertezas e sensibilidade
 
-### 12.1 Matriz de riscos
+### 12.1 Matriz de riscos — fotografia de 18/11/2026
 
-Probabilidade e impacto são avaliações qualitativas hipotéticas.
+Probabilidade e impacto são avaliações qualitativas hipotéticas da proposta original de 18/11/2026. Os itens relativos a metas de desempenho, disponibilidade, RPO/RTO, armazenamento, severidade de alertas, credenciais, chaves, retenção, homologação e isolamento foram posteriormente alinhados com Desenvolvimento e não permanecem como lacunas de produto. Para a situação atual, prevalece a revisão da seção 17.
 
 | Risco | Probabilidade | Impacto | Mitigação / resposta |
 |---|---|---|---|
@@ -519,7 +519,7 @@ Probabilidade e impacto são avaliações qualitativas hipotéticas.
 | Integração Supabase/Auth/RLS de domínio incompleta | Alta | Alto | Implementar por camadas; testes RLS reais e negativos; revisão independente |
 | Critérios de detecção e falsos positivos indefinidos | Alta | Alto | Definir taxonomia, severidade, revisão humana e contingência antes de implementar |
 | Integração de Supabase Storage e scanner antimalware interno do Polychat | Alta | Alto | Implementar armazenamento privado no Supabase Storage e integrar o scanner ao fluxo controlado da aplicação hospedada na stack oficial; evidenciar falha segura, liberação TI auditada e revogação de links |
-| Concorrência, latência, disponibilidade, RPO/RTO não definidos | Alta | Alto | Definir SLOs e carga; teste de carga e restauração; cotar planos/infraestrutura |
+| Concorrência, latência, disponibilidade, RPO/RTO ainda não definidos na fotografia de 18/11 | Alta | Alto | Risco histórico encerrado no nível de requisitos: metas e parâmetros foram alinhados com Desenvolvimento; usar os valores dos artefatos técnicos aprovados e testar conforme homologação |
 | Classificação de dispositivo pode ser contornada | Média | Médio/alto | Tratar como compatibilidade/UX; autorização real sempre server-side |
 | Cumprimento das regras de proteção/retention e obrigações aplicáveis | Alta | Alto | Implementar retenção sem exclusão automática, autorização TI, backups de 12 meses e descarte auditado, sem presumir dispensa legal |
 | Configuração e integração Supabase/Vercel ainda sem evidência técnica completa | Alta | Alto | Validar projetos, regiões, ambientes, acessos, segredos e integrações da stack oficial (Q-025); preservar evidências das Issues #96/#98 |
@@ -612,7 +612,7 @@ As perguntas originais abaixo são preservadas como histórico da baseline anter
 | Q-011 | Qual tamanho máximo, quantidade e quota de PDF/JPEG? Qual scanner antimalware? | Anexos e infraestrutura |
 | Q-012 | Quais SO/navegadores/dispositivos? Tablets e modo desktop entram em qual perfil? | Compatibilidade e teste |
 | Q-013 | Quais controles de segurança obrigatórios, MFA, chaves, pentest e modelo de ameaças? | Hardening, custo e risco |
-| Q-014 | Quais projetos/regiões Supabase/Vercel, responsáveis, segredos, backup e acessos? | Operação e custo recorrente |
+| Q-014 | Quais projetos/regiões Supabase/Vercel, responsáveis, segredos, backup e acessos? | Pergunta histórica; stack confirmada e escopos operacionais #96/#98 encerrados. Q-025 consolida apenas detalhes de integração/evidência ainda ausentes |
 | Q-015 | Qual expectativa contratual para solicitações legais e notificação? | Jurídico/privacidade |
 | Q-016 | Quantas sessões simultâneas, mensagens/minuto e anexos/dia? Qual latência aceitável? | Desempenho e escala |
 | Q-017 | Qual disponibilidade, janela de manutenção, RPO e RTO? | Infraestrutura e SLA |
@@ -799,7 +799,7 @@ Esses artefatos são insumos para identificar transações e DET, mas não são 
 | Q-022 | R$450.000 referência global, não teto; exclusões conhecidas | Atualizar cenário comercial |
 | Q-023 | Português; sem push/browser; contador interno | Atualizar saídas/UX |
 | Q-024 | Usuário não edita/exclui; TI pode editar/excluir com auditoria | Recontar processos de mensagem |
-| Q-025 | Consolidação de evidências específicas da configuração e integração Supabase/Vercel ainda não cobertas pelos aceites #96/#98 | Não reabre a escolha da stack nem os trabalhos operacionais aceitos; informa as premissas técnicas e custos que ainda precisam de evidência documentada |
+| Q-025 | Consolidação de evidências específicas da configuração e integração Supabase/Vercel ainda não cobertas pelos aceites #96/#98 | Não reabre a escolha da stack nem os trabalhos operacionais aceitos; registra lacunas técnicas concretas necessárias para fechar premissas de integração e custo |
 
 Os grupos de requisitos técnicos já alinhados com Desenvolvimento (armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento dos ambientes) não são pendências de produto.
 
