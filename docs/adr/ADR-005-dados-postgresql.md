@@ -11,7 +11,7 @@ O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, 
 
 Supabase é uma plataforma oficial do Polychat, conforme ADR-003. PostgreSQL por meio do Supabase Database é a direção de persistência do projeto. A configuração deve atender à proteção de dados, ao isolamento dos ambientes, às políticas de acesso e às necessidades de backup/recuperação da FORD. A validação das regiões e dos projetos por ambiente permanece na Q-025.
 
-O único esquema de domínio atualmente versionado é `public.profiles`, em migration vinculada ao Supabase. Não foram encontradas migrations para conversas, participantes, mensagens, anexos, alertas ou auditoria.
+O único artefato SQL versionado é uma migration de scaffold para `public.profiles`, ligada ao Supabase Auth. Não há schema de domínio funcional integrado nem migrations para conversas, participantes, mensagens, anexos, alertas ou auditoria. A implementação física do banco de produto ainda não começou.
 
 ## Problema
 
@@ -67,7 +67,7 @@ O domínio é composto por relações explícitas entre contas, conversas, parti
 **Negativas e cuidados:**
 - A FORD/equipe deverá administrar projetos, usuários, papéis, permissões, políticas, migrations, backups e recuperação do banco conforme as capacidades e limites do Supabase Database; a operação da infraestrutura gerenciada segue o serviço contratado.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
-- O esquema parcial vinculado ao Supabase deverá ser evoluído para cobrir o modelo de domínio completo.
+- A migration isolada de scaffold deverá ser revisada/evoluída quando a implementação física do modelo de domínio começar.
 
 ## Riscos
 
@@ -75,7 +75,7 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Evidências atuais
 
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. A migration é um artefato versionado, não comprovação de aplicação em todos os ambientes oficiais.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. Trata-se de migration de scaffold, não schema de produto implementado nem comprovação de aplicação nos ambientes oficiais.
 - Não há migrations versionadas para conversas, participantes, mensagens, anexos, alertas ou eventos de auditoria.
 - A baseline POLY-REQ-001 v0.4 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
 
