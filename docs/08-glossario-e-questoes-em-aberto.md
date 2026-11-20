@@ -24,7 +24,7 @@ As questões respondidas permanecem neste documento para preservar rastreabilida
 | RPO | Ponto de recuperação: perda máxima de dados admitida em cenário de desastre ou falha de infraestrutura. No Polychat, até 24 horas; não se aplica à reconexão normal do usuário. |
 | RTO | Tempo objetivo para recuperação do serviço após interrupção. No Polychat, até 24 horas. |
 | Primary Key | Chave primária interna que identifica um registro no banco de dados; não é necessariamente o nome de usuário informado no login. |
-| Infraestrutura sob controle da FORD | Hospedagem, banco, autenticação, armazenamento, antimalware, monitoramento, segredos e operação sob administração da FORD, sem terceiro acessando, armazenando ou processando seus dados. |
+| Plataformas oficiais | Supabase para backend e Vercel para hospedagem/deploy; escolha confirmada pelo PO e registrada na ADR-003. |
 | Scrum | Framework ágil informado como contexto de trabalho da equipe. |
 | UML | Linguagem de modelagem utilizada para representar aspectos estruturais e comportamentais do sistema. |
 
@@ -47,7 +47,7 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 | Q-011 | Arquivos | PDF e JPEG; até 10 MB por arquivo; até 5 arquivos por mensagem; limites individuais e capacidade total definidos pelo TI; sem limite específico por conversa. PDF protegido por senha é recusado. Antimalware dentro da infraestrutura FORD; falha/inconclusão mantém anexo bloqueado. TI pode liberar qualquer arquivo; usuário não contorna o scanner. | Resolvida |
 | Q-012 | Dispositivos | Usuário: celulares Android/iOS, Chrome e Safari móveis atuais. TI: computadores, Chrome, Edge e Firefox atuais. Tablets não são permitidos. | Resolvida |
 | Q-013 | Segurança técnica | Criptografia em trânsito e em repouso, sem E2EE. Chaves administradas pelo servidor sob responsabilidade do TI. Proteção de credenciais e gestão de chaves alinhadas com Desenvolvimento. Os administradores TI possuem poderes iguais; a confiança e os riscos do modelo foram considerados avaliados pelo projeto. | Resolvida como decisão de produto e alinhamento técnico |
-| Q-014 | Infraestrutura e jurisdição | Hospedagem e infraestrutura sob controle da FORD, preferencialmente no Brasil. Nenhum terceiro pode acessar, armazenar ou processar dados da FORD. Bibliotecas e atualizações sem acesso aos dados são permitidas. Ambientes de desenvolvimento, homologação e produção isolados conforme alinhamento com Desenvolvimento. | Resolvida quanto à regra do cliente; compatibilização da arquitetura registrada em Q-025 |
+| Q-014 | Infraestrutura, plataformas e jurisdição | Supabase e Vercel são as plataformas oficiais do Polychat, conforme alinhamento complementar do PO com Desenvolvimento. Regiões, acessos e segregação dos ambientes devem ser validados; serviços externos adicionais exigem aprovação explícita. | Resolvida quanto à escolha das plataformas; validações operacionais em Q-025 |
 | Q-015 | Solicitações legais | Solicitações legais dirigidas à FORD ou a fornecedores de infraestrutura são tratadas pela própria FORD. A FORD espera ser informada quando isso for juridicamente permitido. | Resolvida |
 | Q-016 | Carga e desempenho | Capacidade inicial de até 25 conexões simultâneas de usuários finais, além dos administradores TI. Volume esperado de mensagens e anexos baixo/ocasional. Metas de desempenho alinhadas com Desenvolvimento e consideradas completas. | Resolvida |
 | Q-017 | Disponibilidade e recuperação | Disponibilidade mensal de 99%; RPO de até 24 horas em desastre/falha de infraestrutura; RTO de até 24 horas; backups diários de banco e anexos com retenção de 12 meses; manutenção fora do horário comercial com aviso prévio; suporte em horário comercial. | Resolvida |
@@ -67,7 +67,7 @@ Somente os itens abaixo continuam exigindo ação. As oito frentes técnicas ali
 |---|---|---|---|---|
 | Q-018 | Arquitetura de informação e telas | Consolidar mapa definitivo de telas, navegação e wireframes para Usuário e console TI, respeitando as funcionalidades já definidas. | O escopo funcional está definido, mas a organização visual detalhada ainda depende de refinamento UX/PO. | PO / UX |
 | Q-019 | Insumos de identidade visual | Obter logo, manual de marca e códigos oficiais de cores/tipografia, se ainda não estiverem disponíveis no projeto. | A direção azul/branco e o uso do logo estão definidos; faltam os arquivos oficiais e os valores exatos. | FORD / responsável pela marca / UX |
-| Q-025 | Compatibilização da arquitetura com a infraestrutura FORD | Revisar as ADRs e decisões técnicas que ainda pressupõem serviços gerenciados Supabase/Vercel. Definir arquitetura que mantenha hospedagem e processamento de dados sob controle da FORD, sem terceiro acessando, armazenando ou processando dados. Preservar tecnologias de aplicação apenas se forem compatíveis com essa restrição. | A documentação e a Issue #88 registram Supabase + Vercel como direção anterior, enquanto a FORD v2 impõe infraestrutura sob seu controle. A exigência do cliente está definida; a solução arquitetural precisa ser reconciliada e documentada. | Tech Lead / Desenvolvimento / TI da FORD / PO |
+| Q-025 | Validação técnica da stack Supabase + Vercel | Confirmar projetos e regiões Supabase por ambiente; ambientes Vercel Preview/Production; domínios, variáveis, segredos, acessos, associação entre deployments e projetos backend; integração real de Auth/Database/Storage/Realtime e evidências de backup, restore, smoke test e rollback. | As plataformas oficiais estão escolhidas e alinhadas; ainda faltam evidências técnicas completas da configuração e homologação por ambiente. | Tech Lead / Desenvolvimento / TI da FORD |
 
 ## 8.4 Decisões consolidadas que não devem ser reabertas como pendência
 
@@ -85,16 +85,17 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 
 ## 8.5 Decisões arquiteturais e limites
 
-- A restrição da FORD de não permitir que terceiros acessem, armazenem ou processem seus dados é uma decisão de cliente confirmada.
-- A existência de Next.js, Vercel, Supabase, migrations ou ADRs no repositório não constitui, por si só, aprovação dessas plataformas para produção sob a restrição atual.
-- A direção Supabase/Vercel anterior deve ser revisada e formalmente reconciliada; não deve prevalecer automaticamente sobre a decisão mais recente da FORD.
+- Supabase e Vercel são as plataformas oficiais do Polychat, confirmadas pelo PO após alinhamento com Desenvolvimento.
+- A escolha da stack não equivale a comprovação de integração, configuração de produção ou homologação dos ambientes.
+- Serviços adicionais que acessem ou processem dados exigem aprovação explícita do projeto.
+- As regiões, permissões, segredos, backups e controles de cada ambiente oficial devem ser verificados.
 - A tecnologia definitiva deve ser registrada em ADR revisada, mantendo a distinção entre requisito de negócio, decisão arquitetural, implementação e homologação.
 - A aprovação de uma decisão técnica não deve ser confundida com evidência de implantação ou teste.
 
 ## 8.6 Histórico e rastreabilidade
 
 - Q-001 a Q-024 são identificadores históricos preservados das versões anteriores.
-- Q-025 foi criado para registrar a reconciliação técnica necessária após a restrição de infraestrutura informada na FORD v2.
+- Q-025 permanece aberto para concluir a validação técnica dos ambientes Supabase/Vercel; não representa uma pendência sobre a escolha das plataformas.
 - Questões resolvidas permanecem documentadas para preservar a origem e a decisão.
 - Quando uma questão parcial for concluída, atualizar seu status e vincular o artefato de UX ou a decisão correspondente.
 - Não reutilizar identificadores encerrados para assuntos diferentes.
