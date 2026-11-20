@@ -9,26 +9,24 @@
 
 O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, participantes, mensagens, anexos, alertas e eventos de auditoria. O produto atende uma única organização (FORD); a baseline não prevê operação multi-tenant.
 
-A FORD v2 determina que hospedagem e infraestrutura permaneçam sob controle da FORD e que nenhum serviço de terceiro acesse, armazene ou processe dados da organização. A decisão anterior por PostgreSQL gerenciado pelo Supabase não pode ser mantida como escolha de hospedagem ou serviço de banco (ADR-003).
+Supabase é uma plataforma oficial do Polychat, conforme ADR-003. PostgreSQL por meio do Supabase Database é a direção de persistência do projeto. A configuração deve atender à proteção de dados, ao isolamento dos ambientes, às políticas de acesso e às necessidades de backup/recuperação da FORD. A validação das regiões e dos projetos por ambiente permanece na Q-025.
 
-PostgreSQL permanece como tecnologia relacional proposta para o banco, desde que sua instância e operação estejam na infraestrutura sob controle da FORD. A escolha do ambiente operacional e a compatibilização técnica fazem parte da Q-025.
-
-O único esquema de domínio atualmente versionado é `public.profiles`, em migration vinculada ao Supabase. Não foram encontradas migrations para conversas, participantes, mensagens, anexos, alertas ou auditoria.
+O único artefato SQL versionado é uma migration de scaffold para `public.profiles`, ligada ao Supabase Auth. Não há schema de domínio funcional integrado nem migrations para conversas, participantes, mensagens, anexos, alertas ou auditoria. A implementação física do banco de produto ainda não começou.
 
 ## Problema
 
-Definir uma direção de persistência que preserve integridade referencial, rastreabilidade e isolamento de acesso, sem adotar um banco hospedado por terceiro nem confundir o esquema parcial existente com o modelo de domínio completo.
+Definir uma direção de persistência que preserve integridade referencial, rastreabilidade e isolamento de acesso, distinguindo o schema parcial existente do modelo de domínio completo.
 
 ## Alternativas consideradas
 
-1. **PostgreSQL em infraestrutura sob controle da FORD:** tecnologia relacional proposta, sujeita à validação de operação, compatibilidade e homologação.
-2. **Outro banco relacional operado sob controle da FORD:** alternativa possível caso a infraestrutura e os padrões corporativos indiquem tecnologia diferente.
-3. **Banco de dados gerenciado externamente/SaaS:** não permitido para dados da FORD quando o terceiro puder acessar, armazenar ou processar essas informações.
+1. **PostgreSQL via Supabase Database:** plataforma oficial escolhida para persistência, sujeita à validação de schema, RLS, região, backup e homologação.
+2. **Outro banco relacional:** alternativa descartada na direção atual, salvo decisão formal posterior que substitua a ADR-003.
+3. **Outro banco/serviço de terceiros:** não aprovado para o projeto sem decisão explícita e avaliação própria.
 4. **Banco documental:** não selecionado nesta proposta, pois as relações entre conversas, participantes, autoria, mensagens e auditoria exigem integridade relacional.
 
 ## Decisão proposta
 
-Manter **PostgreSQL como tecnologia de banco relacional proposta**, sem vincular a escolha ao Supabase ou a qualquer serviço externo. A instância, seus backups, administração, monitoramento e recuperação devem permanecer sob controle da FORD.
+Adotar **PostgreSQL por meio do Supabase Database** como plataforma oficial de persistência. Schema, migrations, políticas RLS, backups, monitoramento e recuperação devem ser implementados e validados conforme os requisitos da FORD.
 
 O modelo lógico deve contemplar, no mínimo:
 
@@ -56,20 +54,20 @@ Não introduzir deleções em cascata ou expiração automática que contrariem 
 
 ## Justificativa
 
-O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. Um banco relacional oferece integridade referencial e transações adequadas a essas relações. A operação sob controle da FORD atende à restrição de infraestrutura, independentemente do fornecedor de software utilizado para o mecanismo de banco.
+O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. Um banco relacional oferece integridade referencial e transações adequadas a essas relações. A administração dos projetos, permissões, políticas e dados permanece sob governança da FORD; a operação utiliza o Supabase Database como plataforma oficial.
 
 ## Consequências
 
 **Positivas:**
 - Integridade referencial e transações para o domínio de comunicação.
-- Independência de um serviço externo específico de banco de dados.
+- Dependência do serviço oficial Supabase Database, que deve ser considerada na análise de continuidade, portabilidade e custos.
 - Possibilidade de aplicar controle de acesso no servidor e no próprio banco.
 - Rastreabilidade de operações administrativas e regras de retenção.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisará operar, monitorar, atualizar, proteger e recuperar a instância.
+- A FORD/equipe deverá administrar projetos, usuários, papéis, permissões, políticas, migrations, backups e recuperação do banco conforme as capacidades e limites do Supabase Database; a operação da infraestrutura gerenciada segue o serviço contratado.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
-- O esquema parcial vinculado ao Supabase precisará ser adaptado ou substituído.
+- A migration isolada de scaffold deverá ser revisada/evoluída quando a implementação física do modelo de domínio começar.
 
 ## Riscos
 
@@ -77,13 +75,13 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Evidências atuais
 
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. A migration é um artefato versionado, não comprovação de aplicação em infraestrutura FORD.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. Trata-se de migration de scaffold, não schema de produto implementado nem comprovação de aplicação nos ambientes oficiais.
 - Não há migrations versionadas para conversas, participantes, mensagens, anexos, alertas ou eventos de auditoria.
 - A baseline POLY-REQ-001 v0.4 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
 
 ## Pendências para Accepted
 
-- Confirmar com Tech Lead e TI que PostgreSQL é compatível com a infraestrutura disponibilizada e aprovada pela FORD (Q-025).
+- Confirmar projetos/regiões Supabase por ambiente, aplicar migrations de forma controlada e validar RLS, backup e restauração (Q-025).
 - Revisar o modelo físico, migrations, índices, políticas de autorização e estratégia de backup/restore no ambiente de homologação.
 - Registrar a decisão técnica, aprovadores e evidências de teste.
 
