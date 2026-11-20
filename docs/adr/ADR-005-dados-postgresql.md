@@ -65,7 +65,7 @@ O domínio é composto por relações explícitas entre contas, conversas, parti
 - Rastreabilidade de operações administrativas e regras de retenção.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisará operar, monitorar, atualizar, proteger e recuperar a instância.
+- A FORD/equipe deverá administrar projetos, usuários, papéis, permissões, políticas, migrations, backups e recuperação do banco conforme as capacidades e limites do Supabase Database; a operação da infraestrutura gerenciada segue o serviço contratado.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
 - O esquema parcial vinculado ao Supabase deverá ser evoluído para cobrir o modelo de domínio completo.
 
