@@ -4,19 +4,20 @@
 
 ## Navegação
 
-1. [Controle do documento](00-controle-do-documento.md)
-2. [Visão geral e escopo](01-visao-geral-e-escopo.md)
-3. [Objetivos](02-objetivos.md)
-4. [Requisitos funcionais](03-requisitos-funcionais.md)
-5. [Requisitos não funcionais](04-requisitos-nao-funcionais.md)
-6. [Regras de negócio e restrições](05-regras-de-negocio-e-restricoes.md)
-7. [Diagramas UML](06-diagramas-uml.md)
-8. [Rastreabilidade e critérios de aceitação](07-rastreabilidade-e-criterios-de-aceitacao.md)
-9. [Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md)
-10. [Baseline consolidada e rastreabilidade da Issue #88](09-baseline-requisitos-mvp.md)
-11. [Índice de decisões arquiteturais (ADRs) — Issue #89](adr/README.md)
-12. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
-13. [Política de anexos e proteção antimalware — Issue #117](storage/politica-anexos-e-antimalware.md)
+1. [Visão resumida do produto](visao.md)
+2. [Controle do documento](00-controle-do-documento.md)
+3. [Visão geral e escopo](01-visao-geral-e-escopo.md)
+4. [Objetivos](02-objetivos.md)
+5. [Requisitos funcionais](03-requisitos-funcionais.md)
+6. [Requisitos não funcionais](04-requisitos-nao-funcionais.md)
+7. [Regras de negócio e restrições](05-regras-de-negocio-e-restricoes.md)
+8. [Diagramas UML](06-diagramas-uml.md)
+9. [Rastreabilidade e critérios de aceitação](07-rastreabilidade-e-criterios-de-aceitacao.md)
+10. [Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md)
+11. [Baseline consolidada e rastreabilidade da Issue #88](09-baseline-requisitos-mvp.md)
+12. [Índice de decisões arquiteturais (ADRs) — Issue #89](adr/README.md)
+13. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
+14. [Política de anexos e proteção antimalware — Issue #117](storage/politica-anexos-e-antimalware.md)
 
 ## Infraestrutura e deploy
 
@@ -39,7 +40,7 @@ A documentação não cria nem seleciona diagramas UML nesta versão, pois o tip
 
 ## Decisões arquiteturais
 
-O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
+O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões arquiteturais originadas na Issue #89. A ADR-003 registra como Accepted a escolha Supabase/Vercel, confirmada pelo PO após alinhamento com Desenvolvimento. Outras ADRs podem permanecer Proposed para detalhamento e revisão técnica; a aprovação da plataforma não significa que cada integração esteja implementada ou homologada.
 
 
 ## Atualização arquitetural — 19/11/2026
