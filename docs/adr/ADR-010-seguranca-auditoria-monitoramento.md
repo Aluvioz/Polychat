@@ -126,7 +126,7 @@ O modelo de criptografia definido preserva a capacidade de operação e investig
 **Negativas e cuidados:**
 - A ausência de E2EE implica que o servidor e administradores tecnicamente autorizados podem acessar conteúdo em claro.
 - O modelo requer proteção rigorosa do ambiente, das chaves, das contas TI e dos registros de auditoria.
-- O catálogo de eventos e controles técnicos precisa ser implementado e testado na infraestrutura FORD.
+- O catálogo de eventos e controles técnicos precisa ser implementado e testado na stack oficial Supabase/Vercel, sob governança da FORD.
 
 ## Riscos
 
