@@ -518,7 +518,7 @@ Probabilidade e impacto são avaliações qualitativas hipotéticas.
 | Implementação de monitoramento/auditoria ainda não entregue | Alta | Alto | Implementar lista de termos TI, fila/severidades/prazos, sem IA externa/bloqueio automático; auditar operações administrativas conforme v0.4 |
 | Integração Supabase/Auth/RLS de domínio incompleta | Alta | Alto | Implementar por camadas; testes RLS reais e negativos; revisão independente |
 | Critérios de detecção e falsos positivos indefinidos | Alta | Alto | Definir taxonomia, severidade, revisão humana e contingência antes de implementar |
-| Integração de storage e scanner antimalware FORD | Alta | Alto | Implementar armazenamento e análise internos; evidenciar falha segura, liberação TI auditada e revogação de links |
+| Integração de Supabase Storage e scanner antimalware interno do Polychat | Alta | Alto | Implementar armazenamento privado no Supabase Storage e integrar o scanner ao fluxo controlado da aplicação hospedada na stack oficial; evidenciar falha segura, liberação TI auditada e revogação de links |
 | Concorrência, latência, disponibilidade, RPO/RTO não definidos | Alta | Alto | Definir SLOs e carga; teste de carga e restauração; cotar planos/infraestrutura |
 | Classificação de dispositivo pode ser contornada | Média | Médio/alto | Tratar como compatibilidade/UX; autorização real sempre server-side |
 | Cumprimento das regras de proteção/retention e obrigações aplicáveis | Alta | Alto | Implementar retenção sem exclusão automática, autorização TI, backups de 12 meses e descarte auditado, sem presumir dispensa legal |
@@ -589,7 +589,7 @@ Esta seção registra apenas as premissas de contratação usadas na simulação
 - Valores históricos da simulação: MVP **R$ 520.900,00** e versão completa **R$ 622.500,00**; ambos dependem de recontagem APF, reestimativa de esforço/custo e revisão comercial.
 - O plano atual não tem data final obrigatória: será organizado em sprints após a recontagem APF e a validação técnica dos ambientes Supabase/Vercel.
 - A referência de **R$ 450.000,00** informada pela FORD inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento; não é teto aprovado.
-- Custos recorrentes precisam ser recalculados com a solução sob controle da FORD. As tabelas anteriores de consumo de serviços gerenciados e mensalidades são apenas simulações históricas da arquitetura antiga.
+- Custos recorrentes precisam ser recalculados com os planos e limites atuais das plataformas oficiais Supabase e Vercel, além dos demais custos operacionais. As tabelas anteriores de consumo e mensalidades são simulações históricas de preços/planos de 18/11/2026, não uma decisão de abandonar a arquitetura Supabase/Vercel.
 - Condições de pagamento, garantia, suporte, validade e marcos contratuais devem ser negociados novamente após a emissão da nova contagem e proposta.
 - Nenhuma estimativa desta versão autoriza contratar serviços externos adicionais além das plataformas oficiais Supabase/Vercel sem aprovação explícita.
 
@@ -799,7 +799,7 @@ Esses artefatos são insumos para identificar transações e DET, mas não são 
 | Q-022 | R$450.000 referência global, não teto; exclusões conhecidas | Atualizar cenário comercial |
 | Q-023 | Português; sem push/browser; contador interno | Atualizar saídas/UX |
 | Q-024 | Usuário não edita/exclui; TI pode editar/excluir com auditoria | Recontar processos de mensagem |
-| Q-025 | Configuração técnica da stack oficial Supabase/Vercel | Bloqueia confirmação de ambientes, regiões, custos e evidências de integração |
+| Q-025 | Consolidação de evidências específicas da configuração e integração Supabase/Vercel ainda não cobertas pelos aceites #96/#98 | Não reabre a escolha da stack nem os trabalhos operacionais aceitos; informa as premissas técnicas e custos que ainda precisam de evidência documentada |
 
 Os grupos de requisitos técnicos já alinhados com Desenvolvimento (armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento dos ambientes) não são pendências de produto.
 
