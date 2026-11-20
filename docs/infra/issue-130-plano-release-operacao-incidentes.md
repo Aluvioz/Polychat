@@ -3,7 +3,7 @@
 **Issue:** #130 — Preparar release, operação e plano de incidentes  
 **Epic:** #87 — SQA, validação e release  
 **Documento:** POLY-OPS-130  
-**Versão:** 0.3 — 20/11/2026  
+**Versão:** 0.4 — 20/11/2026  
 **Estado:** proposta operacional para revisão; não representa aprovação institucional nem comprova execução de procedimentos  
 **Responsáveis pela validação:** Product Owner, Tech Lead, Desenvolvimento, SQA, TI/Operação e representantes designados da FORD. A TI da FORD é responsável operacional por segurança; não há uma área separada de Segurança da Informação como frente do projeto.
 
@@ -46,7 +46,7 @@ Uma recomendação deste documento não se transforma automaticamente em políti
 ### 2.3 Limites deste documento
 
 Este plano não:
-- configura Supabase, Vercel, GitHub Actions, monitoramento ou alertas;
+- configura provedores de identidade, banco de dados, armazenamento, plataforma de deploy, GitHub Actions, monitoramento ou alertas;
 - cria credenciais, secrets, usuários, ambientes ou regras de acesso;
 - altera os valores de RPO, RTO, disponibilidade, retenção, manutenção ou suporte já definidos pela FORD;
 - declara que backups/restaurações, rollback, smoke tests ou testes de incidente já foram executados;
@@ -59,9 +59,9 @@ Este plano não:
 
 ### 3.1 Arquitetura e ambientes
 
-A Issue #88 e a ADR-003 registram Supabase + Vercel como plataformas oficiais. A Issue #96 foi encerrada após aceite de seu escopo operacional de ambientes. A Issue #98 também foi encerrada após aceite do escopo de Preview/Production, smoke test e rollback.
+A FORD v2 exige que hospedagem, processamento e operação dos dados permaneçam sob controle da FORD, sem terceiros acessando, armazenando ou processando esses dados. O índice atual de ADRs classifica a ADR-003 (Supabase + Vercel) como **Deprecated**; portanto, essa direção histórica não deve ser tratada como arquitetura-alvo aprovada. A Q-025 permanece aberta para reconciliar as ADRs e formalizar uma arquitetura compatível com a restrição da FORD.
 
-Os encerramentos #96/#98 devem ser respeitados e reutilizados como evidência dos respectivos escopos. A Q-025 consolida somente detalhes objetivos de configuração/integração não cobertos por esses aceites; não reabre a escolha das plataformas nem repete criação/configuração de ambientes, smoke tests ou rollback.
+As Issues #96 e #98 permanecem encerradas nos escopos que tiveram aceite: ambientes/configurações documentados na #96 e Preview/Production, smoke test e rollback na #98. Esses aceites e suas evidências devem ser preservados, sem reabrir ou repetir suas entregas. Eles não constituem, por si sós, aprovação da arquitetura-alvo atual nem encerram a Q-025.
 
 A existência de um Preview Deployment ou de um projeto de desenvolvimento não comprova, isoladamente, segregação de dados, integração funcional completa, homologação ou prontidão de produção.
 
@@ -70,7 +70,7 @@ A existência de um Preview Deployment ou de um projeto de desenvolvimento não 
 A baseline vigente é POLY-REQ-001 v0.4. A implementação funcional do produto ainda não começou: o repositório contém estrutura inicial Next.js e artefatos isolados de scaffold (middleware, migration de perfil e testes com Supabase simulado), mas não há fluxos reais integrados de autenticação, conversas, grupos, anexos, alertas, console TI ou auditoria.
 
 O workflow de CI executa testes automatizados, ESLint, verificação TypeScript e build. Esses checks são necessários, mas não demonstram por si só:
-- integração real com Supabase hospedado;
+- integração real com os serviços e componentes da arquitetura-alvo formalmente definida e homologada;
 - políticas RLS de domínio para conversas, participantes, mensagens, anexos e auditoria;
 - funcionamento ponta a ponta dos fluxos de produto;
 - restauração de backup ou cumprimento de RPO/RTO;
@@ -85,10 +85,11 @@ A avaliação de release deve usar a evidência mais recente da versão candidat
 |---|---|---|
 | docs/09-baseline-requisitos-mvp.md | Escopo, requisitos, restrições e fotografia de implementação. | Não é homologação do produto. |
 | docs/04-requisitos-nao-funcionais.md | RNF-009: disponibilidade, backup, retenção, RPO e RTO. | Valores definidos na FORD v2; execução e evidência operacional pendentes. |
-| docs/08-glossario-e-questoes-em-aberto.md | Histórico das questões e Q-018/Q-019/Q-025 abertas. | Demais questões foram respondidas/alinhadas; Q-025 não reabre #96/#98. |
+| docs/08-glossario-e-questoes-em-aberto.md | Histórico das questões e Q-018/Q-019/Q-025 abertas. | Demais questões foram respondidas/alinhadas; Q-025 trata da reconciliação arquitetural, preservando os escopos encerrados de #96/#98. |
 | docs/10-governanca-desenvolvimento.md | DoR/DoD, PR, revisão independente, CI e evidências. | Checks de CI não substituem testes funcionais e aceite. |
 | docs/infra/issue-96-auditoria-ambientes.md | Auditoria histórica de ambientes e limites de verificação. | Deve ser lida junto com o comentário posterior de encerramento da Issue #96. |
-| docs/adr/ADR-009-ambientes-deploy.md | Detalha ambientes/deploy das plataformas oficiais. | Status Proposed para revisão técnica; a seleção Supabase/Vercel é Accepted na ADR-003 e os aceites #96/#98 são preservados. |
+| docs/adr/ADR-003-supabase-vercel.md | Registra a direção histórica Supabase + Vercel. | Status Deprecated; não representa arquitetura-alvo vigente. |
+| docs/adr/ADR-009-ambientes-deploy.md | Detalha ambientes, publicação e promoção entre estágios. | Status Proposed; deve ser compatibilizada com Q-025 e com a infraestrutura sob controle da FORD. Os aceites #96/#98 são preservados em seus escopos. |
 | docs/adr/ADR-010-seguranca-auditoria-monitoramento.md | Detalha segurança, auditoria e monitoramento especificados na baseline. | Status Proposed para revisão técnica; TI é responsável operacional por segurança. |
 | Issue #125 / PR #154 | Modelo de ameaças e mitigação. | Documento estava em PR Draft na consulta; não declarar integrado ou aprovado. |
 | Issue #126 / PR #153 | Plano de testes e rastreabilidade. | Documento estava em PR Draft na consulta; acompanhar sua integração e revisão. |
@@ -134,7 +135,7 @@ Não se deve converter ausência de evidência em aprovação presumida.
 | GO-06 | Regressão e homologação concluídas. | Matriz de navegador/dispositivo, defeitos e aceite. | SQA + PO | Obrigatório |
 | GO-07 | Riscos técnicos avaliados e controles críticos implementados/testados. | Modelo de ameaças, testes e revisão técnica com TI (responsável pela segurança na FORD) e SQA. | Tech Lead + TI + SQA | Obrigatório |
 | GO-08 | Regras de monitoramento, consulta administrativa, auditoria e aviso no primeiro acesso implementadas conforme a baseline v0.4. | Evidências de RF-014 a RF-016 e RF-022/RF-023; não exigir nova deliberação de produto sobre Q-007 a Q-010. Obrigações legais aplicáveis permanecem válidas. | TI + Tech Lead + SQA | Obrigatório para funcionalidades relacionadas |
-| GO-09 | Ambientes oficiais e variáveis da versão confirmados; nenhum segredo em código ou bundle cliente. | Reutilizar aceites #96/#98; complementar somente lacunas técnicas objetivas via Q-025, sem repetir configurações aceitas. | TI/Operação + Tech Lead | Obrigatório |
+| GO-09 | Ambiente-alvo e variáveis da versão confirmados conforme arquitetura formalmente definida; nenhum segredo em código ou bundle cliente. | Reutilizar os aceites #96/#98 exclusivamente nos respectivos escopos; resolver Q-025 quanto à arquitetura-alvo e evidenciar configuração/isolamento aplicáveis, sem repetir entregas já aceitas. | TI/Operação + Tech Lead | Obrigatório |
 | GO-10 | Backups diários de banco e anexos, retenção de 12 meses e restauração demonstrados. | Registro de backup e teste compatível com RPO até 24h em desastre e RTO até 24h. | TI/Operação | Obrigatório antes de mudanças com risco aos dados |
 | GO-11 | RPO/RTO e disponibilidade definidos e atendidos na evidência operacional. | Disponibilidade mensal 99%; RPO até 24h em desastre/falha de infraestrutura; RTO até 24h; evidência de teste/monitoramento. | TI/Operação + SQA | Obrigatório antes da produção |
 | GO-12 | Plano de rollback viável para aplicação, configuração e banco. | Runbook revisado e evidência de ensaio quando aplicável. | Tech Lead + TI/Operação | Obrigatório |
@@ -250,7 +251,7 @@ O smoke test pós-release deve ser aprovado antes de comunicar a liberação com
 1. Confirmar a versão, o escopo e o commit aprovados.
 2. Verificar que todas as mudanças entram por PR, com revisão independente e checks exigidos aprovados.
 3. Conferir migrations pendentes, ordem de aplicação, compatibilidade com a versão anterior e plano de recuperação.
-4. Confirmar ambiente de destino, integração com Supabase e variáveis necessárias, sem copiar valores secretos para issue, PR ou documentação.
+4. Confirmar o ambiente de destino, a integração com os componentes previstos na arquitetura-alvo formalmente aprovada e as variáveis necessárias, sem copiar valores secretos para issue, PR ou documentação.
 5. Confirmar backup e possibilidade de restauração quando a mudança puder afetar dados ou schema.
 6. Confirmar janela, participantes, suporte, monitoramento e canal de comunicação.
 7. Obter e registrar a decisão Go.
@@ -309,7 +310,7 @@ Os requisitos operacionais da FORD v2 são fixos; a tabela distingue esses parâ
 | Frequência | Backups diários de banco de dados e anexos. | TI/Operação | Requisito definido; execução/evidência pendente |
 | Retenção | Backups retidos por 12 meses; dados excluídos expiram das cópias ao fim do ciclo. | TI/Operação | Requisito definido; implementação/evidência pendente |
 | Criptografia | Criptografia em trânsito e em repouso; gestão de chaves sob controle do servidor e TI da FORD. | TI + Tech Lead | Requisito definido; implementação/evidência pendente |
-| Localização | Configurar e documentar regiões dos projetos oficiais, preferencialmente Brasil. | TI + Tech Lead | Diretriz definida; detalhe dos projetos/configurações conforme Q-025 |
+| Localização | Configurar e documentar a região dos componentes de hospedagem, dados e armazenamento da arquitetura-alvo, preferencialmente no Brasil. | TI + Tech Lead | Diretriz definida; decisão e configuração da arquitetura dependem da resolução de Q-025 |
 | Acesso | Somente operadores TI autorizados; autenticação e trilha de auditoria. | TI + Desenvolvimento | Requisito definido; implementação/evidência pendente |
 | RPO | Até 24 horas em desastre/falha de infraestrutura; não se aplica à reconexão normal de mensagens confirmadas. | TI/Operação | Requisito definido; teste/evidência pendente |
 | RTO | Até 24 horas. | TI/Operação | Requisito definido; teste/evidência pendente |
@@ -377,7 +378,7 @@ Os limites quantitativos e o tempo de observação devem ser definidos pela oper
 
 | Camada | Tratamento esperado | Atenção |
 |---|---|---|
-| Aplicação Vercel | Retornar à versão estável previamente identificada, conforme recurso e procedimento homologados. | Confirmar compatibilidade com schema e dados atuais. |
+| Camada de aplicação | Retornar à versão estável previamente identificada, conforme os recursos e o procedimento homologados para a arquitetura adotada. | Confirmar compatibilidade com schema, dados e componentes atuais. |
 | Configuração | Reaplicar configuração versionada e aprovada. | Não publicar secrets em logs ou PR. |
 | Migration/schema | Usar estratégia de reversão ou migration corretiva revisada; restaurar backup somente quando decidido e seguro. | DDL ou mudança destrutiva pode não ser reversível sem perda. |
 | Dados | Recuperar a partir de ponto e cópia aprovados. | Restore pode descartar operações posteriores; requer decisão de impacto. |
@@ -717,7 +718,7 @@ Aprovação de encerramento:
 | OPS-13 | Revisar controles e riscos residuais técnicos com TI (responsável operacional por segurança) e Tech Lead; não reabrir riscos já avaliados do modelo de poderes TI. | TI + Tech Lead + SQA | Go/No-Go |
 | OPS-14 | Instrumentar/evidenciar metas de desempenho alinhadas, considerando até 25 conexões simultâneas de usuários finais além de TI. | Desenvolvimento + TI | Aceite de desempenho; meta definida, medição pendente |
 
-OPS-03/Q-025 consolida evidências específicas da stack oficial, sem reabrir os aceites #96/#98. OPS-04 a OPS-08 tratam de execução/evidência de continuidade, deploy e rollback. OPS-09 trata de incidentes operacionais, não da severidade dos alertas de conteúdo já definida em RN-013. Q-007 a Q-017 estão resolvidas.
+OPS-03/Q-025 trata da definição e compatibilização da arquitetura-alvo e dos ambientes sob controle da FORD, preservando os aceites #96/#98 em seus escopos e sem repeti-los. OPS-04 a OPS-08 tratam de execução/evidência de continuidade, publicação e rollback. OPS-09 trata de incidentes operacionais, não da severidade dos alertas de conteúdo já definida em RN-013. Q-007 a Q-017 estão resolvidas.
 
 ## 18. Dependências e critérios de aceite da Issue #130
 
@@ -725,11 +726,11 @@ OPS-03/Q-025 consolida evidências específicas da stack oficial, sem reabrir os
 
 - **Issue #125:** modelo de ameaças e mitigação; necessário para priorizar riscos e validar controles.
 - **Issue #126:** plano de testes e rastreabilidade; necessário para identificar evidências de qualidade.
-- **Issue #127:** automação unitária e integração Supabase/RLS; necessário para evidenciar regras e isolamento.
+- **Issue #127:** automação unitária e de integração, incluindo testes de autorização/RLS no mecanismo de banco definido pela arquitetura-alvo; necessário para evidenciar regras e isolamento.
 - **Issue #128:** automação E2E; necessário para validar fluxos críticos.
 - **Issue #129:** homologação, acessibilidade e regressão; necessário para aceite de qualidade e produto.
 - **Issue #96:** auditoria de ambientes; reutilizar a auditoria e o registro de encerramento, sem presumir detalhes não presentes.
-- **ADR-009 e ADR-010:** permanecem Proposed para revisão técnica específica. ADR-003 Accepted confirma Supabase/Vercel; requisitos de segurança, monitoramento, retenção e alertas estão definidos na baseline v0.4.
+- **ADR-003, ADR-009 e ADR-010:** ADR-003 está Deprecated e não define a arquitetura-alvo. ADR-009 e ADR-010 permanecem Proposed para revisão técnica. A Q-025 deve reconciliar arquitetura e operação com a exigência de infraestrutura sob controle da FORD; os requisitos de segurança, monitoramento, retenção e alertas estão definidos na baseline v0.4.
 
 Uma dependência não precisa estar encerrada para que este plano seja documentado, mas não se pode declarar a release pronta enquanto faltarem evidências ou aprovações obrigatórias.
 
@@ -764,7 +765,7 @@ Não marcar todos os critérios como concluídos apenas pela criação deste doc
 
 ## 19. Parecer do Product Owner
 
-O plano organiza os elementos necessários para transformar uma entrega em release controlada e suportável. A versão 0.3 reconcilia o plano com a FORD v2: lançamento único sem piloto, público/dispositivos definidos, parâmetros de continuidade, responsabilidades de TI e distinção entre requisitos definidos e evidências operacionais ainda não executadas.
+O plano organiza os elementos necessários para transformar uma entrega em release controlada e suportável. A versão 0.4 corrige a referência arquitetural: Supabase + Vercel permanecem como direção histórica depreciada, enquanto a Q-025 registra a reconciliação necessária com a exigência de infraestrutura sob controle da FORD. Permanecem consolidados o lançamento único sem piloto, o público e os dispositivos definidos, os parâmetros de continuidade, as responsabilidades operacionais de TI e a distinção entre requisitos definidos e evidências ainda não demonstradas.
 
 **Validação do PO (19/11/2026):** aprovo os critérios de release do produto descritos nas seções 5.2, 5.4 e 5.5 como baseline de avaliação de cada versão candidata. O aceite do PO deve ser registrado por release e não pode ser inferido de CI verde, deployment Ready, aceite técnico ou aprovação de uma PR documental.
 
@@ -782,4 +783,5 @@ A aprovação do PO cobre aderência ao escopo, critérios funcionais, valor e i
 |---|---|---|
 | 0.1 | 19/11/2026 | Primeira proposta do plano de release, operação, backup/recuperação, rollback, monitoramento, incidentes, suporte e evidências. |
 | 0.2 | 19/11/2026 | Registra validação do PO dos critérios de release por versão; acrescenta gates de público, jornadas, escopo, comunicação e acompanhamento. |
-| 0.3 | 20/11/2026 | Corrige parâmetros para FORD v2, remove piloto de lançamento, reconhece Supabase/Vercel oficiais, atualiza RPO/RTO/99%/backups e explicita que a implementação funcional ainda não começou. |
+| 0.3 | 20/11/2026 | Corrige parâmetros para FORD v2, remove piloto de lançamento, atualiza RPO/RTO/99%/backups e explicita que a implementação funcional ainda não começou. |
+| 0.4 | 20/11/2026 | Corrige o status arquitetural da ADR-003 como Deprecated, atualiza referências a ambientes, publicação, recuperação e dependências para não presumir Supabase/Vercel como arquitetura-alvo; preserva os aceites #96/#98 em seus escopos. |
