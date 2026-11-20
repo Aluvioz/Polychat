@@ -15,7 +15,7 @@
 
 - Esta proposta foi recalibrada documentalmente, mas **não possui nova contagem APF nem preço atual**.
 - As seções numéricas derivadas de 18/11/2026 são referência histórica, não uma oferta comercial vigente.
-- A baseline v0.4 altera funções, dados, regras e arquitetura: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; infraestrutura sob controle FORD.
+- A baseline v0.4 altera funções, dados e regras: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; e confirma Supabase e Vercel como plataformas oficiais.
 - Supabase Auth permanece na stack oficial; a fronteira lógica para fins de APF deve ser analisada sem presumir automaticamente classificação como AIE. Preços/planos dos serviços Supabase e Vercel devem ser revalidados na estimativa comercial atual.
 - A escolha da stack está definida pela ADR-003 Accepted. Q-025 permanece para consolidação de evidências técnicas específicas ainda ausentes, sem reabrir a seleção de plataformas. A nova contagem dependerá do modelo lógico POLY-DATA-001 v0.3, matriz #100 atualizada, ADRs e fluxos UX #91/#92 aceitos.
 - A referência FORD de R$ 450.000,00 não é teto aprovado. Inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
@@ -720,7 +720,7 @@ Esta seção é o aditivo vigente para interpretar a proposta histórica acima. 
 |---|---|---|---|
 | Fonte de requisitos | Baseline anterior, predominantemente RF-001 a RF-018 | RF-001 a RF-023 e RN-001 a RN-025 consolidados | Recontar e revalidar processos elementares |
 | Identidade | Supabase Auth oficial do projeto | A autenticação permanece na stack aprovada; classificação APF do serviço depende da fronteira lógica | Reavaliar FD-08/AIE; não aplicar automaticamente redução de 5 PF |
-| Infraestrutura | Supabase + Vercel como plataformas oficiais | Validar configurações por ambiente, regiões, recursos e custos atuais dos planos | Recalcular custos recorrentes e operação; não reutilizar valores históricos |
+| Infraestrutura | Supabase + Vercel como plataformas oficiais | Consolidar evidências específicas de configuração/integração ainda ausentes, considerando os aceites #96/#98 e os planos oficiais | Recalcular custos recorrentes e operação; não reutilizar valores históricos |
 | Contas | Alguns parâmetros de provisionamento/credenciais ainda abertos | TI cria contas e senha inicial, username único, recovery por TI; sem troca obrigatória/MFA/expiração periódica exigidos | Revalidar DET/RET/EE de autenticação/provisionamento |
 | TI | Governança/hierarquia de administradores indefinida | Poderes iguais para todos os administradores TI; sem principal ou segunda aprovação | Reavaliar somente as funções percebidas pelo usuário; não criar hierarquia |
 | Grupos | Ciclo de vida parcialmente pendente | TI cria/encerra/desativa/reativa grupos e administra membros; usuários não saem voluntariamente; remoção revoga acesso histórico | Revisar transações de grupo/membership e dados de histórico |
