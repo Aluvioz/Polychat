@@ -30,10 +30,17 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 | [03 — Requisitos funcionais](../03-requisitos-funcionais.md) | Fonte dos RF-001 a RF-023 e dos critérios CA-xxx.n |
 | [04 — Requisitos não funcionais](../04-requisitos-nao-funcionais.md) | Fonte dos RNF-001 a RNF-013 e respectivos métodos de verificação |
 | [07 — Rastreabilidade e critérios de aceitação](../07-rastreabilidade-e-criterios-de-aceitacao.md) | Relação existente entre objetivos, RFs, RNFs e critérios |
-| [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Histórico Q-001 a Q-024; somente Q-018, Q-019 e Q-025 permanecem abertas, com Q-025 técnica/operacional |
+| [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Histórico Q-001 a Q-024; somente Q-018, Q-019 e Q-025 permanecem abertas; Q-025 trata da compatibilização arquitetural com a infraestrutura sob controle da FORD |
 | [09 — Baseline consolidada do MVP](../09-baseline-requisitos-mvp.md) | Escopo, estado técnico observado, comandos de CI e evidências existentes |
 | [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de autorização e cenários AUTH-01 a AUTH-20 |
 | [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
+| [Issue #110](https://github.com/Aluvioz/Polychat/issues/110) | Histórico paginado, sincronização Realtime, reconexão e deduplicação |
+| [Issue #111](https://github.com/Aluvioz/Polychat/issues/111) | Última mensagem, indicador de não lidas e marcação de leitura |
+| [Issue #113](https://github.com/Aluvioz/Polychat/issues/113) | Remoção de participantes e revogação de acesso |
+| [Issue #116](https://github.com/Aluvioz/Polychat/issues/116) | Validade de links temporários e autorização de download |
+| [Issue #119](https://github.com/Aluvioz/Polychat/issues/119) | Redefinição e recuperação de credenciais |
+| [Issue #123](https://github.com/Aluvioz/Polychat/issues/123) | Fila de alertas, estados e fluxo de revisão |
+| [Issue #124](https://github.com/Aluvioz/Polychat/issues/124) | Auditoria de ações privilegiadas |
 | [Issue #125](https://github.com/Aluvioz/Polychat/issues/125) | Modelo de ameaças e hardening |
 | [Issue #129](https://github.com/Aluvioz/Polychat/issues/129) | Execução de homologação, acessibilidade e regressão |
 
@@ -122,8 +129,8 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 | RF-003 — CA-003.5 | TC-E2E-010 | E2E | Especificado; TI cria e envia individualmente a senha inicial e o link; Q-006 resolvida |
 | RF-004 — CA-004.1 a CA-004.3 | TC-INT-004, TC-E2E-011, TC-SEC-006 | Integração / E2E / Segurança | Especificado; testar desativação, revogação de sessão e reativação conforme Q-002 resolvida |
 | RF-005 — CA-005.1 a CA-005.3 | TC-E2E-012, TC-SEC-007 | E2E / Segurança | Especificado; depende de schema e operações administrativas |
-| RF-006 — CA-006.1 a CA-006.3 | TC-INT-005, TC-E2E-013, TC-SEC-008 | Integração / E2E / Segurança | Especificado; depende de membership definido na #99/#101 |
-| RF-007 — CA-007.1 a CA-007.3 | TC-E2E-004 | E2E | Especificado; lista, ordenação e estado vazio |
+| RF-006 — CA-006.1 a CA-006.3 | TC-INT-005, TC-E2E-013, TC-SEC-008 | Integração / E2E / Segurança | Especificado; depende de membership definido na #99/#101; remoção e revogação cruzadas com #113 |
+| RF-007 — CA-007.1 a CA-007.3 | TC-E2E-004 | E2E | Especificado; lista, ordenação e estado vazio; relacionar histórico e sincronização com a #110 quando aplicável |
 | RF-008 — CA-008.1 a CA-008.3 | TC-E2E-005, TC-SEC-009 | E2E / Segurança | Especificado; acesso direto por URL/API deve ser negado a não participante |
 | RF-009 — CA-009.1 a CA-009.4 | TC-E2E-006, TC-INT-006, TC-SEC-010 | Integração / E2E / Segurança | Especificado; requer conversa e mensagens funcionais |
 | RF-010 — CA-010.1 a CA-010.3 | TC-E2E-007, TC-INT-005, TC-SEC-008 | Integração / E2E / Segurança | Especificado; testar membro e não membro |
@@ -141,10 +148,10 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 
 | Requisito / critério | Caso(s) relacionado(s) | Nível principal | Prontidão / observação |
 |---|---|---|---|
-| RF-019 — CA-019.1 a CA-019.4 | TC-INT-011, TC-E2E-016, TC-SEC-017 | Integração / E2E / Segurança | Especificado; testar registro de leitura, horário e contagem de não lidas por usuário/conversa |
-| RF-020 — CA-020.1 a CA-020.5 | TC-INT-012, TC-E2E-017, TC-SEC-018 | Integração / E2E / Segurança | Especificado; usuário negado; TI edita/exclui a qualquer momento; ações auditadas |
+| RF-019 — CA-019.1 a CA-019.4 | TC-INT-011, TC-E2E-016, TC-SEC-017 | Integração / E2E / Segurança | Especificado; testar registro de leitura, horário e contagem de não lidas por usuário/conversa; relacionar com #111 |
+| RF-020 — CA-020.1 a CA-020.5 | TC-INT-012, TC-E2E-017, TC-SEC-018 | Integração / E2E / Segurança | Especificado; usuário negado; TI edita/exclui a qualquer momento; ações auditadas; relacionar auditoria com #124 |
 | RF-021 — CA-021.1 a CA-021.4 | TC-INT-013, TC-E2E-018, TC-SEC-019 | Integração / E2E / Segurança | Especificado; TI exporta conversas individuais e grupos, sem justificativa/segunda aprovação, com auditoria |
-| RF-022 — CA-022.1 a CA-022.11 | TC-INT-014, TC-E2E-019, TC-SEC-020 | Integração / E2E / Segurança | Especificado; catálogo de eventos, acesso exclusivo TI, sem exclusão automática e exclusão autorizada auditada |
+| RF-022 — CA-022.1 a CA-022.11 | TC-INT-014, TC-E2E-019, TC-SEC-020 | Integração / E2E / Segurança | Especificado; catálogo de eventos, acesso exclusivo TI, sem exclusão automática e exclusão autorizada auditada; relacionar operações privilegiadas com #124 |
 | RF-023 — CA-023.1 a CA-023.3 | TC-E2E-020, TC-UX-002 | E2E / UX | Especificado; aviso de monitoramento no primeiro acesso, sem depender de push/browser notification |
 
 ## 8. Matriz de rastreabilidade — requisitos não funcionais
@@ -366,8 +373,14 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 | #101 — RLS | Sem policies de domínio e testes reais, não há prova de isolamento de conversas/grupos/mensagens | Testar em banco real de teste após implementação e revisão |
 | #102 — auditoria | Eventos, acesso e retenção estão definidos; a implementação da trilha, integridade e evidências ainda não começou | Validar os eventos RF-016/RF-022 e retenção conforme baseline v0.4 |
 | #105 — integração Auth | Middleware isolado não comprova login e autorização ponta a ponta | Executar integração e E2E depois de conectar os fluxos reais |
+| #110 — histórico e sincronização | Histórico paginado, Realtime, reconexão e deduplicação precisam de verificação integrada | Vincular cenários de recuperação/sincronização ao fluxo de mensagens e evidenciar ausência de duplicidade |
+| #111 — leitura e não lidas | Última mensagem, contador e recibos/horários de leitura precisam de validação por usuário e conversa | Executar cenários de leitura e sincronização conforme os critérios da issue |
+| #113 — remoção de participantes | Remoção precisa encerrar autorização de leitura e download do conteúdo anterior | Verificar revogação server-side de conversa e anexos após a remoção |
 | #116 — links e autorização de download | Regras de link temporário, validade e autorização de download precisam ser verificadas junto à política de anexos | Testar expiração e revogação de acesso após remoção de participante, sem presumir que um link emitido mantenha acesso válido |
 | #117 — anexos/antimalware | Formatos, limites, quotas, scanner interno, liberação administrativa e falha segura definidos; implementação ainda não começou | Testar os requisitos confirmados, sem reabrir parâmetros de produto |
+| #119 — redefinição/recuperação de credenciais | Fluxo exclusivo de TI precisa ser validado contra autenticação e sessão | Cobrir credencial redefinida, sessões e mensagens de resultado conforme os critérios de recuperação |
+| #123 — alertas e revisão | Fila, severidades, prazos e encerramento precisam de verificação integrada | Relacionar alertas gerados aos testes de detecção e registrar estados/transições do fluxo de revisão |
+| #124 — auditoria privilegiada | Eventos de edição/exclusão, exportação, consulta e outras operações privilegiadas precisam de cobertura | Completar os cenários de auditoria além da consulta de conversas, sem duplicar a matriz da #100 |
 | #125 — threat modeling | Controles e cenários de ameaça ainda requerem consolidação | Incorporar ameaças aprovadas à suíte de segurança |
 | #129 — homologação | Execução manual e regressão global são trabalho próprio dessa issue | Transferir roteiros e evidências de execução à #129 |
 | Q-002/Q-006 | Decisões resolvidas: poderes iguais de TI; TI provisiona username/senha e recupera credenciais | Não são pendências; testar conforme RF-002/RF-003/RNF-003 |
@@ -407,7 +420,7 @@ A entrega documental desta issue poderá ser considerada pronta para revisão qu
 
 O plano apresenta uma estrutura adequada de planejamento e rastreabilidade, com cobertura documental de RF-001 a RF-023 e RNF-001 a RNF-013. A existência de um caso especificado não comprova implementação, execução ou aprovação. Os artefatos isolados hoje disponíveis — módulo de autorização, migration de exemplo e testes com dependências simuladas — não comprovam integração ponta a ponta, RLS de domínio ou homologação do produto.
 
-Antes de considerar o plano documental integralmente consolidado, devem ser incorporados os ajustes de classificação dos testes por dispositivo, ampliação dos cenários de anexos, referências cruzadas às Issues #110, #111, #113, #116, #119, #123 e #124, precisão de TC-E2E-004 e formalização da autoridade para aceitação de risco residual. A rastreabilidade e os contratos de integração também devem permanecer coerentes com a arquitetura-alvo a ser formalizada após Q-025; não se deve presumir Supabase/Vercel como destino aprovado.
+A versão 0.2 incorpora os ajustes documentais identificados: os testes por dispositivo foram classificados como compatibilidade/UX; os cenários de anexos foram ampliados para cobrir antimalware, autorização, expiração e revogação; as dependências das Issues #110, #111, #113, #116, #119, #123 e #124 foram explicitadas; TC-E2E-004 foi refinado; e a autoridade para aceitação de risco residual foi delimitada. O plano também deixou de presumir Supabase/Vercel como arquitetura-alvo e mantém a rastreabilidade compatível com a decisão a formalizar em Q-025.
 
 A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcionalidades e dependências: autenticação/autorização; dados e políticas de acesso; conversas e mensagens; grupos, anexos e auditoria; e, por fim, homologação transversal, compatibilidade, acessibilidade, desempenho e recuperação. A Issue #129 permanece responsável pela homologação, acessibilidade e regressão global executadas.
 
