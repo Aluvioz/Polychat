@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.3 — 19/11/2026  
+**Versão:** 0.4 — 20/11/2026  
 **Status:** modelo preliminar; sujeito à revisão técnica do Tech Lead, TI (responsável operacional por segurança na FORD) e SQA  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
@@ -49,10 +49,10 @@ Esta versão é uma análise documental e preliminar. Ela não inclui:
 
 - teste de intrusão ou exploração ativa;
 - varredura autenticada de infraestrutura;
-- revisão de configuração administrativa dos projetos Supabase ou Vercel;
+- revisão de configuração administrativa de ambientes ou serviços hospedados candidatos, enquanto a arquitetura-alvo e sua topologia permanecem pendentes na Q-025;
 - inspeção de secrets reais ou variáveis de ambiente protegidas;
 - teste de segurança em produção;
-- confirmação de aplicação de migrations em ambiente Supabase hospedado;
+- confirmação de aplicação de migrations no banco de dados do ambiente-alvo, ainda não formalizado;
 - validação jurídica ou avaliação de impacto de privacidade.
 
 A ausência de evidência no repositório não prova que um controle inexista em todos os ambientes; significa que ele não pode ser considerado comprovado por esta análise.
@@ -110,11 +110,11 @@ A fotografia do repositório não representa implementação funcional. Os arqui
 - Next.js 16, React 19, TypeScript e App Router estão presentes.
 - Existe um módulo de autorização isolado (`src/auth/authorization.mjs`), sem integração com handlers/rotas reais; deve ser tratado como scaffold, não como autenticação implementada.
 - O módulo de autorização é Express-compatible e não foi identificado como integrado a handlers/rotas reais do App Router.
-- Não há cliente/SDK Supabase integrado ao runtime do produto.
-- Existe uma migration de exemplo para `public.profiles`; é artefato versionado, não comprova aplicação no Supabase nem início da implementação funcional.
-- A migration versionada não comprova que foi aplicada em projeto Supabase hospedado.
+- Não há cliente/SDK Supabase integrado ao runtime do produto. Essa observação descreve o estado do repositório e não designa Supabase como arquitetura-alvo.
+- Existe uma migration de exemplo para `public.profiles`; é artefato versionado da direção técnica anterior, não comprova aplicação no banco-alvo nem início da implementação funcional.
+- A migration versionada não comprova que foi aplicada em qualquer ambiente de banco hospedado ou de teste.
 - Não foram identificadas migrations/policies de domínio para conversas, memberships, mensagens, anexos ou auditoria.
-- Existem testes unitários de um módulo isolado com Supabase simulado; não testam rotas reais, RLS de domínio ou integrações hospedadas.
+- Existem testes unitários de um módulo isolado com dependências Supabase simuladas; são evidência restrita desse scaffold e não testam rotas reais, RLS de domínio ou a arquitetura-alvo.
 - O workflow CI executa testes, ESLint, verificação TypeScript e build.
 
 **Conclusão da fotografia:** a implementação funcional do Polychat ainda não começou. Há somente estrutura inicial do frontend e artefatos de scaffold isolados; nenhum fluxo de negócio está integrado ou homologado.
@@ -126,10 +126,10 @@ O fluxo abaixo representa a arquitetura de referência a avaliar. Elementos iden
 ~~~mermaid
 flowchart LR
     U["Usuário / TI"] -->|HTTPS| B["Navegador / dispositivo"]
-    B -->|HTTPS| V["Next.js / camada server-side na Vercel"]
-    V -->|Validação de identidade| A["Supabase Auth"]
-    V -->|Consultas autorizadas| P["PostgreSQL / RLS"]
-    V -->|Upload e download autorizados| S["Storage privado proposto"]
+    B -->|HTTPS| V["Next.js / camada server-side — hospedagem sob controle FORD; topologia pendente Q-025"]
+    V -->|Identidade| A["Serviço de identidade sob controle FORD — mecanismo pendente ADR-004"]
+    V -->|Consultas autorizadas| P["Banco de dados sob controle FORD — PostgreSQL proposto na ADR-005"]
+    V -->|Upload e download autorizados| S["Storage privado sob controle FORD — ADR-008 proposta"]
     P -->|Metadados e persistência| D["Dados de domínio"]
     V -->|Eventos de auditoria| L["Trilha de auditoria proposta"]
     V -->|Detecção de mensagem| M["Mecanismo de análise proposto"]
@@ -142,7 +142,7 @@ flowchart LR
 
 1. dispositivo/navegador → aplicação web;
 2. camada cliente → handlers e serviços server-side;
-3. aplicação → Supabase Auth;
+3. aplicação → serviço de identidade definido pela arquitetura-alvo e executado sob controle da FORD;
 4. aplicação → PostgreSQL e políticas RLS;
 5. aplicação → Storage;
 6. serviços de análise/antimalware → aplicação, caso terceiros venham a ser contratados;
@@ -227,7 +227,7 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 
 | ID | Cenário de ameaça | Ativo / impacto | Controles existentes observados | Mitigação proposta | Prioridade inicial / responsável |
 |---|---|---|---|---|---|
-| THR-001 | Atacante utiliza credenciais/sessão comprometidas de Usuário para agir como a vítima. | A-01, A-03; exposição e fraude. | Há apenas scaffold isolado de autorização e testes simulados; não há login/sessão integrado ao produto. | Implementar autenticação Supabase Auth no runtime; proteger credenciais e sessões conforme RNF-003; revogar acesso quando conta for desativada; auditar eventos aplicáveis e testar sessão inválida/expirada. Não incluir MFA, troca inicial ou expiração periódica como requisito, pois a FORD não os exige. | P1 — Desenvolvimento / TI; #103/#105/#125 |
+| THR-001 | Atacante utiliza credenciais/sessão comprometidas de Usuário para agir como a vítima. | A-01, A-03; exposição e fraude. | Há apenas scaffold isolado de autorização e testes simulados; não há login/sessão integrado ao produto. | Implementar o mecanismo de identidade definido na arquitetura aprovada, executado sob controle da FORD; proteger credenciais e sessões conforme RNF-003; revogar acesso quando conta for desativada; auditar eventos aplicáveis e testar sessão inválida/expirada. Não incluir MFA, troca inicial ou expiração periódica como requisito, pois a FORD não os exige. | P1 — Desenvolvimento / TI; #103/#105/#125 |
 | THR-002 | Conta TI comprometida é usada por atacante para executar operações administrativas legítimas da role. | A-01, A-02, A-03, A-06; impacto potencial elevado por privilégio. | O modelo de produto prevê poderes iguais para administradores TI; ainda não há autenticação funcional integrada. A confiança e os riscos dos poderes administrativos já foram avaliados pela FORD/projeto. | Proteger credenciais e sessões conforme requisitos alinhados; garantir contas individuais, desativação/revogação e auditoria das ações. Não criar hierarquia, administrador principal, segunda aprovação ou MFA obrigatório. | P1 — Desenvolvimento / TI; #103/#104/#105/#124 |
 | THR-003 | Atacante se passa por usuário/serviço em chamadas entre navegador, aplicação e provedor por validação incompleta de origem ou token. | A-01, A-02; impersonação e acesso não autorizado. | ADR-006 descreve validação server-side para perfis; integração completa não comprovada. | Validar identidade em cada operação server-side; não aceitar identidade/role do body, query ou estado de UI; validar emissor/audiência/expiração conforme contrato do provedor; proteger comunicação com TLS. | P1 — Tech Lead e desenvolvimento; #105, #125 |
 
@@ -259,7 +259,7 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 | THR-015 | Logs, alertas ou evidências armazenam conteúdo integral de mensagens, dados pessoais ou tokens além do necessário. | A-03, A-06, A-07; exposição secundária e retenção excessiva. | ADR-010 e PR #151 propõem minimização; políticas finais continuam pendentes. | Definir esquema mínimo; mascarar segredos; restringir acesso; separar logs técnicos de conteúdo; estabelecer retenção; revisar amostras de logs e alertas. | P1 — TI e Desenvolvimento; #102, #122; regras de acesso/retention já definidas na baseline |
 | THR-016 | Alertas de conteúdo suspeito permitem acesso indevido à mensagem original ou expõem conteúdo em notificação. | A-03, A-07; divulgação e uso fora da finalidade. | PR #151 propõe contexto mínimo; a política de acesso e os fluxos não estão aprovados. | Separar permissão de ver alerta da permissão de consultar conversa; usar metadados mínimos; exigir autenticação/autorização no acesso; auditar consulta; proibir conteúdo integral em notificação por padrão até aprovação. | P1 — TI e Desenvolvimento; #122, #123, #121, #102 |
 | THR-017 | Conteúdo enviado por usuário é renderizado sem escaping e executa script no contexto de outro usuário (XSS armazenado/refletido). | A-03, A-04, A-01; roubo de sessão, ação indevida e exposição. | Não há interface de chat implementada identificada na fotografia técnica; nenhum teste XSS de produto foi comprovado. | Usar renderização segura por padrão; evitar HTML não confiável; sanitizar somente quando houver necessidade validada; configurar CSP como defesa em profundidade; proteger cookies; testar payloads de XSS em mensagem, nome de grupo e nome de arquivo. | P1 — Frontend, Tech Lead e SQA; #125, #126 |
-| THR-018 | Serviço adicional não aprovado recebe conteúdo de mensagem/anexo. | A-03, A-05, A-07; exposição a terceiro não autorizado. | Supabase e Vercel são plataformas oficiais; outros serviços de análise/IA/scanner não estão automaticamente autorizados. | Manter processamento nos componentes oficiais e scanner interno FORD; não encaminhar conteúdo a serviços adicionais ou IA externa sem aprovação explícita. | P1 — TI / Desenvolvimento; RN-022, #117/#122 |
+| THR-018 | Serviço adicional não aprovado recebe conteúdo de mensagem/anexo. | A-03, A-05, A-07; exposição a terceiro não autorizado. | A arquitetura-alvo ainda não está formalizada; a ADR-003 (Supabase + Vercel) está Deprecated. O requisito vigente determina que infraestrutura e processamento permaneçam sob controle da FORD. | Manter processamento na arquitetura que vier a ser formalmente aprovada e sob controle da FORD; utilizar o scanner interno FORD e não encaminhar conteúdo a serviços adicionais ou IA externa sem aprovação explícita. | P1 — TI / Desenvolvimento; RN-022, #117/#122 |
 
 ### 8.5 Denial of Service — negação de serviço
 
@@ -275,7 +275,7 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 | ID | Cenário de ameaça | Ativo / impacto | Controles existentes observados | Mitigação proposta | Prioridade inicial / responsável |
 |---|---|---|---|---|---|
 | THR-023 | Endpoint/handler esquece de exigir autenticação ou autorização, permitindo operação sem o middleware esperado. | A-02, A-03, A-04, A-05; acesso indevido. | Módulo isolado oferece middleware; integração uniforme em handlers reais não foi evidenciada. | Inventariar rotas/ações; aplicar autenticação e autorização como padrão; testes automatizados para rota sem token, role indevida e erro; revisão de PR focada em autorização. | P0 — Tech Lead e backend; #105, #125, #126 |
-| THR-024 | Policies RLS ausentes, permissivas ou inconsistentes permitem que cliente leia/edite dados de outro usuário. | A-02, A-03, A-04, A-05, A-06; exposição e adulteração. | RLS observada somente em `profiles`; nenhuma policy de domínio foi identificada na baseline. | Definir schema revisado; política por tabela e operação; grants mínimos; testes em PostgreSQL/Supabase real com atores diferentes; verificar ausência de bypass genérico e revisar funções privilegiadas. | P0 — Tech Lead, backend, TI e SQA; #99, #100, #101 |
+| THR-024 | Policies RLS ausentes, permissivas ou inconsistentes permitem que cliente leia/edite dados de outro usuário. | A-02, A-03, A-04, A-05, A-06; exposição e adulteração. | RLS observada somente em `profiles`; nenhuma policy de domínio foi identificada na baseline. | Definir schema revisado; política por tabela e operação; grants mínimos; testes no mecanismo de banco efetivamente escolhido e aprovado para a arquitetura-alvo, em ambiente real e isolado, com atores diferentes; verificar ausência de bypass genérico e revisar funções privilegiadas. | P0 — Tech Lead, backend, TI e SQA; #99, #100, #101 |
 | THR-025 | Uso indevido de service role ou função privilegiada ignora RLS e permite acesso amplo. | A-02 a A-08; comprometimento amplo. | ADR-006 proíbe expor service-role; função `is_active_ti()` existente tem escopo limitado e cuidados documentados. | Preferir operações com privilégios mínimos; manter service role somente server-side; restringir grants/owners; revisar SECURITY DEFINER, search_path e execução; auditar operações privilegiadas e testar abuso. | P0 — Tech Lead e TI; #101, #125 |
 | THR-026 | XSS ou CSRF induz usuário autenticado a executar ação sem intenção, inclusive ação administrativa. | A-01, A-02, A-03, A-04; uso indevido da sessão. | Não há fluxo funcional de chat/admin integrado identificado; política de cookies/sessão ainda pendente. | Para CSRF, identificar se a autenticação usa cookies enviados automaticamente; aplicar SameSite, token anti-CSRF e validação Origin/Referer conforme arquitetura; operações mutáveis não devem usar GET; para XSS aplicar controles de saída/CSP. | P1 — Tech Lead, frontend/backend e SQA; ADR-004, #105, #125 |
 | THR-027 | Permissão de role/membership implementada incorretamente concede a Usuário função reservada ao TI ou acesso a conversa alheia. | A-02, A-03, A-04; elevação indevida e exposição. | Matriz #100 define a separação `user`/`ti` e membership; enforcement ainda não foi implementado. | Testar somente dois perfis, com todos os administradores TI equivalentes; verificar operações exclusivas TI e membership por conversa. Não introduzir administrador principal, hierarquia ou segunda aprovação. | P0 — Desenvolvimento / SQA; #100/#101 |
@@ -387,7 +387,7 @@ As prioridades são iniciais e precisam de revisão por Tech Lead, TI (responsá
 | Prioridade | Ação de mitigação | Ameaças | Responsável primário | Dependências / evidência esperada |
 |---|---|---|---|---|
 | P0 | Integrar autenticação e autorização a todos os handlers/rotas reais; validar sessão e conta no servidor | THR-001, 003, 023 | Tech Lead / backend | #105; revisão de código e testes em rotas reais |
-| P0 | Aprovar e implementar RLS de domínio para conversas, memberships, mensagens e anexos; testar isolamento | THR-004, 005, 012, 024 | Tech Lead / backend / TI | #99, #100, #101; testes PostgreSQL/Supabase real |
+| P0 | Aprovar e implementar RLS de domínio para conversas, memberships, mensagens e anexos; testar isolamento | THR-004, 005, 012, 024 | Tech Lead / backend / TI | #99, #100, #101; testes no banco real definido pela arquitetura-alvo |
 | P0 | Manter secrets privilegiados exclusivamente server-side; revisar acesso, bundles e workflows | THR-014, 025 | Tech Lead / TI | Revisão de ambiente, artefato de build, CI e procedimento de rotação |
 | P0 | Implementar trilha de auditoria para consulta TI e ações privilegiadas conforme baseline | THR-009, 010, 027 | TI / backend / SQA | #102, #121, #124; teste de evento e integridade |
 | P1 | Implementar autenticação, proteção de sessão, recuperação pelo TI, revogação e rate limiting | THR-001, 002, 019 | Desenvolvimento / TI | ADR-004, #103/#104/#105; requisitos de credenciais já definidos; testes |
@@ -480,7 +480,7 @@ Risco residual é o risco que permanece depois de controles implementados e evid
 | Condições de reabertura | Incidente, alteração de arquitetura, aumento de exposição ou vencimento |
 | Registro formal | Link para aprovação/documento institucional |
 
-**Estado da versão 0.1:** nenhum risco residual possui aceitação formal registrada. A classificação deve ser revisada depois da validação técnica e das decisões institucionais.
+**Estado desta versão:** nenhum risco residual possui aceitação formal registrada. A classificação deve ser revisada depois da validação técnica e das decisões institucionais.
 
 ## 14. Decisões ainda abertas
 
@@ -490,7 +490,7 @@ As respostas de produto da FORD v2 foram consolidadas em `docs/08-glossario-e-qu
 |---|---|---|
 | Q-018 | Refinamento interno de arquitetura de informação/telas pelo PO/UX | Pode alterar apresentação de controles, não os requisitos de segurança já definidos |
 | Q-019 | Recebimento dos ativos oficiais de identidade visual | Impacto limitado à interface e risco de falsificação visual |
-| Q-025 | Consolidação de evidências técnicas específicas da configuração/integração Supabase/Vercel ainda não cobertas pelos aceites #96/#98 | Confirmar projetos/regiões, ambientes, domínios, escopos de variáveis e integrações efetivas, sem reabrir escolha da stack nem repetir testes já aceitos |
+| Q-025 | Compatibilização da arquitetura com a infraestrutura sob controle da FORD | Revisar ADRs e decisões que ainda pressupõem serviços gerenciados Supabase/Vercel; definir topologia e componentes compatíveis com hospedagem/processamento sob controle da FORD. Preservar os aceites #96/#98 em seus escopos, sem reabri-los ou extrapolá-los |
 
 As demais Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas. A implementação dos controles continua pendente, mas isso não transforma os requisitos em perguntas abertas.
 
@@ -556,7 +556,7 @@ Qualquer mudança relevante de arquitetura, autenticação, RLS, Storage, monito
 
 ## 18. Parecer do PO
 
-A versão 0.3 é uma base preliminar de ameaças alinhada à FORD v2. Ela identifica riscos técnicos que não podem ser considerados mitigados apenas porque existem requisitos, ADRs ou artefatos de scaffold. A implementação funcional ainda não começou.
+A versão 0.4 é uma base preliminar de ameaças alinhada à FORD v2 e à Q-025. Ela identifica riscos técnicos que não podem ser considerados mitigados apenas porque existem requisitos, ADRs ou artefatos de scaffold. A arquitetura-alvo ainda precisa ser formalizada e a implementação funcional não começou.
 
 O maior cuidado de produto é não confundir a capacidade administrativa prevista para TI com autorização irrestrita, nem confundir monitoramento de segurança com permissão para tratamento indiscriminado de mensagens. A consulta de conversas e exportação pelo TI, edição/exclusão administrativa, alerta e auditoria seguem as regras da FORD v2; anexos exigem validação, scanner interno e proteção antes da disponibilização.
 
@@ -580,7 +580,7 @@ A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triage
 | PRD-006 | Conta desativada mantém sessão/token utilizável | Pessoa inativa consegue continuar acessando operações protegidas | P0 — bloqueia o fluxo de conta se revogação não for comprovada | Implementar revogação imediata de sessões no ato de desativação e negar operações server-side; testar tokens/sessões existentes. Regras de provisionamento e recuperação já definidas | Desenvolvimento / TI; RN-003/RF-004, #103/#104/#105 |
 | PRD-007 | Falha de backup/restore ou de operação impede cumprir os parâmetros já definidos | Perda de histórico ou indisponibilidade além do objetivo aprovado | P1 — implementação/ensaio e evidência ainda pendentes | Implementar backup diário de banco/anexos por 12 meses, medir restauração contra RPO 24h/RTO 24h e disponibilidade mensal de 99%; manter manutenção fora do horário comercial com aviso e suporte em horário comercial | TI / Desenvolvimento / SQA; RN-023, #98/#130 |
 | PRD-008 | Usuário acessa por dispositivo/perfil não autorizado ou há ampliação indevida do público | Acesso incompatível com o escopo inicial e risco de capacidade/homologação | P1 — validar restrições de perfil e dispositivo antes do lançamento único | Manter 25 usuários finais do setor técnico e aproximadamente 2–3 TI; Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos. Não haverá piloto de lançamento. | PO / Desenvolvimento / TI / SQA; RN-015/RN-023/RN-024, #106/#129 |
-| PRD-009 | Conteúdo é encaminhado a serviço adicional não aprovado | Exposição de mensagens/anexos a terceiros não autorizados | P1 — não integrar serviço adicional sem aprovação explícita | Supabase e Vercel são plataformas oficiais; o scanner é interno da FORD. Não encaminhar conteúdo a fornecedores adicionais, IA externa ou scanner SaaS não aprovado | TI / Desenvolvimento; RN-022, #117/#122, ADR-003/008/010 |
+| PRD-009 | Conteúdo é encaminhado a serviço adicional não aprovado | Exposição de mensagens/anexos a terceiros não autorizados | P1 — não integrar serviço adicional sem aprovação explícita | A arquitetura-alvo permanece pendente na Q-025; manter hospedagem e processamento sob controle da FORD. O scanner é interno da FORD. Não encaminhar conteúdo a fornecedores adicionais, IA externa ou scanner SaaS não aprovado | TI / Desenvolvimento; RN-022, #117/#122, Q-025, ADR-008/010 |
 | PRD-010 | Usuários não entenderem falhas, bloqueios, alertas ou canal de suporte | Repetição de tentativas, perda de trabalho, procura de canais não oficiais e baixa confiança no produto | P1 — resolver nos fluxos e no plano de operação | Definir mensagens de erro e estados compreensíveis, orientação de recuperação/reenvio, canal de suporte e comunicação de incidentes; não exibir detalhes técnicos ou dados sensíveis | PO / UX / TI / Operação / SQA; #91/#92/#117/#126/#129/#130, THR-019/020/021 |
 
 #### Decisões de produto e critérios de liberação
@@ -616,3 +616,5 @@ A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triage
 |---|---|---|
 | 0.1 | 19/11/2026 | Primeira análise documental STRIDE, inventário de ativos, fronteiras de confiança, registro preliminar de ameaças, plano de mitigação, testes e decisões pendentes. Não representa pentest, aprovação de segurança ou aceite de risco. |
 | 0.2 | 19/11/2026 | Inclui revisão de risco sob perspectiva de produto, impactos em confiança/uso/continuidade, prioridades de triagem e atualização das referências às políticas #117/#122 v0.2. Não representa aprovação técnica ou aceitação de risco residual. |
+| 0.3 | 19/11/2026 | Reconciliou o modelo preliminar com as respostas da FORD v2 e atualizou papéis, riscos e dependências; não aprovou arquitetura nem controles. |
+| 0.4 | 20/11/2026 | Corrige a representação da Q-025 e da ADR-003 Deprecated; descreve a arquitetura-alvo como pendente e mantém as quatro correções SQA registradas na revisão como pendências de reavaliação. |
