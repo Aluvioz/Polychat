@@ -7,7 +7,7 @@
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados (**Proposed**)
 - **Tecnologia relacional proposta:** PostgreSQL, exclusivamente em infraestrutura sob controle da FORD; arquitetura operacional ainda depende da Q-025
 
-> **Importante:** este documento registra o modelo lógico preliminar do Polychat. Ele separa estruturas já implementadas, necessidades confirmadas pelos requisitos e propostas técnicas ainda sujeitas à revisão. Não representa aprovação final do schema, não substitui as decisões pendentes de negócio e não autoriza, por si só, a criação ou aplicação de migrations.
+> **Importante:** este documento registra o modelo lógico conceitual do Polychat e as decisões funcionais validadas pelo PO para a baseline v0.5. Distingue regras confirmadas, evidências legadas e propostas técnicas. Não representa aprovação do schema físico, não aprova tecnologia de autenticação/armazenamento nem autoriza, por si só, a criação ou aplicação de migrations.
 
 ## 1. Objetivo
 
@@ -31,7 +31,7 @@ As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinha
 
 | Status | Significado |
 |---|---|
-| **Implementado** | Existe no repositório em migration versionada. Não significa, por si só, que foi aplicado ou homologado em ambiente Supabase. |
+| **Implementado (legado)** | Existe no repositório em migration versionada. Não significa que foi aplicado ou homologado na infraestrutura-alvo da FORD; artefatos vinculados ao Supabase são scaffold histórico. |
 | **Confirmado** | Há requisito ou regra de negócio que sustenta a necessidade funcional da informação. |
 | **Proposta técnica** | É uma solução preliminar para discussão e revisão; ainda não deve ser tratada como decisão aprovada. |
 | **Pendente** | Depende de decisão de negócio, aprovação, detalhamento ou validação técnica. |
