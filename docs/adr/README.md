@@ -38,7 +38,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 5. A autenticação deve respeitar o provisionamento exclusivo pelo TI, os identificadores e credenciais definidos pela FORD, a recuperação pelo TI e a revogação imediata de sessões na desativação de conta (ADR-004).
 6. A ADR-006 permanece Accepted apenas para o módulo e a migration de perfis; não cobre as políticas RLS de domínio nem comprova integração às rotas reais.
 7. Realtime, armazenamento de anexos e ambientes utilizam a stack Supabase/Vercel oficial e precisam de validação técnica conforme as ADRs 007 a 009.
-8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4 e foram incorporados à ADR-010. Seu status permanece Proposed porque implantação, catálogo técnico, evidências de segurança e integração com infraestrutura FORD ainda precisam de revisão.
+8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4 e foram incorporados à ADR-010. Seu status permanece Proposed porque implantação, catálogo técnico, evidências de segurança e integração com a stack oficial Supabase/Vercel ainda precisam de revisão.
 
 ## Evidências verificadas no repositório
 
