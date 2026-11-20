@@ -263,15 +263,13 @@ O encerramento:
 
 ### 13.5 Compatibilização com a FORD v2
 
-A FORD v2 estabelece que infraestrutura, hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, sem terceiros acessando, armazenando ou processando dados da organização. A direção Supabase + Vercel usada no escopo operacional original foi depreciada na ADR-003.
+Supabase e Vercel são as plataformas oficiais do Polychat, conforme ADR-003 e alinhamento complementar do PO com Desenvolvimento. As configurações e ensaios atestados pela Issue #98 permanecem como **evidência de execução e conclusão técnica do escopo operacional da issue**.
 
-Assim, as configurações e ensaios Supabase/Vercel atestados pela Issue #98 permanecem como **evidência histórica de execução e conclusão técnica do escopo original**. Não devem ser interpretados como autorização vigente para processar dados reais da FORD nesses serviços após a FORD v2.
-
-O comentário de encerramento não declara se dados reais da FORD foram ou não inseridos nesses serviços. Este documento também não determina essa condição. A arquitetura operacional substituta e a forma de transição permanecem na Q-025 e na ADR-009.
+Essa condição não deve ser ampliada além das evidências disponíveis: o relatório registra quais deployments e testes foram observados, quais configurações não puderam ser inspecionadas administrativamente e quais integrações reais ainda não foram comprovadas. A Q-025 e a ADR-009 tratam da validação técnica dos projetos, regiões, variáveis, acessos, integração e segregação por ambiente, não da substituição das plataformas oficiais.
 
 ### 13.6 Encaminhamento
 
 - Manter a Issue #98 encerrada; não reabri-la apenas pela atualização da restrição arquitetural.
 - Preservar os registros e artefatos do deployment e do ensaio de rollback, conforme solicitado no comentário de aceite.
-- Não promover Supabase/Vercel como arquitetura-alvo para dados da FORD.
+- Manter Supabase/Vercel como plataformas oficiais; concluir as validações de configuração e integração identificadas na Q-025.
 - Revalidar smoke test, deploy, domínio/HTTPS, rollback e recuperação quando a arquitetura sob controle da FORD estiver selecionada e homologada.
