@@ -18,16 +18,16 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 
 | ADR | Tema | Status | Escopo do status |
 |---|---|---|---|
-| [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular com execução e dados sob controle da FORD; topologia e componentes ainda aguardam validação técnica |
+| [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular com Supabase/Vercel oficiais e governança operacional da FORD; topologia e componentes ainda aguardam validação técnica |
 | [ADR-002](ADR-002-frontend-nextjs.md) | Frontend | Accepted | Next.js 16 + React 19 + TypeScript; React + Vite explicitamente recusado para o Polychat |
 | [ADR-003](ADR-003-supabase-vercel.md) | Plataformas oficiais Supabase + Vercel | Accepted | Supabase (backend) e Vercel (hospedagem/deploy) são a stack oficial confirmada pelo PO |
-| [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Requisitos funcionais consolidados; mecanismo de identidade deve operar sob controle da FORD |
+| [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Supabase Auth é o serviço oficial de identidade; integração às rotas e validação por ambiente pendentes |
 | [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL via Supabase Database; schema, migrations, RLS e backup ainda exigem validação |
 | [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo limitado | Aceite cobre apenas perfis; políticas RLS de domínio e integração às rotas ainda precisam ser implementadas e testadas |
 | [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Supabase Realtime é a opção da stack oficial; prova de conceito e regras de autorização pendentes |
 | [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Supabase Storage é a opção oficial; privacidade, scanner, URLs temporárias e revogação exigem validação |
 | [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Vercel e Supabase oficiais; segregação, variáveis, regiões e acessos por ambiente em validação |
-| [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Regras funcionais consolidadas na FORD v2; implementação, catálogo técnico e controles na infraestrutura FORD aguardam validação |
+| [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Regras funcionais consolidadas; implementação, catálogo técnico e controles na stack oficial aguardam validação |
 
 ## Decisões e restrições vigentes
 
