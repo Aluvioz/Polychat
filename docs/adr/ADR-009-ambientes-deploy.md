@@ -82,7 +82,7 @@ Isolamento e promoção controlada reduzem o risco de contaminação entre está
 ## Consequências
 
 **Positivas:**
-- Alinhamento com a restrição de infraestrutura da FORD.
+- Alinhamento com a stack oficial e a governança operacional definida pela FORD.
 - Separação explícita entre ambientes e credenciais.
 - Promoção e rollback rastreáveis.
 - Preservação dos registros de conclusão das Issues #96 e #98 sem tratá-los como aprovação irrestrita da arquitetura anterior.
