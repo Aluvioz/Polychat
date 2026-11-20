@@ -8,7 +8,7 @@ Aplicação web de comunicação interna em desenvolvimento para a FORD.
 
 ## Estado atual
 
-O repositório contém a fundação do frontend em Next.js 16, React 19, TypeScript e App Router. A interface atual é uma página institucional. Os fluxos de autenticação, conversas, grupos, mensagens, anexos, alertas e administração ainda não estão implementados de ponta a ponta.
+O repositório contém somente o scaffold inicial do frontend em Next.js 16, React 19, TypeScript e App Router. A interface atual é uma página institucional. **A implementação funcional do Polychat ainda não começou.** Não há login, conversas, grupos, mensagens, anexos, alertas, console TI ou auditoria implementados. Os arquivos isolados de autorização, migration de perfil e testes simulados não constituem funcionalidades integradas do produto.
 
 A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript, com Vercel como plataforma oficial de hospedagem/deploy e Supabase como plataforma oficial de backend. O uso de cada produto/serviço Supabase é detalhado nas ADRs específicas.
 
@@ -56,7 +56,8 @@ O GitHub Actions executa testes automatizados, lint, verificação de tipos e bu
 - Bibliotecas e atualizações que não acessem dados da FORD podem ser utilizadas, respeitadas as políticas aplicáveis.
 - Dados em trânsito e em repouso devem ser protegidos conforme os requisitos consolidados; a solução não deve ser apresentada como criptografia ponta a ponta (E2EE).
 - Ambientes de desenvolvimento, homologação e produção devem permanecer isolados.
-- Não trate migrations, variáveis de exemplo, testes unitários ou builds como evidência de integração ou homologação de produção.
+- Trate o estado atual como scaffold, não como implementação parcial do produto.
+- Não trate middleware isolado, migration de perfil, variáveis de exemplo, testes simulados, build ou Preview como evidência de funcionalidade integrada ou homologação de produção.
 
 Supabase e Vercel não são referências apenas históricas: são plataformas oficiais do Polychat. Os arquivos de exemplo e testes simulados, contudo, não comprovam por si só integração funcional, configuração de produção, segregação de ambientes ou homologação. Consulte as ADRs e a documentação das Issues #96 e #98.
 
