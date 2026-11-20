@@ -84,7 +84,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Usuário acessa somente por celular Android/iOS; TI acessa somente por computador.
 - Interface exclusivamente em português, azul e branco, com logo da FORD.
 - Indicador de mensagens não lidas dentro do aplicativo; sem notificações push ou notificações do navegador.
-- Hospedagem e infraestrutura sob controle da FORD, preferencialmente no Brasil; nenhum terceiro pode acessar, armazenar ou processar dados da organização.
+- Supabase e Vercel são as plataformas oficiais do Polychat; regiões, acessos, segredos e ambientes devem ser configurados e validados sob governança da FORD. Outros serviços externos exigem aprovação explícita.
 
 ### 2.2 Fora do escopo inicial
 
@@ -131,7 +131,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 | D-019 | Aviso de monitoramento no primeiro acesso. | Confirmado | RN-025; RF-023 |
 | D-020 | Criptografia em trânsito e em repouso; sem E2EE; chaves administradas pelo servidor sob responsabilidade do TI. | Confirmado/alinhado | RN-016; RNF-002 |
 | D-021 | Retenção sem exclusão automática enquanto o sistema operar; TI autoriza exclusões e preservação em investigação; backups por 12 meses com descarte registrado. | Alinhado com Desenvolvimento | RN-021; RNF-004; RNF-009 |
-| D-022 | Infraestrutura sob controle da FORD, preferencialmente no Brasil; nenhum terceiro acessa, armazena ou processa dados. | Confirmado | RN-022; RNF-013 |
+| D-022 | Supabase e Vercel confirmadas como plataformas oficiais; Vercel para hospedagem/deploy e Supabase para backend. Validar regiões, acessos, segredos e segregação de ambientes; outros serviços exigem aprovação explícita. | Alinhamento complementar do PO com Desenvolvimento | RN-022; RNF-013; ADR-003 |
 | D-023 | Disponibilidade 99% mensal; RPO 24h em desastre; RTO 24h; backups diários por 12 meses; manutenção fora do horário comercial; suporte em horário comercial. | Confirmado/alinhado | RN-023; RNF-009 |
 | D-024 | Usuário em Android/iOS, Chrome/Safari móveis atuais; TI em computador, Chrome/Edge/Firefox atuais; tablets não permitidos. | Confirmado/alinhado | RN-015; RF-017; RF-018; RNF-005 |
 | D-025 | Interface em português, azul/branco e logo FORD; sem push/browser notification. | Confirmado; ativos visuais detalhados dependem de material de marca | RN-010; RN-019; RF-023; RNF-006 |
@@ -222,9 +222,9 @@ A descrição completa está em [05 — Regras de negócio e restrições](05-re
 
 ### 5.1 Restrição de infraestrutura atual
 
-A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas.
+O alinhamento complementar do PO com Desenvolvimento confirma **Supabase e Vercel como plataformas oficiais do Polychat**. Vercel é a plataforma de hospedagem/deploy; Supabase é a plataforma de backend, com os serviços específicos detalhados nas ADRs 004 a 008. Esta decisão corrige a interpretação documental anterior que tratou a stack como depreciada.
 
-Essa regra é requisito do cliente e prevalece sobre premissas tecnológicas anteriores incompatíveis. A Issue #88 e as ADRs anteriores registram Supabase + Vercel como direção tecnológica; essa direção precisa ser reconciliada formalmente com a restrição atual. Não se deve presumir que a utilização anterior dessas plataformas continua autorizada para produção.
+Os controles de segurança e governança da FORD continuam aplicáveis: regiões, acessos, segredos, segregação entre desenvolvimento/homologação/produção, backups, retenção e auditoria devem ser validados. A inclusão de outros serviços externos que acessem/processam dados exige aprovação explícita.
 
 A decisão de arquitetura deve separar:
 - Tecnologia e framework de aplicação.
@@ -244,7 +244,7 @@ A solução final deve manter dados e processamento dentro da fronteira de contr
 Snapshot documental consultado na branch main em 19/11/2026:
 
 - O repositório contém aplicação Next.js 16 com React 19, TypeScript e App Router, além de instruções e integração de deploy historicamente orientadas à Vercel.
-- O README ainda descreve Vercel como destino de hospedagem/deploy e Supabase como backend planejado, declarando que a integração Supabase ainda não foi conectada.
+- O README atualiza Vercel como hospedagem/deploy e Supabase como backend oficial do projeto; a documentação continua distinguindo essa decisão de integração funcional já concluída.
 - A interface principal é uma página institucional. Não foram encontradas telas completas de login, conversas, mensagens, grupos, anexos ou console administrativo.
 - O módulo src/auth/authorization.mjs contém middleware Express-compatible que recebe um cliente Supabase server-side, valida token por supabase.auth.getUser(token), consulta profiles, aceita user e ti, bloqueia perfil ausente/desconhecido e conta inativa, e falha fechada.
 - O middleware não está conectado a handlers/rotas reais do App Router.
@@ -255,7 +255,7 @@ Snapshot documental consultado na branch main em 19/11/2026:
 - O package.json consultado não incluía SDK Supabase nas dependências.
 - O workflow CI executa testes automatizados, ESLint, TypeScript e build em atualizações da main e em Pull Requests direcionadas à main.
 
-**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Além da implementação funcional ausente, a direção antiga Supabase/Vercel precisa ser reconciliada com a restrição de infraestrutura FORD antes de ser considerada arquitetura-alvo.
+**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. A direção Supabase/Vercel está confirmada como stack oficial; a implementação funcional e a configuração homologada dos ambientes ainda precisam de evidências.
 
 ### 5.3 Limites da evidência técnica
 
@@ -299,7 +299,7 @@ As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 �
 
 - Q-018 — Consolidação interna do mapa de telas, navegação e wireframes pelo PO/UX.
 - Q-019 — Obtenção dos ativos oficiais da identidade visual FORD, caso ainda não estejam disponíveis.
-- Q-025 — Reconciliação da arquitetura e das ADRs anteriores com a exigência de infraestrutura sob controle da FORD, sem terceiro acessando, armazenando ou processando dados.
+- Q-025 — Validar projetos/regiões Supabase, ambientes Vercel, acessos, segredos, integrações e evidências de homologação da stack oficial.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
@@ -318,8 +318,8 @@ Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências
 | Anexos e antimalware | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-011 a RF-013 e RNF-010 | Limites, scanner local, liberação TI, links e metadados |
 | Monitoramento e severidades | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-014/RF-015 | Lista de regras, fila, prazos e fluxo TI |
 | Retenção e continuidade | FORD v2 e alinhamento com Desenvolvimento | Atualiza RN-021/RN-023 e RNF-009 | Backups, exclusão, expiração de cópias e evidências |
-| Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Requer revisão de arquitetura/ADRs e da antiga direção Supabase/Vercel |
-| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e reconciliação arquitetural |
+| Stack Supabase/Vercel | Alinhamento complementar do PO com Desenvolvimento | Atualiza RN-022 e RNF-013 | Plataformas oficiais confirmadas; falta evidência técnica completa de configuração e homologação por ambiente |
+| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 permanece para validações técnicas da stack oficial | Mantém refinamento de UX, insumos de marca e verificação de configuração por ambiente |
 
 ## 10. Referências e documentos relacionados
 
