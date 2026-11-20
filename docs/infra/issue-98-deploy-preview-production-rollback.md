@@ -205,7 +205,9 @@ Os comandos npm não foram executados localmente nesta sessão. O run [443966278
 - Não declara deploy de produção, smoke test funcional ou rollback ensaiado.
 - Não marca critérios de aceite como concluídos.
 
-## 12. Situação dos critérios originais da Issue #98
+## 12. Situação dos critérios originais da Issue #98 — auditoria de 18/11/2026
+
+**Nota temporal:** os estados abaixo refletem somente a auditoria documental de 18/11/2026. O aceite final e o encerramento da issue em 19/11/2026 estão registrados na seção 13 e prevalecem para o estado final da issue.
 
 | Critério original | Estado nesta auditoria | Justificativa |
 |---|---|---|
