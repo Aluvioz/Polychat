@@ -10,7 +10,7 @@
 
 A `main` contém `package.json`, `next.config.ts` e a estrutura `src/app/`. O projeto declara Next.js `^16.0.0`, React e React DOM `^19.2.0`, TypeScript `^5.9.3` e usa o App Router. A página atual é uma apresentação institucional do Polychat; login, conversas e painel TI ainda não estão implementados.
 
-A baseline exige perfil Usuário em smartphone e perfil TI em computador, além de uma interface simples com identidade azul e branca. A matriz de navegadores/dispositivos e os ativos oficiais de marca ainda estão pendentes.
+A baseline exige perfil Usuário em smartphone e perfil TI em computador, além de uma interface simples com identidade azul e branca. A matriz de navegadores/dispositivos foi consolidada na FORD v2; os ativos oficiais de marca e códigos exatos de identidade visual permanecem sujeitos à obtenção/validação (Q-019).
 
 ## Problema
 
@@ -55,7 +55,7 @@ Next.js 16 + React 19 + TypeScript é a stack já instalada e versionada no proj
 - A página inicial é apenas institucional; esta ADR não declara chat ou autenticação entregues.
 - A integração real com Supabase permanece pendente conforme README e baseline.
 - A regra celular/desktop é requisito de experiência. User-agent, viewport ou emulação podem ser contornados e não podem autorizar operações.
-- Matriz de SO/navegadores, tablets, modo desktop, acessibilidade aplicável, manual de marca e fluxos de tela continuam pendentes (Q-012, Q-018, Q-019 e Q-020).
+- Compatibilidade de SO/navegadores e restrição a tablets estão definidas na FORD v2. Permanecem refinamento de telas/navegação (Q-018), obtenção dos ativos exatos de marca (Q-019) e observância das obrigações de acessibilidade aplicáveis, sem requisito adicional informado pelo cliente (Q-020 resolvida no nível de escopo).
 - A configuração reprodutível de dependências e ferramentas do projeto é acompanhada pela Issue #95.
 
 ## Evidências
