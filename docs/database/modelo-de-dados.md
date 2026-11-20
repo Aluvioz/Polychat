@@ -5,7 +5,7 @@
 - **Status:** Modelo lógico conceitual com escopo funcional validado pelo PO; schema físico, DDL e migrations não aprovados
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados (**Proposed**)
-- **Tecnologia relacional proposta:** PostgreSQL, exclusivamente em infraestrutura sob controle da FORD; arquitetura operacional ainda depende da Q-025
+- **Stack definida para o projeto:** Supabase + Vercel, conforme orientação recebida em aula; PostgreSQL é utilizado via Supabase, enquanto Vercel atende à hospedagem/deploy da aplicação
 
 > **Importante:** este documento registra o modelo lógico conceitual do Polychat e as decisões funcionais validadas pelo PO para a baseline v0.5. Distingue regras confirmadas, evidências legadas e propostas técnicas. Não representa aprovação do schema físico, não aprova tecnologia de autenticação/armazenamento nem autoriza, por si só, a criação ou aplicação de migrations.
 
@@ -20,9 +20,9 @@ O modelo serve como referência de produto e domínio para a Issue #99. Esta rev
 O modelo considera:
 
 - A Issue #99, que solicita modelar perfis, conversas, participantes, mensagens, anexos, eventos de auditoria e persistência dos controles administrativos definidos.
-- A ADR-005, atualmente **Proposed**, que mantém PostgreSQL como tecnologia relacional proposta, sem vincular hospedagem ou processamento a Supabase ou a qualquer serviço externo.
+- A ADR-005, atualmente **Proposed**, que deve ser alinhada à stack definida para o projeto: PostgreSQL via Supabase e aplicação hospedada/deployada na Vercel.
 - A baseline vigente **POLY-REQ-001 v0.5 — 20/11/2026**, os requisitos RF-001 a RF-023, as regras RN-001 a RN-025 e as decisões consolidadas da FORD v2.
-- A migration legada de perfis `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`, registrada somente como evidência do estado anterior do repositório; ela não define a arquitetura-alvo nem o provedor de identidade aprovado.
+- A migration existente de perfis `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`, que constitui o scaffold inicial da integração com Supabase Auth e deve ser avaliada como parte da stack do projeto.
 - A Q-025, que mantém pendente a compatibilização técnica da arquitetura com a exigência de infraestrutura sob controle da FORD.
 
 As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinhadas no nível funcional e não devem continuar classificadas como dúvidas de produto. As decisões adicionais de produto tomadas nesta versão estão registradas nas seções 11 e 12.
@@ -31,7 +31,7 @@ As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinha
 
 | Status | Significado |
 |---|---|
-| **Implementado (legado)** | Existe no repositório em migration versionada. Não significa que foi aplicado ou homologado na infraestrutura-alvo da FORD; artefatos vinculados ao Supabase são scaffold histórico. |
+| **Implementado no repositório** | Existe no repositório em migration versionada. Não significa, por si só, que foi aplicado ou homologado no ambiente Supabase do projeto. |
 | **Confirmado** | Há requisito ou regra de negócio que sustenta a necessidade funcional da informação. |
 | **Proposta técnica** | É uma solução preliminar para discussão e revisão; ainda não deve ser tratada como decisão aprovada. |
 | **Pendente** | Depende de decisão de negócio, aprovação, detalhamento ou validação técnica. |
@@ -39,7 +39,7 @@ As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinha
 
 ## 3. Premissas e limites
 
-1. PostgreSQL permanece como tecnologia relacional proposta na ADR-005, desde que instância, armazenamento, autenticação, operação, backups e processamento permaneçam sob controle da FORD. A escolha da arquitetura operacional continua em Q-025; Supabase/Vercel não são arquitetura-alvo aprovada.
+1. A stack definida para o projeto é Supabase + Vercel: Supabase fornece PostgreSQL e os serviços backend previstos (como Auth, Storage e RLS), enquanto Vercel hospeda/deploya a aplicação. Os detalhes de configuração e implantação devem ser revisados tecnicamente; a compatibilidade com as restrições da FORD é acompanhada na Q-025.
 2. O escopo inicial é uma única organização, a FORD. Não adicionar `tenant_id` ou arquitetura multi-tenant sem mudança explícita de escopo.
 3. Existem somente dois perfis de aplicação: `user` e `ti`. Participação em conversa é um vínculo de domínio, não um terceiro perfil.
 4. Somente TI administra contas, grupos e participantes conforme RF-003 a RF-006. Usuários não entram nem saem voluntariamente de grupos.
@@ -54,7 +54,7 @@ As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinha
 
 ## 4. Diagrama lógico preliminar
 
-O diagrama representa relações conceituais de domínio, não um DER físico aprovado. A identidade autenticada é fornecida por mecanismo que deverá operar sob controle da FORD; nenhum provedor externo específico é fixado por este modelo.
+O diagrama representa relações conceituais de domínio, não um DER físico aprovado. A identidade autenticada é fornecida pelo Supabase Auth, integrado à camada de perfis do Polychat.
 
 ~~~mermaid
 erDiagram
@@ -73,7 +73,7 @@ erDiagram
 
 ### 4.1 Leitura do diagrama
 
-- `profiles` representa a conta funcional do Polychat, vinculada a uma identidade autenticada no mecanismo sob controle da FORD. O vínculo técnico com o provedor de identidade não é decidido aqui.
+- `profiles` representa a conta funcional do Polychat, vinculada à identidade autenticada pelo Supabase Auth.
 - Uma conversa é individual (`direct`) ou em grupo (`group`).
 - Cada par de usuários possui uma única conversa individual; a conversa é reutilizada em novas iniciações pelo mesmo par.
 - `memberships` registra períodos de participação. Uma remoção encerra o período vigente; uma reinclusão cria um novo período sem restaurar acesso ao histórico anterior à nova entrada.
@@ -92,7 +92,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 **Necessidade funcional:** confirmada. A migration existente é um artefato legado/parcial, não a arquitetura-alvo aprovada.
 
-**Finalidade:** representar a conta funcional do Polychat, seu identificador de acesso e seu perfil/estado, associada à identidade autenticada sob controle da FORD.
+**Finalidade:** representar a conta funcional do Polychat, seu identificador de acesso e seu perfil/estado, associada à identidade autenticada pelo Supabase Auth.
 
 | Campo conceitual | Obrigatório | Regra funcional | Situação |
 |---|---:|---|---|
@@ -107,11 +107,11 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 - Somente TI cria e administra contas Usuário e TI; não há auto cadastro ou convite externo.
 - O nome de usuário é único e pode ser alterado pelo TI. A forma de comparação/normalização para unicidade é detalhe técnico, sem alterar a regra de unicidade.
 - O perfil possui somente `user` e `ti`; não criar papel de proprietário, administrador principal ou moderador.
-- Credenciais não devem ser duplicadas em uma tabela genérica de perfil. A autenticação e a recuperação de senha seguem os processos definidos pela FORD e precisam operar sob seu controle.
+- Credenciais não devem ser duplicadas em uma tabela genérica de perfil. A autenticação e a recuperação de senha devem utilizar os fluxos definidos para o Supabase Auth, com controles administrativos do perfil TI conforme os requisitos.
 - Desativação é bloqueio lógico e revoga sessões, mas não apaga histórico de mensagens, anexos ou auditoria.
 - Dados pessoais adicionais, como matrícula ou departamento, não devem ser adicionados sem requisito e fonte confirmados.
 
-**Evidência legada:** a migration `202611160001_profiles_roles_and_account_status.sql` vincula `profiles.id` a `auth.users(id)` com `ON DELETE CASCADE` e inclui RLS específica de perfis. Isso documenta o scaffold anterior; não aprova Supabase Auth nem determina a relação física final. A exclusão física da identidade não pode provocar perda em cascata do histórico de domínio.
+**Evidência existente:** a migration `202611160001_profiles_roles_and_account_status.sql` vincula `profiles.id` a `auth.users(id)` com `ON DELETE CASCADE` e inclui RLS específica de perfis. Ela constitui o scaffold inicial de integração com Supabase Auth; sua revisão técnica deve preservar o histórico de domínio, evitando exclusão em cascata de conversas, mensagens, anexos ou auditoria.
 
 ### 5.2 conversations — conversas individuais e em grupo
 
@@ -202,7 +202,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 |---|---:|---|---|
 | id | Sim | Identificador do anexo. | Proposta técnica |
 | message_id | Sim | Mensagem à qual o anexo pertence. | Regra confirmada |
-| storage_reference | Sim | Referência interna ao objeto armazenado sob controle da FORD; não é URL pública. | Proposta técnica |
+| storage_reference | Sim | Referência ao objeto armazenado em bucket privado do Supabase Storage; não é URL pública. | Proposta técnica |
 | original_filename | Sim | Nome recebido, tratado como dado não confiável. | Proposta técnica |
 | mime_type / size_bytes | Sim | Tipo real e tamanho efetivo do arquivo. | Regras confirmadas |
 | scan_status / scan_result / scanned_at | Necessidade funcional | Estado e evidência da análise antimalware. | Necessidade confirmada; estrutura a definir |
@@ -356,11 +356,11 @@ Os itens desta seção expressam invariantes funcionais e candidatos a restriç�
 
 ### 7.1 Chaves e referências
 
-- Novas entidades necessitam de identificadores internos estáveis; UUID é uma alternativa técnica possível, não uma decisão de dependência de Supabase Auth.
+- Novas entidades necessitam de identificadores internos estáveis; UUID é compatível com a stack Supabase/PostgreSQL e deve ser avaliado como padrão técnico, inclusive quanto à relação com os identificadores do Supabase Auth.
 - Definir FKs entre perfis, conversas, períodos de participação, mensagens, anexos, confirmações de leitura, alertas e auditoria.
 - Revisar ações `ON DELETE` de cada FK. Exclusão física de identidade/perfil não pode apagar em cascata conversas, mensagens, anexos, alertas ou auditoria.
 - Desativação lógica de conta é o mecanismo funcional para revogar acessos e preservar histórico; não confundir com exclusão física.
-- A relação com o provedor de identidade deve ser compatível com mecanismo operado sob controle da FORD.
+- A relação de identidade deve ser integrada ao Supabase Auth, preservando a separação entre autenticação e perfil funcional.
 
 ### 7.2 Restrições candidatas
 
@@ -394,7 +394,7 @@ Seletividade, ordenação, custo de escrita e índices compostos devem ser avali
 
 ## 8. Segurança, identidade e acesso aos dados
 
-A autenticação deve operar sob controle da FORD, conforme a restrição da baseline v0.5 e a Q-025. O modelo lógico não presume Supabase Auth, Supabase Database, Storage, Realtime ou Vercel como serviços-alvo.
+A autenticação do Polychat utiliza Supabase Auth; os dados relacionais utilizam PostgreSQL no Supabase e os arquivos podem utilizar Supabase Storage privado. A aplicação é hospedada/deployada na Vercel. Configuração, RLS e integração precisam ser revisadas tecnicamente e evidenciadas nos ambientes previstos.
 
 Princípios funcionais que o modelo deve suportar:
 
@@ -406,9 +406,9 @@ Princípios funcionais que o modelo deve suportar:
 6. Download de anexo exige autorização vigente; link conhecido não substitui autorização e links emitidos devem ser revogados imediatamente após perda de acesso.
 7. Operações administrativas de TI e alterações de configurações previstas geram eventos de auditoria.
 8. Falha na identificação, verificação de conta, membership ou autorização não concede acesso.
-9. Nenhum segredo, token, chave privilegiada ou conteúdo da FORD pode ser exposto ou enviado a serviço de terceiro para processamento.
+9. Nenhum segredo, token ou chave privilegiada pode ser exposto ao cliente. A exigência da FORD de não permitir acesso/processamento por terceiros deve ser conciliada com o uso de Supabase + Vercel na Q-025; não declarar conformidade antes dessa análise.
 
-Os detalhes de autenticação, políticas na camada de persistência, mecanismos de armazenamento e enforcement são decisões técnicas ainda relacionadas à Q-025 e às issues correspondentes. Esta seção não aprova uma implementação específica nem declara controles em funcionamento.
+Os detalhes de configuração do Supabase Auth, PostgreSQL/RLS, Storage privado, integração server-side e deploy na Vercel permanecem decisões de implementação e evidência técnica das issues correspondentes. A stack está definida para o projeto; a Q-025 acompanha sua compatibilidade com as restrições registradas pela FORD. Esta seção não declara controles em funcionamento.
 
 ## 9. Retenção, exclusão e histórico
 
@@ -459,7 +459,7 @@ As decisões acima são decisões de produto quanto ao comportamento esperado. E
 
 ### 11.1 Dependência arquitetural que permanece fora da decisão de produto
 
-A Q-025 continua aberta para compatibilizar as ADRs e os artefatos técnicos com a exigência de infraestrutura sob controle da FORD, sem terceiro acessando, armazenando ou processando dados. A regra do cliente está definida; a solução técnica não é decidida por este modelo nem por este parecer do PO.
+A Q-025 continua aberta para documentar e tratar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados por terceiros. A stack não deve ser considerada obsoleta ou substituída por inferência; a análise deve registrar os impactos, riscos e encaminhamentos sem alterar as regras funcionais aprovadas.
 
 ## 12. Parecer do Product Owner — 20/11/2026
 
@@ -470,7 +470,7 @@ O PO ratifica como núcleo do modelo as entidades `profiles`, `conversations`, `
 ### Decisões ratificadas
 
 1. **Organização e perfis:** organização única FORD, sem multi-tenancy; apenas perfis `user` e `ti`.
-2. **Identidade e contas:** nome de usuário único definido/alterado pelo TI; desativação revoga acesso e preserva histórico. O provedor de identidade deve operar sob controle da FORD e não é fixado por este modelo.
+2. **Identidade e contas:** nome de usuário único definido/alterado pelo TI; desativação revoga acesso e preserva histórico. A identidade é autenticada pelo Supabase Auth; a integração com `profiles` deve respeitar os papéis `user` e `ti`.
 3. **Conversas individuais:** uma conversa por par de usuários, reutilizada em novas iniciações.
 4. **Participação em grupos:** somente TI inclui/remove; não há saída voluntária; remoção revoga acesso imediatamente; reinclusão cria novo período e não restaura acesso às mensagens anteriores.
 5. **Ciclo de vida dos grupos:** grupos desativados ficam em modo somente leitura para participantes vigentes; grupos encerrados ficam disponíveis apenas ao TI até eventual reativação.
@@ -488,10 +488,10 @@ Esta aprovação é exclusivamente de produto/negócio e não aprova:
 - normalização, DER físico, tipos SQL, PKs, FKs, constraints, índices ou particionamento;
 - estrutura física de `message_reads`, `memberships`, `security_alerts` ou configurações;
 - policies RLS, triggers, funções privilegiadas, grants ou comportamento físico de cascatas;
-- provedor de identidade, hospedagem, Storage, Realtime ou arquitetura de execução;
+- desenho físico e operacional detalhado de Supabase Auth, PostgreSQL/RLS, Supabase Storage, Realtime, integração server-side e deploy na Vercel;
 - criação/aplicação de migrations ou homologação em ambiente da FORD.
 
-PostgreSQL permanece tecnologia relacional proposta na ADR-005, sob condição de operação dentro da infraestrutura da FORD. A ADR-005 continua Proposed e a Q-025 permanece como dependência técnica de arquitetura. A migration Supabase existente é artefato legado e não representa escolha atual de provedor.
+A stack do projeto é Supabase + Vercel, conforme orientação recebida em aula. A ADR-005 continua com status Proposed e deve ser alinhada a essa direção técnica pelos responsáveis; a Q-025 permanece para tratar a compatibilidade com as restrições registradas pela FORD. A migration Supabase existente é o scaffold inicial da solução, não um artefato a ser descartado.
 
 **Conclusão do PO:** o escopo funcional conceitual do modelo está validado para a baseline v0.5 e as lacunas de produto listadas na seção 11 estão decididas. A Issue #99 continua aberta; este parecer não declara schema físico, migrations ou implementação concluídos.
 
@@ -525,7 +525,7 @@ A futura estrutura física deve preservar, sem alterar as decisões de produto:
 - ocorrência de alertas com regras, severidade e revisão;
 - retenção e preservação histórica previstas na RN-021;
 - persistência somente das configurações identificadas no inventário;
-- identidade e processamento dentro da fronteira de controle da FORD.
+- identidade, armazenamento e processamento de acordo com a stack definida (Supabase + Vercel), com os impactos frente às restrições da FORD tratados explicitamente na Q-025.
 
 Qualquer escolha de tabela, campo, tipo, constraint, índice, FK, estratégia de autenticação, armazenamento, RLS ou migration permanece uma decisão de implementação. Uma solução física poderá variar desde que preserve os requisitos e não contradiga o parecer funcional do PO.
 
@@ -535,7 +535,7 @@ Qualquer escolha de tabela, campo, tipo, constraint, índice, FK, estratégia de
 |---|---|---|---|
 | 0.1 | 18/11/2026 | Primeira proposta do modelo lógico, dicionário preliminar, relacionamentos, rastreabilidade e registro das decisões pendentes. | Proposta inicial |
 | 0.2 | 19/11/2026 | Valida o escopo funcional das entidades centrais, inclui `security_alerts` e delimita configurações persistentes como dependentes de inventário. | Escopo conceitual validado pelo PO |
-| 0.3 | 20/11/2026 | Atualiza a baseline para v0.5; elimina premissas de Supabase/Vercel; atualiza decisões de grupos, memberships, mensagens, anexos, auditoria, alertas e configurações; define unicidade de conversas individuais, mensagens só com anexo e leitura por mensagem/participante. | Escopo funcional conceitual validado pelo PO; schema físico e migrations não aprovados |
+| 0.3 | 20/11/2026 | Atualiza a baseline para v0.5; alinha o modelo conceitual à stack Supabase + Vercel definida para o projeto; atualiza decisões de grupos, memberships, mensagens, anexos, auditoria, alertas e configurações; define unicidade de conversas individuais, mensagens só com anexo e leitura por mensagem/participante. | Escopo funcional conceitual validado pelo PO; schema físico e migrations não aprovados |
 
 ## 16. Referências internas
 
