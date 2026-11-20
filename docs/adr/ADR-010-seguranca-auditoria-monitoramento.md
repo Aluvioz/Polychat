@@ -16,7 +16,7 @@ O TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou a
 
 A FORD confirmou criptografia em trânsito e em repouso, sem criptografia ponta a ponta (E2EE). O servidor precisa ter acesso ao conteúdo para executar as funções de monitoramento e administração. As chaves permanecem sob gestão do servidor e da TI FORD.
 
-A infraestrutura e todo processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. A direção anterior Supabase + Vercel foi depreciada na ADR-003.
+Supabase e Vercel são as plataformas oficiais do Polychat, conforme ADR-003. O processamento de mensagens, alertas e operações administrativas deve ocorrer nos componentes aprovados dessa stack; nenhum serviço externo adicional ou ferramenta de IA/scanner de terceiros pode receber conteúdo sem aprovação explícita.
 
 A FORD informou que não há política corporativa específica de privacidade para este programa, que Jurídico não será envolvido como frente do projeto e que privacidade/LGPD não é prioridade operacional do programa. TI será o canal para pedidos de acesso, correção e exclusão; pedidos legais serão tratados pela própria FORD, que espera ser informada quando juridicamente permitido. Essas informações registram a posição do cliente e não afastam obrigações legais aplicáveis. A FORD também informou não possuir uma área separada de Segurança da Informação; TI assume essa responsabilidade.
 
@@ -39,7 +39,7 @@ Registrar como a solução deve proteger conteúdo, operar monitoramento e inves
 - Não declarar nem divulgar o produto como E2EE.
 - O servidor mantém acesso técnico ao conteúdo para monitoramento, consulta administrativa e operação do sistema.
 - A gestão de chaves permanece sob responsabilidade do servidor e da TI FORD, seguindo os requisitos de proteção de credenciais e gestão de chaves já alinhados com Desenvolvimento.
-- Todo esse processamento deve ocorrer na infraestrutura sob controle da FORD; nenhum serviço de terceiro pode receber conteúdo, metadados ou chaves.
+- Esse processamento deve ocorrer nos componentes oficiais Supabase/Vercel, com acesso mínimo, isolamento por ambiente e proteção de segredos. Não enviar conteúdo, metadados ou chaves para serviços externos adicionais não aprovados.
 
 ### 2. Monitoramento de mensagens
 
@@ -144,7 +144,7 @@ A igualdade de poderes entre os administradores TI e os riscos correspondentes f
 ## Pendências para Accepted
 
 - Definir e revisar tecnicamente o modelo de dados, catálogo de eventos e interfaces de auditoria.
-- Integrar o processamento e armazenamento de alertas, conteúdo e logs à infraestrutura sob controle da FORD (Q-025).
+- Integrar e validar o processamento e armazenamento de alertas, conteúdo e logs nos serviços oficiais Supabase/Vercel, com políticas de acesso e auditoria (Q-025).
 - Implementar os fluxos server-side e as políticas de autorização correspondentes; testar falhas e tentativas não autorizadas.
 - Validar tecnicamente a gestão de chaves, proteção dos logs, backups e restauração.
 - Submeter a ADR à revisão do Tech Lead e da TI no contexto da arquitetura-alvo.
