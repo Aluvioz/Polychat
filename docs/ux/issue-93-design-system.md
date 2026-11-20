@@ -115,7 +115,7 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 | Modal funcional, escape e retorno de foco | **Pendente de implementação e teste** — galeria é apenas estática |
 | Leitor de tela, zoom 200%/400%, reflow | **Pendente** |
 | Contraste de bordas/indicadores e estados desabilitados | **Pendente de verificação completa** |
-| QA em navegadores/dispositivos homologados | **Pendente de definição Q-012 e execução #129** |
+| QA em navegadores/dispositivos homologados | **Matriz definida pela FORD (Q-012 resolvida); execução/homologação pendente na #129** |
 
 ### Plano mínimo para teste humano (não executado)
 
