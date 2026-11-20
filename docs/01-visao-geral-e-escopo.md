@@ -68,7 +68,7 @@ Todos os administradores do perfil TI possuem os mesmos poderes administrativos.
 - Auditoria de operações administrativas e de segurança conforme o catálogo estabelecido pela FORD.
 - Criptografia em trânsito e em repouso, sem criptografia ponta a ponta; o servidor pode acessar o conteúdo para as funções de monitoramento e administração previstas.
 - Acesso do Usuário somente por celular e do TI somente por computador.
-- Interface exclusivamente em português, com identidade visual FORD em azul e branco e utilização do logo da FORD.
+- Interface exclusivamente em português, com paleta Ford provisória definida pelo PO: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco e neutros. O Ford Oval só pode ser aplicado a partir de arquivo oficial autorizado.
 - Indicador de mensagens não lidas dentro do aplicativo; sem notificações push ou notificações do navegador.
 
 ### Fora do escopo inicial
@@ -166,9 +166,9 @@ A stack de aplicação existente no repositório não deve ser confundida com au
 - Usuários que tentarem acessar por computador devem receber a mensagem “só pode ser usado em celular”.
 - TI não pode utilizar o console administrativo por celular.
 - Interface exclusivamente em português.
-- A tela inicial após autenticação apresenta as conversas mais recentes.
-- O console TI possui painel de alertas, gestão de usuários, gestão de grupos, configurações de segurança e painel de auditoria.
-- Identidade visual em azul e branco, com logo da FORD; códigos exatos das cores devem seguir a identidade visual fornecida/aprovada pela FORD.
+- A arquitetura da informação foi consolidada pelo PO em 20/11/2026: Usuário mobile inicia em Conversas recentes, com busca contextual para iniciar conversa individual e tela de conversa para chats individuais/grupos; TI desktop inicia no Dashboard e navega por Usuários, Grupos, Consulta de conversas, Alertas, Auditoria e Configurações limitadas aos controles definidos.
+- A identidade visual utiliza provisoriamente Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. O uso do Ford Oval e de tipografia corporativa depende dos arquivos e orientações oficiais autorizados.
+- O catálogo detalhado de telas, fluxos, estados e limites por perfil está em [POLY-UX-DEC-001](ux/decisoes-produto-q018-q019.md). Q-018 está resolvida; Q-019 mantém pendente apenas os ativos oficiais de marca.
 - A FORD não definiu requisitos adicionais de acessibilidade para o produto; obrigações legais aplicáveis não são afastadas por essa decisão.
 
 ## 1.10 Homologação e aceite
@@ -205,7 +205,7 @@ Essas respostas descrevem o processo e o posicionamento informados pelo cliente.
 Os seguintes itens permanecem para complementação, sem reabrir os requisitos já concluídos com Desenvolvimento:
 
 - Data limite de disponibilização, caso venha a ser estabelecida.
-- Códigos exatos das cores e ativos oficiais da identidade visual FORD, a partir do material de marca disponível.
+- Arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação/tipografia da FORD. A paleta cromática provisória já está definida em Q-019 e pode orientar o Design System.
 - Eventuais evoluções de escopo após o lançamento inicial, especialmente expansão para outros setores.
 - Detalhes de produto que não tenham sido definidos no questionário ou nos alinhamentos já concluídos devem ser tratados pelo processo normal de decisão do PO, sem reabrir as oito frentes técnicas consideradas completas.
 
