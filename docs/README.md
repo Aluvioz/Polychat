@@ -1,6 +1,6 @@
 # Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** baseline POLY-REQ-001 v0.4, atualizada em 19/11/2026 com base no questionário FORD v2 e nos alinhamentos complementares do PO com Desenvolvimento. A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. A restrição de infraestrutura sob controle da FORD prevalece sobre ADRs e configurações tecnológicas anteriores incompatíveis.
+**Status:** baseline POLY-REQ-001 v0.4, atualizada em 19/11/2026 com base no questionário FORD v2 e nos alinhamentos complementares do PO com Desenvolvimento. A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. O alinhamento complementar do PO com Desenvolvimento confirma Supabase e Vercel como plataformas oficiais do projeto; a documentação abaixo distingue essa decisão da conclusão técnica de cada integração.
 
 ## Navegação
 
@@ -44,7 +44,7 @@ O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões
 
 ## Atualização arquitetural — 19/11/2026
 
-A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, sem terceiros acessando, armazenando ou processando dados da organização. A direção anterior Supabase + Vercel foi depreciada na ADR-003. Consulte a [baseline v0.4](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md) e a Q-025.
+O alinhamento complementar do PO com Desenvolvimento confirma **Supabase e Vercel como plataformas oficiais do Polychat**. A interpretação anterior que as classificava como proibidas/legadas foi incorreta e está sendo corrigida. Permanecem aplicáveis a proteção de dados, o isolamento de desenvolvimento/homologação/produção e a validação de regiões, acessos, segredos, backups e configurações por ambiente. Consulte a [baseline v0.4](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md), ADR-003 e Q-025.
 
 As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica e registram que esses aceites não constituem autorização vigente para serviços externos processarem dados da FORD após a FORD v2.
 
