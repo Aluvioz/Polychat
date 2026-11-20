@@ -1,7 +1,7 @@
 # Issue #98 — Runbook de smoke test e rollback de aplicação
 
 **Status:** procedimento documentado; o Tech Lead confirmou em 19/11/2026 que o smoke test hospedado e o ensaio de rollback abrangidos pela Issue #98 foram executados. O comentário de aceite não reproduz deployment IDs, commits, horários ou logs da execução.  
-**Escopo histórico:** aplicação Next.js hospedada na Vercel. Este runbook preserva o procedimento do ambiente original e não autoriza o uso de Vercel/Supabase para processar dados reais da FORD após a FORD v2. Não define rollback de banco de dados, migrations ou dados.
+**Escopo:** aplicação Next.js hospedada na Vercel, plataforma oficial do Polychat. Este runbook cobre rollback da aplicação, não rollback de banco de dados, migrations ou dados Supabase.
 
 ## 1. Pré-condições obrigatórias
 
@@ -60,7 +60,7 @@ Se o deployment anterior não estiver disponível, não for compatível com o sc
 
 Rollback da aplicação Vercel não reverte migrations nem restaura dados Supabase. Não executar `db reset`, restauração, downgrade de migration ou alteração de dados como parte deste runbook.
 
-Backup, restore, RPO, RTO, compatibilidade de migrations e plano de recuperação do banco e do armazenamento escolhidos para a arquitetura FORD precisam de procedimento próprio, decisão aprovada e teste controlado. Esta seção é histórica para o ambiente Supabase usado no escopo original. A ADR-009 permanece Proposed; este documento não altera seu status.
+Backup, restore, RPO, RTO, compatibilidade de migrations e plano de recuperação do banco e do armazenamento Supabase precisam de procedimento próprio, decisão aprovada e teste controlado. A ADR-009 permanece Proposed; este documento não altera seu status.
 
 ## 6. Registro do ensaio
 
@@ -87,6 +87,6 @@ Em 19/11/2026, o Tech Lead confirmou na [Issue #98](https://github.com/Aluvioz/P
 
 O comentário de aceite ressalva que as evidências de deployment, smoke tests hospedados, ensaio de rollback e configuração de produção devem permanecer acessíveis e atualizadas. Este runbook preserva o procedimento e registra a atestação, mas não substitui os logs, identificadores de deployment, commits, horários ou relatórios originais. Não foram inventados valores para os campos ausentes.
 
-A FORD v2 exige que infraestrutura e processamento de dados permaneçam sob controle da própria FORD e proíbe terceiros de acessar, armazenar ou processar dados da organização. A Vercel/Supabase do escopo original deve ser tratada como ambiente histórico de execução; este runbook não autoriza novos deployments que processem dados reais da FORD nesses serviços. A estratégia de deploy/rollback para a arquitetura-alvo deve ser definida na ADR-009 após a resolução da Q-025.
+Vercel e Supabase são as plataformas oficiais do Polychat. Este runbook documenta procedimentos para a aplicação hospedada na Vercel e ressalta que rollback da aplicação não desfaz migrations nem restaura dados Supabase. As configurações concretas de ambiente, domínios, projetos e integração devem ser validadas conforme ADR-009 e Q-025.
 
 O encerramento da Issue #98 permanece válido para o escopo operacional atestado e não implica aceite da ADR-009, homologação completa do produto ou autorização geral de produção.
