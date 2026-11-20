@@ -45,7 +45,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 - `package.json`, `src/app/`, `next.config.ts`: aplicação Next.js 16 / React 19 / TypeScript.
 - `src/app/page.tsx`: página inicial institucional; não comprova fluxos completos de chat.
 - `src/auth/authorization.mjs`: middleware Express-compatible com dependência de cliente Supabase e validação de token.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration de `profiles` e RLS vinculada à arquitetura anterior.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration parcial de `profiles` e RLS, integrante da stack oficial Supabase; não cobre RLS de domínio.
 - `tests/authorization.test.mjs`: testes unitários com Supabase simulado; não comprovam integração com provedor ou infraestrutura de produção.
 - `.env.example`: placeholders históricos de Supabase, sem credenciais reais.
 - `README.md`: registra Supabase e Vercel como plataformas oficiais e documenta a necessidade de validar a integração funcional por ambiente.
@@ -57,7 +57,7 @@ A existência de código, migrations, variáveis de exemplo ou sucesso no CI nã
 
 | Tema | Responsável pela revisão/decisão | Evidência necessária |
 |---|---|---|
-| Arquitetura lógica e infraestrutura compatível com a FORD | Tech Lead + TI | Solução técnica selecionada, fronteiras e responsabilidades registradas na ADR |
+| Arquitetura lógica sobre a stack oficial | Tech Lead + TI | Componentes, fronteiras server-side, responsabilidades, configurações e controles definidos nas ADRs; sem reabrir a escolha Supabase/Vercel |
 | Autenticação e sessões | Tech Lead + Dev backend + TI | Implementação e testes integrados nos ambientes oficiais Supabase/Vercel |
 | Banco de dados e autorização/RLS de domínio | Tech Lead + Dev backend + TI | Migrations, políticas e testes de isolamento no ambiente homologado |
 | Realtime, storage e antimalware | Tech Lead + Dev backend + TI | Prova de conceito e testes de acesso, revogação e falha segura |
@@ -82,8 +82,8 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 |---|---|
 | ADRs versionadas com contexto, decisão, consequências e status | Estrutura documentada; decisões específicas ainda aguardam revisões indicadas |
 | Testes relevantes automatizados ou evidência documentada | Evidência parcial: testes unitários simulados de autorização e workflow CI; faltam integrações com a arquitetura-alvo |
-| Revisão por PR concluída | Pendente de revisão e aprovação humana |
-| Sem regressão nos fluxos relacionados | A confirmar pelos checks da PR; as alterações desta rodada são documentais |
+| Revisão por PR concluída | Issue #89 fechada após PR #139 aprovada e integrada; a PR #158 é saneamento corretivo posterior, não pré-requisito para reencerrar #89 |
+| Sem regressão nos fluxos relacionados | A PR #139 concluiu o escopo original; alterações documentais posteriores devem passar por seus próprios checks e revisão |
 
 ## Histórico
 
@@ -93,4 +93,4 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 - **19/11/2026** — revisão documental inicial marcou incorretamente Supabase/Vercel como Deprecated; o PO confirmou que ambas são plataformas oficiais e alinhadas, e esta ADR-003 foi restaurada como Accepted.
 - **19/11/2026** — ADR-008, ADR-009, ADR-010, modelo de dados, matriz #100, política de anexos, documentação de autorização e proposta APF reconciliados com a FORD v2 na branch `docs/ford-v2-governance-reconciliation`; os arquivos permanecem sujeitos à revisão por PR.
 
-**Regra de fechamento:** a Issue #89 só deve ser fechada depois de as ADRs aplicáveis serem revisadas e aprovadas pelos responsáveis, a arquitetura compatível com a FORD ser formalizada, a PR desta revisão ser aprovada e integrada e os checks passarem. A Epic #77 só deve ser fechada depois que #89 for concluída e seu checklist for atualizado.
+**Estado de fechamento:** a Issue #89 foi encerrada em 17/11/2026 após integração da PR #139 e aceite dos critérios originais. Esta PR #158 corrige documentação posterior e não reabre a Issue #89 nem altera seu histórico; se necessário, registrar a revisão corretiva na trilha documental da issue/PR sem modificar retroativamente o aceite.
