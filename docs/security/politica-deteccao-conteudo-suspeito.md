@@ -167,11 +167,9 @@ O fluxo abaixo é uma referência para discussão e não substitui o desenho té
 
 A detecção não deve bloquear mensagens ou punir automaticamente usuários enquanto não houver definição expressa.
 
-**Proposta a aprovar**
+**Regra de implementação**
 
-A detecção deve funcionar como sinalização e registro, sem atuar como mecanismo de moderação impeditiva. A falha do mecanismo de detecção não deve converter silenciosamente uma mensagem em “aprovada” nem ser apresentada como resultado limpo.
-
-A política de continuidade deve definir se, diante de indisponibilidade, o envio prossegue e a análise fica pendente para retentativa, ou se existe outro tratamento. Até essa decisão, a equipe não deve implementar bloqueio de envio apenas por falha do detector.
+A detecção funciona como sinalização e registro, sem atuar como mecanismo de moderação impeditiva. A indisponibilidade do detector não pode ser apresentada como resultado limpo, nem justificar bloqueio automático da mensagem. O fluxo técnico deve registrar falha/pendência e permitir tratamento operacional seguro, preservando o envio de texto conforme as regras de produto. A estratégia concreta de retentativa/recuperação é detalhe técnico a especificar e testar, não uma pergunta de produto.
 
 ## 9. Registro da ocorrência e contexto mínimo
 
@@ -336,34 +334,32 @@ A equipe deve registrar:
 
 Não afirmar que o detector é preciso ou confiável apenas porque os testes unitários passaram; a avaliação depende de conjunto representativo e critérios previamente aprovados.
 
-## 13.3 Parecer do PO — comportamento funcional-base validado
+## 13.3 Decisões de produto consolidadas — FORD v2
 
-**Validação do Product Owner — 19/11/2026**
+As decisões abaixo são requisitos vigentes da FORD v2, não recomendações pendentes de aprovação:
 
-O PO valida o comportamento funcional-base descrito neste documento, dentro dos limites dos requisitos RF-014/RF-015 e CA-014.1 a CA-014.4:
-
-1. **Finalidade:** analisar mensagens do Polychat segundo regras explicitamente aprovadas, para sinalizar conteúdo potencialmente suspeito e apoiar a revisão de segurança. A detecção não deve ser usada para avaliação de produtividade ou finalidades distintas.
-2. **Escopo inicial de categorias:** palavrões/termos ofensivos conforme lista fornecida e aprovada pela FORD. A lista concreta ainda não está disponível nesta PR. Outras categorias candidatas — como ameaças e ofensas direcionadas — não entram automaticamente no escopo ativo; exigem definição e aprovação próprias.
+1. **Finalidade:** analisar mensagens do Polychat segundo regras/lista administrada pelo TI, incluindo palavrões, para sinalização e revisão de segurança. Não usar para avaliação de produtividade ou finalidades distintas.
+2. **Escopo inicial:** lista/regras de termos mantida pelo TI, incluindo palavrões. A configuração concreta da lista é tarefa operacional do TI durante a implementação. Não inferir análise contextual, ameaças ou outras categorias não definidas.
 3. **Resultado automático:** quando uma regra ativa corresponder, registrar a ocorrência com motivo, identificador e versão da regra e gerar alerta para revisão pelo TI autorizado. A ocorrência deve ser apresentada como sinalização, nunca como violação ou culpa confirmada.
-4. **Revisão humana:** a ocorrência deve permitir classificação como confirmada, falso positivo ou inconclusiva, com identificação do revisor e registro da decisão. Um falso positivo isolado não altera automaticamente a lista ativa nem treina regras.
+4. **Revisão humana:** TI revisa a ocorrência e pode encerrá-la sem justificativa obrigatória. O sistema registra operador, momento e estado para auditoria; falso positivo não altera automaticamente a lista.
 5. **Sem ação punitiva automática:** a detecção não bloqueia, edita ou apaga mensagem, não suspende/desativa conta e não aplica advertência ou sanção. Mudança futura exigirá decisão explícita, justificativa, avaliação e aprovação formal próprias.
 6. **Acesso:** o alerta deve ser restrito aos operadores TI autorizados. A existência do alerta não concede permissão para abrir a conversa; a consulta ao conteúdo segue o controle e a auditoria das Issues #121/#124.
 7. **Minimização:** alertas e logs devem usar referência segura e metadados mínimos. A mensagem integral não deve ser replicada em notificações/logs por padrão.
-8. **Tecnologia:** a política funcional não escolhe fornecedor ou serviço externo. Qualquer envio de conteúdo a terceiro, uso de IA/modelo externo ou mudança de arquitetura exige avaliação e aprovação próprias.
+8. **Tecnologia:** Supabase e Vercel são plataformas oficiais. A detecção ocorre nos componentes oficiais do projeto; não encaminhar conteúdo a IA, modelo, scanner de mensagens ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
 
-### O que esta validação não aprova
+### O que permanece como trabalho técnico/operacional
 
-Permanecem pendentes e não podem ser inferidos deste parecer:
+Não são perguntas de produto; são atividades necessárias à implementação e evidência:
 
-- a lista exata de palavras, expressões, idiomas e variações, a ser fornecida/aprovada pela FORD e Segurança (Q-007);
-- a inclusão de categorias além de palavrões/termos expressamente aprovados;
-- normalização, limites de palavra, tratamento de citações/contexto e implementação técnica;
-- limiares, severidades, destinatários específicos, canal de alerta, SLA, escalonamento e distribuição de responsabilidades (Q-008);
-- procedimento e autoridade institucional de investigação, além do papel geral de revisão humana;
-- comportamento de contingência quando o detector estiver indisponível;
-- conteúdo exato que o revisor poderá visualizar, finalidade formal, transparência, retenção e descarte (Q-009/Q-010, #102);
-- aprovação institucional da política de monitoramento e das salvaguardas por FORD, TI, Segurança e Jurídico/Privacidade;
-- schema físico, fornecedor, biblioteca, implantação, testes e evidências de produção.
+- configurar e versionar a lista inicial de termos sob responsabilidade do TI;
+- implementar normalização, limites de palavra e tratamento de variações sem análise contextual;
+- implementar fila TI com severidades e prazos definidos: alta imediatamente/até 1 hora; média até 1 dia útil; baixa até 3 dias úteis;
+- implementar revisão e encerramento por TI sem justificativa obrigatória;
+- implementar esquema físico, vínculo com mensagens e eventos de auditoria conforme baseline v0.4;
+- definir tecnicamente retentativa/falha do detector sem bloquear automaticamente mensagens;
+- implementar, testar e evidenciar os fluxos no runtime real da stack oficial Supabase/Vercel.
+
+A FORD já definiu finalidade funcional, acesso administrativo, auditoria e retenção. Seu posicionamento institucional sobre ausência de uma frente Jurídica/Privacidade não afasta obrigações legais aplicáveis; não se cria uma etapa de aprovação por uma equipe que o cliente informou não integrar o projeto.
 
 **Resultado:** o comportamento de produto está definido pela FORD v2 e alinhado com Desenvolvimento. A implementação funcional ainda não começou; a Issue #122 permanece aberta até que a detecção, a fila, a auditoria, os testes e as evidências estejam implementados e revisados.
 
@@ -377,14 +373,14 @@ Permanecem pendentes e não podem ser inferidos deste parecer:
 | D-122-02 | Implementar a detecção por regras/lista mantida pelo TI, incluindo palavrões | Desenvolvimento / TI | Q-007 resolvida, RF-014 |
 | D-122-03 | Configurar a lista concreta de termos iniciais e o mecanismo de manutenção pelo TI | TI / Desenvolvimento | RF-014 |
 | D-122-04 | Implementar estratégia determinística sem análise contextual ou IA | Desenvolvimento / Tech Lead | RF-014 |
-| D-122-05 | Definir normalização e tratamento de contexto, citações e falsos positivos | Segurança / Tech Lead / Produto | RF-014, Issue #122 |
-| D-122-06 | Definir limiares ou regras de classificação, se necessários | FORD / Segurança / Tech Lead | Q-007 |
+| D-122-05 | Implementar normalização determinística e casos positivos/negativos sem análise contextual | Desenvolvimento / TI / SQA | RF-014, Issue #122 |
+| D-122-06 | Implementar identificação da regra correspondente; severidade do alerta segue RN-013 | Desenvolvimento / TI | RF-014/RF-015 |
 | D-122-07 | Implementar fila de alertas TI com severidade e prazos definidos | Desenvolvimento / TI | Q-008 resolvida, RF-015, Issue #123 |
 | D-122-08 | Implementar revisão/encerramento por TI sem justificativa obrigatória e registrar auditoria | Desenvolvimento / TI | Q-008 resolvida, Issues #123/#124 |
 | D-122-09 | Implementar dados mínimos da ocorrência e retenção/auditoria conforme baseline v0.4 | Desenvolvimento / TI | Q-009/Q-010 resolvidas, Issue #102 |
-| D-122-10 | Aprovar comportamento diante de indisponibilidade do detector | TI / Segurança / Tech Lead | Issue #122 |
-| D-122-11 | Aprovar auditoria e acesso às mensagens durante a investigação | TI / Segurança / Jurídico / Privacidade | Issues #121 e #124 |
-| D-122-12 | Definir critérios de qualidade e revisão periódica das regras | FORD / Segurança / PO | Issue #122 |
+| D-122-10 | Definir e testar contingência técnica do detector sem bloqueio automático de mensagens | Desenvolvimento / TI / Tech Lead | Issue #122 |
+| D-122-11 | Implementar auditoria das consultas e do tratamento de alertas conforme regras já definidas | Desenvolvimento / TI | Issues #121, #124 |
+| D-122-12 | Definir métricas técnicas e procedimento de manutenção/versionamento da lista pelo TI | TI / Desenvolvimento / SQA | Issue #122 |
 
 ## 15. Critérios de aceite da Issue #122 — rastreabilidade
 
