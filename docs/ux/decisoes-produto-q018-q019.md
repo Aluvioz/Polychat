@@ -132,6 +132,7 @@ Os resultados são uma checagem matemática inicial de combinações escolhidas.
 A referência pública consultada identifica Ford Blue `#00095B`, Ford Twilight `#00142E` e o azul digital `#066FEF`; a documentação pública de referência também orienta a preservar os arquivos oficiais do Ford Oval sem distorção ou alteração. As fontes consultadas são referências públicas de apoio e não substituem o manual/kit de marca formalmente entregue pela FORD:
 
 - [Ford brand guidelines — referência pública de cores e elementos digitais](https://www.rainbrand.com/brand-guidelines/ford/) (material de terceiros baseado em conteúdo público de ford.com; não é guia oficial da FORD).
+- [Ford Brand Identity Guidelines R05 — cópia pública hospedada por terceiro](https://www.scribd.com/document/1011475715/Ford-Brand-Identity-Guidelines-R05) (referência para Ford Blue, Ford Twilight, Ford Skyview e neutros; a hospedagem em terceiro não comprova que seja o manual vigente e autorizado para este projeto).
 - [Ford Motor Company — brand integrity / uso do Ford Oval em guidelines de 2025](https://performance.ford.com/content/dam/fordPerformance/motorsport/mustang-cup/2025_01_08-Issue-2.0.-Mustang-Cup-Brand-Guidelines-2025.pdf).
 
 ### 2.6 Decisão e pendência residual
