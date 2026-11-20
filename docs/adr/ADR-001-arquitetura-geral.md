@@ -50,7 +50,7 @@ Supabase e Vercel são as plataformas externas explicitamente aprovadas para o p
 
 A modularidade mantém responsabilidades testáveis e reduz a confiança no cliente. O uso das plataformas oficialmente alinhadas evita uma migração indevida de stack e permite concentrar a validação nos controles de configuração, isolamento, acesso, armazenamento, auditoria e recuperação.
 
-A seleção de tecnologias específicas deve considerar compatibilidade com a infraestrutura corporativa, operação, segurança, continuidade e capacidade de homologação, sem reintroduzir serviços externos incompatíveis.
+A seleção das configurações específicas das plataformas oficiais deve considerar governança das contas, regiões, acesso, segurança, continuidade e capacidade de homologação, sem introduzir serviços adicionais não aprovados.
 
 ## Consequências
 
@@ -61,8 +61,8 @@ A seleção de tecnologias específicas deve considerar compatibilidade com a in
 - Decisões técnicas rastreáveis e passíveis de substituição por componente.
 
 **Negativas e cuidados:**
-- Maior responsabilidade da FORD/equipe sobre operação, disponibilidade, atualização e recuperação.
-- Necessidade de comprovar capacidade de infraestrutura, observabilidade, backup/restore e suporte.
+- Responsabilidade da FORD/equipe pela governança dos projetos, identidades, acessos, configurações, políticas, backup/restore e operação da aplicação.
+- Dependência dos recursos e limites operacionais oferecidos pelos planos oficiais Supabase/Vercel, que devem ser considerados no dimensionamento e na continuidade.
 - Integração e testes de segurança precisam ocorrer no ambiente operacional real.
 
 ## Riscos
