@@ -1,13 +1,24 @@
-# Proposta comercial — dimensionamento e precificação do Polychat por APF
+# Proposta APF — dimensionamento preliminar do Polychat (versão histórica em reconciliação)
 
 **Destinatário:** Fábio Cerqueira  
 **Produto:** Polychat — aplicação web de comunicação interna da FORD  
 **Repositório de referência:** [Aluvioz/Polychat](https://github.com/Aluvioz/Polychat)  
-**Base documental analisada:** branch `main`, fotografia consultada em 18/11/2026  
-**Data da proposta:** 18/11/2026  
-**Natureza:** estimativa preliminar rastreável; sujeita às validações e pendências deste documento.
+**Base da estimativa original:** fotografia da `main` em 18/11/2026 (baseline anterior à FORD v2)  
+**Revisão de escopo:** 19/11/2026 — questionário FORD v2 e alinhamentos complementares  
+**Natureza atual:** documento de referência metodológica e estimativa histórica; os valores da versão anterior não constituem proposta comercial vigente, preço fechado ou compromisso contratual.
 
-> **Aviso de uso comercial:** os números abaixo formam uma proposta preliminar defensável, não uma medição final certificada. O catálogo de dados e os limites funcionais ainda não foram aprovados integralmente pelo cliente; DET/RET/ALR foram estimados a partir da baseline e estão explicitamente identificados como hipóteses. A contagem deve ser revalidada com o modelo de dados e os protótipos aprovados antes da contratação por preço fechado.
+> **Aviso de uso comercial e de versão:** o cálculo de 124 PF e os valores de MVP/Completo abaixo foram produzidos em 18/11/2026, antes da consolidação da FORD v2 em 19/11/2026. A baseline atual acrescentou RF-019 a RF-023, fechou decisões sobre contas, grupos, anexos, monitoramento, auditoria, retenção e infraestrutura, atualizou a UX #91/#92 e retirou Supabase + Vercel como arquitetura-alvo. Portanto, 124 PF, esforço, prazos, custos, preços e custos recorrentes antigos são **históricos e precisam ser recalculados**. Esta revisão não emite novo número de PF nem nova cotação. Consulte a seção 17 — Revisão de impacto da FORD v2.
+
+
+
+## Estado atual após FORD v2 — 19/11/2026
+
+- Esta proposta foi recalibrada documentalmente, mas **não possui nova contagem APF nem preço atual**.
+- As seções numéricas derivadas de 18/11/2026 são referência histórica, não uma oferta comercial vigente.
+- A baseline v0.4 altera funções, dados, regras e arquitetura: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; infraestrutura sob controle FORD.
+- A hipótese de Supabase Auth como AIE externo e a estimativa de serviços gerenciados Supabase/Vercel foram descontinuadas como premissas de arquitetura.
+- A decisão de arquitetura técnica permanece em Q-025. A nova contagem dependerá do modelo lógico POLY-DATA-001 v0.3, matriz #100 atualizada, ADRs e fluxos UX #91/#92 aceitos.
+- A referência FORD de R$ 450.000,00 não é teto aprovado. Inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
 
 ## 1. Identificação e sumário executivo
 
@@ -15,7 +26,7 @@ Esta proposta dimensiona o desenvolvimento do Polychat para o público inicial i
 
 A documentação do repositório é a fonte primária. A inspeção do código confirma que a implementação funcional está em estágio inicial: há uma página institucional, middleware isolado de autorização e migration de perfis, mas não há fluxo funcional de login, chat, grupos, anexos, alertas ou consulta administrativa integrado ao App Router. A proposta considera a construção das funções de negócio previstas, sem cobrar como concluídas as partes de código que ainda não estão integradas.
 
-### Resumo da estimativa-base
+### Resumo da estimativa-base histórica — 18/11/2026 (não vigente)
 
 | Indicador | MVP — baseline funcional | Completo — baseline + hardening não funcional |
 |---|---:|---:|
@@ -27,9 +38,9 @@ A documentação do repositório é a fonte primária. A inspeção do código c
 | Preço comercial sugerido (arredondado) | **R$ 520.900,00** | **R$ 622.500,00** |
 | Preço de referência a R$ 488/PF | R$ 60.512,00 | R$ 60.512,00 |
 
-**Leitura executiva:** o valor de referência de R$ 488,00/PF é tratado exclusivamente como preço unitário de mercado informado para comparação. Aplicado aos 124 PF, produz R$ 60.512,00 e não cobre o custo interno hipotético estimado. O preço proposto decorre da triangulação de custo, tributos, margem e reserva de risco, e não da multiplicação automática dos PF por uma taxa de custo.
+**Leitura histórica:** o valor de referência de R$ 488,00/PF foi usado exclusivamente como comparação de preço unitário de mercado. A conta histórica de 124 PF produziu R$ 60.512,00 de referência, valor que não cobria o custo interno hipotético então estimado. Essa comparação não foi recalculada para o escopo v0.4.
 
-**Orçamento registrado na baseline:** R$ 450.000,00, mas a documentação não esclarece se é teto aprovado nem quais itens inclui. O preço preliminar do MVP excede essa referência em R$ 70.806,71; a versão completa excede em R$ 172.442,13. A natureza do orçamento deve ser confirmada antes da negociação.
+**Condição comercial atual da FORD:** R$ 450.000,00 é uma referência comercial global informada, não teto aprovado. Inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento. Os desvios numéricos da estimativa antiga não devem ser usados como conclusão de estouro de orçamento; a comparação precisa ser refeita após a recontagem e a atualização de custos.
 
 ## 2. Escopo e fronteira da aplicação
 
@@ -64,7 +75,7 @@ A visão limita o público inicial a aproximadamente 25 pessoas do setor técnic
 - Alertas ao TI e consulta administrativa de conversas.
 - Registro de auditoria das consultas administrativas.
 - Regras de acesso por perfil e restrição de experiência por tipo de dispositivo.
-- Interface web e integração técnica de referência Supabase + Vercel, sem pressupor que já estejam integralmente configuradas.
+- Interface web com frontend Next.js; autenticação, backend, banco, storage, antimalware, auditoria, processamento e deploy devem operar em infraestrutura sob controle da FORD. A decisão técnica específica depende da Q-025.
 
 ### 2.4 Fora da fronteira / não incluído nesta proposta-base
 
@@ -75,7 +86,7 @@ A visão limita o público inicial a aproximadamente 25 pessoas do setor técnic
 - Formatos de anexo diferentes de PDF/JPEG.
 - Convites externos, auto cadastro e uso por fornecedores/parceiros.
 - Expansão para todos os setores da FORD além do público inicial.
-- Exportação em massa, edição ou exclusão de mensagens pelo TI/Usuário.
+- Edição ou exclusão de mensagens pelo Usuário. A FORD v2 permite ao TI editar/excluir mensagens a qualquer momento, com auditoria, e exportar conversas; essas funções precisam constar da contagem atualizada.
 - Criptografia ponta a ponta (E2EE): não está aprovada e conflita com análise server-side e consulta administrativa previstas.
 - Operação 24x7, SOC, suporte presencial, compra de dispositivos, licenças corporativas e serviços jurídicos.
 - Migração de dados legados em volume não identificado.
@@ -107,7 +118,12 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | RF-015 | Alertar o TI sobre mensagens sinalizadas | Sistema/TI | Intenção confirmada; canal/severidade pendentes | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-013 |
 | RF-016 | TI consultar qualquer conversa | TI | Confirmado; acesso deve ser auditado | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-014 |
 | RF-017 | Restringir perfil Usuário a celular | Sistema | Confirmado; critério técnico pendente | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-015 |
-| RF-018 | Restringir perfil TI a computador | Sistema | Confirmado; critério técnico pendente | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-015 |
+| RF-018 | Restringir perfil TI a computador | Sistema | Confirmado: computadores com Chrome/Edge/Firefox atuais; tablets não permitidos | `docs/03-requisitos-funcionais.md`, RF-018; `docs/09-baseline-requisitos-mvp.md`, v0.4 |
+| RF-019 | Confirmar leitura, exibir horário de leitura e quantidade de mensagens não lidas | Sistema/Usuário | Confirmado na FORD v2 | `docs/03-requisitos-funcionais.md`, RF-019 |
+| RF-020 | Permitir edição/exclusão administrativa de mensagens | TI | Confirmado; cada ação auditada | `docs/03-requisitos-funcionais.md`, RF-020 |
+| RF-021 | Exportar conversas | TI | Confirmado; exportação auditada | `docs/03-requisitos-funcionais.md`, RF-021 |
+| RF-022 | Registrar e gerir auditoria administrativa | Sistema/TI | Confirmado; consulta/gestão de logs somente TI | `docs/03-requisitos-funcionais.md`, RF-022; RNF-004 |
+| RF-023 | Exibir aviso de monitoramento no primeiro acesso | Sistema | Confirmado | `docs/03-requisitos-funcionais.md`, RF-023 |
 
 ### 3.2 Requisitos não funcionais e restrições
 
@@ -127,7 +143,7 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | RNF-012 | Acessibilidade | Despriorizada na visão de produto; obrigações legais/corporativas aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-012 |
 | RNF-013 | Arquitetura/plataforma | Supabase + Vercel é direção técnica da Issue #88; integração/configuração não concluídas | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
 
-**Outras regras/restrições:** dois perfis (RN-001); administração pelo TI (RN-003); sem auto cadastro (RN-004); mensagens individuais (RN-006); grupos administrados pelo TI (RN-007); formatos PDF/JPEG (RN-008); uso exclusivo interno (RN-009); sem captura/gravação (RN-011); análise e alertas (RN-012/RN-013); consulta TI com auditoria (RN-014); restrição de dispositivo (RN-015); sem integrações externas de comunicação (RN-017); público inicial (RN-018); identidade Ford azul/branco (RN-019); orçamento de R$ 450.000,00 sem composição (RN-020). Fonte: `docs/05-regras-de-negocio-e-restricoes.md`, tabela RN-001–RN-020.
+**Outras regras/restrições:** somente roles `user` e `ti`; todos os TI com poderes equivalentes; grupos e participantes administrados pelo TI; usuários não saem de grupos; remoção revoga acesso ao histórico; usuários não editam/excluem mensagens; TI edita/exclui e exporta com auditoria; leitura/horário e não lidas; PDF/JPEG (10 MB, 5 por mensagem), quotas individuais e totais pelo TI; scanner interno com bloqueio em falha/inconclusão e liberação TI auditada; monitoramento por lista sem análise contextual/IA externa; severidades/prazos de alertas; auditoria e retenção; infraestrutura FORD. Fonte: POLY-REQ-001 v0.4 e documentos 03 a 05.
 
 ### 3.3 Divergências e regra de precedência adotada
 
@@ -163,9 +179,9 @@ Pesos utilizados:
 
 ### 4.2 Premissas de contagem
 
-Todas as quantidades DET/DER, RET/RLR e ALR abaixo são **hipóteses de dimensionamento**, pois a Issue #99 (schema) ainda está aberta e o modelo de dados completo não existe na `main`. A contagem assume um grupo de dados lógico por entidade e um RET por grupo de dados, em complexidade baixa. A modelagem aprovada poderá alterar DET/RET e complexidade.
+Todas as quantidades DET/DER, RET/RLR e ALR da contagem original são **hipóteses de dimensionamento**. O modelo lógico foi atualizado na versão POLY-DATA-001 v0.3, mas ainda não constitui schema físico aprovado. Além disso, a FORD v2 alterou o conjunto de funções e a arquitetura de fronteira; a contagem histórica deve ser refeita. DET/RET/ALR, complexidades e funções candidatas deverão ser revistos com a documentação e os protótipos aceitos.
 
-1. Uma identidade autenticada é mantida pelo Supabase Auth, fora da fronteira funcional Polychat, e referenciada pela aplicação. Por isso, foi incluído provisoriamente um AIE de identidades. Se o contrato de medição definir Supabase Auth como parte da fronteira da solução, retirar esse AIE (−5 PF).
+1. A hipótese histórica de Supabase Auth como AIE externo não é mais válida como premissa de arquitetura: ADR-003 foi depreciada e a identidade deve operar sob controle da FORD. Um AIE só poderá ser mantido se o analista identificar um arquivo lógico efetivamente mantido fora da fronteira funcional Polychat, mesmo que dentro da infraestrutura FORD. Não retirar nem manter automaticamente 5 PF; reavaliar a fronteira e o grupo de dados na nova contagem.
 2. Perfis de aplicação são mantidos pelo Polychat em `public.profiles` e formam um ALI.
 3. Conversas, memberships, mensagens, anexos, alertas e eventos de auditoria são ALIs candidatos, pois representam grupos lógicos de dados mantidos pela aplicação segundo os requisitos/Issue #99. O fato de o schema não estar implementado não impede sua identificação preliminar a partir dos requisitos; a confirmação depende da Issue #99.
 4. Regras de detecção configuráveis não foram contadas como ALI separado, porque catálogo, manutenção e operações de configuração não estão especificados.
@@ -177,7 +193,7 @@ Todas as quantidades DET/DER, RET/RLR e ALR abaixo são **hipóteses de dimensio
 
 ### 4.3 Limites da estimativa
 
-O inventário é uma contagem de requisitos, não uma inspeção de todas as telas futuras. Faltam modelo de dados aprovado, protótipos aceitos, fluxos completos, política de alertas, regras de retenção e matriz de dispositivos. O total de 124 PF deve ser lido como baseline preliminar para negociação, com faixa de sensibilidade na seção 12.
+O inventário e o total de 124 PF são exclusivamente a contagem preliminar de 18/11/2026, anterior à baseline v0.4. Modelo lógico, requisitos funcionais, fronteira de autenticação e fluxos UX foram alterados/confirmados desde então. A contagem antiga não deve sustentar orçamento ou preço atuais até nova medição.
 
 ## 5. Contagem APF: funções de dados
 
@@ -198,7 +214,7 @@ O inventário é uma contagem de requisitos, não uma inspeção de todas as tel
 
 O AIE FD-08 representa o conjunto de identidades/credenciais mantido pelo provedor de autenticação Supabase Auth, fora da fronteira lógica da aplicação Polychat, mas referenciado por ela para autenticar e associar perfis. A aplicação consulta a identidade validada e usa seu identificador para relacioná-la ao ALI Perfis.
 
-**Ressalva:** a ADR-004 ainda está Proposed e o SDK/integração real não está no código. O AIE é uma hipótese coerente com a fronteira adotada, não evidência de integração entregue. Caso o cliente/analista considere o serviço de autenticação parte interna da solução contratada, ou não reconheça o grupo de dados externo como arquivo lógico referenciado, o AIE deve ser retirado e a contagem cai para **119 PF**.
+**Ressalva:** o FD-08/AIE da contagem de 18/11 representa uma hipótese baseada em Supabase Auth e não é uma decisão vigente. A arquitetura v0.4 exige mecanismo de identidade sob controle FORD, mas a fronteira APF (Polychat versus serviço corporativo interno) não foi definida. O analista deve reidentificar ou retirar o AIE conforme o arquivo lógico realmente mantido fora da fronteira. Não afirmar 119 PF por simples subtração: as demais funções e dados também precisam ser recontados.
 
 ### 5.2 Total das funções de dados
 
@@ -256,7 +272,7 @@ A inclusão e remoção de participantes são processos distintos porque alteram
 - Não foram contadas consultas de busca de usuários, listagens administrativas, configurações de políticas, exportações ou relatórios que não tenham especificação funcional suficiente.
 - Status de entrega/leitura, presença, digitação, notificações push, edição/exclusão e saída voluntária de grupos não estão definidos e não foram contados.
 
-## 7. Totalização em PF
+## 7. Totalização em PF — fotografia histórica de 18/11/2026 (não vigente)
 
 ### 7.1 Matriz tipo × complexidade
 
@@ -299,7 +315,7 @@ A quantidade de funções (23) e a soma de PF (124) reconciliam com as tabelas d
 
 O total principal é **PF não ajustado**. Não se aplica VAF/fator de ajuste ao preço-base. Como sensibilidade, o AIE de identidades pode ser removido se a fronteira aprovada incluir o serviço de autenticação: 124 − 5 = **119 PF**. A variação é de −4,03%. Os requisitos não funcionais serão estimados separadamente, sem aplicar um fator arbitrário aos PF.
 
-## 8. Esforço e cronograma
+## 8. Esforço e cronograma — hipóteses históricas de 18/11/2026
 
 A fórmula solicitada é:
 
@@ -341,7 +357,7 @@ Os valores por pessoa-mês são hipóteses de custo total carregado, incluindo r
 
 **Prazo provável:** aproximadamente 5 meses corridos com equipe média próxima de 4 a 5 pessoas, respeitando dependências e aprovações do cliente. O cenário otimista pode aproximar-se de 3–4 meses com decisões rápidas e baixa retrabalho; o conservador pode chegar a 7–8 meses. Prazo não é calculado dividindo pessoa-mês por um número de pessoas sem considerar paralelismo, dependências, aprovações e disponibilidade do cliente.
 
-## 9. Custo interno
+## 9. Custo interno — estimativa histórica de 18/11/2026
 
 ### 9.1 Custo direto de pessoal
 
@@ -376,7 +392,7 @@ Para comparar os cenários, usa-se a taxa média de pessoal direto do cenário p
 | Provável | 20,67 PM | R$ 340.891,67 |
 | Conservador | 31,00 PM | R$ 500.837,50 |
 
-## 10. Preço proposto — detalhamento e triangulação
+## 10. Preço proposto — cálculo histórico de 18/11/2026 (não vigente)
 
 ### 10.1 Preço de referência de mercado
 
@@ -446,7 +462,7 @@ O valor percebido está associado ao controle interno de contas, grupos e acesso
 
 O orçamento de R$ 450.000,00 registrado em RN-020 é referência sem composição confirmada. O MVP proposto excede-o em R$ 70.800,00 (aprox. 15,73%); a versão completa excede-o em R$ 172.500,00 (aprox. 38,33%). Caso seja teto rígido, será necessário priorizar entregas e revisar escopo com o cliente, sem remover controles legais/de segurança por inferência.
 
-## 11. Modelo de cobrança e condições de pagamento
+## 11. Modelo de cobrança — simulação histórica, não oferta vigente
 
 ### 11.1 Investimento inicial de desenvolvimento
 
@@ -497,15 +513,15 @@ Probabilidade e impacto são avaliações qualitativas hipotéticas.
 | Risco | Probabilidade | Impacto | Mitigação / resposta |
 |---|---|---|---|
 | Schema e fronteira de dados ainda não aprovados (#99) | Alta | Alto | Workshop de dados; confirmar ALI/AIE, DET/RET e relacionamentos antes da baseline final |
-| Políticas de monitoramento e consulta TI sem aprovação de negócio/jurídico (#100/#102, Q-007–Q-010) | Alta | Muito alto | Aprovação expressa da FORD, TI, Segurança e Jurídico/Privacidade; registrar finalidade, transparência e retenção |
+| Implementação de monitoramento/auditoria ainda não entregue | Alta | Alto | Implementar lista de termos TI, fila/severidades/prazos, sem IA externa/bloqueio automático; auditar operações administrativas conforme v0.4 |
 | Integração Supabase/Auth/RLS de domínio incompleta | Alta | Alto | Implementar por camadas; testes RLS reais e negativos; revisão independente |
 | Critérios de detecção e falsos positivos indefinidos | Alta | Alto | Definir taxonomia, severidade, revisão humana e contingência antes de implementar |
-| Limites de anexos e scanner antimalware indefinidos | Média | Alto | Fixar tamanho, quota, formatos, quarentena e comportamento em falha do scanner |
+| Integração de storage e scanner antimalware FORD | Alta | Alto | Implementar armazenamento e análise internos; evidenciar falha segura, liberação TI auditada e revogação de links |
 | Concorrência, latência, disponibilidade, RPO/RTO não definidos | Alta | Alto | Definir SLOs e carga; teste de carga e restauração; cotar planos/infraestrutura |
 | Classificação de dispositivo pode ser contornada | Média | Médio/alto | Tratar como compatibilidade/UX; autorização real sempre server-side |
-| Privacidade e retenção de dados pessoais não aprovadas | Alta | Muito alto | Avaliação jurídica/privacidade, transparência, minimização e política de descarte |
-| Dependência de provedores Supabase/Vercel | Média | Alto | Contratos, região, backup, portabilidade, plano de saída e monitoramento |
-| Orçamento de R$ 450 mil pode ser teto | Média | Alto | Confirmar composição; negociar fases e recontar qualquer redução funcional |
+| Cumprimento das regras de proteção/retention e obrigações aplicáveis | Alta | Alto | Implementar retenção sem exclusão automática, autorização TI, backups de 12 meses e descarte auditado, sem presumir dispensa legal |
+| Arquitetura anterior Supabase/Vercel incompatível com a FORD v2 | Alta | Alto | Definir arquitetura e operação dentro da infraestrutura sob controle FORD (Q-025); preservar a evidência anterior como histórico |
+| Reestimativa comercial após revisão v0.4 | Alta | Alto | Recalcular APF, esforço, preço e recorrência; R$ 450 mil é referência, não teto aprovado |
 
 ### 12.2 Sensibilidade do tamanho e produtividade
 
@@ -564,7 +580,7 @@ O aceite deverá ser demonstrado por evidências verificáveis, no mínimo:
 
 O aceite técnico da equipe não substitui aceite formal da FORD, aprovação de privacidade/jurídico ou homologação de segurança.
 
-## 14. Condições comerciais e validade da proposta
+## 14. Condições comerciais — valores históricos, sem oferta vigente
 
 - Valores são estimativas hipotéticas em reais, sujeitos à confirmação de tributos, custos de provedores e escopo final.
 - Preço MVP sugerido: **R$ 520.900,00**; preço completo sugerido: **R$ 622.500,00**.
@@ -576,7 +592,7 @@ O aceite técnico da equipe não substitui aceite formal da FORD, aprovação de
 - **Validade comercial sugerida: 30 dias corridos**, como hipótese, a partir da emissão/entrega desta proposta. Após esse período, revisar taxas, impostos, disponibilidade de equipe e custos de terceiros.
 - Início condicionado à assinatura, indicação dos responsáveis, liberação dos ambientes e resolução das pendências críticas.
 
-## 15. Pendências a esclarecer antes da contagem final
+## 15. Perguntas da baseline anterior — status atualizado na v0.4
 
 As perguntas abaixo devem ser respondidas antes de transformar esta estimativa em preço fechado. A lista preserva as questões da baseline.
 
@@ -693,3 +709,115 @@ Não foi realizada estimativa COCOMO II. Embora a referência de Boehm seja pert
 | Mudanças de escopo | Processo incremental de recontagem e cobrança incluído |
 
 **Condição para emissão final:** corrigir/reconciliar a matriz de complexidade e os subtotais de transações com um analista APF, confirmar a fronteira do AIE e aprovar o modelo de dados da Issue #99. Até lá, 124 PF e os valores associados são referência provisória para discussão, não compromisso fechado.
+
+
+## 17. Revisão de impacto — baseline FORD v2 (19/11/2026)
+
+Esta seção é o aditivo vigente para interpretar a proposta histórica acima. Em 19/11/2026 a baseline foi atualizada para POLY-REQ-001 v0.4, com base no questionário FORD v2 e nos alinhamentos do PO com Desenvolvimento.
+
+### 17.1 Mudanças que invalidam a contagem e os valores anteriores como referência atual
+
+| Tema | Premissa usada na estimativa de 18/11 | Decisão atual v0.4 | Impacto APF/comercial |
+|---|---|---|---|
+| Fonte de requisitos | Baseline anterior, predominantemente RF-001 a RF-018 | RF-001 a RF-023 e RN-001 a RN-025 consolidados | Recontar e revalidar processos elementares |
+| Identidade | Supabase Auth como provedor externo presumido | Identidade e sessão devem operar sob controle da FORD; ADR-003 depreciada | Reavaliar fronteira e FD-08/AIE; não aplicar automaticamente redução de 5 PF |
+| Infraestrutura | Supabase + Vercel como direção de deploy/serviços | Nenhum terceiro pode acessar, armazenar ou processar dados FORD | Refazer custos de infraestrutura/DevOps, operação e suporte |
+| Contas | Alguns parâmetros de provisionamento/credenciais ainda abertos | TI cria contas e senha inicial, username único, recovery por TI; sem troca obrigatória/MFA/expiração periódica exigidos | Revalidar DET/RET/EE de autenticação/provisionamento |
+| TI | Governança/hierarquia de administradores indefinida | Poderes iguais para todos os administradores TI; sem principal ou segunda aprovação | Reavaliar somente as funções percebidas pelo usuário; não criar hierarquia |
+| Grupos | Ciclo de vida parcialmente pendente | TI cria/encerra/desativa/reativa grupos e administra membros; usuários não saem voluntariamente; remoção revoga acesso histórico | Revisar transações de grupo/membership e dados de histórico |
+| Mensagens | Edição/exclusão ainda tratadas como pendentes | Usuário não edita/exclui; TI pode editar/excluir com auditoria | Incluir funções transacionais administrativas e atributos de histórico conforme análise IFPUG |
+| Leitura | Recibos/contador não incluídos na primeira contagem | RF-019: confirmação/horário de leitura e quantidade de não lidas | Incluir avaliação de funções de leitura/atualização de estado |
+| Exportação | Exportação não incluída | RF-021: TI exporta conversas, auditado | Validar saída externa/processo de exportação |
+| Auditoria | Foco anterior em consulta TI | RF-022 e catálogo ampliado: contas/grupos/membros, consultas, alertas, downloads, liberação, exportações, edição/exclusão de mensagens, configurações | Reavaliar ALI/EE/CE/SE de auditoria e complexidade |
+| Aviso de monitoramento | Não estava na contagem | RF-023: aviso no primeiro acesso | Avaliar se é função independente ou parte de autenticação/onboarding segundo CPM |
+| Anexos | Limites/seleção ainda como pendência | PDF/JPEG; 10 MB; 5 por mensagem; quotas TI; PDF protegido rejeitado; JPEG galeria sem câmera; EXIF/GPS removido | Atualizar DET/regras e processos de upload/download |
+| Antimalware | Scanner/limites pendentes e Supabase Storage proposto | Scanner interno FORD; falha/inconclusão bloqueia; TI pode liberar arquivo com auditoria | Incluir avaliação de processo de liberação e metadados de análise |
+| Monitoramento | Critérios/severidade em aberto | Lista de termos TI, inclui palavrões; sem contexto/IA externa; severidades e prazos definidos; sem bloqueio automático | Revisar alertas, manutenção de termos, revisão/encerramento; não contar controles duplicados |
+| Retenção e continuidade | Regras e prazos pendentes | Sem exclusão automática enquanto sistema opera; TI autoriza exclusões; backups diários 12 meses; RPO/RTO definidos | Custos e esforço técnico/operacional devem ser atualizados; PF depende de transações realmente reconhecidas |
+| UX | Wireframes em proposta sem aceite | Issues #91 e #92 aceitas como wireframes de baixa fidelidade | Usar como artefato de apoio, não como protótipo testado ou tela implementada |
+| Prazo/orçamento | Data e teto orçamentário tratados como perguntas | Sem prazo final; planejamento em sprints. R$450 mil é referência, não teto, com exclusões definidas | Não manter prazos nem comparativo de “estouro” da estimativa antiga |
+
+### 17.2 Inventário adicional de requisitos funcionais
+
+| ID | Função/necessidade | Implicação a validar na APF |
+|---|---|---|
+| RF-019 | Confirmação/horário de leitura e contador de não lidas | Determinar entradas/consultas/saídas reconhecíveis e grupos de dados envolvidos |
+| RF-020 | Edição e exclusão administrativa de mensagens pelo TI | Validar processos elementares distintos e histórico/auditoria |
+| RF-021 | Exportação de conversas pelo TI | Validar saída externa, formato e fronteira do processo |
+| RF-022 | Registro e gestão de auditoria administrativa | Reavaliar transações de gravação/consulta/gestão sem dupla contagem de auditoria embutida |
+| RF-023 | Aviso de monitoramento no primeiro acesso | Validar se compõe autenticação ou configura processo elementar independente |
+
+Além desses requisitos, reavaliar:
+- gestão de lista de termos pelo TI;
+- tratamento/encerramento de alertas e severidades;
+- liberação administrativa de anexos;
+- download de anexos pelo TI durante investigações;
+- manutenção de configurações efetivamente persistentes;
+- desativação/reativação de grupos e gestão de participantes conforme RF/RN atualizadas.
+
+A inclusão nesta lista significa que o analista deve examinar o processo segundo as regras IFPUG; não significa que cada item resulte automaticamente em transação APF independente. Evitar dupla contagem de validações, auditoria embutida, notificações internas e controles transversais.
+
+### 17.3 Arquitetura e fronteira de contagem
+
+- Next.js permanece como tecnologia de frontend, mas a Vercel não é a arquitetura-alvo de hospedagem.
+- Supabase Auth/Database/Storage/Realtime não são provedores-alvo para dados FORD após ADR-003 ser depreciada.
+- Banco PostgreSQL, identidade, storage, scanner, auditoria, monitoramento, backups e execução/deploy devem ficar sob controle da FORD.
+- O AIE FD-08 da estimativa histórica não representa uma decisão vigente. Reavaliar se existe arquivo lógico mantido fora da fronteira funcional Polychat dentro da própria infraestrutura FORD; a localização interna por si só não resolve a fronteira APF.
+- A escolha final do ambiente técnico permanece vinculada à Q-025. Não estimar consumo de plano SaaS ou mensalidade Vercel/Supabase como custo atual.
+- Bibliotecas/dependências que não acessem dados FORD podem ser utilizadas conforme as políticas técnicas aplicáveis.
+
+### 17.4 UX e evidências
+
+As Issues #91 e #92 foram encerradas após aprovação do PO/Tech Lead das jornadas e wireframes de baixa fidelidade:
+- #91: jornada Usuário mobile, PR #141, review #5946859734, CI runs #13 e #83, Vercel success.
+- #92: console TI desktop, PR #142, review #5946890924, CI runs #14 e #84, Vercel success.
+
+Esses artefatos são insumos para identificar transações e DET, mas não são telas implementadas, protótipos funcionais nem evidência de testes de usabilidade. O mapa final de telas/navegação (Q-018) e os ativos exatos de marca (Q-019) continuam em refinamento.
+
+### 17.5 Estado atualizado das questões da baseline
+
+| Questão | Situação v0.4 | Tratamento para APF |
+|---|---|---|
+| Q-001 | 25 usuários finais + 2–3 TI | Considerar público correto; não reabrir |
+| Q-002 | Poderes equivalentes entre TI; sem principal/segunda aprovação | Não modelar hierarquia |
+| Q-003 | Regras de grupos, saída e remoção respondidas | Atualizar membership e revogação |
+| Q-004 | JPEG da galeria; sem câmera; remoção EXIF/GPS | Atualizar fluxo de anexos |
+| Q-005/Q-006 | username único; senha provisionada e recovery TI; sem MFA/expiração/troca obrigatória | Atualizar fronteira e fluxos de identidade |
+| Q-007/Q-008 | Lista de termos e alertas com severidades/prazos definidos; sem bloqueio automático | Atualizar alertas e manutenção de regras |
+| Q-009/Q-010 | Consulta TI sem justificativa; auditoria e retenção/backup definidos | Atualizar auditoria/dados |
+| Q-011 | Limites e scanner interno definidos | Atualizar upload/download e dados |
+| Q-012 | Dispositivos/navegadores definidos; tablets não permitidos | Atualizar requisitos de compatibilidade |
+| Q-013 | Proteção de credenciais e chaves alinhadas; MFA não exigido | Não reabrir controles já alinhados |
+| Q-014 | Infraestrutura FORD; sem terceiro processando dados | Q-025 para escolha técnica |
+| Q-015 | Solicitações legais tratadas pela FORD; informar quando juridicamente permitido | Registrar posição do cliente; obrigações legais permanecem |
+| Q-016/Q-017 | Desempenho/capacidade e continuidade alinhados | Não reabrir requisitos já completos |
+| Q-018 | Refinamento de telas/navegação ainda aberto | Revalidar transações após mapa final |
+| Q-019 | Ativos oficiais de marca a obter/confirmar | Afeta UX, não necessariamente PF |
+| Q-020 | Sem requisito adicional de acessibilidade informado; obrigações aplicáveis permanecem | Estimar hardening obrigatório conforme aplicável |
+| Q-021 | Sem prazo final; planejamento por sprints | Não assumir prazo fixo de 5 meses |
+| Q-022 | R$450.000 referência global, não teto; exclusões conhecidas | Atualizar cenário comercial |
+| Q-023 | Português; sem push/browser; contador interno | Atualizar saídas/UX |
+| Q-024 | Usuário não edita/exclui; TI pode editar/excluir com auditoria | Recontar processos de mensagem |
+| Q-025 | Arquitetura técnica a reconciliar com infraestrutura FORD | Bloqueia premissas finais de tecnologia/custo |
+
+Os grupos de requisitos técnicos já alinhados com Desenvolvimento (armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento dos ambientes) não são pendências de produto.
+
+### 17.6 Estado comercial e recomendação
+
+- 124 PF, 20,67/24,67 pessoa-mês, 5/6–6,5 meses, custos internos, preços de R$520.900/R$622.500 e mensalidades das seções anteriores correspondem à fotografia de 18/11/2026. São mantidos apenas para histórico.
+- Não utilizar os valores antigos em apresentação/negociação como preço vigente.
+- R$450.000,00 é referência comercial global da FORD, não teto aprovado; contempla implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
+- Não há prazo final obrigatório; o cronograma deverá ser organizado por sprints após a arquitetura e o escopo revisados.
+- Custos operacionais devem ser refeitos a partir da infraestrutura sob controle FORD, sem presumir serviços SaaS externos.
+
+### 17.7 Condições para nova emissão
+
+1. Fechar a Q-025 e registrar a arquitetura sob controle da FORD.
+2. Revisar fronteira APF e grupos lógicos; definir se há AIE interno/externo ao Polychat.
+3. Recalcular ALI/AIE/EE/SE/CE e DET/RET/ALR com base nos requisitos v0.4, evitando dupla contagem.
+4. Considerar o modelo lógico atualizado POLY-DATA-001 v0.3 e as revisões técnicas da Issue #99.
+5. Usar os wireframes #91/#92 como evidência documental, mantendo distinção entre baixa fidelidade e telas/testes realizados.
+6. Atualizar esforço, cronograma, infraestrutura, implantação, licenças, suporte, manutenção, treinamento, tributos, margem e risco.
+7. Submeter a nova contagem e estimativa à revisão do PO, Tech Lead, analista APF e responsáveis comerciais antes de emitir proposta.
+
+**Conclusão desta revisão:** a proposta foi reconciliada documentalmente com a FORD v2, mas a contagem funcional e os preços históricos não foram recalculados. Ela não deve ser tratada como proposta comercial atual até a nova APF ser concluída.
