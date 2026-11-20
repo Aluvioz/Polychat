@@ -336,61 +336,63 @@ Não afirmar que o detector é preciso ou confiável apenas porque os testes uni
 
 ## 13.3 Decisões de produto consolidadas — FORD v2
 
-As decisões abaixo são requisitos vigentes da FORD v2, não recomendações pendentes de aprovação:
+As regras abaixo são requisitos confirmados, não propostas aguardando nova aprovação:
 
-1. **Finalidade:** analisar mensagens do Polychat segundo regras/lista administrada pelo TI, incluindo palavrões, para sinalização e revisão de segurança. Não usar para avaliação de produtividade ou finalidades distintas.
-2. **Escopo inicial:** lista/regras de termos mantida pelo TI, incluindo palavrões. A configuração concreta da lista é tarefa operacional do TI durante a implementação. Não inferir análise contextual, ameaças ou outras categorias não definidas.
-3. **Resultado automático:** quando uma regra ativa corresponder, registrar a ocorrência com motivo, identificador e versão da regra e gerar alerta para revisão pelo TI autorizado. A ocorrência deve ser apresentada como sinalização, nunca como violação ou culpa confirmada.
-4. **Revisão humana:** TI revisa a ocorrência e pode encerrá-la sem justificativa obrigatória. O sistema registra operador, momento e estado para auditoria; falso positivo não altera automaticamente a lista.
-5. **Sem ação punitiva automática:** a detecção não bloqueia, edita ou apaga mensagem, não suspende/desativa conta e não aplica advertência ou sanção. Mudança futura exigirá decisão explícita, justificativa, avaliação e aprovação formal próprias.
-6. **Acesso:** o alerta deve ser restrito aos operadores TI autorizados. A existência do alerta não concede permissão para abrir a conversa; a consulta ao conteúdo segue o controle e a auditoria das Issues #121/#124.
-7. **Minimização:** alertas e logs devem usar referência segura e metadados mínimos. A mensagem integral não deve ser replicada em notificações/logs por padrão.
-8. **Tecnologia:** Supabase e Vercel são plataformas oficiais. A detecção ocorre nos componentes oficiais do projeto; não encaminhar conteúdo a IA, modelo, scanner de mensagens ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
+1. **Finalidade:** analisar mensagens com regras/lista de termos mantida pelo TI, incluindo palavrões, para sinalização e revisão de segurança. Não usar para avaliação de produtividade ou finalidades distintas.
+2. **Escopo:** lista/regras de termos administradas pelo TI. A configuração concreta dos primeiros termos é atividade operacional de TI; não ampliar por inferência para análise contextual, IA, ameaças ou outras categorias.
+3. **Resultado automático:** quando uma regra ativa corresponder, registrar ocorrência com motivo, identificador/versão da regra e gerar alerta na fila do console TI. A ocorrência é sinalização, não confirmação de violação.
+4. **Revisão humana:** TI revisa e pode encerrar o alerta sem justificativa obrigatória. Registrar operador, momento e estado para auditoria.
+5. **Sem punição/bloqueio automático:** a detecção não bloqueia mensagens, não edita/apaga conteúdo, não suspende contas e não aplica sanções.
+6. **Acesso:** o alerta é visível ao TI. TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação; essa consulta gera auditoria.
+7. **Minimização:** alertas e logs usam referência segura e metadados mínimos; não replicar mensagem integral em notificações/logs por padrão.
+8. **Plataformas:** Supabase e Vercel são as plataformas oficiais do Polychat. Não encaminhar conteúdo a IA, modelo, scanner SaaS ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
 
-### O que permanece como trabalho técnico/operacional
+### Trabalho técnico/operacional ainda necessário
 
-Não são perguntas de produto; são atividades necessárias à implementação e evidência:
+A implementação funcional do Polychat ainda não começou. Permanecem como trabalho a implementar e evidenciar:
 
 - configurar e versionar a lista inicial de termos sob responsabilidade do TI;
-- implementar normalização, limites de palavra e tratamento de variações sem análise contextual;
-- implementar fila TI com severidades e prazos definidos: alta imediatamente/até 1 hora; média até 1 dia útil; baixa até 3 dias úteis;
-- implementar revisão e encerramento por TI sem justificativa obrigatória;
-- implementar esquema físico, vínculo com mensagens e eventos de auditoria conforme baseline v0.4;
-- definir tecnicamente retentativa/falha do detector sem bloquear automaticamente mensagens;
-- implementar, testar e evidenciar os fluxos no runtime real da stack oficial Supabase/Vercel.
+- implementar comparação determinística, normalização e testes positivos/negativos, sem análise contextual;
+- implementar fila de alertas TI com severidades baixa/média/alta e prazos: alta imediatamente/até 1 hora; média até 1 dia útil; baixa até 3 dias úteis;
+- implementar revisão/encerramento sem justificativa obrigatória;
+- persistir ocorrência e eventos de auditoria conforme baseline v0.4;
+- definir tecnicamente o tratamento de indisponibilidade do detector, sem apresentar falha como resultado limpo nem bloquear automaticamente o envio;
+- implementar, integrar e testar os fluxos no runtime real das plataformas oficiais.
 
-A FORD já definiu finalidade funcional, acesso administrativo, auditoria e retenção. Seu posicionamento institucional sobre ausência de uma frente Jurídica/Privacidade não afasta obrigações legais aplicáveis; não se cria uma etapa de aprovação por uma equipe que o cliente informou não integrar o projeto.
+A FORD já definiu finalidade, acesso administrativo, auditoria e retenção. O posicionamento institucional sobre ausência de frente de Jurídico/Privacidade não afasta obrigações legais aplicáveis, mas não cria uma etapa de aprovação por uma equipe que o cliente informou não integrar ao projeto.
 
-**Resultado:** o comportamento de produto está definido pela FORD v2 e alinhado com Desenvolvimento. A implementação funcional ainda não começou; a Issue #122 permanece aberta até que a detecção, a fila, a auditoria, os testes e as evidências estejam implementados e revisados.
+**Resultado:** requisitos funcionais e operacionais alinhados à FORD v2. A Issue #122 permanece aberta porque a implementação, a integração, os testes e as evidências ainda não começaram.
 
 ---
 
-## 14. Decisões pendentes e responsáveis sugeridos
+## 14. Atividades de implementação e responsáveis
 
-| ID | Decisão | Responsável sugerido | Impacto |
+| ID | Atividade | Responsável | Referência/resultado esperado |
 |---|---|---|---|
-| D-122-01 | Aplicar o aviso de monitoramento no primeiro acesso e limitar a detecção ao escopo de produto definido | PO / TI | RF-023, ADR-010 |
-| D-122-02 | Implementar a detecção por regras/lista mantida pelo TI, incluindo palavrões | Desenvolvimento / TI | Q-007 resolvida, RF-014 |
-| D-122-03 | Configurar a lista concreta de termos iniciais e o mecanismo de manutenção pelo TI | TI / Desenvolvimento | RF-014 |
-| D-122-04 | Implementar estratégia determinística sem análise contextual ou IA | Desenvolvimento / Tech Lead | RF-014 |
-| D-122-05 | Implementar normalização determinística e casos positivos/negativos sem análise contextual | Desenvolvimento / TI / SQA | RF-014, Issue #122 |
-| D-122-06 | Implementar identificação da regra correspondente; severidade do alerta segue RN-013 | Desenvolvimento / TI | RF-014/RF-015 |
-| D-122-07 | Implementar fila de alertas TI com severidade e prazos definidos | Desenvolvimento / TI | Q-008 resolvida, RF-015, Issue #123 |
-| D-122-08 | Implementar revisão/encerramento por TI sem justificativa obrigatória e registrar auditoria | Desenvolvimento / TI | Q-008 resolvida, Issues #123/#124 |
-| D-122-09 | Implementar dados mínimos da ocorrência e retenção/auditoria conforme baseline v0.4 | Desenvolvimento / TI | Q-009/Q-010 resolvidas, Issue #102 |
-| D-122-10 | Definir e testar contingência técnica do detector sem bloqueio automático de mensagens | Desenvolvimento / TI / Tech Lead | Issue #122 |
-| D-122-11 | Implementar auditoria das consultas e do tratamento de alertas conforme regras já definidas | Desenvolvimento / TI | Issues #121, #124 |
-| D-122-12 | Definir métricas técnicas e procedimento de manutenção/versionamento da lista pelo TI | TI / Desenvolvimento / SQA | Issue #122 |
+| D-122-01 | Exibir aviso de monitoramento no primeiro acesso | Desenvolvimento / TI | RF-023 |
+| D-122-02 | Implementar detecção determinística por lista/regras mantidas pelo TI, incluindo palavrões | Desenvolvimento / TI | RF-014; Q-007 resolvida |
+| D-122-03 | Configurar a lista inicial e mecanismo de manutenção/versionamento pelo TI | TI / Desenvolvimento | RF-014 |
+| D-122-04 | Implementar processamento sem análise contextual ou IA de terceiros | Desenvolvimento / Tech Lead | RF-014 |
+| D-122-05 | Implementar normalização e casos positivos/negativos sem análise contextual | Desenvolvimento / SQA | Testes DET |
+| D-122-06 | Registrar a regra correspondente e classificar o alerta conforme severidades já definidas em RN-013 | Desenvolvimento / TI | RF-014/RF-015 |
+| D-122-07 | Implementar fila TI e prazos baixa/média/alta | Desenvolvimento / TI | RF-015; Q-008 resolvida |
+| D-122-08 | Implementar revisão/encerramento por TI sem justificativa obrigatória e auditar ações | Desenvolvimento / TI | #123/#124 |
+| D-122-09 | Persistir metadados mínimos da ocorrência e aplicar auditoria/retenção da baseline v0.4 | Desenvolvimento / TI | #102; Q-009/Q-010 resolvidas |
+| D-122-10 | Definir e testar contingência técnica do detector sem bloqueio automático | Desenvolvimento / TI / Tech Lead | Testes DET |
+| D-122-11 | Integrar consulta ao conteúdo e registro de auditoria conforme regras existentes | Desenvolvimento / TI | #121/#124 |
+| D-122-12 | Definir métricas técnicas e procedimento de manutenção/versionamento da lista | TI / Desenvolvimento / SQA | Issue #122 |
+
+---
 
 ## 15. Critérios de aceite da Issue #122 — rastreabilidade
 
-Os critérios originais da Issue #122 são preservados. Esta tabela especifica as evidências esperadas e não declara nenhum critério concluído.
+Os critérios originais da Issue #122 são preservados. Esta tabela especifica as evidências esperadas e não declara nenhum critério concluído. A implementação funcional ainda não começou.
 
 | Critério original | Evidência esperada | Situação na versão 0.3 |
 |---|---|---|
 | Mensagens sinalizadas com contexto mínimo; falsos positivos revisáveis | Registro com regra/versão e contexto mínimo aprovado; fluxo de revisão e classificação de falsos positivos | Parcial: modelo e cenários documentados; política e fluxo precisam de aprovação |
 | Testes relevantes automatizados ou evidência documentada | Execução dos cenários DET-01 a DET-14 com conjunto de teste aprovado | Pendente: cenários propostos; não há evidência de execução |
-| Revisão por PR concluída | Revisão técnica, funcional, segurança e aprovação da PR | Pendente |
+| Revisão por PR concluída | Revisão técnica, funcional e SQA, com participação de TI como responsável operacional por segurança | Pendente |
 | Sem regressão nos fluxos relacionados | CI e testes dos fluxos de envio, alertas, autorização e auditoria aplicáveis | Pendente |
 
 ## 16. Dependências e impactos
@@ -398,7 +400,7 @@ Os critérios originais da Issue #122 são preservados. Esta tabela especifica a
 | Issue / artefato | Relação com este documento |
 |---|---|
 | #86 — Segurança, monitoramento e auditoria | Épica que reúne controles de detecção, consulta, alertas e auditoria |
-| ADR-010 — Segurança, auditoria e monitoramento | Referência arquitetural e de governança; permanece Proposed |
+| ADR-010 — Segurança, auditoria e monitoramento | Referência arquitetural para revisão técnica; permanece Proposed enquanto o detalhamento técnico estiver pendente |
 | #102 — Estratégia de auditoria e retenção | Define retenção e salvaguardas dos registros e ocorrências |
 | #121 — Consulta administrativa de mensagens | Implementa o acesso autorizado ao conteúdo durante a investigação |
 | #123 — Alertas e fila de revisão TI | Implementa apresentação, estado e tratamento das ocorrências |
