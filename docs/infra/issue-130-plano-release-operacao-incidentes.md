@@ -410,15 +410,15 @@ Os itens abaixo são recomendações para a equipe técnica validar e instrument
 
 Logs devem ser úteis para diagnóstico sem se tornarem nova fonte de exposição. Como princípio:
 - não registrar senhas, tokens, chaves, cookies ou secrets;
-- não registrar conteúdo integral de mensagens ou anexos sem decisão e justificativa formal;
+- não replicar conteúdo integral de mensagens ou anexos em logs técnicos; usar referências e metadados mínimos;
 - minimizar dados pessoais e mascarar identificadores sempre que possível;
 - restringir acesso a logs e trilhas de auditoria;
 - registrar operador, horário, recurso e resultado para ações administrativas quando exigido;
 - proteger registros contra alteração e exclusão indevidas;
-- definir retenção, descarte e acesso com Segurança e Jurídico/Privacidade;
+- implementar e evidenciar retenção, descarte e acesso a logs conforme baseline v0.4, sob responsabilidade operacional da TI;
 - preservar evidências de incidentes com cadeia de custódia e controle de acesso apropriados.
 
-A ADR-010 permanece Proposed e suas aprovações institucionais não são substituídas por esta seção.
+A ADR-010 permanece Proposed para revisão técnica. Os requisitos de auditoria, retenção, acesso TI e monitoramento já estão definidos na baseline v0.4; esta seção trata de sua implementação operacional e evidências.
 
 ### 10.3 Alertas e acionamento
 
