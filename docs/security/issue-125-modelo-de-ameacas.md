@@ -64,7 +64,7 @@ A ausência de evidência no repositório não prova que um controle inexista em
 | [Baseline POLY-REQ-001 — Issue #88](../09-baseline-requisitos-mvp.md) | Escopo v0.4, RF-001 a RF-023, RNF-001 a RNF-013 e estado real do repositório; implementação funcional ainda não iniciada. |
 | [Requisitos funcionais](../03-requisitos-funcionais.md) | RF-001 a RF-023, incluindo autenticação, mensagens, leitura, administração, exportação, auditoria e aviso de monitoramento. |
 | [Requisitos não funcionais](../04-requisitos-nao-funcionais.md) | RNF-001 a RNF-013; parâmetros principais já alinhados. Implementação, testes e evidências seguem pendentes. |
-| [Questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Q-018, Q-019 e Q-025 permanecem abertas. Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas e não devem aparecer como questões pendentes. |
+| [Questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Q-018 está resolvida; Q-019 tem paleta provisória definida, restando ativos/regras oficiais somente para uso institucional/produção; Q-025 permanece aberta para compatibilização arquitetural. Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas e não devem aparecer como questões pendentes. |
 | [Índice de ADRs](../adr/README.md) | Situação de aprovação das decisões arquiteturais. |
 | [ADR-004 — Autenticação e sessões](../adr/ADR-004-autenticacao-sessoes.md) | Proposta de fluxo de autenticação; permanece Proposed. |
 | [ADR-006 — Autorização e RLS](../adr/ADR-006-autorizacao-rls.md) | Contrato e direção de autorização documentados; políticas RLS de domínio e integração funcional ainda não implementadas. |
@@ -549,7 +549,8 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 |---|---|---|
 | **0.1 — preliminar** | Primeira publicação | Ativos, contexto, STRIDE, ameaças candidatas, prioridades iniciais, mitigações e decisões pendentes |
 | **0.2 — revisada tecnicamente** | Após revisão Tech Lead, TI e SQA | Arquitetura validada, fronteiras confirmadas, probabilidade/impacto revisados e ações priorizadas |
-| **0.3 — alinhada à FORD v2** | Após revisão da baseline e das decisões já respondidas | Atualizar riscos, papéis, medidas e dependências; não reabrir as regras de produto |
+| **0.3 — alinhada à FORD v2** | Versão histórica, publicada após revisão da baseline e das decisões respondidas | Atualizou riscos, papéis, medidas e dependências sem reabrir regras de produto |
+| **0.4 — alinhada à Q-025** | Versão atual | Corrige a representação da arquitetura; mantém hospedagem/processamento sob controle da FORD e registra a arquitetura-alvo como pendente de formalização |
 | **1.0 — baseline de segurança** | Após implementação e testes dos controles prioritários | Evidências por ameaça, estado de mitigação, risco residual e aprovação dos responsáveis |
 
 Qualquer mudança relevante de arquitetura, autenticação, RLS, Storage, monitoramento, consulta administrativa ou fornecedor deve provocar revisão do modelo.
