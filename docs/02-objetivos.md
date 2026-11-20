@@ -4,7 +4,7 @@ Os objetivos abaixo consolidam as necessidades registradas no questionário atua
 
 | ID | Objetivo | Resultado esperado | Situação |
 |---|---|---|---|
-| OBJ-001 | Disponibilizar um canal próprio de comunicação corporativa para uso interno da FORD. | Os 25 usuários finais do setor técnico utilizam o Polychat, com os dados e a operação sob controle da FORD e sem serviços de terceiros acessando, armazenando ou processando dados da organização. | Confirmado pela FORD; restrição de infraestrutura consolidada. |
+| OBJ-001 | Disponibilizar um canal próprio de comunicação corporativa para uso interno da FORD. | Os 25 usuários finais do setor técnico utilizam o Polychat em arquitetura com Supabase e Vercel como plataformas oficiais, com dados, acessos e operação governados pela FORD. | Confirmado pela FORD; restrição de infraestrutura consolidada. |
 | OBJ-002 | Permitir comunicação individual entre usuários ativos. | Um usuário ativo consegue iniciar conversas, enviar mensagens de texto, consultar histórico paginado e acompanhar estados básicos de leitura. | Confirmado pela FORD. |
 | OBJ-003 | Permitir comunicação em grupos administrados pelo TI. | O TI cria, encerra, desativa e reativa grupos, administra participantes e revoga imediatamente o acesso de integrantes removidos às mensagens e anexos anteriores. | Confirmado pela FORD. |
 | OBJ-004 | Centralizar a administração do aplicativo no perfil TI. | TI administra contas, credenciais, grupos, participantes, configurações, consultas e exportações de conversas, anexos de investigação, alertas e registros de auditoria. Todos os administradores TI possuem os mesmos poderes. | Confirmado pela FORD; poderes administrativos considerados avaliados pelo projeto. |
