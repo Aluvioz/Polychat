@@ -71,7 +71,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 | M-05 | Leitor de tela com títulos, rótulos, erros e alertas | NOT RUN |
 | M-06 | Contraste não textual e estados de foco | NOT RUN |
 | M-07 | Teclado em modal funcional real (quando existir) | NOT APPLICABLE / PENDENTE DE IMPLEMENTAÇÃO |
-| M-08 | Homologação institucional da marca e dos tokens oficiais pela Ford (não exigida para referência acadêmica) | PENDING APPROVAL |
+| M-08 | Homologação institucional da marca e dos tokens oficiais pela Ford (não exigida para referência ilustrativa) | PENDING APPROVAL |
 
 ## 5. Critérios de aceite da #93 após esta revisão
 
@@ -79,13 +79,13 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 - **Contraste textual:** pares principais calculados; cobertura completa pendente.
 - **Acessibilidade:** melhorias no código e roteiro documentados; **testes manuais não executados**.
 - **CI:** verificação estática adicionada; resultado do CI deve ser conferido no PR.
-- **Homologação institucional de marca Q-019:** pendente da FORD; a galeria acadêmica inclui referência do Ford Oval da Wikimedia Commons com atribuição e ressalva, sem alegação de aprovação oficial.
+- **Homologação institucional de marca Q-019:** pendente da FORD; a galeria demonstrativa inclui referência do Ford Oval da Wikimedia Commons com atribuição e ressalva, sem alegação de aprovação oficial.
 - **Aprovação PR:** ainda pendente; manter Draft enquanto o Tech Lead solicitar mudanças.
 - **Sem regressão:** não demonstrado integralmente; os arquivos continuam isolados, sem mudança no runtime principal.
 
 Não marcar “aprovado” ou “homologado” somente com estas evidências.
 
 
-## 6. Referência visual Ford Oval — decisão acadêmica do PO
+## 6. Referência visual Ford Oval — decisão do PO
 
-A galeria apresenta, apenas como referência visual acadêmica, a imagem publicada em [Wikimedia Commons — File:Ford logo.svg](https://commons.wikimedia.org/wiki/File:Ford_logo.svg). A origem classifica o desenho como domínio público para fins de copyright nos EUA, mas registra possível proteção marcária em determinadas jurisdições. O uso no protótipo não equivale a autorização da Ford, afiliação, patrocínio, endosso ou aprovação institucional. O caso M-08 permanece `PENDING APPROVAL` para qualquer homologação oficial de marca; essa pendência não impede a apresentação acadêmica da referência visual com ressalva.
+A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.svg](https://commons.wikimedia.org/wiki/File:Ford_logo.svg) como referência visual da proposta. A origem classifica o desenho como domínio público para fins de copyright nos EUA, mas registra possível proteção marcária em determinadas jurisdições. O uso no protótipo não equivale a autorização da Ford, afiliação, patrocínio, endosso ou aprovação institucional. O caso M-08 permanece `PENDING APPROVAL` para qualquer homologação oficial de marca; a referência visual permanece acompanhada de fonte e ressalva.
