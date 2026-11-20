@@ -20,7 +20,7 @@ Definir como notificar participantes sobre mensagens novas sem tratar um evento 
 
 ## Decisão proposta
 
-Avaliar Supabase Realtime como transporte de notificação, condicionado a prova de conceito e aprovação técnica. O banco deve permanecer como fonte de verdade:
+Adotar Supabase Realtime como transporte preferencial da stack oficial, condicionado a prova de conceito técnica, validação de políticas/canais e autorização por conversa. O banco deve permanecer como fonte de verdade:
 
 1. Validar identidade, participação e permissão de envio no servidor/banco.
 2. Persistir a mensagem com identificador e timestamp gerados no servidor.
