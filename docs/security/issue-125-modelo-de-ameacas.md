@@ -382,22 +382,22 @@ Os controles abaixo são recomendações para avaliação técnica. A aprovaçã
 
 ## 11. Plano de mitigação priorizado
 
-As prioridades são iniciais e precisam de revisão por Tech Lead e Segurança. “Dependência” indica onde a implementação, decisão ou evidência deverá ocorrer; não significa que o controle já foi entregue.
+As prioridades são iniciais e precisam de revisão por Tech Lead, TI (responsável operacional por segurança na FORD) e SQA. “Dependência” indica onde a implementação ou evidência deverá ocorrer; não significa que o controle já foi entregue.
 
 | Prioridade | Ação de mitigação | Ameaças | Responsável primário | Dependências / evidência esperada |
 |---|---|---|---|---|
 | P0 | Integrar autenticação e autorização a todos os handlers/rotas reais; validar sessão e conta no servidor | THR-001, 003, 023 | Tech Lead / backend | #105; revisão de código e testes em rotas reais |
 | P0 | Aprovar e implementar RLS de domínio para conversas, memberships, mensagens e anexos; testar isolamento | THR-004, 005, 012, 024 | Tech Lead / backend / TI | #99, #100, #101; testes PostgreSQL/Supabase real |
-| P0 | Manter secrets privilegiados exclusivamente server-side; revisar acesso, bundles e workflows | THR-014, 025 | Tech Lead / TI / Segurança | Revisão de ambiente, artefato de build, CI e procedimento de rotação |
-| P0 | Definir governança e implementar auditoria obrigatória para consulta TI | THR-009, 010, 027 | TI / Segurança / backend | #102, #121, #124, Q-009/Q-010; teste de evento e integridade |
-| P1 | Definir política de senha, MFA, sessões, recuperação, revogação e rate limiting | THR-001, 002, 019 | TI / Segurança | ADR-004, #105, Q-005/Q-006; política aprovada e testes |
-| P1 | Implementar validação segura de conteúdo, quarentena, scanner e controle de download | THR-007, 013, 020 | Backend / Segurança / TI | #117, #115, #116, Q-011; testes STO e evidências de Storage privado |
+| P0 | Manter secrets privilegiados exclusivamente server-side; revisar acesso, bundles e workflows | THR-014, 025 | Tech Lead / TI | Revisão de ambiente, artefato de build, CI e procedimento de rotação |
+| P0 | Implementar trilha de auditoria para consulta TI e ações privilegiadas conforme baseline | THR-009, 010, 027 | TI / backend / SQA | #102, #121, #124; teste de evento e integridade |
+| P1 | Implementar autenticação, proteção de sessão, recuperação pelo TI, revogação e rate limiting | THR-001, 002, 019 | Desenvolvimento / TI | ADR-004, #103/#104/#105; requisitos de credenciais já definidos; testes |
+| P1 | Implementar validação segura de conteúdo, armazenamento privado, scanner interno e controle de download | THR-007, 013, 020 | Backend / TI | #115, #116, #117; testes STO e evidências de Storage privado |
 | P1 | Prevenir XSS/CSRF e testar dados não confiáveis em todos os pontos de renderização/ações | THR-006, 017, 026 | Frontend / backend / SQA | #125, #126; testes negativos e revisão de headers/cookies |
-| P1 | Definir e implementar controles de conteúdo suspeito, minimização e acesso a alertas | THR-015, 016, 018 | Segurança / TI / backend | #122, #123, Q-007/Q-008; aprovação institucional e testes DET |
+| P1 | Implementar detecção por lista TI, minimização, fila e acesso a alertas | THR-015, 016, 018 | TI / backend / SQA | #122, #123; regras e prazos já definidos; testes DET |
 | P1 | Proteger CI/CD e dependências; restringir permissões e revisar cadeia de suprimentos | THR-008, 014 | Tech Lead / responsáveis CI | Revisão de workflow, lockfile, permissões e processo de atualização |
 | P1 | Definir tratamento de indisponibilidade de Auth, banco, Storage e scanner; testar fail closed | THR-021 | Tech Lead / TI | ADRs pertinentes; testes de falha e recuperação |
 | P2 | Definir limites de uso, capacidade e proteção de endpoints/realtime | THR-022 | Tech Lead / TI | Q-016 e ADR-007; teste de carga e métricas |
-| P2 | Aprovar região, suboperadores, responsabilidades, backups, RPO/RTO e processo de resposta | THR-018, 021 | FORD / TI / Segurança / Jurídico | Q-014/Q-015/Q-017, #98 e plano operacional |
+| P2 | Consolidar evidências específicas de região/configuração e demonstrar backup, RPO/RTO e resposta | THR-018, 021 | FORD / TI / Tech Lead | Q-025 e #98/#130; não reabrir requisitos já alinhados nem aceites #96/#98 |
 
 ## 12. Plano de testes e evidências
 
@@ -527,7 +527,7 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 |---|---|---|
 | Threat model e mitigação priorizada; riscos residuais aceitos formalmente | Modelo revisado por Tech Lead, TI (segurança operacional) e SQA; plano com responsáveis; riscos residuais formalmente aceitos pela autoridade competente | **Parcial:** modelo preliminar produzido; revisão, plano validado e aceitação formal pendentes |
 | Testes relevantes automatizados ou evidência documentada | Testes SEC-01..SEC-18 executados ou evidência justificada, vinculados a commit e ambiente | **Pendente:** cenários especificados; esta versão não executa testes |
-| Revisão por PR concluída | PR revisada/aprovada por Tech Lead e SQA, com participação da TI como responsável operacional por segurança, e checks concluídos | **Pendente** |
+| Revisão por PR concluída | PR revisada/aprovada por Tech Lead e SQA, com participação da TI como responsável operacional por segurança e checks concluídos | **Pendente** |
 | Sem regressão nos fluxos relacionados | CI e testes de regressão dos fluxos efetivamente implementados | **Pendente:** dependerá da implementação e da Issue #129 |
 
 ### 16.1 Condições para considerar o threat model revisado
