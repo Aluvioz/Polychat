@@ -15,11 +15,11 @@
 - **Negado — confirmado:** a FORD v2 proíbe a operação ou atribui a operação a outro ator.
 - **Condicionado:** operação permitida somente quando a condição descrita estiver satisfeita (por exemplo, membership vigente).
 - **Pendente de detalhamento:** a categoria funcional existe, mas o catálogo/tela/opção específica ainda não foi inventariado. Não criar permissão genérica.
-- **Implementação legada:** evidência que existe no repositório, mas não comprova a arquitetura-alvo nem RLS de domínio.
+- **Implementação parcial:** evidência existente na stack oficial, mas que ainda não comprova integração ponta a ponta nem RLS de domínio.
 
 Três conceitos devem permanecer separados:
 
-1. **Identidade:** a conta autenticada, validada por mecanismo executado sob controle da FORD.
+1. **Identidade:** a conta autenticada, validada pelo Supabase Auth, serviço oficial de identidade do Polychat.
 2. **Role:** um dos dois perfis de aplicação — `user` ou `ti`. Todos os administradores TI têm poderes iguais.
 3. **Membership:** relação entre uma conta e uma conversa/grupo. Role TI não é membership; membership não concede funções administrativas.
 
@@ -76,8 +76,8 @@ Três conceitos devem permanecer separados:
 | Anexo | Baixar arquivo durante investigação | TI | Permitido; download auditado | Operação administrativa server-side | RF-022; RN-008 |
 | Anexo | Liberar arquivo bloqueado | TI | Permitido por ação administrativa; ação auditada | Fluxo explícito de liberação TI; usuários não podem contornar análise | RN-008; RNF-010 |
 | Anexo | Baixar após remoção do participante | Participante removido | Negado imediatamente, inclusive para anexos anteriores | Revogar acesso e invalidar links previamente emitidos | RF-006; RN-007 |
-| Antimalware | Analisar anexo | Sistema | Scanner na infraestrutura FORD; falha/inconclusão mantém arquivo bloqueado no fluxo normal | Fail closed para disponibilização automática; envio de texto permanece funcional | RNF-010; ADR-008 |
-| Mensagem suspeita | Detectar por regra/lista | Sistema | Regra/lista mantida pelo TI, incluindo palavrões; sem análise contextual ou IA externa | Processamento dentro da infraestrutura FORD | RF-014; RN-012 |
+| Antimalware | Analisar anexo | Sistema | Scanner interno integrado ao fluxo controlado do Polychat na stack oficial; não encaminhar a scanner externo não aprovado; falha/inconclusão mantém bloqueado | Fail closed para disponibilização automática; envio de texto permanece funcional | RNF-010; ADR-008 |
+| Mensagem suspeita | Detectar por regra/lista | Sistema | Regra/lista mantida pelo TI, incluindo palavrões; sem análise contextual ou IA de terceiros | Processamento nos componentes oficiais da stack; sem envio a serviços adicionais de análise não aprovados | RF-014; RN-012 |
 | Mensagem suspeita | Bloquear automaticamente mensagem/conta por detecção | Sistema | Negado/não previsto | Não implementar bloqueio automático | RF-014/RF-015; RN-012/RN-013 |
 | Alertas | Consultar fila e alertas | TI | Permitido | Área administrativa protegida | RF-015; RN-013 |
 | Alertas | Encerrar alerta | TI | Permitido sem justificativa obrigatória | Registrar evento de tratamento/encerramento | RF-015; RF-022 |
