@@ -13,7 +13,7 @@ A FORD não exige troca obrigatória de senha no primeiro acesso, expiração pe
 
 Supabase é uma plataforma oficial do Polychat, conforme ADR-003. O serviço Supabase Auth é a direção de identidade do projeto, sujeito à configuração de segurança, proteção de credenciais e validação técnica dos ambientes. A aprovação do serviço não dispensa a verificação de região, acessos, políticas e integração real.
 
-O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são evidências parciais do caminho técnico adotado; não comprovam, isoladamente, autenticação integrada nem aplicação das migrations em todos os ambientes oficiais.
+O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são scaffold isolado que ilustra o caminho técnico pretendido. Não representam implementação parcial funcional: não há login, sessão, recovery ou provisionamento integrados ao runtime Next.js.
 
 ## Problema
 
@@ -62,7 +62,7 @@ O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado
 
 **Negativas e cuidados:**
 - A equipe precisará integrar e operar o mecanismo de identidade no ambiente aprovado pela FORD.
-- O código atual utiliza Supabase como dependência prevista; permanece necessário integrá-lo às rotas reais do Next.js e validar os ambientes.
+- A implementação funcional ainda não começou; será necessário integrar Supabase Auth ao runtime Next.js e validar os ambientes oficiais.
 - A integração deverá ser testada no runtime e na infraestrutura reais, além dos testes unitários isolados.
 
 ## Riscos
@@ -71,9 +71,9 @@ Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevid
 
 ## Evidências atuais
 
-- `src/auth/authorization.mjs` valida token por `supabase.auth.getUser`, mas depende de cliente fornecido externamente.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria perfis associados a `auth.users`; integra a direção Supabase oficial, mas sua aplicação e cobertura funcional ainda precisam ser verificadas.
-- Não há fluxo integrado de login, logout, recuperação ou provisionamento na interface.
+- `src/auth/authorization.mjs` é um exemplo isolado que recebe um cliente Supabase externamente; não existe cliente inicializado e integrado ao runtime.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` é uma migration de scaffold versionada; não comprova schema funcional do produto nem aplicação em ambiente hospedado.
+- Não há fluxo integrado de login, logout, recuperação ou provisionamento na interface. A implementação funcional do produto ainda não começou.
 - Testes unitários simulados do middleware não comprovam integração com a solução de identidade definitiva.
 
 ## Pendências para Accepted
