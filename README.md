@@ -12,7 +12,7 @@ O repositório contém a fundação do frontend em Next.js 16, React 19, TypeScr
 
 A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript, com Vercel como plataforma oficial de hospedagem/deploy e Supabase como plataforma oficial de backend. O uso de cada produto/serviço Supabase é detalhado nas ADRs específicas.
 
-Supabase + Vercel permanecem como direção tecnológica oficial, conforme ADR-003 e alinhamento complementar do PO com Desenvolvimento. A Q-025 não trata de substituir essas plataformas: permanece limitada à confirmação de configurações técnicas por ambiente, regiões, acessos, segredos e evidências de integração/homologação.
+Supabase + Vercel permanecem como direção tecnológica oficial, conforme ADR-003 e alinhamento complementar do PO com Desenvolvimento. A Q-025 não trata de substituir essas plataformas nem repetir as entregas aceitas nas Issues #96/#98: limita-se a consolidar evidências específicas de configuração e integração ainda não cobertas, sem expor valores sensíveis.
 
 ## Requisitos de desenvolvimento
 
