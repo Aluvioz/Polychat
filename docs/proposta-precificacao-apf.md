@@ -87,7 +87,7 @@ A visão limita o público inicial a aproximadamente 25 pessoas do setor técnic
 - Convites externos, auto cadastro e uso por fornecedores/parceiros.
 - Expansão para todos os setores da FORD além do público inicial.
 - Edição ou exclusão de mensagens pelo Usuário. A FORD v2 permite ao TI editar/excluir mensagens a qualquer momento, com auditoria, e exportar conversas; essas funções precisam constar da contagem atualizada.
-- Criptografia ponta a ponta (E2EE): não está aprovada e conflita com análise server-side e consulta administrativa previstas.
+- Criptografia ponta a ponta (E2EE): não é adotada; a FORD confirmou criptografia em trânsito e em repouso, com acesso do servidor para monitoramento/administração.
 - Operação 24x7, SOC, suporte presencial, compra de dispositivos, licenças corporativas e serviços jurídicos.
 - Migração de dados legados em volume não identificado.
 
@@ -117,7 +117,7 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | RF-014 | Detectar mensagens por regras/lista de termos TI, sem análise contextual/IA externa | Sistema | Confirmado/alinhado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-012 |
 | RF-015 | Alertas baixa/média/alta, com prazos de resposta definidos e revisão humana | Sistema/TI | Confirmado/alinhado; sem bloqueio automático | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-013 |
 | RF-016 | TI consultar qualquer conversa a qualquer momento, sem justificativa/segunda aprovação | TI | Confirmado; consulta auditada | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-014 |
-| RF-017 | Restringir perfil Usuário a celular | Sistema | Confirmado; critério técnico pendente | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-015 |
+| RF-017 | Restringir perfil Usuário a celular | Sistema | Confirmado: Android/iOS com Chrome/Safari móveis atuais; tablets não permitidos | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-015 |
 | RF-018 | Restringir perfil TI a computador | Sistema | Confirmado: computadores com Chrome/Edge/Firefox atuais; tablets não permitidos | `docs/03-requisitos-funcionais.md`, RF-018; `docs/09-baseline-requisitos-mvp.md`, v0.4 |
 | RF-019 | Confirmar leitura, exibir horário de leitura e quantidade de mensagens não lidas | Sistema/Usuário | Confirmado na FORD v2 | `docs/03-requisitos-funcionais.md`, RF-019 |
 | RF-020 | Permitir edição/exclusão administrativa de mensagens | TI | Confirmado; cada ação auditada | `docs/03-requisitos-funcionais.md`, RF-020 |
@@ -135,10 +135,10 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | RNF-004 | Auditabilidade | Operações administrativas auditáveis; consulta de conversa pelo TI explicitamente registrada | `docs/04-requisitos-nao-funcionais.md`, RNF-004 |
 | RNF-005 | Compatibilidade | Usuário Android/iOS em Chrome/Safari móveis atuais; TI computador Chrome/Edge/Firefox atuais; tablets não permitidos | `docs/04-requisitos-nao-funcionais.md`, RNF-005 |
 | RNF-006 | Usabilidade | Interface simples; conversas recentes após login; telas e métricas pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-006 |
-| RNF-007 | Desempenho | Segurança prevalece sobre velocidade; latência e metas não definidas | `docs/04-requisitos-nao-funcionais.md`, RNF-007 |
+| RNF-007 | Desempenho | Metas de desempenho alinhadas com Desenvolvimento; verificar parâmetros no artefato técnico vigente, sem reabrir a premissa | `docs/04-requisitos-nao-funcionais.md`, RNF-007 |
 | RNF-008 | Capacidade | 25 conexões simultâneas de usuários finais, além de administradores TI; limites alinhados | `docs/04-requisitos-nao-funcionais.md`, RNF-008 |
 | RNF-009 | Disponibilidade/continuidade | 99% mensal; backups diários 12 meses; RPO 24h em desastre; RTO 24h; manutenção fora expediente e suporte comercial | `docs/04-requisitos-nao-funcionais.md`, RNF-009 |
-| RNF-010 | Segurança de arquivos | Somente PDF/JPEG, validação do conteúdo real e avaliação antimalware | `docs/04-requisitos-nao-funcionais.md`, RNF-010 |
+| RNF-010 | Segurança de arquivos | PDF/JPEG, limites v0.4, scanner na infraestrutura FORD, bloqueio em falha/inconclusão e liberação TI auditada | `docs/04-requisitos-nao-funcionais.md`, RNF-010 |
 | RNF-011 | Privacidade/governança | Posição da FORD registrada; aviso no primeiro acesso; regras e retenção v0.4; obrigações legais aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-011 |
 | RNF-012 | Acessibilidade | Despriorizada na visão de produto; obrigações legais/corporativas aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-012 |
 | RNF-013 | Arquitetura/plataforma | Infraestrutura sob controle FORD; nenhum terceiro acessa/armazena/processa dados; Q-025 para decisão técnica | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
@@ -208,7 +208,7 @@ O inventário e o total de 124 PF são exclusivamente a contagem preliminar de 1
 | FD-05 | Metadados de anexos | ALI | 8 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-011–RF-013; `docs/adr/ADR-008-storage-anexos.md`, Contexto |
 | FD-06 | Alertas de mensagens sinalizadas | ALI | 8 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-014/RF-015; `docs/05-regras-de-negocio-e-restricoes.md`, RN-012/RN-013 |
 | FD-07 | Eventos de auditoria | ALI | 7 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-016/CA-016.4; `docs/04-requisitos-nao-funcionais.md`, RNF-004; `docs/adr/ADR-010-seguranca-auditoria-monitoramento.md` |
-| FD-08 | Identidades autenticadas — hipótese histórica a reavaliar | AIE (não confirmado na fronteira v0.4) | 4 | 1 | Baixa | 5 (valor histórico, não contar como decisão vigente) | `docs/adr/ADR-004-autenticacao-sessoes.md`, Contexto/Decisão proposta; `docs/adr/ADR-003-supabase-vercel.md`, Supabase Auth previsto; `docs/09-baseline-requisitos-mvp.md`, RF-001 |
+| FD-08 | Identidades autenticadas — hipótese Supabase Auth histórica | AIE (hipótese não vigente) | 4 | 1 | Baixa | 5 (PF históricos; fronteira a reavaliar) | `docs/adr/ADR-004-autenticacao-sessoes.md`, Contexto/Decisão proposta; `docs/adr/ADR-003-supabase-vercel.md`, Supabase Auth previsto; `docs/09-baseline-requisitos-mvp.md`, RF-001 |
 
 ### 5.1 FD-08/AIE — justificativa histórica, sujeita à recontagem
 
