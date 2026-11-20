@@ -8,9 +8,9 @@
 | Cliente / organização | FORD |
 | Identificador | POLY-REQ-001 |
 | Título | Documento de Especificação de Requisitos do Polychat |
-| Versão | 0.3 |
+| Versão | 0.4 |
 | Data da revisão | 19/11/2026 |
-| Status | Revisado com base no Questionário de Esclarecimento de Requisitos da FORD (versão atualizada recebida em 19/11/2026) e nos alinhamentos complementares do PO com Desenvolvimento. Referência vigente para os documentos 00 a 04. |
+| Status | Revisado com base no Questionário de Esclarecimento de Requisitos da FORD (versão atualizada recebida em 19/11/2026) e nos alinhamentos complementares do PO com Desenvolvimento. Referência vigente para a baseline de requisitos de produto e documentos correlatos. |
 | Contexto acadêmico | Equipe de graduação da UNIFACS; projeto da UC Projeto e Engenharia de Software (conforme README do repositório) |
 | Responsável de produto (PO) | Papel exercido no projeto; identificação nominal não registrada neste documento |
 | Responsável técnico | Equipe de desenvolvimento; identificação nominal não registrada neste documento |
@@ -24,18 +24,19 @@
 |---|---|---|---|
 | 0.1 | 13/11/2026 | Equipe de requisitos | Primeira consolidação das informações disponíveis; lacunas, riscos e diagramas pendentes registrados. |
 | 0.2 | 16/11/2026 | Consolidação da Issue #88 | Baseline confrontada com a visão POLYCHAT — FORD v0.1; registrados requisitos, rastreabilidade, arquitetura de referência da issue e evidências técnicas disponíveis naquele momento. |
-| 0.3 | 19/11/2026 | Product Owner | Atualização após o alinhamento com a FORD: revisão de escopo, público, contas, grupos, mensagens, anexos, monitoramento, auditoria, privacidade declarada, retenção, infraestrutura, operação, homologação e premissas já alinhadas com Desenvolvimento. |
+| 0.3 | 19/11/2026 | Product Owner | Atualização inicial após o questionário FORD v2 e os alinhamentos complementares. |
+| 0.4 | 19/11/2026 | Product Owner | Correção e consolidação da baseline: confirmação de Supabase e Vercel como plataformas oficiais; harmonização da infraestrutura, operação, segurança, retenção, anexos, homologação e rastreabilidade. |
 
 ## Referência e precedência
 
-A versão 0.3 substitui, para fins de especificação dos requisitos de produto, as interpretações anteriores baseadas exclusivamente na visão POLYCHAT — FORD v0.1.
+A versão 0.4 substitui, para fins de especificação dos requisitos de produto, as interpretações anteriores baseadas exclusivamente na visão POLYCHAT — FORD v0.1 e atualiza a versão 0.3.
 
 A fonte atual é composta por:
 - Questionário de Esclarecimento de Requisitos da FORD v2, recebido em 19/11/2026.
 - Alinhamentos complementares do PO com a equipe de Desenvolvimento, considerados concluídos para limites de armazenamento, regras e severidade dos alertas, metas de desempenho, proteção de credenciais, gestão de chaves, política detalhada de retenção, critérios de homologação e isolamento dos ambientes.
 - Premissas de produto confirmadas pelo PO nesta revisão, inclusive o entendimento de que os administradores de TI da FORD são de extrema confiança e que os riscos ligados aos poderes administrativos já foram avaliados no âmbito do projeto.
 
-Em caso de divergência entre documentos anteriores e esta revisão, prevalecem as decisões mais recentes consolidadas nesta versão, sem apagar o histórico das versões anteriores.
+Em caso de divergência entre documentos anteriores e esta revisão, prevalecem as decisões mais recentes consolidadas nesta versão, sem apagar o histórico das versões anteriores. Supabase e Vercel são as plataformas oficiais do projeto, conforme alinhamento complementar do PO com Desenvolvimento; Q-025 não reabre essa escolha.
 
 ## Validação e responsabilidades
 
