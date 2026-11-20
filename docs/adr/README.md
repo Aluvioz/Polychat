@@ -20,24 +20,24 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 |---|---|---|---|
 | [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular com execução e dados sob controle da FORD; topologia e componentes ainda aguardam validação técnica |
 | [ADR-002](ADR-002-frontend-nextjs.md) | Frontend | Accepted | Next.js 16 + React 19 + TypeScript; React + Vite explicitamente recusado para o Polychat |
-| [ADR-003](ADR-003-supabase-vercel.md) | Direção histórica Supabase + Vercel | Deprecated | Decisão da Issue #88 retirada após a FORD v2; não é arquitetura-alvo |
+| [ADR-003](ADR-003-supabase-vercel.md) | Plataformas oficiais Supabase + Vercel | Accepted | Supabase (backend) e Vercel (hospedagem/deploy) são a stack oficial confirmada pelo PO |
 | [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Requisitos funcionais consolidados; mecanismo de identidade deve operar sob controle da FORD |
-| [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL permanece como tecnologia proposta, sem hospedagem Supabase ou serviço externo |
-| [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo legado limitado | Aceite cobre apenas o módulo e a migration de perfis vinculados ao Supabase; precisa ser adaptado/revalidado para a arquitetura FORD |
-| [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Proposta anterior dependente de Supabase; precisa ser reconciliada com processamento interno à infraestrutura FORD |
-| [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Storage deve permanecer sob controle da FORD; proposta anterior de Supabase Storage não é opção vigente |
-| [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Vercel/Supabase não são destinos-alvo; ambientes e promoção devem ser definidos na infraestrutura FORD |
+| [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL via Supabase Database; schema, migrations, RLS e backup ainda exigem validação |
+| [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo limitado | Aceite cobre apenas perfis; políticas RLS de domínio e integração às rotas ainda precisam ser implementadas e testadas |
+| [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Supabase Realtime é a opção da stack oficial; prova de conceito e regras de autorização pendentes |
+| [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Supabase Storage é a opção oficial; privacidade, scanner, URLs temporárias e revogação exigem validação |
+| [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Vercel e Supabase oficiais; segregação, variáveis, regiões e acessos por ambiente em validação |
 | [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Regras funcionais consolidadas na FORD v2; implementação, catálogo técnico e controles na infraestrutura FORD aguardam validação |
 
 ## Decisões e restrições vigentes
 
 1. A stack de frontend adotada é Next.js 16 + React 19 + TypeScript (ADR-002). React + Vite foi explicitamente recusado para o Polychat; não deve ser introduzido nem usado como base de migração sem ADR substitutiva aprovada.
-2. A FORD v2 exige infraestrutura sob controle da FORD, preferencialmente no Brasil, sem terceiro acessando, armazenando ou processando dados da organização. A decisão anterior Supabase + Vercel foi depreciada na ADR-003.
-3. O framework Next.js permanece válido como stack de frontend; isso não autoriza hospedagem Vercel nem uso de Supabase Auth, Database, Storage ou Realtime para dados da FORD.
-4. PostgreSQL é a tecnologia de banco relacional proposta na ADR-005, desde que a instância e sua operação permaneçam sob controle da FORD. A escolha técnica e a homologação da implantação continuam dependentes da Q-025.
+2. Supabase e Vercel são as plataformas oficiais do Polychat, conforme decisão confirmada pelo PO e registrada na ADR-003.
+3. Vercel é a plataforma oficial de hospedagem/deploy e Supabase é a plataforma oficial de backend; os serviços específicos são detalhados nas ADRs 004 a 008.
+4. PostgreSQL via Supabase Database é a direção de persistência. Q-025 permanece para validar regiões, projetos, acessos, segredos e configuração real dos ambientes.
 5. A autenticação deve respeitar o provisionamento exclusivo pelo TI, os identificadores e credenciais definidos pela FORD, a recuperação pelo TI e a revogação imediata de sessões na desativação de conta (ADR-004).
-6. A ADR-006 permanece Accepted somente para o módulo e a migration legados que implementam autorização de perfis vinculados ao Supabase. Esse aceite não aprova o Supabase como provedor-alvo nem cobre os recursos de domínio do Polychat.
-7. Realtime, armazenamento de anexos e ambientes precisam ser redesenhados ou validados para execução dentro da fronteira de controle da FORD (ADRs 007 a 009).
+6. A ADR-006 permanece Accepted apenas para o módulo e a migration de perfis; não cobre as políticas RLS de domínio nem comprova integração às rotas reais.
+7. Realtime, armazenamento de anexos e ambientes utilizam a stack Supabase/Vercel oficial e precisam de validação técnica conforme as ADRs 007 a 009.
 8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4 e foram incorporados à ADR-010. Seu status permanece Proposed porque implantação, catálogo técnico, evidências de segurança e integração com infraestrutura FORD ainda precisam de revisão.
 
 ## Evidências verificadas no repositório
@@ -72,7 +72,7 @@ Manter as questões atualizadas em `08-glossario-e-questoes-em-aberto.md`. Perma
 
 - **Q-018:** refinamento interno do mapa de telas, navegação e wireframes pelo PO/UX.
 - **Q-019:** obtenção/validação dos ativos oficiais da identidade visual FORD, caso ainda não estejam disponíveis.
-- **Q-025:** reconciliação técnica da arquitetura com a exigência de infraestrutura sob controle da FORD, sem terceiro acessando, armazenando ou processando dados.
+- **Q-025:** validação técnica da configuração da stack oficial Supabase/Vercel (projetos, regiões, ambientes, acessos, segredos, integrações e evidências).
 
 Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento de ambientes — não são pendências. A confiança nos administradores TI e a igualdade de seus poderes também não devem ser reabertas como pendência de requisito.
 
@@ -90,7 +90,7 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 - **16/11/2026** — PR #133 criou uma primeira versão dos ADRs, encerrada sem merge; aquela versão não integra a `main`.
 - **17/11/2026** — conjunto inicial revisado contra a baseline então vigente e o conteúdo da `main`.
 - **19/11/2026** — ADR-002 e seu índice atualizados para registrar a recusa de React + Vite e alinhar a stack de frontend.
-- **19/11/2026** — baseline atualizada para POLY-REQ-001 v0.4 após a FORD v2; README e ADRs 001, 003, 004 e 005 revisados para refletir a restrição de infraestrutura sob controle da FORD. ADR-003 passou a Deprecated.
+- **19/11/2026** — revisão documental inicial marcou incorretamente Supabase/Vercel como Deprecated; o PO confirmou que ambas são plataformas oficiais e alinhadas, e esta ADR-003 foi restaurada como Accepted.
 - **19/11/2026** — ADR-008, ADR-009, ADR-010, modelo de dados, matriz #100, política de anexos, documentação de autorização e proposta APF reconciliados com a FORD v2 na branch `docs/ford-v2-governance-reconciliation`; os arquivos permanecem sujeitos à revisão por PR.
 
 **Regra de fechamento:** a Issue #89 só deve ser fechada depois de as ADRs aplicáveis serem revisadas e aprovadas pelos responsáveis, a arquitetura compatível com a FORD ser formalizada, a PR desta revisão ser aprovada e integrada e os checks passarem. A Epic #77 só deve ser fechada depois que #89 for concluída e seu checklist for atualizado.
