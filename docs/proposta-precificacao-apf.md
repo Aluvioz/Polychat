@@ -15,7 +15,7 @@
 
 - Esta proposta foi recalibrada documentalmente, mas **não possui nova contagem APF nem preço atual**.
 - As seções numéricas derivadas de 18/11/2026 são referência histórica, não uma oferta comercial vigente.
-- A baseline v0.4 altera funções, dados e regras: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; e confirma Supabase e Vercel como plataformas oficiais.
+- A baseline v0.4 altera funções, dados e regras: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; e confirma Supabase e Vercel como plataformas oficiais. A implementação funcional ainda não começou.
 - Supabase Auth permanece na stack oficial; a fronteira lógica para fins de APF deve ser analisada sem presumir automaticamente classificação como AIE. Preços/planos dos serviços Supabase e Vercel devem ser revalidados na estimativa comercial atual.
 - A escolha da stack está definida pela ADR-003 Accepted. Q-025 permanece para consolidação de evidências técnicas específicas ainda ausentes, sem reabrir a seleção de plataformas. A nova contagem dependerá do modelo lógico POLY-DATA-001 v0.3, matriz #100 atualizada, ADRs e fluxos UX #91/#92 aceitos.
 - A referência FORD de R$ 450.000,00 não é teto aprovado. Inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
@@ -24,7 +24,7 @@
 
 Esta proposta dimensiona o desenvolvimento do Polychat para o público inicial informado de aproximadamente 25 pessoas do setor técnico da FORD, com dois perfis de aplicação — Usuário e TI —, comunicação individual e em grupos, anexos PDF/JPEG, monitoramento de mensagens suspeitas, alertas ao TI e consulta administrativa de conversas com auditoria.
 
-A documentação do repositório é a fonte primária. A inspeção do código confirma que a implementação funcional está em estágio inicial: há uma página institucional, middleware isolado de autorização e migration de perfis, mas não há fluxo funcional de login, chat, grupos, anexos, alertas ou consulta administrativa integrado ao App Router. A proposta considera a construção das funções de negócio previstas, sem cobrar como concluídas as partes de código que ainda não estão integradas.
+A documentação do repositório é a fonte primária. A inspeção do repositório confirma que **a implementação funcional do Polychat ainda não começou**. Há somente scaffold de página institucional, exemplo isolado de middleware de autorização, migration de exemplo de perfis e testes simulados. Não existe fluxo funcional de login, chat, grupos, anexos, alertas ou consulta administrativa integrado ao App Router. A estimativa considera a construção de todas as funções de negócio previstas; os artefatos de scaffold não devem ser tratados como entregas funcionais concluídas.
 
 ### Resumo da estimativa-base histórica — 18/11/2026 (não vigente)
 
