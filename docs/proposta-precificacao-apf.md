@@ -7,7 +7,7 @@
 **Revisão de escopo:** 19/11/2026 — questionário FORD v2 e alinhamentos complementares  
 **Natureza atual:** documento de referência metodológica e estimativa histórica; os valores da versão anterior não constituem proposta comercial vigente, preço fechado ou compromisso contratual.
 
-> **Aviso de uso comercial e de versão:** o cálculo de 124 PF e os valores de MVP/Completo abaixo foram produzidos em 18/11/2026, antes da consolidação da FORD v2 em 19/11/2026. A baseline atual acrescentou RF-019 a RF-023, fechou decisões sobre contas, grupos, anexos, monitoramento, auditoria, retenção e infraestrutura, atualizou a UX #91/#92 e retirou Supabase + Vercel como arquitetura-alvo. Portanto, 124 PF, esforço, prazos, custos, preços e custos recorrentes antigos são **históricos e precisam ser recalculados**. Esta revisão não emite novo número de PF nem nova cotação. Consulte a seção 17 — Revisão de impacto da FORD v2.
+> **Aviso de uso comercial e de versão:** o cálculo de 124 PF e os valores de MVP/Completo abaixo foram produzidos em 18/11/2026, antes da consolidação da FORD v2 em 19/11/2026. A baseline atual acrescentou RF-019 a RF-023, fechou decisões sobre contas, grupos, anexos, monitoramento, auditoria, retenção e infraestrutura, atualizou a UX #91/#92 e confirmou Supabase + Vercel como plataformas oficiais do projeto. Portanto, 124 PF, esforço, prazos, custos, preços e custos recorrentes antigos são **históricos e precisam ser recalculados**. Esta revisão não emite novo número de PF nem nova cotação. Consulte a seção 17 — Revisão de impacto da FORD v2.
 
 
 
@@ -16,7 +16,7 @@
 - Esta proposta foi recalibrada documentalmente, mas **não possui nova contagem APF nem preço atual**.
 - As seções numéricas derivadas de 18/11/2026 são referência histórica, não uma oferta comercial vigente.
 - A baseline v0.4 altera funções, dados, regras e arquitetura: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; infraestrutura sob controle FORD.
-- A hipótese de Supabase Auth como AIE externo e a estimativa de serviços gerenciados Supabase/Vercel foram descontinuadas como premissas de arquitetura.
+- Supabase Auth permanece na stack oficial; a fronteira lógica para fins de APF deve ser analisada sem presumir automaticamente classificação como AIE. Preços/planos dos serviços Supabase e Vercel devem ser revalidados na estimativa comercial atual.
 - A decisão de arquitetura técnica permanece em Q-025. A nova contagem dependerá do modelo lógico POLY-DATA-001 v0.3, matriz #100 atualizada, ADRs e fluxos UX #91/#92 aceitos.
 - A referência FORD de R$ 450.000,00 não é teto aprovado. Inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
 
@@ -75,7 +75,7 @@ A visão limita o público inicial a aproximadamente 25 pessoas do setor técnic
 - Alertas ao TI e consulta administrativa de conversas.
 - Registro de auditoria das consultas administrativas.
 - Regras de acesso por perfil e restrição de experiência por tipo de dispositivo.
-- Interface web com frontend Next.js; autenticação, backend, banco, storage, antimalware, auditoria, processamento e deploy devem operar em infraestrutura sob controle da FORD. A decisão técnica específica depende da Q-025.
+- Interface web com frontend Next.js; autenticação, backend, banco e storage utilizam Supabase; hospedagem e deploy utilizam Vercel. Configurações, regiões e segregação por ambiente devem ser validadas na Q-025.
 
 ### 2.4 Fora da fronteira / não incluído nesta proposta-base
 
@@ -141,9 +141,9 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | RNF-010 | Segurança de arquivos | PDF/JPEG, limites v0.4, scanner na infraestrutura FORD, bloqueio em falha/inconclusão e liberação TI auditada | `docs/04-requisitos-nao-funcionais.md`, RNF-010 |
 | RNF-011 | Privacidade/governança | Posição da FORD registrada; aviso no primeiro acesso; regras e retenção v0.4; obrigações legais aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-011 |
 | RNF-012 | Acessibilidade | Despriorizada na visão de produto; obrigações legais/corporativas aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-012 |
-| RNF-013 | Arquitetura/plataforma | Infraestrutura sob controle FORD; nenhum terceiro acessa/armazena/processa dados; Q-025 para decisão técnica | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
+| RNF-013 | Arquitetura/plataforma | Supabase/Vercel oficiais; Q-025 para validar configuração, regiões e isolamento por ambiente | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
 
-**Outras regras/restrições:** somente roles `user` e `ti`; todos os TI com poderes equivalentes; grupos e participantes administrados pelo TI; usuários não saem de grupos; remoção revoga acesso ao histórico; usuários não editam/excluem mensagens; TI edita/exclui e exporta com auditoria; leitura/horário e não lidas; PDF/JPEG (10 MB, 5 por mensagem), quotas individuais e totais pelo TI; scanner interno com bloqueio em falha/inconclusão e liberação TI auditada; monitoramento por lista sem análise contextual/IA externa; severidades/prazos de alertas; auditoria e retenção; infraestrutura FORD. Fonte: POLY-REQ-001 v0.4 e documentos 03 a 05.
+**Outras regras/restrições:** somente roles `user` e `ti`; todos os TI com poderes equivalentes; grupos e participantes administrados pelo TI; usuários não saem de grupos; remoção revoga acesso ao histórico; usuários não editam/excluem mensagens; TI edita/exclui e exporta com auditoria; leitura/horário e não lidas; PDF/JPEG (10 MB, 5 por mensagem), quotas individuais e totais pelo TI; scanner interno com bloqueio em falha/inconclusão e liberação TI auditada; monitoramento por lista sem análise contextual/IA externa; severidades/prazos de alertas; auditoria e retenção; stack oficial Supabase/Vercel e governança FORD. Fonte: POLY-REQ-001 v0.4 e documentos 03 a 05.
 
 ### 3.3 Divergências e regra de precedência adotada
 
@@ -181,7 +181,7 @@ Pesos utilizados:
 
 Todas as quantidades DET/DER, RET/RLR e ALR da contagem original são **hipóteses de dimensionamento**. O modelo lógico foi atualizado na versão POLY-DATA-001 v0.3, mas ainda não constitui schema físico aprovado. Além disso, a FORD v2 alterou o conjunto de funções e a arquitetura de fronteira; a contagem histórica deve ser refeita. DET/RET/ALR, complexidades e funções candidatas deverão ser revistos com a documentação e os protótipos aceitos.
 
-1. A hipótese histórica de Supabase Auth como AIE externo não é mais válida como premissa de arquitetura: ADR-003 foi depreciada e a identidade deve operar sob controle da FORD. Um AIE só poderá ser mantido se o analista identificar um arquivo lógico efetivamente mantido fora da fronteira funcional Polychat, mesmo que dentro da infraestrutura FORD. Não retirar nem manter automaticamente 5 PF; reavaliar a fronteira e o grupo de dados na nova contagem.
+1. Supabase Auth é o serviço oficial de identidade do projeto (ADR-003/004). Para APF, a classificação do FD-08 como AIE depende da fronteira lógica entre a aplicação Polychat e o serviço de identidade, não apenas de o provedor ser externo. Reavaliar o grupo de dados e as funções na nova contagem; não retirar nem manter automaticamente os 5 PF históricos.
 2. Perfis de aplicação são mantidos pelo Polychat em `public.profiles` e formam um ALI.
 3. Conversas, memberships, mensagens, anexos, alertas e eventos de auditoria são ALIs candidatos, pois representam grupos lógicos de dados mantidos pela aplicação segundo os requisitos/Issue #99. O fato de o schema não estar implementado não impede sua identificação preliminar a partir dos requisitos; a confirmação depende da Issue #99.
 4. Regras de detecção configuráveis não foram contadas como ALI separado, porque catálogo, manutenção e operações de configuração não estão especificados.
@@ -208,13 +208,13 @@ O inventário e o total de 124 PF são exclusivamente a contagem preliminar de 1
 | FD-05 | Metadados de anexos | ALI | 8 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-011–RF-013; `docs/adr/ADR-008-storage-anexos.md`, Contexto |
 | FD-06 | Alertas de mensagens sinalizadas | ALI | 8 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-014/RF-015; `docs/05-regras-de-negocio-e-restricoes.md`, RN-012/RN-013 |
 | FD-07 | Eventos de auditoria | ALI | 7 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-016/CA-016.4; `docs/04-requisitos-nao-funcionais.md`, RNF-004; `docs/adr/ADR-010-seguranca-auditoria-monitoramento.md` |
-| FD-08 | Identidades autenticadas — hipótese Supabase Auth histórica | AIE (hipótese não vigente) | 4 | 1 | Baixa | 5 (PF históricos; fronteira a reavaliar) | `docs/adr/ADR-004-autenticacao-sessoes.md`, Contexto/Decisão proposta; `docs/adr/ADR-003-supabase-vercel.md`, Supabase Auth previsto; `docs/09-baseline-requisitos-mvp.md`, RF-001 |
+| FD-08 | Identidades autenticadas — Supabase Auth | AIE (classificação preliminar; fronteira a confirmar) | 4 | 1 | Baixa | 5 (PF históricos; fronteira a reavaliar) | `docs/adr/ADR-004-autenticacao-sessoes.md`, Contexto/Decisão proposta; `docs/adr/ADR-003-supabase-vercel.md`, Supabase Auth previsto; `docs/09-baseline-requisitos-mvp.md`, RF-001 |
 
 ### 5.1 FD-08/AIE — justificativa histórica, sujeita à recontagem
 
 O AIE FD-08 representa o conjunto de identidades/credenciais mantido pelo provedor de autenticação Supabase Auth, fora da fronteira lógica da aplicação Polychat, mas referenciado por ela para autenticar e associar perfis. A aplicação consulta a identidade validada e usa seu identificador para relacioná-la ao ALI Perfis.
 
-**Ressalva:** o FD-08/AIE da contagem de 18/11 representa uma hipótese baseada em Supabase Auth e não é uma decisão vigente. A arquitetura v0.4 exige mecanismo de identidade sob controle FORD, mas a fronteira APF (Polychat versus serviço corporativo interno) não foi definida. O analista deve reidentificar ou retirar o AIE conforme o arquivo lógico realmente mantido fora da fronteira. Não afirmar 119 PF por simples subtração: as demais funções e dados também precisam ser recontados.
+**Ressalva:** Supabase Auth é a plataforma oficial de identidade, mas a classificação de FD-08 como AIE para APF continua sendo hipótese de fronteira lógica. O analista deve confirmar se existe grupo de dados reconhecível mantido pelo serviço fora da fronteira da aplicação Polychat. Não afirmar 119 PF por simples subtração: as demais funções e dados também precisam ser recontados.
 
 ### 5.2 Total das funções de dados
 
@@ -520,7 +520,7 @@ Probabilidade e impacto são avaliações qualitativas hipotéticas.
 | Concorrência, latência, disponibilidade, RPO/RTO não definidos | Alta | Alto | Definir SLOs e carga; teste de carga e restauração; cotar planos/infraestrutura |
 | Classificação de dispositivo pode ser contornada | Média | Médio/alto | Tratar como compatibilidade/UX; autorização real sempre server-side |
 | Cumprimento das regras de proteção/retention e obrigações aplicáveis | Alta | Alto | Implementar retenção sem exclusão automática, autorização TI, backups de 12 meses e descarte auditado, sem presumir dispensa legal |
-| Arquitetura anterior Supabase/Vercel incompatível com a FORD v2 | Alta | Alto | Definir arquitetura e operação dentro da infraestrutura sob controle FORD (Q-025); preservar a evidência anterior como histórico |
+| Configuração e integração Supabase/Vercel ainda sem evidência técnica completa | Alta | Alto | Validar projetos, regiões, ambientes, acessos, segredos e integrações da stack oficial (Q-025); preservar evidências das Issues #96/#98 |
 | Reestimativa comercial após revisão v0.4 | Alta | Alto | Recalcular APF, esforço, preço e recorrência; R$ 450 mil é referência, não teto aprovado |
 
 ### 12.2 Sensibilidade do tamanho e produtividade
@@ -585,11 +585,11 @@ O aceite técnico da equipe não substitui aceite formal da FORD, aprovação de
 Esta seção registra apenas as premissas de contratação usadas na simulação de 18/11/2026. Os preços, prazos, validade e cronograma abaixo não são uma oferta atual e não devem ser reutilizados como compromisso comercial depois da FORD v2.
 
 - Valores históricos da simulação: MVP **R$ 520.900,00** e versão completa **R$ 622.500,00**; ambos dependem de recontagem APF, reestimativa de esforço/custo e revisão comercial.
-- O plano atual não tem data final obrigatória: será organizado em sprints depois da arquitetura e do escopo técnico compatíveis com a infraestrutura FORD.
+- O plano atual não tem data final obrigatória: será organizado em sprints após a recontagem APF e a validação técnica dos ambientes Supabase/Vercel.
 - A referência de **R$ 450.000,00** informada pela FORD inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento; não é teto aprovado.
 - Custos recorrentes precisam ser recalculados com a solução sob controle da FORD. As tabelas anteriores de consumo de serviços gerenciados e mensalidades são apenas simulações históricas da arquitetura antiga.
 - Condições de pagamento, garantia, suporte, validade e marcos contratuais devem ser negociados novamente após a emissão da nova contagem e proposta.
-- Nenhuma estimativa desta versão autoriza contratar serviço externo para acessar, armazenar ou processar dados da FORD.
+- Nenhuma estimativa desta versão autoriza contratar serviços externos adicionais além das plataformas oficiais Supabase/Vercel sem aprovação explícita.
 
 ## 15. Perguntas da baseline anterior — status atualizado na v0.4
 
@@ -625,7 +625,7 @@ As perguntas originais abaixo são preservadas como histórico da baseline anter
 ### Pendências específicas de APF
 - Extrair/revisar o conteúdo integral dos PDFs legados de requisitos e casos de uso e compará-los à baseline Markdown; confirmar se há requisito vigente ausente ou divergente.
 
-- Aprovar fronteira de Supabase Auth e confirmar ou retirar o AIE FD-08.
+- Confirmar, para fins de APF, a fronteira lógica e a classificação do FD-08 associado ao Supabase Auth.
 - Aprovar o modelo de dados da Issue #99 e identificar DET/RET reais por ALI/AIE.
 - Validar cada processo elementar com protótipos e fluxos aprovados.
 - Resolver as classificações de complexidade e os totais da matriz antes de emitir a contagem final assinada.
@@ -719,8 +719,8 @@ Esta seção é o aditivo vigente para interpretar a proposta histórica acima. 
 | Tema | Premissa usada na estimativa de 18/11 | Decisão atual v0.4 | Impacto APF/comercial |
 |---|---|---|---|
 | Fonte de requisitos | Baseline anterior, predominantemente RF-001 a RF-018 | RF-001 a RF-023 e RN-001 a RN-025 consolidados | Recontar e revalidar processos elementares |
-| Identidade | Supabase Auth como provedor externo presumido | Identidade e sessão devem operar sob controle da FORD; ADR-003 depreciada | Reavaliar fronteira e FD-08/AIE; não aplicar automaticamente redução de 5 PF |
-| Infraestrutura | Supabase + Vercel como direção de deploy/serviços | Nenhum terceiro pode acessar, armazenar ou processar dados FORD | Refazer custos de infraestrutura/DevOps, operação e suporte |
+| Identidade | Supabase Auth oficial do projeto | A autenticação permanece na stack aprovada; classificação APF do serviço depende da fronteira lógica | Reavaliar FD-08/AIE; não aplicar automaticamente redução de 5 PF |
+| Infraestrutura | Supabase + Vercel como plataformas oficiais | Validar configurações por ambiente, regiões, recursos e custos atuais dos planos | Recalcular custos recorrentes e operação; não reutilizar valores históricos |
 | Contas | Alguns parâmetros de provisionamento/credenciais ainda abertos | TI cria contas e senha inicial, username único, recovery por TI; sem troca obrigatória/MFA/expiração periódica exigidos | Revalidar DET/RET/EE de autenticação/provisionamento |
 | TI | Governança/hierarquia de administradores indefinida | Poderes iguais para todos os administradores TI; sem principal ou segunda aprovação | Reavaliar somente as funções percebidas pelo usuário; não criar hierarquia |
 | Grupos | Ciclo de vida parcialmente pendente | TI cria/encerra/desativa/reativa grupos e administra membros; usuários não saem voluntariamente; remoção revoga acesso histórico | Revisar transações de grupo/membership e dados de histórico |
@@ -758,11 +758,11 @@ A inclusão nesta lista significa que o analista deve examinar o processo segund
 
 ### 17.3 Arquitetura e fronteira de contagem
 
-- Next.js permanece como tecnologia de frontend, mas a Vercel não é a arquitetura-alvo de hospedagem.
-- Supabase Auth/Database/Storage/Realtime não são provedores-alvo para dados FORD após ADR-003 ser depreciada.
+- Next.js permanece como frontend e Vercel é a plataforma oficial de hospedagem/deploy.
+- Supabase é a plataforma oficial de backend; Auth, Database, Storage e Realtime são avaliados nas ADRs específicas e não devem ser tratados como serviços cancelados.
 - Banco PostgreSQL, identidade, storage, scanner, auditoria, monitoramento, backups e execução/deploy devem ficar sob controle da FORD.
 - O AIE FD-08 da estimativa histórica não representa uma decisão vigente. Reavaliar se existe arquivo lógico mantido fora da fronteira funcional Polychat dentro da própria infraestrutura FORD; a localização interna por si só não resolve a fronteira APF.
-- A escolha final do ambiente técnico permanece vinculada à Q-025. Não estimar consumo de plano SaaS ou mensalidade Vercel/Supabase como custo atual.
+- A stack Supabase/Vercel está escolhida; Q-025 valida projetos, regiões e configurações. Recalcular os planos, limites e mensalidades atuais antes de emitir nova estimativa comercial.
 - Bibliotecas/dependências que não acessem dados FORD podem ser utilizadas conforme as políticas técnicas aplicáveis.
 
 ### 17.4 UX e evidências
@@ -787,7 +787,7 @@ Esses artefatos são insumos para identificar transações e DET, mas não são 
 | Q-011 | Limites e scanner interno definidos | Atualizar upload/download e dados |
 | Q-012 | Dispositivos/navegadores definidos; tablets não permitidos | Atualizar requisitos de compatibilidade |
 | Q-013 | Proteção de credenciais e chaves alinhadas; MFA não exigido | Não reabrir controles já alinhados |
-| Q-014 | Infraestrutura FORD; sem terceiro processando dados | Q-025 para escolha técnica |
+| Q-014 | Plataformas oficiais Supabase/Vercel e governança da FORD | Q-025 para validação de ambientes e regiões |
 | Q-015 | Solicitações legais tratadas pela FORD; informar quando juridicamente permitido | Registrar posição do cliente; obrigações legais permanecem |
 | Q-016/Q-017 | Desempenho/capacidade e continuidade alinhados | Não reabrir requisitos já completos |
 | Q-018 | Refinamento de telas/navegação ainda aberto | Revalidar transações após mapa final |
@@ -797,7 +797,7 @@ Esses artefatos são insumos para identificar transações e DET, mas não são 
 | Q-022 | R$450.000 referência global, não teto; exclusões conhecidas | Atualizar cenário comercial |
 | Q-023 | Português; sem push/browser; contador interno | Atualizar saídas/UX |
 | Q-024 | Usuário não edita/exclui; TI pode editar/excluir com auditoria | Recontar processos de mensagem |
-| Q-025 | Arquitetura técnica a reconciliar com infraestrutura FORD | Bloqueia premissas finais de tecnologia/custo |
+| Q-025 | Configuração técnica da stack oficial Supabase/Vercel | Bloqueia confirmação de ambientes, regiões, custos e evidências de integração |
 
 Os grupos de requisitos técnicos já alinhados com Desenvolvimento (armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento dos ambientes) não são pendências de produto.
 
@@ -811,7 +811,7 @@ Os grupos de requisitos técnicos já alinhados com Desenvolvimento (armazenamen
 
 ### 17.7 Condições para nova emissão
 
-1. Fechar a Q-025 e registrar a arquitetura sob controle da FORD.
+1. Fechar a Q-025 após validar projetos, regiões, configurações, integrações e segregação da stack oficial Supabase/Vercel.
 2. Revisar fronteira APF e grupos lógicos; definir se há AIE interno/externo ao Polychat.
 3. Recalcular ALI/AIE/EE/SE/CE e DET/RET/ALR com base nos requisitos v0.4, evitando dupla contagem.
 4. Considerar o modelo lógico atualizado POLY-DATA-001 v0.3 e as revisões técnicas da Issue #99.
