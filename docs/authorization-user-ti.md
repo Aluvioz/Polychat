@@ -1,7 +1,7 @@
 # Autenticação, perfis e autorização — Polychat
 
 **Baseline:** POLY-REQ-001 v0.4 (FORD v2)  
-**ADRs relacionadas:** [ADR-004 — Autenticação e sessões](adr/ADR-004-autenticacao-sessoes.md), [ADR-006 — Autorização server-side e RLS](adr/ADR-006-autorizacao-rls.md), [ADR-003 — Direção tecnológica histórica](adr/ADR-003-supabase-vercel.md)  
+**ADRs relacionadas:** [ADR-004 — Autenticação e sessões](adr/ADR-004-autenticacao-sessoes.md), [ADR-006 — Autorização server-side e RLS](adr/ADR-006-autorizacao-rls.md), [ADR-003 — Plataformas oficiais Supabase + Vercel](adr/ADR-003-supabase-vercel.md)  
 **Issues relacionadas:** #100, #101 e #105  
 **Status:** contrato funcional atualizado; implementação da arquitetura-alvo e revisão técnica ainda necessárias.
 
@@ -31,8 +31,8 @@ A aplicação não deve armazenar senha em texto puro. Os detalhes criptográfic
 
 ## 3. Contrato de autenticação e autorização
 
-1. A autenticação e a gestão de sessões devem operar dentro da infraestrutura sob controle da FORD. Não utilizar provedor externo que acesse, armazene ou processe credenciais, identidades ou dados de sessão da organização.
-2. A tecnologia de identidade definitiva depende da reconciliação arquitetural Q-025 e da ADR-004. A antiga direção Supabase Auth foi depreciada junto com a direção Supabase + Vercel na ADR-003.
+1. A autenticação e a gestão de sessões utilizam Supabase Auth, serviço oficial da plataforma de backend do Polychat. A integração deve respeitar o provisionamento exclusivo pelo TI, proteção de credenciais, autorização server-side e segregação de ambientes.
+2. Supabase Auth é a tecnologia de identidade oficial do projeto, conforme ADR-003 e ADR-004. A Q-025 permanece para validar configurações, integração e evidências nos ambientes oficiais.
 3. O servidor valida a sessão/identidade e obtém o perfil e estado da conta de fonte confiável.
 4. O navegador nunca é fonte confiável para `profile_id`, role, estado de conta ou membership.
 5. Operações administrativas e de domínio devem ser autorizadas no servidor, com políticas no banco (RLS quando suportadas e adequadas à implementação) como defesa adicional.
@@ -83,9 +83,9 @@ O repositório contém:
 - `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`, migration de perfil ligada a `auth.users`;
 - `tests/authorization.test.mjs`, com 11 testes unitários usando Supabase simulado.
 
-Esses artefatos representam a implementação legada vinculada à proposta Supabase. Não comprovam integração funcional com as rotas Next.js, autenticação completa na interface, aplicação de migration em ambiente homologado nem RLS de conversas, participantes, mensagens, anexos ou auditoria.
+Esses artefatos representam a fundação parcial da implementação Supabase. Não comprovam integração funcional com as rotas Next.js, autenticação completa na interface, aplicação de migration em todos os ambientes nem RLS de conversas, participantes, mensagens, anexos ou auditoria.
 
-A direção Supabase + Vercel foi depreciada após a FORD v2. O módulo e a migration existentes devem ser adaptados ou substituídos quando a arquitetura de identidade e dados sob controle da FORD for definida. Não reutilizar o exemplo legado como arquitetura-alvo.
+Supabase e Vercel são as plataformas oficiais do Polychat. O módulo e a migration existentes devem ser integrados e evoluídos para cobrir os fluxos reais; não devem ser tratados como implementação completa apenas por já existirem no repositório.
 
 ## 7. Dispositivos
 
@@ -97,8 +97,8 @@ A restrição define compatibilidade de uso e experiência. User-agent, viewport
 
 ## 8. Pendências técnicas remanescentes
 
-- Definir a tecnologia de identidade e sessão dentro da infraestrutura FORD (Q-025/ADR-004).
-- Substituir/adaptar o adaptador Supabase legado.
+- Validar a configuração do Supabase Auth por ambiente e sua integração com as rotas reais do Next.js (Q-025/ADR-004).
+- Completar e testar o adaptador Supabase já previsto, incluindo sessão, recuperação de senha e revogação.
 - Conectar autenticação e autorização aos handlers/rotas reais da aplicação.
 - Implementar autorização de domínio e políticas do banco coerentes com a matriz #100 e o schema aprovado.
 - Implementar revogação imediata de sessões e testar a desativação de contas.
