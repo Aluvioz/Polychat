@@ -12,7 +12,7 @@
 - [Galeria de componentes HTML](./issue-93-galeria.html) — demonstração estática com estados, controles e padrões do produto. Abrir o HTML localmente com o CSS no mesmo diretório para visualização. Botões não realizam operações reais.
 - Este documento — linguagem visual, princípios, catálogo, acessibilidade, responsividade, critérios de revisão e pendências.
 
-A paleta de referência do Design System foi atualizada para a direção cromática provisória definida pelo PO em Q-019: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF`, cinza claro `#F0F0F0` e preto suave `#0F0F0F`. Os códigos orientam a proposta visual, mas não substituem o pacote de marca fornecido/autorizado pela FORD. **Não utilizar nem reconstruir o Ford Oval sem arquivo oficial autorizado**. Até lá, identificar o produto apenas pelo nome textual Polychat.
+A paleta de referência do Design System utiliza a direção cromática provisória definida pelo PO em Q-019: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF`, cinza claro `#F0F0F0` e preto suave `#0F0F0F`. Para esta proposta acadêmica, a galeria também exibe o Ford Oval como referência visual, carregado da imagem publicada na [Wikimedia Commons — File:Ford logo.svg](https://commons.wikimedia.org/wiki/File:Ford_logo.svg). A página da fonte identifica o desenho como domínio público para fins de copyright nos Estados Unidos, mas ressalva que podem existir restrições de marca em determinadas jurisdições. A inclusão atende à decisão do PO para uso ilustrativo neste trabalho acadêmico; **não afirma autorização da Ford, não implica afiliação ou endosso e não autoriza uso comercial nem incorporação ao runtime**. Para uso institucional ou em produção, continuam necessários os ativos e as orientações oficiais da Ford.
 
 ## 2. Princípios de UX
 
@@ -129,7 +129,7 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 
 | Ponto | Referência | Dono sugerido |
 |---|---|---|
-| Arquivo autorizado do Ford Oval e regras específicas de aplicação/tipografia, se existentes | Q-019; POLY-UX-DEC-001 | FORD / Comunicação |
+| Pacote oficial de marca e regras específicas de aplicação/tipografia para uso institucional ou produção | Q-019; POLY-UX-DEC-001 | FORD / Comunicação |
 | Evidências de acessibilidade/homologação | #129; obrigações aplicáveis, sem requisito adicional específico da FORD (Q-020 resolvida) | PO / SQA / UX |
 | Matriz de navegadores e dispositivos | Q-012 resolvida: Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos | TI / SQA |
 | Arquitetura da informação e catálogo de telas | Q-018 resolvida; decisões registradas em POLY-UX-DEC-001 | PO / UX |
@@ -179,7 +179,7 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 | Tema | Situação | Condição para aprovação |
 |---|---|---|
 | Paleta provisória Ford | Definida pelo PO em Q-019 e refletida nos tokens | Usar nos protótipos e na documentação; não declarar como aprovação integral do manual corporativo |
-| Ford Oval e regras específicas de tipografia/aplicação | Arquivo oficial/autorizado ainda não fornecido | Aplicar somente após recebimento dos ativos e orientações autorizados pela FORD |
+| Ford Oval e regras específicas de tipografia/aplicação | Referência visual da Wikimedia Commons incluída na galeria apenas para uso acadêmico; pacote oficial da Ford ainda não fornecido | Manter atribuição e ressalva de marca; não apresentar como ativo oficial nem usar em produção sem autorização |
 | Critérios de acessibilidade aplicáveis | Q-020 resolvida: FORD não definiu exigências adicionais para o programa inicial | Manter obrigações legais/corporativas aplicáveis e concluir testes/evidências de acessibilidade pertinentes |
 | Contraste de todos os componentes e estados | Parcial; cálculos cobrem pares selecionados | Medir texto, bordas, ícones, foco, hover, desabilitado e fundos efetivamente renderizados |
 | Navegação por teclado | Testes manuais pendentes | Executar Tab/Shift+Tab e validar ordem, foco e operação dos controles |
@@ -193,7 +193,7 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 ### 10.4 Ações para reavaliação
 
 1. **UX/UI:** corrigir inconsistências visuais e documentar variantes/estados que ainda não estejam demonstrados na galeria.
-2. **FORD/Comunicação:** fornecer o arquivo autorizado do Ford Oval e eventuais regras específicas de tipografia/aplicação; a paleta cromática provisória já foi definida pelo PO e registrada em POLY-UX-DEC-001.
+2. **FORD/Comunicação:** fornecer o pacote oficial do Ford Oval e eventuais regras específicas de tipografia/aplicação para eventual uso institucional/produção. A referência visual da Wikimedia Commons atende somente à apresentação acadêmica e não substitui os ativos oficiais.
 3. **Tech Lead:** selecionar a biblioteca de ícones e revisar a estratégia de manutenção dos tokens e componentes.
 4. **QA/SQA:** executar os casos manuais M-01 a M-08 aplicáveis no documento \`issue-93-evidencias-acessibilidade.md\`, anexando evidência reproduzível. Casos não executados devem permanecer \`NOT RUN\` ou \`PENDING\`.
 5. **QA/SQA:** complementar a avaliação de contraste para estados e componentes efetivamente renderizados, incluindo foco, bordas e controles desabilitados.
@@ -205,7 +205,7 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 A Issue #93 deve permanecer aberta e a PR #143 deve permanecer em Draft até que:
 
 - a documentação e a biblioteca demonstrativa estejam revisadas;
-- a paleta provisória Ford esteja formalmente registrada (concluído em Q-019), mantendo o uso do Ford Oval condicionado ao arquivo autorizado;
+- a paleta provisória Ford esteja formalmente registrada (concluído em Q-019) e a referência visual do Ford Oval esteja acompanhada de atribuição e ressalva explícita de uso acadêmico, sem alegação de autorização ou endosso;
 - os testes de teclado, zoom/reflow, leitor de tela e contraste aplicáveis tenham evidências;
 - a seleção de ícones e sua licença estejam documentadas;
 - a galeria hospedada tenha sido verificada;
@@ -218,4 +218,9 @@ A Issue #93 deve permanecer aberta e a PR #143 deve permanecer em Draft até que
 
 ## Atualização de decisões de produto — 20/11/2026
 
-Q-018 foi resolvida pelo PO: o mapa de telas e a navegação por perfil estão registrados em [POLY-UX-DEC-001](./decisoes-produto-q018-q019.md). Q-019 possui paleta cromática provisória definida (`#00095B`, `#00142E`, `#066FEF`, branco e neutros); o arquivo autorizado do Ford Oval e eventuais regras corporativas específicas permanecem pendentes. A galeria e os tokens desta PR refletem a paleta provisória, sem alterar o runtime.
+Q-018 foi resolvida pelo PO: o mapa de telas e a navegação por perfil estão registrados em [POLY-UX-DEC-001](./decisoes-produto-q018-q019.md). Q-019 possui paleta cromática provisória definida (`#00095B`, `#00142E`, `#066FEF`, branco e neutros). Por decisão do PO em 20/11/2026, a galeria passa a exibir uma referência visual do Ford Oval obtida na Wikimedia Commons, com fonte e ressalva de uso acadêmico documentadas; isso não equivale ao fornecimento de ativo oficial, autorização da Ford ou homologação corporativa. O pacote oficial permanece necessário para eventual uso institucional/produção. Nenhuma alteração foi feita no runtime.
+
+
+## Decisão do PO — referência visual do Ford Oval (20/11/2026)
+
+A pedido do PO, a galeria desta proposta acadêmica passa a exibir a imagem do Ford Oval publicada na [Wikimedia Commons — File:Ford logo.svg](https://commons.wikimedia.org/wiki/File:Ford_logo.svg). A imagem é carregada da miniatura hospedada pela Wikimedia Commons, sem edição do desenho. A página de origem classifica o arquivo como domínio público para fins de copyright nos Estados Unidos e informa que restrições de marca ainda podem existir em certas jurisdições. Esta inclusão é **exclusivamente ilustrativa e acadêmica**: não declara que o Polychat seja produto oficial, afiliado, patrocinado ou endossado pela Ford; não representa aprovação do manual de marca; e não autoriza uso comercial ou aplicação no runtime. A fonte é indicada no README e na galeria. Para adoção institucional ou produtiva, o pacote de marca autorizado e as regras oficiais da Ford continuam necessários.
