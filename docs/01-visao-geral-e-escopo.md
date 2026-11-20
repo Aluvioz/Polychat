@@ -139,7 +139,7 @@ Todos os administradores do perfil TI possuem os mesmos poderes administrativos.
 
 ## 1.7 Infraestrutura, operação e restrições tecnológicas
 
-A infraestrutura deve permanecer sob controle da FORD, preferencialmente em território brasileiro. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da FORD. Bibliotecas de código e atualizações de software que não acessem dados são permitidas.
+Supabase e Vercel são as plataformas oficiais do Polychat, conforme alinhamento complementar do PO com Desenvolvimento. A operação deve respeitar a governança da FORD, preferencialmente com regiões de dados/execução adequadas ao Brasil, isolamento de ambientes e controle de acessos. Outros serviços de terceiros não estão automaticamente autorizados a acessar ou processar dados.
 
 Hospedagem, banco de dados, autenticação, armazenamento de anexos, antimalware, monitoramento, segredos e operação devem respeitar essa fronteira. Os ambientes de desenvolvimento, homologação e produção devem permanecer isolados conforme alinhamento concluído com Desenvolvimento.
 
