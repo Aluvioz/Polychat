@@ -2,10 +2,10 @@
 
 **Issue de origem:** #88 — Consolidar baseline de requisitos e escopo MVP  
 **Identificador:** POLY-REQ-001  
-**Versão:** 0.4 — 19/11/2026  
+**Versão:** 0.5 — 20/11/2026  
 **Fonte primária:** Questionário de Esclarecimento de Requisitos da FORD, versão atualizada (FORD v2), recebido em 19/11/2026.  
 **Fontes complementares:** alinhamentos do PO com Desenvolvimento, premissas consolidadas nos documentos 00 a 08 e decisões de negócio registradas pelo representante da FORD.  
-**Estado:** baseline de requisitos de produto atualizada; decisões de infraestrutura e ADRs antigas precisam ser reconciliadas com a restrição da FORD de manter dados e operação sob seu controle.
+**Estado:** baseline de produto atualizada com arquitetura da informação por perfil e paleta visual provisória Ford; ativos oficiais de logotipo permanecem pendentes em Q-019 e compatibilização arquitetural permanece em Q-025.
 
 Esta versão substitui, para a especificação de produto, a baseline v0.3 baseada principalmente na visão POLYCHAT — FORD v0.1. Os identificadores existentes foram preservados; os novos requisitos funcionais foram acrescentados a partir de RF-019.
 
@@ -82,7 +82,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Auditoria das operações administrativas e de segurança conforme catálogo definido pela FORD.
 - Criptografia em trânsito e em repouso, sem criptografia ponta a ponta (E2EE); o servidor mantém acesso ao conteúdo para monitoramento e administração.
 - Usuário acessa somente por celular Android/iOS; TI acessa somente por computador.
-- Interface exclusivamente em português, azul e branco, com logo da FORD.
+- Interface exclusivamente em português, com paleta Ford provisória: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. Aplicar o Ford Oval somente a partir de arquivo oficial autorizado.
 - Indicador de mensagens não lidas dentro do aplicativo; sem notificações push ou notificações do navegador.
 - Hospedagem e infraestrutura sob controle da FORD, preferencialmente no Brasil; nenhum terceiro pode acessar, armazenar ou processar dados da organização.
 
@@ -134,11 +134,13 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 | D-022 | Infraestrutura sob controle da FORD, preferencialmente no Brasil; nenhum terceiro acessa, armazena ou processa dados. | Confirmado | RN-022; RNF-013 |
 | D-023 | Disponibilidade 99% mensal; RPO 24h em desastre; RTO 24h; backups diários por 12 meses; manutenção fora do horário comercial; suporte em horário comercial. | Confirmado/alinhado | RN-023; RNF-009 |
 | D-024 | Usuário em Android/iOS, Chrome/Safari móveis atuais; TI em computador, Chrome/Edge/Firefox atuais; tablets não permitidos. | Confirmado/alinhado | RN-015; RF-017; RF-018; RNF-005 |
-| D-025 | Interface em português, azul/branco e logo FORD; sem push/browser notification. | Confirmado; ativos visuais detalhados dependem de material de marca | RN-010; RN-019; RF-023; RNF-006 |
+| D-025 | Interface em português, paleta Ford provisória (`#00095B`, `#00142E`, `#066FEF`, branco e neutros) e uso do Ford Oval somente com arquivo oficial autorizado; sem push/browser notification. | Direção cromática provisória definida pelo PO em 20/11/2026; arquivo oficial do logo pendente em Q-019 | RN-010; RN-019; RF-023; RNF-006; POLY-UX-DEC-001 |
 | D-026 | Lançamento único após homologação, sem piloto; aceite escrito e Go/No-Go do gestor. | Confirmado/alinhado | RN-024; RF-001 a RF-023; RNF-001 a RNF-013 |
 | D-027 | R$ 450.000,00 como referência comercial global, incluindo implantação e excluindo infraestrutura, licenças, suporte, manutenção e treinamento. | Condição informada; não é teto aprovado | RN-020 |
 | D-028 | Sem data limite definida; prazo será combinado por planejamento de sprints. | Confirmado | RN-024; Q-021 |
 | D-029 | Segurança é prioridade sobre velocidade; posicionamento do cliente sobre privacidade/LGPD não afasta obrigações legais. | Posicionamento registrado | RN-016; RN-025; RNF-011 |
+| D-030 | Arquitetura da informação: Usuário mobile com Conversas recentes como área principal; TI desktop com Dashboard, Usuários, Grupos, Consulta, Alertas, Auditoria e Configurações restritas aos controles definidos. | Decisão de produto do PO em 20/11/2026 | Q-018; POLY-UX-DEC-001 |
+| D-031 | Identidade visual provisória baseada na família cromática Ford: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco e neutros; logotipo oficial condicionado a arquivo autorizado. | Paleta provisória definida pelo PO em 20/11/2026; ativos oficiais pendentes | Q-019; RNF-006; POLY-UX-DEC-001 |
 
 ## 4. Inventário e rastreabilidade
 
@@ -195,7 +197,7 @@ A descrição detalhada e os critérios de aceitação estão em [03 — Requisi
 | RNF-003 | Proteção de credenciais e sessões | Confirmado; alinhamento técnico |
 | RNF-004 | Auditabilidade, catálogo de eventos, acesso e retenção | Confirmado; alinhamento técnico |
 | RNF-005 | Compatibilidade e restrição por dispositivo | Confirmado; homologação alinhada |
-| RNF-006 | Usabilidade, idioma e identidade visual | Direção confirmada; ativos exatos de marca pendentes |
+| RNF-006 | Usabilidade, idioma e identidade visual | Navegação e paleta provisória definidas; arquivo oficial do logotipo ainda pendente em Q-019 |
 | RNF-007 | Desempenho | Metas alinhadas com Desenvolvimento |
 | RNF-008 | Capacidade inicial e armazenamento | Limites alinhados com Desenvolvimento |
 | RNF-009 | Disponibilidade, continuidade, backup, RPO/RTO | Confirmado/alinhado |
@@ -297,8 +299,8 @@ Essas evidências não comprovam integração com infraestrutura FORD, aplicaç�
 
 As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). Permanecem abertas somente:
 
-- Q-018 — Consolidação interna do mapa de telas, navegação e wireframes pelo PO/UX.
-- Q-019 — Obtenção dos ativos oficiais da identidade visual FORD, caso ainda não estejam disponíveis.
+- Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
+- Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
 - Q-025 — Reconciliação da arquitetura e das ADRs anteriores com a exigência de infraestrutura sob controle da FORD, sem terceiro acessando, armazenando ou processando dados.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
