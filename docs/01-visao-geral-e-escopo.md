@@ -120,7 +120,7 @@ Todos os administradores do perfil TI possuem os mesmos poderes administrativos.
 
 - Mensagens suspeitas, incluindo palavrões definidos em lista mantida pelo TI, são detectadas automaticamente por regras.
 - Não há análise contextual nem uso de IA de terceiros.
-- Conteúdo de mensagens e anexos não pode ser enviado a serviços externos.
+- O conteúdo de mensagens e anexos não pode ser encaminhado a serviços adicionais de análise, IA ou scanner não aprovados; o processamento necessário nos componentes oficiais Supabase/Vercel e no scanner interno do Polychat é permitido.
 - Os alertas aparecem em fila administrativa no console do TI.
 - A equipe de TI analisa os alertas; o encerramento não exige justificativa.
 - Prazos por severidade: alta, imediatamente e em até 1 hora; média, até 1 dia útil; baixa, até 3 dias úteis.
