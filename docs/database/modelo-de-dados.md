@@ -5,10 +5,10 @@
 - **Status:** modelo lógico atualizado para a baseline FORD v2; revisão física/técnica pendente
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados
-- **Tecnologia proposta:** PostgreSQL em infraestrutura sob controle da FORD
-- **Dependência arquitetural:** Q-025 — compatibilização com a infraestrutura FORD
+- **Tecnologia oficial:** PostgreSQL via Supabase Database
+- **Dependência técnica:** Q-025 — validação de projetos, regiões, ambientes e configuração Supabase/Vercel
 
-> Este documento consolida o modelo lógico à luz da baseline POLY-REQ-001 v0.4. Não aprova DDL, migrations, RLS ou tecnologia de implantação. A migração antiga vinculada a Supabase é evidência histórica e não define a arquitetura-alvo. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da FORD.
+> Este documento consolida o modelo lógico à luz da baseline POLY-REQ-001 v0.4. Supabase é a plataforma oficial de backend do Polychat; o documento não aprova por si só DDL, migrations ou RLS de domínio. A migration existente é uma fundação parcial, não evidência de implementação completa. Serviços externos adicionais exigem aprovação explícita.
 
 ## 1. Objetivo
 
@@ -24,7 +24,7 @@ O modelo considera:
 - matriz de autorização da Issue #100, com parecer funcional do PO registrado;
 - política de anexos e antimalware, atualizada conforme limites e regras da FORD v2;
 - documentos de auditoria, monitoramento e retenção;
-- artefatos existentes no repositório, identificados como legado quando vinculados ao Supabase.
+- artefatos existentes no repositório, identificados conforme seu grau de implementação e cobertura, sem classificar Supabase como legado.
 
 ### 2.1 Convenção de status
 
@@ -32,14 +32,14 @@ O modelo considera:
 |---|---|
 | **Requisito confirmado** | Regra funcional consolidada na FORD v2 ou alinhamento formal do PO com Desenvolvimento. |
 | **Estrutura lógica proposta** | Entidade/atributo necessário para suportar o requisito; nomes e tipos físicos ainda podem mudar. |
-| **Implementação legada** | Código ou migration existente, mas vinculado à arquitetura Supabase/Vercel depreciada. |
+| **Implementação parcial** | Código ou migration existente na stack oficial, mas ainda sem cobertura funcional completa ou integração comprovada. |
 | **Revisão técnica pendente** | Requer decisão sobre tipos, chaves, índices, constraints, transações, RLS ou implantação. |
 | **Pendente de escopo** | Informação funcional ainda não detalhada, como telas/parametrização persistente não inventariada. |
 
 ## 3. Premissas e limites
 
 1. O banco lógico é relacional; PostgreSQL é a tecnologia proposta, desde que sua instância, administração, backups e operação permaneçam sob controle da FORD.
-2. A arquitetura física definitiva depende da Q-025. Supabase Database/Auth/Storage/Realtime não são arquitetura-alvo vigente após a ADR-003 passar a Deprecated.
+2. Supabase é a plataforma oficial de backend. Os serviços Database/Auth/Storage/Realtime são detalhados nas ADRs 004 a 008; Q-025 verifica projetos, regiões e configurações por ambiente, não a escolha da plataforma.
 3. O escopo inicial é uma única organização (FORD), sem multi-tenancy ou `tenant_id` adicional.
 4. Os únicos perfis de aplicação são `user` e `ti`. Todos os administradores TI possuem poderes equivalentes; não criar administrador principal, owner ou moderator.
 5. Contas são criadas exclusivamente pelo TI. O nome de usuário é único e pode ser definido/alterado pelo TI. A senha é criada e enviada individualmente pelo TI; recuperação é exclusiva do TI.
@@ -48,10 +48,10 @@ O modelo considera:
 8. Usuários não podem editar ou excluir mensagens. TI pode editar ou excluir mensagens a qualquer momento; operações devem ser auditadas.
 9. O sistema registra confirmação/horário de leitura e quantidade de mensagens não lidas.
 10. Anexos são PDF/JPEG, até 10 MB por arquivo e até 5 arquivos por mensagem. O TI define quotas individuais e capacidade total; não existe quota por conversa.
-11. Anexos são analisados por antimalware na infraestrutura FORD. Falha ou resultado inconclusivo mantém o anexo bloqueado para o fluxo normal. TI pode liberar qualquer anexo por ação administrativa auditada.
+11. Anexos são analisados por antimalware integrado à stack oficial antes da disponibilização; não utilizar scanner externo não aprovado. Falha ou resultado inconclusivo mantém o anexo bloqueado para o fluxo normal. TI pode liberar qualquer anexo por ação administrativa auditada.
 12. Mensagens, anexos, alertas, logs de auditoria e registros administrativos não sofrem exclusão automática enquanto o sistema opera. Exclusões são autorizadas pelo TI; backups diários são retidos por 12 meses.
 13. A consulta de conversas pelo TI é permitida a qualquer momento, sem justificativa ou segunda aprovação, e deve ser auditada. Exportação de conversas também é permitida e auditada.
-14. A detecção de conteúdo suspeito é baseada em regras/lista de termos gerida pelo TI, sem análise contextual ou IA/serviço externo e sem bloqueio automático de mensagem.
+14. A detecção de conteúdo suspeito é baseada em regras/lista de termos gerida pelo TI, sem análise contextual ou IA/serviço externo não aprovado e sem bloqueio automático de mensagem.
 15. O modelo deste documento é lógico. Não aplicar migrations nem declarar RLS de domínio implementada apenas com base nesta documentação.
 
 ## 4. Diagrama lógico preliminar
@@ -111,7 +111,7 @@ Os campos abaixo são candidatos lógicos. Tipos SQL, constraints, chaves e índ
 - Todos os perfis TI possuem os mesmos poderes.
 - A desativação encerra imediatamente as sessões, preservando o histórico.
 
-**Legado:** a migration `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles` vinculado a `auth.users`. Esse artefato é vinculado à direção tecnológica anterior e não é o modelo físico-alvo. A nova solução deve retirar a dependência externa e preservar as regras funcionais.
+**Implementação parcial existente:** a migration `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles` vinculado a `auth.users` no Supabase Auth. O artefato integra a stack oficial, mas cobre apenas perfis; deve ser evoluído com as entidades de domínio e políticas RLS correspondentes.
 
 ### 5.2 conversations — conversas individuais e grupos
 
@@ -222,7 +222,7 @@ Os campos abaixo são candidatos lógicos. Tipos SQL, constraints, chaves e índ
 - TI define quotas individuais e capacidade total; não existe limite por conversa.
 - PDF protegido por senha é rejeitado.
 - JPEG é selecionado da galeria; não há captura por câmera. Metadados EXIF/GPS são removidos.
-- Análise antimalware ocorre na infraestrutura FORD.
+- Análise antimalware deve ser executada no fluxo controlado do Polychat, integrado ao armazenamento privado Supabase.
 - Falha, indisponibilidade ou inconclusão mantém o anexo bloqueado no fluxo normal; mensagem de texto continua funcionando.
 - TI pode liberar qualquer anexo por operação administrativa auditada. Usuários não podem contornar a análise.
 - TI pode baixar anexos durante investigações; o download é auditado.
@@ -257,7 +257,7 @@ Os campos abaixo são candidatos lógicos. Tipos SQL, constraints, chaves e índ
 
 A estrutura lógica deve permitir manter os termos habilitados, sua regra/categoria e o histórico mínimo de administração necessário. Campos físicos (por exemplo, termo, status, versão, criado/alterado por e timestamps) são candidatos e devem ser revistos tecnicamente. Não criar uma tabela genérica de configurações para armazenar qualquer parâmetro sem inventário.
 
-A lista e o processamento devem permanecer dentro da infraestrutura FORD. Nenhum texto de mensagem pode ser enviado a serviço externo.
+A lista e o processamento devem permanecer nos componentes oficiais Supabase/Vercel. Nenhum texto de mensagem pode ser enviado a serviços externos adicionais ou ferramentas de IA não aprovadas.
 
 ### 5.9 audit_events — eventos de auditoria
 
@@ -348,7 +348,7 @@ Propostas para revisão técnica:
 - Role, estado e membership não podem ser aceitos de dados enviados livremente pelo navegador.
 - Negar por padrão quando identidade, membership ou permissão não puderem ser verificadas.
 - TI tem exceções administrativas explicitamente definidas para consulta/exportação, administração de mensagens, anexos, alertas e auditoria, todas rastreáveis.
-- A migration Supabase existente só cobre `profiles` e é legado; não comprova RLS de domínio nem define o modelo final.
+- A migration Supabase existente só cobre `profiles`; não comprova RLS de domínio nem define sozinha o modelo final.
 
 ## 9. Retenção, exclusão e histórico
 
@@ -385,7 +385,7 @@ Propostas para revisão técnica:
 | Q-016 — desempenho/capacidade | Alinhada com Desenvolvimento | metas e capacidade constam dos requisitos técnicos; não reabrir como pendência de produto |
 | Q-024 — edição/exclusão de mensagens | Respondida | Usuário não edita/exclui; TI pode editar/excluir com auditoria |
 | Q-018/Q-019 | Parcialmente abertos | refinamento de telas/navegação e ativos oficiais de marca |
-| Q-025 | Aberta | compatibilização da arquitetura técnica com infraestrutura sob controle da FORD |
+| Q-025 | Aberta | validação técnica dos projetos, regiões e ambientes da stack oficial Supabase/Vercel |
 
 ## 12. Validações e critérios para migrations
 
@@ -394,7 +394,7 @@ Antes de migrations:
 - [ ] TI revisa administração de contas, grupos, consulta/exportação e auditoria.
 - [ ] Matriz #100 e revisão independente SQA são consideradas; o parecer funcional do PO não substitui SQA.
 - [ ] Estratégia de autorização/RLS e testes negativos de domínio são aprovados.
-- [ ] A solução de banco/identidade/storage é compatível com a Q-025 e ADRs revisadas.
+- [ ] Os projetos Supabase/Vercel, regiões, políticas RLS, storage privado e integrações são validados conforme a Q-025 e ADRs revisadas.
 - [ ] Backup/restore e retenção são compatíveis com RN-021/RNF-009.
 - [ ] A revisão ocorre por PR antes de aplicar migrations.
 
