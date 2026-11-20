@@ -20,7 +20,7 @@ Definir uma direção de persistência que preserve integridade referencial, ras
 ## Alternativas consideradas
 
 1. **PostgreSQL via Supabase Database:** plataforma oficial escolhida para persistência, sujeita à validação de schema, RLS, região, backup e homologação.
-2. **Outro banco relacional operado sob controle da FORD:** alternativa possível caso a infraestrutura e os padrões corporativos indiquem tecnologia diferente.
+2. **Outro banco relacional:** alternativa descartada na direção atual, salvo decisão formal posterior que substitua a ADR-003.
 3. **Outro banco/serviço de terceiros:** não aprovado para o projeto sem decisão explícita e avaliação própria.
 4. **Banco documental:** não selecionado nesta proposta, pois as relações entre conversas, participantes, autoria, mensagens e auditoria exigem integridade relacional.
 
@@ -54,13 +54,13 @@ Não introduzir deleções em cascata ou expiração automática que contrariem 
 
 ## Justificativa
 
-O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. Um banco relacional oferece integridade referencial e transações adequadas a essas relações. A operação sob controle da FORD atende à restrição de infraestrutura, independentemente do fornecedor de software utilizado para o mecanismo de banco.
+O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. Um banco relacional oferece integridade referencial e transações adequadas a essas relações. A administração dos projetos, permissões, políticas e dados permanece sob governança da FORD; a operação utiliza o Supabase Database como plataforma oficial.
 
 ## Consequências
 
 **Positivas:**
 - Integridade referencial e transações para o domínio de comunicação.
-- Independência de um serviço externo específico de banco de dados.
+- Dependência do serviço oficial Supabase Database, que deve ser considerada na análise de continuidade, portabilidade e custos.
 - Possibilidade de aplicar controle de acesso no servidor e no próprio banco.
 - Rastreabilidade de operações administrativas e regras de retenção.
 
