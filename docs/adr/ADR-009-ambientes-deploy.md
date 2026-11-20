@@ -26,7 +26,7 @@ Estabelecer isolamento de ambientes, gestão de segredos, promoção segura, evi
 ## Alternativas consideradas
 
 1. **Ambientes oficiais Supabase + Vercel:** projetos/ambientes segregados, com gestão de acessos, variáveis e configurações sob governança da FORD.
-2. **Hospedagem ou pipeline SaaS externo para dados da FORD:** não permitido quando o serviço puder acessar, armazenar ou processar dados, artefatos com dados, segredos ou conteúdo operacional da organização.
+2. **Outros serviços SaaS de hospedagem/pipeline:** não aprovados para o projeto quando não estiverem incluídos na decisão explícita Supabase + Vercel; qualquer ampliação exige avaliação e aprovação própria.
 3. **Ambiente único compartilhado:** não atende ao requisito de isolamento entre desenvolvimento, homologação e produção.
 4. **CI de código sem acesso a dados corporativos:** pode ser utilizado para testes e validações de código, desde que não receba dados da FORD, segredos operacionais ou acesso capaz de processá-los.
 
