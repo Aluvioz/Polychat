@@ -5,7 +5,7 @@
 **Versão:** 0.4 — 19/11/2026  
 **Fonte primária:** Questionário de Esclarecimento de Requisitos da FORD, versão atualizada (FORD v2), recebido em 19/11/2026.  
 **Fontes complementares:** alinhamentos do PO com Desenvolvimento, premissas consolidadas nos documentos 00 a 08 e decisões de negócio registradas pelo representante da FORD.  
-**Estado:** baseline de requisitos de produto atualizada; decisões de infraestrutura e ADRs antigas precisam ser reconciliadas com a restrição da FORD de manter dados e operação sob seu controle.
+**Estado:** baseline de requisitos de produto v0.4 vigente. Supabase e Vercel são as plataformas oficiais do projeto; sua seleção está concluída. Permanecem verificações técnicas específicas de configuração e evidências, sem reabrir a decisão da stack.
 
 Esta versão substitui, para a especificação de produto, a baseline v0.3 baseada principalmente na visão POLYCHAT — FORD v0.1. Os identificadores existentes foram preservados; os novos requisitos funcionais foram acrescentados a partir de RF-019.
 
@@ -26,8 +26,9 @@ A classificação de um requisito como confirmado ou alinhado não significa que
 1. A FORD v2 e os alinhamentos complementares registrados pelo PO em 19/11/2026 prevalecem sobre respostas e interpretações anteriores da visão v0.1.
 2. As decisões de negócio atuais prevalecem sobre documentos anteriores que ainda indiquem políticas, permissões ou parâmetros diferentes.
 3. Os documentos 00 a 08 desta revisão detalham a baseline e devem permanecer consistentes com este documento.
-4. A Issue #88 e as ADRs elaboradas antes do alinhamento continuam sendo registros históricos/técnicos, mas não autorizam ignorar a restrição mais recente da FORD para infraestrutura e processamento de dados.
-5. Não se presume que uma tecnologia atualmente presente no código esteja aprovada para produção apenas por já ter sido utilizada ou documentada.
+4. Supabase e Vercel são as plataformas oficiais do projeto, conforme alinhamento complementar do PO com Desenvolvimento e ADR-003 Accepted. A vedação a outros serviços externos não aprovados não se aplica às duas plataformas expressamente escolhidas.
+5. A aprovação das plataformas não comprova que todas as integrações, recursos, configurações ou módulos estejam implementados e homologados; essas evidências devem ser verificadas separadamente.
+6. As Issues #96 e #98 permanecem encerradas com aceite técnico nos seus escopos originais; verificações posteriores não devem reabrir nem repetir os trabalhos aceitos.
 
 ### 1.3 Premissas de gestão já encerradas
 
@@ -124,7 +125,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 | D-012 | Confirmação/horário de leitura e contador de mensagens não lidas. | Confirmado | RF-019 |
 | D-013 | Mensagens confirmadas são persistidas e recuperadas após reconexão normal; RPO de 24h aplica-se somente a desastre/falha de infraestrutura. | Confirmado | RN-023; RF-009; RF-010; RNF-009 |
 | D-014 | Anexos PDF/JPEG; 10 MB por arquivo; até 5 por mensagem; quotas individual e total administradas pelo TI. | Confirmado/alinhado | RN-008; RF-011; RF-012; RNF-010 |
-| D-015 | Scanner antimalware na infraestrutura FORD; falha/inconclusão mantém anexo bloqueado; TI pode liberar arquivo. | Confirmado | RN-008; RF-011; RF-012; RNF-010 |
+| D-015 | Scanner antimalware integrado ao fluxo controlado do Polychat na stack oficial Supabase/Vercel; falha/inconclusão mantém anexo bloqueado; TI pode liberar por ação auditada. | Confirmado/alinhado | RN-008; RF-011; RF-012; RNF-010; ADR-008 |
 | D-016 | Sem captura de foto ou gravação; JPEG selecionado da galeria; remoção de metadados GPS. | Confirmado | RN-011; RF-013 |
 | D-017 | Detecção por regras/lista de termos do TI, incluindo palavrões; sem análise contextual ou IA de terceiros. | Confirmado/alinhado | RN-012; RF-014 |
 | D-018 | Alertas baixa/média/alta; prazos alta até 1h, média 1 dia útil, baixa 3 dias úteis; TI analisa e encerra sem justificativa. | Confirmado/alinhado | RN-013; RF-015 |
@@ -202,7 +203,7 @@ A descrição detalhada e os critérios de aceitação estão em [03 — Requisi
 | RNF-010 | Segurança de anexos e antimalware | Confirmado/alinhado |
 | RNF-011 | Monitoramento e tratamento de dados | Regras operacionais registradas; obrigações legais aplicáveis permanecem |
 | RNF-012 | Acessibilidade | Não há requisito adicional informado pela FORD; obrigações aplicáveis permanecem |
-| RNF-013 | Infraestrutura, soberania de dados e isolamento dos ambientes | Restrição FORD confirmada; arquitetura técnica a reconciliar |
+| RNF-013 | Plataformas oficiais, governança, região e isolamento dos ambientes | Supabase/Vercel confirmadas; controles por ambiente devem ser evidenciados |
 
 A descrição completa está em [04 — Requisitos não funcionais](04-requisitos-nao-funcionais.md).
 
@@ -299,7 +300,7 @@ As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 �
 
 - Q-018 — Consolidação interna do mapa de telas, navegação e wireframes pelo PO/UX.
 - Q-019 — Obtenção dos ativos oficiais da identidade visual FORD, caso ainda não estejam disponíveis.
-- Q-025 — Validar projetos/regiões Supabase, ambientes Vercel, acessos, segredos, integrações e evidências de homologação da stack oficial.
+- Q-025 — Consolidar evidências objetivas da configuração e das integrações dos serviços oficiais Supabase/Vercel que ainda não estejam cobertas pelos aceites das Issues #96 e #98; não repetir smoke tests, rollback ou configuração já aceitos.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
