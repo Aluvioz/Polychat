@@ -12,7 +12,7 @@
 - [Galeria de componentes HTML](./issue-93-galeria.html) — demonstração estática com estados, controles e padrões do produto. Abrir o HTML localmente com o CSS no mesmo diretório para visualização. Botões não realizam operações reais.
 - Este documento — linguagem visual, princípios, catálogo, acessibilidade, responsividade, critérios de revisão e pendências.
 
-Os tokens tomam como **ponto de partida provisório** cores existentes em `src/app/globals.css` na `main`: `#003478`, `#001f4d`, `#1769aa`, `#10243e`, `#64748b`, `#ffffff`, `#f4f7fb`. Não representam códigos oficiais da Ford. **Não utilizar logotipo oficial sem fornecimento e autorização (Q-019, RN-019)**. O símbolo textual P da demonstração é um placeholder.
+A paleta de referência do Design System foi atualizada para a direção cromática provisória definida pelo PO em Q-019: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF`, cinza claro `#F0F0F0` e preto suave `#0F0F0F`. Os códigos orientam a proposta visual, mas não substituem o pacote de marca fornecido/autorizado pela FORD. **Não utilizar nem reconstruir o Ford Oval sem arquivo oficial autorizado**. Até lá, identificar o produto apenas pelo nome textual Polychat.
 
 ## 2. Princípios de UX
 
@@ -26,15 +26,15 @@ Os tokens tomam como **ponto de partida provisório** cores existentes em `src/a
 
 | Token CSS | Valor | Uso | Fonte |
 |---|---|---|---|
-| `--pc-brand-700` | `#003478` | Botões primários, links, títulos de marca | Existente na landing page |
-| `--pc-brand-900` | `#001F4D` | Hover e superfícies azuis profundas | Existente |
-| `--pc-brand-600` | `#1769AA` | Acentos, **não** texto pequeno sem teste | Existente |
-| `--pc-brand-050` | `#EDF4FB` | Fundo informativo | Proposta |
-| `--pc-ink` | `#10243E` | Texto principal | Existente |
+| `--pc-brand-700` | `#00095B` | Ford Blue: botões primários, navegação e elementos de marca do produto | Paleta provisória Q-019 |
+| `--pc-brand-900` | `#00142E` | Ford Twilight: cabeçalhos e superfícies azuis profundas | Paleta provisória Q-019 |
+| `--pc-brand-600` | `#066FEF` | Ford Skyview: links e acentos; branco em texto de botão exige contraste validado | Paleta provisória Q-019 |
+| `--pc-brand-050` | `#F0F0F0` | Fundo neutro claro e separadores | Token neutro do produto |
+| `--pc-ink` | `#0F0F0F` | Texto principal sobre superfícies claras | Token neutro do produto |
 | `--pc-text-secondary` | `#475569` | Texto secundário | Proposta |
 | `--pc-text-muted` | `#64748B` | Metadados em fundo branco | Existente |
 | `--pc-surface` | `#FFFFFF` | Cards/formulários | Existente |
-| `--pc-background` | `#F4F7FB` | Fundo da aplicação | Existente |
+| `--pc-background` | `#F0F0F0` | Fundo da aplicação | Existente |
 | `--pc-border` | `#CBD5E1` | Delimitadores, entradas | Proposta |
 | `--pc-success` | `#027A48` | Sucesso textual em fundo branco | Proposta |
 | `--pc-error` | `#B42318` | Erro e ação destrutiva | Proposta |
@@ -54,16 +54,16 @@ Razões calculadas com luminância relativa sRGB e fórmula `(L_clara + 0,05) / 
 
 | Primeiro plano / fundo | Razão | WCAG 2.2 AA texto normal (≥ 4,5:1) |
 |---|---:|---|
-| `#003478` / `#FFFFFF` | 11,92:1 | Passa |
-| `#FFFFFF` / `#003478` | 11,92:1 | Passa |
-| `#001F4D` / `#FFFFFF` | 16,11:1 | Passa |
-| `#1769AA` / `#FFFFFF` | 5,77:1 | Passa |
-| `#10243E` / `#FFFFFF` | 15,63:1 | Passa |
+| `#00095B` / `#FFFFFF` | 17,64:1 | Passa |
+| `#FFFFFF` / `#00095B` | 17,64:1 | Passa |
+| `#00142E` / `#FFFFFF` | 18,43:1 | Passa |
+| `#FFFFFF` / `#066FEF` | 4,64:1 | Passa, margem estreita |
+| `#0F0F0F` / `#FFFFFF` | 19,17:1 | Passa |
 | `#64748B` / `#FFFFFF` | 4,76:1 | Passa, margem estreita |
 | `#475569` / `#FFFFFF` | 7,58:1 | Passa |
 | `#B42318` / `#FFFFFF` | 6,57:1 | Passa |
 | `#027A48` / `#FFFFFF` | 5,41:1 | Passa |
-| `#003478` / `#EDF4FB` | 10,74:1 | Passa |
+| `#00095B` / `#F0F0F0` | 15,48:1 | Passa |
 
 **Restrições da evidência:** não foi feito teste automatizado de navegador, imagem renderizada, zoom, inversão de cor, contraste não textual, leitor de tela, mobile ou navegação completa por teclado. O par `#64748B` tem pouca margem e deve ser reavaliado se houver mudança de fundo/opacity. Não use códigos sem conferir o fundo efetivo.
 
@@ -129,10 +129,10 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 
 | Ponto | Referência | Dono sugerido |
 |---|---|---|
-| Azul oficial, logotipo, tipografia e manual da marca Ford | RN-019; Q-019 | Cliente / Comunicação / PO |
+| Arquivo autorizado do Ford Oval e regras específicas de aplicação/tipografia, se existentes | Q-019; POLY-UX-DEC-001 | FORD / Comunicação |
 | Evidências de acessibilidade/homologação | #129; obrigações aplicáveis, sem requisito adicional específico da FORD (Q-020 resolvida) | PO / SQA / UX |
 | Matriz de navegadores e dispositivos | Q-012 resolvida: Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos | TI / SQA |
-| Exatas páginas, ações e configurações do produto | Q-018 | PO / UX |
+| Arquitetura da informação e catálogo de telas | Q-018 resolvida; decisões registradas em POLY-UX-DEC-001 | PO / UX |
 | Regras de câmera/JPEG e limites de anexos | Q-004 e Q-011 resolvidas; implementação e testes permanecem pendentes | Desenvolvimento / SQA |
 | Remoção de integrantes e edição/exclusão de mensagens | Q-003 e Q-024 resolvidas; TI executa ações, com revogação de acesso/auditoria conforme baseline | Desenvolvimento / SQA |
 | Regras de detecção, alertas e consulta administrativa | Q-007, Q-008 e Q-009 resolvidas; implementar fila, severidades/prazos e auditoria conforme baseline | Desenvolvimento / SQA / TI |
@@ -150,7 +150,7 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 | Revisão por PR concluída | **Pendente** |
 | Ausência de regressões | **Não demonstrada**; arquivos ficam isolados em `docs/ux`, sem alterar produção |
 
-**O que falta antes de fechar:** revisão por Tech Lead/SQA/PO, obtenção dos ativos oficiais de marca (Q-019), execução das verificações de acessibilidade pertinentes e registro das evidências. A matriz de dispositivos Q-012 e o escopo de acessibilidade adicional Q-020 não são pendências de requisitos. Referência à Epic #78. Não fechar a issue sem satisfazer os critérios.
+**O que falta antes de fechar:** revisão por Tech Lead/SQA/PO e execução das verificações de acessibilidade pertinentes, com evidências. A paleta provisória de Q-019 já está definida e pode orientar a proposta; permanece pendente somente o arquivo oficial autorizado do Ford Oval e eventuais regras corporativas específicas de aplicação/tipografia. A matriz de dispositivos Q-012 e o escopo de acessibilidade adicional Q-020 não são pendências de requisitos. Referência à Epic #78. Não fechar a issue sem satisfazer os critérios.
 
 *Esta biblioteca não contém permissões funcionais ou sistemas reais e não deve ser vendida como implementação pronta do design system de produção.*
 
@@ -178,7 +178,8 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 
 | Tema | Situação | Condição para aprovação |
 |---|---|---|
-| Paleta, tipografia e logotipo oficiais da FORD | Não recebidos/confirmados nesta proposta; valores atuais são provisórios | Receber e aplicar manual/ativos oficiais da marca (Q-019) |
+| Paleta provisória Ford | Definida pelo PO em Q-019 e refletida nos tokens | Usar nos protótipos e na documentação; não declarar como aprovação integral do manual corporativo |
+| Ford Oval e regras específicas de tipografia/aplicação | Arquivo oficial/autorizado ainda não fornecido | Aplicar somente após recebimento dos ativos e orientações autorizados pela FORD |
 | Critérios de acessibilidade aplicáveis | Q-020 resolvida: FORD não definiu exigências adicionais para o programa inicial | Manter obrigações legais/corporativas aplicáveis e concluir testes/evidências de acessibilidade pertinentes |
 | Contraste de todos os componentes e estados | Parcial; cálculos cobrem pares selecionados | Medir texto, bordas, ícones, foco, hover, desabilitado e fundos efetivamente renderizados |
 | Navegação por teclado | Testes manuais pendentes | Executar Tab/Shift+Tab e validar ordem, foco e operação dos controles |
@@ -192,7 +193,7 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 ### 10.4 Ações para reavaliação
 
 1. **UX/UI:** corrigir inconsistências visuais e documentar variantes/estados que ainda não estejam demonstrados na galeria.
-2. **PO/FORD/Comunicação:** obter a referência oficial de marca e validar paleta, tipografia e uso de logotipo.
+2. **FORD/Comunicação:** fornecer o arquivo autorizado do Ford Oval e eventuais regras específicas de tipografia/aplicação; a paleta cromática provisória já foi definida pelo PO e registrada em POLY-UX-DEC-001.
 3. **Tech Lead:** selecionar a biblioteca de ícones e revisar a estratégia de manutenção dos tokens e componentes.
 4. **QA/SQA:** executar os casos manuais M-01 a M-08 aplicáveis no documento \`issue-93-evidencias-acessibilidade.md\`, anexando evidência reproduzível. Casos não executados devem permanecer \`NOT RUN\` ou \`PENDING\`.
 5. **QA/SQA:** complementar a avaliação de contraste para estados e componentes efetivamente renderizados, incluindo foco, bordas e controles desabilitados.
@@ -204,7 +205,7 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 A Issue #93 deve permanecer aberta e a PR #143 deve permanecer em Draft até que:
 
 - a documentação e a biblioteca demonstrativa estejam revisadas;
-- a direção visual oficial ou a condição provisória de uso esteja formalmente registrada;
+- a paleta provisória Ford esteja formalmente registrada (concluído em Q-019), mantendo o uso do Ford Oval condicionado ao arquivo autorizado;
 - os testes de teclado, zoom/reflow, leitor de tela e contraste aplicáveis tenham evidências;
 - a seleção de ícones e sua licença estejam documentadas;
 - a galeria hospedada tenha sido verificada;
@@ -213,3 +214,8 @@ A Issue #93 deve permanecer aberta e a PR #143 deve permanecer em Draft até que
 
 **Conclusão do PO:** a versão 0.1 pode ser usada como base de discussão e refinamento. Não está aprovada para produção, não substitui homologação de acessibilidade e não autoriza fechar a Issue #93.
 
+
+
+## Atualização de decisões de produto — 20/11/2026
+
+Q-018 foi resolvida pelo PO: o mapa de telas e a navegação por perfil estão registrados em [POLY-UX-DEC-001](./decisoes-produto-q018-q019.md). Q-019 possui paleta cromática provisória definida (`#00095B`, `#00142E`, `#066FEF`, branco e neutros); o arquivo autorizado do Ford Oval e eventuais regras corporativas específicas permanecem pendentes. A galeria e os tokens desta PR refletem a paleta provisória, sem alterar o runtime.
