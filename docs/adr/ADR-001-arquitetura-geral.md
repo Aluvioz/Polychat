@@ -14,7 +14,7 @@ A baseline exige proteção dos dados, isolamento dos ambientes e operação sob
 
 A seleção das plataformas está definida; a Q-025 permanece restrita à validação de configurações concretas (regiões, projetos por ambiente, acessos, segredos, backups, integrações e evidências de homologação). Não se deve inferir que todos os módulos já estejam implementados ou configurados em produção.
 
-O repositório contém Next.js 16, React 19, TypeScript, uma página institucional, um módulo isolado de autorização e uma migration de perfis vinculada ao modelo anterior. Não há implementação funcional ponta a ponta do chat nem comprovação de integração com infraestrutura FORD.
+O repositório contém Next.js 16, React 19, TypeScript, uma página institucional, um módulo isolado de autorização e uma migration de perfis vinculada ao modelo anterior. Não há implementação funcional ponta a ponta do chat nem comprovação de integração completa com os serviços Supabase/Vercel.
 
 ## Problema
 
@@ -22,7 +22,7 @@ Definir fronteiras de confiança, responsabilidades e componentes lógicos com u
 
 ## Alternativas consideradas
 
-1. **Arquitetura modular executada em infraestrutura sob controle da FORD:** aplicação, identidade, banco, armazenamento, análise antimalware, auditoria e operação permanecem dentro da fronteira de controle da organização.
+1. **Arquitetura modular com plataformas oficiais:** Vercel hospeda/deploya a aplicação e Supabase fornece os serviços oficiais de backend, com contas, acessos, ambientes e dados sob governança da FORD.
 2. **Serviços gerenciados oficiais do projeto:** Supabase e Vercel são a escolha aprovada para o Polychat. Outros provedores que acessem ou processem dados exigem aprovação explícita e avaliação própria.
 3. **Aplicação concentrada em um único componente:** reduz configuração inicial, mas aumenta acoplamento e dificulta separar privilégios, testar fronteiras e evoluir a operação.
 
