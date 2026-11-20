@@ -7,7 +7,7 @@
 
 ## Como ler os status
 
-- **Accepted:** decisão restrita e sustentada por requisito ou implementação versionada. O escopo aceito está descrito na própria ADR; não significa aprovação de produção pela FORD.
+- **Accepted:** decisão de desenho/stack aceita no escopo descrito pela ADR. O status não significa que a funcionalidade esteja implementada, integrada ou homologada; a evidência de código existente pode ser apenas scaffold.
 - **Proposed:** proposta técnica aguardando revisão/aprovação dos responsáveis indicados.
 - **Deprecated:** decisão anteriormente registrada, retirada por conflito com requisito posterior. Não deve orientar novas implementações.
 - **Rejected / Superseded:** alternativas recusadas ou substituídas por decisão posterior.
@@ -23,7 +23,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 | [ADR-003](ADR-003-supabase-vercel.md) | Plataformas oficiais Supabase + Vercel | Accepted | Supabase (backend) e Vercel (hospedagem/deploy) são a stack oficial confirmada pelo PO |
 | [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Supabase Auth é o serviço oficial de identidade; integração às rotas e validação por ambiente pendentes |
 | [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL via Supabase Database; schema, migrations, RLS e backup ainda exigem validação |
-| [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo limitado | Aceite cobre apenas perfis; políticas RLS de domínio e integração às rotas ainda precisam ser implementadas e testadas |
+| [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — contrato de desenho limitado | Contrato-alvo `user`/`ti` aceito; middleware e migration existentes são scaffold isolado, sem integração funcional; RLS de domínio ainda não começou |
 | [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Supabase Realtime é a opção da stack oficial; prova de conceito e regras de autorização pendentes |
 | [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Supabase Storage é a opção oficial; privacidade, scanner, URLs temporárias e revogação exigem validação |
 | [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Vercel e Supabase oficiais; segregação, variáveis, regiões e acessos por ambiente em validação |
@@ -36,7 +36,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 3. Vercel é a plataforma oficial de hospedagem/deploy e Supabase é a plataforma oficial de backend; os serviços específicos são detalhados nas ADRs 004 a 008.
 4. PostgreSQL via Supabase Database é a direção de persistência. Q-025 permanece para validar regiões, projetos, acessos, segredos e configuração real dos ambientes.
 5. A autenticação deve respeitar o provisionamento exclusivo pelo TI, os identificadores e credenciais definidos pela FORD, a recuperação pelo TI e a revogação imediata de sessões na desativação de conta (ADR-004).
-6. A ADR-006 permanece Accepted apenas para o módulo e a migration de perfis; não cobre as políticas RLS de domínio nem comprova integração às rotas reais.
+6. A ADR-006 permanece Accepted apenas para o contrato de desenho de perfis/autorização; não declara implementação do módulo, migration ou RLS de domínio integrada ao runtime.
 7. Realtime, armazenamento de anexos e ambientes utilizam a stack Supabase/Vercel oficial e precisam de validação técnica conforme as ADRs 007 a 009.
 8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4 e foram incorporados à ADR-010. Seu status permanece Proposed porque implantação, catálogo técnico, evidências de segurança e integração com a stack oficial Supabase/Vercel ainda precisam de revisão.
 
@@ -44,14 +44,14 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 
 - `package.json`, `src/app/`, `next.config.ts`: aplicação Next.js 16 / React 19 / TypeScript.
 - `src/app/page.tsx`: página inicial institucional; não comprova fluxos completos de chat.
-- `src/auth/authorization.mjs`: middleware Express-compatible com dependência de cliente Supabase e validação de token.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration parcial de `profiles` e RLS, integrante da stack oficial Supabase; não cobre RLS de domínio.
+- `src/auth/authorization.mjs`: exemplo isolado de middleware Express-compatible com dependência de cliente Supabase; não integrado ao runtime.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration de scaffold para `profiles`/RLS, não evidência de schema funcional integrado ou aplicado nos ambientes.
 - `tests/authorization.test.mjs`: testes unitários com Supabase simulado; não comprovam integração com provedor ou infraestrutura de produção.
 - `.env.example`: placeholders históricos de Supabase, sem credenciais reais.
 - `README.md`: registra Supabase e Vercel como plataformas oficiais e documenta a necessidade de validar a integração funcional por ambiente.
 - `.github/workflows/ci.yml`: testes, ESLint, TypeScript e build em push para `main` e PR para `main`.
 
-A existência de código, migrations, variáveis de exemplo ou sucesso no CI não comprova integração completa com Supabase/Vercel, aplicação de migrations em todos os ambientes, RLS de domínio, realtime, storage, antimalware ou fluxos ponta a ponta.
+A implementação funcional do Polychat ainda não começou. A existência de scaffold, migrations de exemplo, variáveis, testes simulados ou sucesso no CI não comprova integração com Supabase/Vercel, RLS de domínio, realtime, storage, antimalware ou fluxos ponta a ponta.
 
 ## Aprovações e responsabilidades pendentes
 
