@@ -46,7 +46,7 @@ O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões
 
 O alinhamento complementar do PO com Desenvolvimento confirma **Supabase e Vercel como plataformas oficiais do Polychat**. A interpretação anterior que as classificava como proibidas/legadas foi incorreta e está sendo corrigida. Permanecem aplicáveis a proteção de dados, o isolamento de desenvolvimento/homologação/produção e a validação de regiões, acessos, segredos, backups e configurações por ambiente. Consulte a [baseline v0.4](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md), ADR-003 e Q-025.
 
-As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica e registram que esses aceites não constituem autorização vigente para serviços externos processarem dados da FORD após a FORD v2.
+As Issues #96 e #98 permanecem encerradas conforme os aceites do responsável/Tech Lead. Seus documentos preservam as evidências de configuração de ambientes, Preview/Production e rollback da stack oficial, bem como os limites dos testes e das inspeções administrativas realizadas. O aceite operacional não substitui evidência de integração funcional de cada módulo.
 
 
 ## Dados, autorização e estimativa
