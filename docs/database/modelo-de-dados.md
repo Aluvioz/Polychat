@@ -20,7 +20,7 @@ O modelo considera:
 
 - POLY-REQ-001 v0.4 e o questionário FORD v2;
 - RF-001 a RF-023, RN-001 a RN-025 e RNF-001 a RNF-013;
-- ADR-005, atualizada para PostgreSQL como tecnologia proposta sob controle da FORD;
+- ADR-005, atualizada para PostgreSQL via Supabase Database;
 - matriz de autorização da Issue #100, com parecer funcional do PO registrado;
 - política de anexos e antimalware, atualizada conforme limites e regras da FORD v2;
 - documentos de auditoria, monitoramento e retenção;
@@ -38,7 +38,7 @@ O modelo considera:
 
 ## 3. Premissas e limites
 
-1. O banco lógico é relacional; PostgreSQL é a tecnologia proposta, desde que sua instância, administração, backups e operação permaneçam sob controle da FORD.
+1. O banco lógico é relacional; PostgreSQL via Supabase Database é a tecnologia oficial de persistência, com administração dos projetos, acessos, backups e políticas sob governança da FORD.
 2. Supabase é a plataforma oficial de backend. Os serviços Database/Auth/Storage/Realtime são detalhados nas ADRs 004 a 008; Q-025 verifica projetos, regiões e configurações por ambiente, não a escolha da plataforma.
 3. O escopo inicial é uma única organização (FORD), sem multi-tenancy ou `tenant_id` adicional.
 4. Os únicos perfis de aplicação são `user` e `ti`. Todos os administradores TI possuem poderes equivalentes; não criar administrador principal, owner ou moderator.
@@ -56,7 +56,7 @@ O modelo considera:
 
 ## 4. Diagrama lógico preliminar
 
-O diagrama representa entidades e relacionamentos lógicos. Não é DER físico aprovado. A autenticação é mantida dentro da fronteira de controle da FORD; não existe dependência funcional-alvo de `auth.users` ou provedor SaaS externo.
+O diagrama representa entidades e relacionamentos lógicos. Não é DER físico aprovado. A autenticação utiliza Supabase Auth; o modelo interno de contas/perfis relaciona-se à identidade autenticada por referência estável, sem expor os identificadores do provedor como identificadores de negócio.
 
 ```mermaid
 erDiagram
@@ -77,10 +77,10 @@ erDiagram
 
 ### 4.1 Leitura do diagrama
 
-- `profiles` representa a conta/perfil interno do Polychat e não deve depender de identidade hospedada por terceiro.
+- `profiles` representa a conta/perfil interno do Polychat e mantém referência à identidade Supabase Auth correspondente.
 - `memberships` representa participação, distinta da role.
 - `message_reads` é uma estrutura lógica candidata para recibo/horário de leitura por mensagem e destinatário; a solução física pode usar outra estrutura se preservar os requisitos.
-- `attachments` guarda metadados e referência privada do objeto; os bytes ficam no armazenamento sob controle da FORD.
+- `attachments` guarda metadados e referência privada do objeto; os bytes ficam em bucket privado do Supabase Storage.
 - `audit_events` registra ações administrativas e de segurança.
 - `security_alerts` representa alertas produzidos pela lista de termos.
 - `monitoring_terms` representa a lista de termos/regras administrada pelo TI. Não é uma tabela genérica de configurações.
@@ -99,7 +99,7 @@ Os campos abaixo são candidatos lógicos. Tipos SQL, constraints, chaves e índ
 | username | Obrigatório | Nome de usuário único na organização; definido e alterável pelo TI. |
 | role | Obrigatório | Somente `user` ou `ti`. |
 | is_active | Obrigatório | Estado da conta. Desativação revoga sessões imediatamente; reativação é feita pelo TI. |
-| credential_reference / credencial protegida | Dependente da solução de identidade | A senha não pode ser armazenada em texto puro. A solução deve operar sob controle da FORD. |
+| credential_reference / credencial protegida | Dependente da solução de identidade | A senha é gerenciada pelo Supabase Auth; o banco de domínio não armazena senha em texto puro. |
 | created_at / updated_at | Recomendado | Datas de criação e atualização. |
 
 **Regras:**
@@ -227,7 +227,7 @@ Os campos abaixo são candidatos lógicos. Tipos SQL, constraints, chaves e índ
 - TI pode liberar qualquer anexo por operação administrativa auditada. Usuários não podem contornar a análise.
 - TI pode baixar anexos durante investigações; o download é auditado.
 - Links temporários têm validade máxima de 5 minutos e a remoção de participante revoga imediatamente o acesso.
-- O armazenamento binário fica fora das tabelas, em storage privado sob controle da FORD.
+- O armazenamento binário fica fora das tabelas, em bucket privado do Supabase Storage.
 
 ### 5.7 security_alerts — alertas de conteúdo suspeito
 
@@ -343,7 +343,7 @@ Propostas para revisão técnica:
 
 - A matriz da Issue #100 define os atores e regras funcionais; o parecer funcional do PO foi registrado em comentário da issue.
 - A implementação RLS de domínio e testes de isolamento pertencem também à Issue #101.
-- Autenticação, autorização e armazenamento devem operar dentro da fronteira da FORD.
+- Autenticação, autorização e armazenamento utilizam Supabase Auth/Database/Storage, com políticas e acessos sob governança da FORD.
 - Autorização server-side é obrigatória; RLS no banco é defesa adicional quando suportada pela implantação.
 - Role, estado e membership não podem ser aceitos de dados enviados livremente pelo navegador.
 - Negar por padrão quando identidade, membership ou permissão não puderem ser verificadas.
