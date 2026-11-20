@@ -1,7 +1,7 @@
 # Issue #98 — Runbook de smoke test e rollback de aplicação
 
-**Status:** procedimento proposto para revisão do Tech Lead; ainda não aprovado nem ensaiado.  
-**Escopo:** aplicação Next.js hospedada na Vercel. Este documento não define rollback de banco de dados, migrations ou dados.
+**Status:** procedimento documentado; o Tech Lead confirmou em 19/11/2026 que o smoke test hospedado e o ensaio de rollback abrangidos pela Issue #98 foram executados. O comentário de aceite não reproduz deployment IDs, commits, horários ou logs da execução.  
+**Escopo histórico:** aplicação Next.js hospedada na Vercel. Este runbook preserva o procedimento do ambiente original e não autoriza o uso de Vercel/Supabase para processar dados reais da FORD após a FORD v2. Não define rollback de banco de dados, migrations ou dados.
 
 ## 1. Pré-condições obrigatórias
 
@@ -60,7 +60,7 @@ Se o deployment anterior não estiver disponível, não for compatível com o sc
 
 Rollback da aplicação Vercel não reverte migrations nem restaura dados Supabase. Não executar `db reset`, restauração, downgrade de migration ou alteração de dados como parte deste runbook.
 
-Backup, restore, RPO, RTO, compatibilidade de migrations e plano de recuperação do Supabase precisam de procedimento próprio, decisão aprovada e teste controlado. A ADR-009 permanece Proposed; este documento não altera seu status.
+Backup, restore, RPO, RTO, compatibilidade de migrations e plano de recuperação do banco e do armazenamento escolhidos para a arquitetura FORD precisam de procedimento próprio, decisão aprovada e teste controlado. Esta seção é histórica para o ambiente Supabase usado no escopo original. A ADR-009 permanece Proposed; este documento não altera seu status.
 
 ## 6. Registro do ensaio
 
@@ -68,15 +68,15 @@ A execução foi confirmada pelo Tech Lead no comentário de encerramento da Iss
 
 | Campo | Registro |
 |---|---|
-| Ambiente (Preview/Production) | Pendente |
-| Projeto Vercel | Pendente |
-| Deployment/commit antes | Pendente |
-| Deployment/commit de referência | Pendente |
-| Aprovação (responsável/data) | Pendente |
-| Smoke test antes/depois | Pendente |
-| Resultado do rollback | Não executado |
-| Evidência/logs | Pendente |
-| Responsável pela execução | Pendente |
+| Ambiente (Preview/Production) | Confirmado pelo Tech Lead; ambiente exato não detalhado no comentário |
+| Projeto Vercel | Projeto do deployment hospedado, sem metadados reproduzidos no comentário |
+| Deployment/commit antes | Atestado como verificado; identificador não reproduzido no comentário |
+| Deployment/commit de referência | Atestado ensaio de rollback; identificador não reproduzido no comentário |
+| Aprovação (responsável/data) | Tech Lead; aceite registrado em 19/11/2026 |
+| Smoke test antes/depois | Atestado como executado; logs/resultados granulares não reproduzidos no comentário |
+| Resultado do rollback | Ensaio confirmado pelo Tech Lead; resultado técnico granular não transcrito no comentário |
+| Evidência/logs | Devem permanecer acessíveis e atualizados, conforme ressalva do aceite |
+| Responsável pela execução | Tech Lead confirmou a execução; executores individuais não especificados no comentário |
 
 **Estado atual:** a Issue #98 foi encerrada como Completed após atestação do Tech Lead de que o deployment hospedado, smoke tests e ensaio de rollback foram executados. Este runbook não contém todos os metadados da execução; manter os artefatos originais acessíveis e associá-los a este registro quando disponíveis. Não apresentar os campos sem detalhe como evidência independente.
 
