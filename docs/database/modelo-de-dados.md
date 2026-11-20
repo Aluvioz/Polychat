@@ -1,495 +1,420 @@
 # Modelo de dados — Polychat
 
 - **Identificador:** POLY-DATA-001
-- **Versão:** 0.2 — 19/11/2026
-- **Status:** Proposta preliminar para revisão
+- **Versão:** 0.3 — 19/11/2026
+- **Status:** modelo lógico atualizado para a baseline FORD v2; revisão física/técnica pendente
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados
-- **Plataforma prevista:** PostgreSQL gerenciado pelo Supabase
+- **Tecnologia proposta:** PostgreSQL em infraestrutura sob controle da FORD
+- **Dependência arquitetural:** Q-025 — compatibilização com a infraestrutura FORD
 
-> **Importante:** este documento registra o modelo lógico preliminar do Polychat. Ele separa estruturas já implementadas, necessidades confirmadas pelos requisitos e propostas técnicas ainda sujeitas à revisão. Não representa aprovação final do schema, não substitui as decisões pendentes de negócio e não autoriza, por si só, a criação ou aplicação de migrations.
+> Este documento consolida o modelo lógico à luz da baseline POLY-REQ-001 v0.4. Não aprova DDL, migrations, RLS ou tecnologia de implantação. A migração antiga vinculada a Supabase é evidência histórica e não define a arquitetura-alvo. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da FORD.
 
 ## 1. Objetivo
 
-Documentar as entidades, atributos candidatos, relacionamentos, regras de integridade e dependências necessárias para persistir os dados do MVP do Polychat.
-
-O documento deve servir como referência comum para Product Owner, Tech Lead, desenvolvimento backend, SQA e TI durante a revisão do modelo e a preparação das migrations da Issue #99.
+Definir as entidades lógicas, atributos candidatos, relacionamentos, invariantes e rastreabilidade necessários ao MVP, separando requisitos funcionais confirmados de decisões físicas ainda sujeitas à revisão do Tech Lead, backend, TI e SQA.
 
 ## 2. Escopo e fontes
 
 O modelo considera:
 
-- A Issue #99, que solicita modelar perfis, conversas, participantes, mensagens, anexos, eventos de auditoria e configurações.
-- A ADR-005, atualmente em status Proposed, que propõe PostgreSQL no Supabase e menciona perfis, conversas, participantes, mensagens, anexos, alertas e auditoria.
-- A baseline POLY-REQ-001 v0.3 e os requisitos funcionais, não funcionais e regras de negócio.
-- A migration existente de perfis: **supabase/migrations/202611160001_profiles_roles_and_account_status.sql**.
-- As questões em aberto Q-003, Q-005, Q-007, Q-008, Q-009, Q-010, Q-011, Q-016 e Q-024.
+- POLY-REQ-001 v0.4 e o questionário FORD v2;
+- RF-001 a RF-023, RN-001 a RN-025 e RNF-001 a RNF-013;
+- ADR-005, atualizada para PostgreSQL como tecnologia proposta sob controle da FORD;
+- matriz de autorização da Issue #100, com parecer funcional do PO registrado;
+- política de anexos e antimalware, atualizada conforme limites e regras da FORD v2;
+- documentos de auditoria, monitoramento e retenção;
+- artefatos existentes no repositório, identificados como legado quando vinculados ao Supabase.
 
-### 2.1 Convenção de status usada neste documento
+### 2.1 Convenção de status
 
 | Status | Significado |
 |---|---|
-| **Implementado** | Existe no repositório em migration versionada. Não significa, por si só, que foi aplicado ou homologado em ambiente Supabase. |
-| **Confirmado** | Há requisito ou regra de negócio que sustenta a necessidade funcional da informação. |
-| **Proposta técnica** | É uma solução preliminar para discussão e revisão; ainda não deve ser tratada como decisão aprovada. |
-| **Pendente** | Depende de decisão de negócio, aprovação, detalhamento ou validação técnica. |
-| **Fora do escopo confirmado** | Não deve ser incluído no MVP com base nas informações atuais. |
+| **Requisito confirmado** | Regra funcional consolidada na FORD v2 ou alinhamento formal do PO com Desenvolvimento. |
+| **Estrutura lógica proposta** | Entidade/atributo necessário para suportar o requisito; nomes e tipos físicos ainda podem mudar. |
+| **Implementação legada** | Código ou migration existente, mas vinculado à arquitetura Supabase/Vercel depreciada. |
+| **Revisão técnica pendente** | Requer decisão sobre tipos, chaves, índices, constraints, transações, RLS ou implantação. |
+| **Pendente de escopo** | Informação funcional ainda não detalhada, como telas/parametrização persistente não inventariada. |
 
 ## 3. Premissas e limites
 
-1. O banco previsto para o MVP é PostgreSQL no Supabase, conforme direção técnica registrada na Issue #88 e na ADR-005 Proposed.
-2. O escopo inicial é uma única organização, a FORD. Não se propõe adicionar tenant_id ou arquitetura multi-tenant sem mudança explícita de escopo.
-3. Existem dois perfis de aplicação: user e ti. A relação de uma pessoa com uma conversa não cria um terceiro perfil nem um papel de autorização adicional.
-4. A criação e a administração de grupos são responsabilidade do TI. Os membros incluídos podem enviar mensagens.
-5. Conversas individuais e em grupo, mensagens textuais e anexos PDF/JPEG fazem parte do escopo funcional.
-6. O TI pode consultar conversas para fins de segurança; a visão de produto exige que esse acesso seja registrado em auditoria.
-7. A migration de profiles é a única migration de domínio identificada na baseline revisada. As demais entidades deste documento são propostas e ainda não existem como tabelas versionadas.
-8. Regras pendentes não serão transformadas em restrições definitivas antes de decisão registrada.
+1. O banco lógico é relacional; PostgreSQL é a tecnologia proposta, desde que sua instância, administração, backups e operação permaneçam sob controle da FORD.
+2. A arquitetura física definitiva depende da Q-025. Supabase Database/Auth/Storage/Realtime não são arquitetura-alvo vigente após a ADR-003 passar a Deprecated.
+3. O escopo inicial é uma única organização (FORD), sem multi-tenancy ou `tenant_id` adicional.
+4. Os únicos perfis de aplicação são `user` e `ti`. Todos os administradores TI possuem poderes equivalentes; não criar administrador principal, owner ou moderator.
+5. Contas são criadas exclusivamente pelo TI. O nome de usuário é único e pode ser definido/alterado pelo TI. A senha é criada e enviada individualmente pelo TI; recuperação é exclusiva do TI.
+6. Conversas individuais e grupos são entidades de domínio. O TI cria, encerra, desativa e reativa grupos e administra seus participantes.
+7. Usuários podem ler somente conversas das quais sejam participantes; usuários incluídos no grupo podem enviar mensagens. Usuários não podem sair voluntariamente dos grupos. A remoção pelo TI revoga imediatamente acesso às mensagens e anexos anteriores do grupo.
+8. Usuários não podem editar ou excluir mensagens. TI pode editar ou excluir mensagens a qualquer momento; operações devem ser auditadas.
+9. O sistema registra confirmação/horário de leitura e quantidade de mensagens não lidas.
+10. Anexos são PDF/JPEG, até 10 MB por arquivo e até 5 arquivos por mensagem. O TI define quotas individuais e capacidade total; não existe quota por conversa.
+11. Anexos são analisados por antimalware na infraestrutura FORD. Falha ou resultado inconclusivo mantém o anexo bloqueado para o fluxo normal. TI pode liberar qualquer anexo por ação administrativa auditada.
+12. Mensagens, anexos, alertas, logs de auditoria e registros administrativos não sofrem exclusão automática enquanto o sistema opera. Exclusões são autorizadas pelo TI; backups diários são retidos por 12 meses.
+13. A consulta de conversas pelo TI é permitida a qualquer momento, sem justificativa ou segunda aprovação, e deve ser auditada. Exportação de conversas também é permitida e auditada.
+14. A detecção de conteúdo suspeito é baseada em regras/lista de termos gerida pelo TI, sem análise contextual ou IA/serviço externo e sem bloqueio automático de mensagem.
+15. O modelo deste documento é lógico. Não aplicar migrations nem declarar RLS de domínio implementada apenas com base nesta documentação.
 
 ## 4. Diagrama lógico preliminar
 
-O diagrama apresenta os relacionamentos esperados para discussão. Ele não é um DER físico aprovado. AUTH_USERS representa a tabela mantida pelo Supabase Auth, fora do schema de domínio public.
+O diagrama representa entidades e relacionamentos lógicos. Não é DER físico aprovado. A autenticação é mantida dentro da fronteira de controle da FORD; não existe dependência funcional-alvo de `auth.users` ou provedor SaaS externo.
 
-~~~mermaid
+```mermaid
 erDiagram
-    AUTH_USERS ||--|| PROFILES : "identidade"
     PROFILES ||--o{ CONVERSATIONS : "cria"
     CONVERSATIONS ||--o{ MEMBERSHIPS : "possui"
     PROFILES ||--o{ MEMBERSHIPS : "participa"
     CONVERSATIONS ||--o{ MESSAGES : "contem"
     PROFILES ||--o{ MESSAGES : "envia"
-    MESSAGES ||--o{ ATTACHMENTS : "pode_conter"
+    MESSAGES ||--o{ MESSAGE_READS : "leituras"
+    PROFILES ||--o{ MESSAGE_READS : "le"
+    MESSAGES ||--o{ ATTACHMENTS : "possui"
     PROFILES ||--o{ AUDIT_EVENTS : "executa"
-    CONVERSATIONS o|--o{ AUDIT_EVENTS : "pode_ser_alvo"
-    MESSAGES ||--o{ SECURITY_ALERTS : "pode_gerar"
-~~~
+    CONVERSATIONS o|--o{ AUDIT_EVENTS : "alvo"
+    MESSAGES ||--o{ SECURITY_ALERTS : "gera"
+    PROFILES ||--o{ SECURITY_ALERTS : "revisa"
+    PROFILES ||--o{ MONITORING_TERMS : "administra"
+```
 
 ### 4.1 Leitura do diagrama
 
-- Um registro de profiles corresponde à identidade de uma conta em auth.users.
-- Uma conversa é individual ou em grupo.
-- memberships associa perfis às conversas; é a relação que permite identificar participantes.
-- Uma conversa pode conter várias mensagens; cada mensagem possui um autor.
-- Uma mensagem pode possuir zero ou mais anexos. A quantidade máxima ainda precisa ser definida.
-- Eventos de auditoria registram ações relevantes. A consulta administrativa de uma conversa deve gerar um evento associado ao operador e à conversa consultada.
-- security_alerts aparece como entidade candidata, sujeita à decisão de escopo descrita na seção 12.
-- A entidade de configurações ainda não aparece no DER porque o inventário de configurações persistentes não foi definido.
+- `profiles` representa a conta/perfil interno do Polychat e não deve depender de identidade hospedada por terceiro.
+- `memberships` representa participação, distinta da role.
+- `message_reads` é uma estrutura lógica candidata para recibo/horário de leitura por mensagem e destinatário; a solução física pode usar outra estrutura se preservar os requisitos.
+- `attachments` guarda metadados e referência privada do objeto; os bytes ficam no armazenamento sob controle da FORD.
+- `audit_events` registra ações administrativas e de segurança.
+- `security_alerts` representa alertas produzidos pela lista de termos.
+- `monitoring_terms` representa a lista de termos/regras administrada pelo TI. Não é uma tabela genérica de configurações.
 
-## 5. Entidades e dicionário de dados preliminar
+## 5. Entidades e dicionário de dados lógico
 
-Os tipos SQL abaixo são sugestões iniciais compatíveis com PostgreSQL. A revisão técnica poderá ajustar nomes e tipos, desde que preserve os requisitos e registre a decisão.
+Os campos abaixo são candidatos lógicos. Tipos SQL, constraints, chaves e índices devem ser validados antes de migrations.
 
-### 5.1 profiles — perfis e estado das contas
+### 5.1 profiles — contas e perfis
 
-**Status:** Implementado parcialmente.
+**Requisitos confirmados:** RF-001 a RF-004; RN-001 a RN-005.
 
-**Finalidade:** armazenar o perfil funcional e o estado da conta associada a uma identidade do Supabase Auth.
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador interno estável da conta. |
+| username | Obrigatório | Nome de usuário único na organização; definido e alterável pelo TI. |
+| role | Obrigatório | Somente `user` ou `ti`. |
+| is_active | Obrigatório | Estado da conta. Desativação revoga sessões imediatamente; reativação é feita pelo TI. |
+| credential_reference / credencial protegida | Dependente da solução de identidade | A senha não pode ser armazenada em texto puro. A solução deve operar sob controle da FORD. |
+| created_at / updated_at | Recomendado | Datas de criação e atualização. |
 
-A migration existente define:
+**Regras:**
+- TI cria todas as contas, inclusive as contas TI.
+- TI cria a senha e envia individualmente junto ao link de acesso.
+- Recuperação de senha é exclusiva do TI.
+- A FORD não exige troca obrigatória no primeiro acesso, expiração periódica ou MFA para este MVP.
+- Não há auto cadastro, autoinscrição ou alteração de role pelo usuário.
+- Todos os perfis TI possuem os mesmos poderes.
+- A desativação encerra imediatamente as sessões, preservando o histórico.
 
-| Campo | Tipo atual | Obrigatório | Regra / observação | Status |
-|---|---|---:|---|---|
-| id | uuid | Sim | PK e FK para auth.users(id), com ON DELETE CASCADE na migration atual. | Implementado |
-| role | text | Sim | Default user; CHECK limitado a user e ti. | Implementado |
-| is_active | boolean | Sim | Default true; indica se a conta está ativa. | Implementado |
-| created_at | timestamptz | Sim | Default now(). | Implementado |
-| updated_at | timestamptz | Sim | Default now(); atualizado pelo trigger existente. | Implementado |
+**Legado:** a migration `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles` vinculado a `auth.users`. Esse artefato é vinculado à direção tecnológica anterior e não é o modelo físico-alvo. A nova solução deve retirar a dependência externa e preservar as regras funcionais.
 
-**Regras conhecidas:**
+### 5.2 conversations — conversas individuais e grupos
 
-- O perfil aceita somente user e ti.
-- A migration cria perfil padrão user quando uma identidade é criada em auth.users.
-- A leitura de profiles está protegida por RLS; o usuário pode ler o próprio perfil e TI ativo pode consultar perfis conforme a policy existente.
-- A escrita direta por anon e authenticated é revogada na migration.
-- Alterações privilegiadas de papel e estado devem ocorrer por operação confiável no servidor.
-- profiles.id é identificador interno vinculado ao Supabase Auth. Não deve ser confundido com o identificador que a pessoa digitará no login.
+**Requisitos confirmados:** RF-005, RF-007 a RF-010, RF-016, RF-021; RN-006, RN-007 e RN-014.
 
-**Pontos de revisão:**
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador interno estável. |
+| kind | Obrigatório | Tipo individual ou grupo. |
+| name | Condicional | Identificação do grupo, quando aplicável. |
+| created_by_profile_id | Obrigatório | Conta que iniciou a criação; grupos são criados pelo TI. |
+| status | Obrigatório | Deve representar ativo, desativado ou encerrado conforme operações do TI. |
+| created_at / updated_at | Recomendado | Datas de criação/atualização. |
+| ended_at / status_changed_at | Condicional | Histórico de encerramento/desativação/reativação, conforme desenho técnico. |
 
-- Q-005 ainda define o identificador de login (e-mail institucional, matrícula, login próprio ou outro). Não adicionar campo de login por suposição.
-- A migration atual usa ON DELETE CASCADE na relação com auth.users. Como o produto exige desativação de contas e pode precisar preservar histórico, o comportamento de exclusão física deve ser revisado à luz de Q-010 antes de qualquer processo de remoção definitiva.
-- Dados de nome, matrícula, departamento ou outros atributos pessoais não devem ser adicionados sem necessidade e fonte de dados confirmadas.
+**Regras:**
+- TI cria, encerra, desativa e reativa grupos.
+- TI administra a inclusão e remoção de participantes.
+- O TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação; consulta auditada.
+- O TI pode exportar conversas, com auditoria.
+- Usuários comuns acessam somente conversas das quais participem.
+- A consulta TI não transforma o administrador em participante.
+- Unicidade de conversa individual por par, arquivamento de conversas individuais e estados físicos adicionais não devem ser inventados sem decisão.
 
-### 5.2 conversations — conversas individuais e em grupo
+### 5.3 memberships — participação
 
-**Status:** Proposta técnica. Não há migration identificada.
+**Requisitos confirmados:** RF-005, RF-006, RF-008, RF-010; RN-007.
 
-**Finalidade:** representar a unidade de comunicação que agrupa participantes e mensagens.
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador interno. |
+| conversation_id | Obrigatório | Referência à conversa. |
+| profile_id | Obrigatório | Referência ao participante. |
+| added_by_profile_id | Obrigatório para inclusão administrativa | Deve identificar o TI que incluiu o participante. |
+| joined_at | Obrigatório | Momento da entrada. |
+| removed_at | Condicional | Momento da remoção pelo TI. |
+| removed_by_profile_id | Condicional | TI que removeu o participante. |
+| membership_status | Obrigatório | Indica participação vigente ou encerrada. |
 
-| Campo candidato | Tipo sugerido | Obrigatório | Regra / observação | Status |
-|---|---|---:|---|---|
-| id | uuid | Sim | Chave primária. | Proposta técnica |
-| kind | text | Sim | Valores candidatos: direct e group, protegidos por CHECK. | Derivado dos requisitos |
-| name | text | Não | Nome/identificação do grupo; aplicável quando kind = group. O RF-005 prevê identificação/nome do grupo. | Requisito confirmado; modelagem proposta |
-| created_by_profile_id | uuid | Sim | FK para profiles.id; autor da criação. Para grupos, a operação deve respeitar a administração pelo TI. | Proposta técnica |
-| created_at | timestamptz | Sim | Data de criação, default now(). | Proposta técnica |
-| updated_at | timestamptz | Sim | Data de atualização; finalidade exata a validar. | Proposta técnica |
-
-**Regras funcionais relacionadas:**
-
-- Deve ser possível distinguir conversa individual de conversa em grupo.
-- A criação de grupos é restrita ao TI.
-- Uma conversa individual é entre dois usuários, conforme RF-009.
-- Não participantes não podem ler nem enviar mensagens em uma conversa.
-- O TI possui acesso administrativo de consulta conforme RF-016; esse acesso não deve depender de o TI ser membro da conversa.
-
-**Decisões pendentes:**
-
-- Se uma conversa individual entre o mesmo par de usuários deve ser única ou se podem existir conversas distintas entre o mesmo par.
-- Como o sistema tratará encerramento, arquivamento ou desativação de grupos (Q-003).
-- Se a conversa terá estado persistente e quais valores esse estado poderá assumir.
-- Se conversas individuais também poderão ser encerradas ou ocultadas.
-
-Não criar status, archived_at ou regra de unicidade entre pares como decisão definitiva antes dessas validações.
-
-### 5.3 memberships — participação em conversas
-
-**Status:** Proposta técnica. Não há migration identificada.
-
-**Finalidade:** relacionar perfis às conversas e permitir verificar quem pode ler e enviar mensagens.
-
-| Campo candidato | Tipo sugerido | Obrigatório | Regra / observação | Status |
-|---|---|---:|---|---|
-| id | uuid | Sim | Chave primária própria, para permitir histórico de períodos de participação caso isso seja aprovado. | Proposta técnica |
-| conversation_id | uuid | Sim | FK para conversations.id. | Proposta técnica |
-| profile_id | uuid | Sim | FK para profiles.id. | Proposta técnica |
-| added_by_profile_id | uuid | Não | FK para profiles.id; indica quem incluiu o participante. | Proposta técnica |
-| joined_at | timestamptz | Sim | Momento de entrada na conversa. | Proposta técnica |
-| last_read_at | timestamptz | Não | Cursor candidato da última leitura do perfil naquela conversa, para apoiar a contagem de não lidas da Issue #111. A abordagem final deve ser validada tecnicamente. | Proposta técnica; rastreada à #111 |
-| ended_at | timestamptz | Não | Momento de encerramento da participação, se aplicável. | Pendente de Q-003 |
-| ended_by_profile_id | uuid | Não | FK para profiles.id; responsável pelo encerramento, se aplicável. | Pendente de Q-003 |
-
-**Regras funcionais relacionadas:**
-
-- Um perfil pode participar de várias conversas.
-- Uma conversa pode ter vários participantes.
-- Para grupos, o TI administra a inclusão e remoção de participantes.
-- Uma conta inativa não deve participar de novas operações de envio.
-- O envio e a leitura por usuários comuns devem verificar participação autorizada no servidor e no banco.
-
-**Decisões pendentes:**
-
-- Se o usuário pode sair voluntariamente de um grupo.
-- Se um participante removido pode ser incluído novamente e como preservar o histórico de participação.
-- Como distinguir saída voluntária, remoção pelo TI e encerramento do grupo (Q-003).
-- Se a remoção deve encerrar a participação sem apagar mensagens anteriores.
-- Se uma conversa individual sempre deve ter exatamente dois participantes ativos.
-- A Issue #111 exige contagem de mensagens não lidas e marcação básica de leitura. O modelo deve permitir registrar o estado de leitura por participante/conversa; `last_read_at` é apenas uma alternativa candidata. Tech Lead/backend devem validar se ela atende aos cenários e à ordenação do histórico ou se será necessário outro cursor/estrutura. Não presumir recibos individuais por mensagem sem requisito adicional.
-
-**Índices candidatos:** índice para localizar as conversas de um perfil (profile_id, conversation_id) e índice para listar participantes de uma conversa (conversation_id, profile_id). Se for aprovado o histórico de participações, revisar a unicidade para impedir mais de uma participação ativa do mesmo perfil na mesma conversa.
-
-Não criar um papel como admin, owner ou moderator em memberships neste momento. A baseline define somente os perfis de aplicação user e ti; a administração de grupos pelo TI deve ser aplicada por autorização, não por um terceiro perfil implícito de participante.
+**Regras:**
+- TI inclui e remove participantes.
+- Usuário não pode sair voluntariamente de grupo.
+- Ao remover participante, acesso às mensagens e anexos anteriores do grupo é revogado imediatamente.
+- Não excluir o registro de membership apenas para remover acesso; preservar evidência histórica de quem participou e quem efetuou a remoção.
+- Membership não cria papel de autorização adicional.
+- Enviar/ler em grupo depende de membership vigente; TI possui exceção de consulta administrativa descrita em RF-016.
 
 ### 5.4 messages — mensagens
 
-**Status:** Proposta técnica. Não há migration identificada.
+**Requisitos confirmados:** RF-008 a RF-010, RF-019, RF-020; RN-006, RN-007 e RN-014.
 
-**Finalidade:** armazenar o conteúdo textual enviado em uma conversa e sua autoria.
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador interno. |
+| conversation_id | Obrigatório | Conversa de origem. |
+| sender_profile_id | Obrigatório | Autor; derivado da identidade validada no servidor. |
+| body | Conforme formato da mensagem | Conteúdo textual. A possibilidade de mensagem composta somente por anexo deve ser validada no fluxo técnico/UX, sem alterar as regras de anexo. |
+| created_at | Obrigatório | Horário de criação/registro confirmado pelo servidor. |
+| edited_at / edited_by_profile_id | Condicional | Registra edição administrativa de mensagem pelo TI. |
+| deleted_at / deleted_by_profile_id | Condicional | Registra exclusão administrativa pelo TI, conforme política técnica de preservação. |
 
-| Campo candidato | Tipo sugerido | Obrigatório | Regra / observação | Status |
-|---|---|---:|---|---|
-| id | uuid | Sim | Chave primária. | Proposta técnica |
-| conversation_id | uuid | Sim | FK para conversations.id. | Proposta técnica |
-| sender_profile_id | uuid | Sim | FK para profiles.id; autor da mensagem. | Proposta técnica |
-| body | text | A validar | Conteúdo textual. Definir se pode ser vazio quando a mensagem possuir apenas anexo. | Pendente de regra |
-| created_at | timestamptz | Sim | Data/hora de criação, default now(). | Proposta técnica |
+**Regras:**
+- Usuários enviam mensagens em conversas individuais e grupos dos quais sejam participantes autorizados.
+- Usuários não podem editar ou excluir mensagens.
+- TI pode editar ou excluir qualquer mensagem a qualquer momento.
+- Edição/exclusão administrativa deve gerar evento de auditoria.
+- Mensagens confirmadas pelo servidor devem ser persistidas e recuperadas após reconexão normal. RPO de 24 horas aplica-se somente a desastre/falha de infraestrutura.
+- Não definir exclusão automática nem cascata que elimine histórico sem autorização do TI e sem observar retenção/investigações.
 
-**Regras funcionais relacionadas:**
+### 5.5 message_reads — confirmações e horários de leitura
 
-- A mensagem pertence a uma única conversa.
-- Uma mensagem possui um único autor.
-- O autor deve ser uma conta ativa e autorizada a enviar na conversa no momento da operação.
-- Mensagens em grupo ficam disponíveis aos participantes autorizados.
-- Usuários externos à conversa não podem ler nem enviar mensagens.
-- A consulta administrativa pelo TI deve obedecer à governança definida para RF-016 e produzir evento de auditoria.
+**Requisito confirmado:** RF-019.
 
-**Decisões pendentes:**
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador interno ou chave composta equivalente. |
+| message_id | Obrigatório | Mensagem lida. |
+| profile_id | Obrigatório | Destinatário/leitor. |
+| read_at | Obrigatório quando lida | Data/hora de leitura. |
 
-- Edição e exclusão de mensagens (Q-024).
-- Se será necessário preservar versões anteriores de mensagens.
-- Se mensagens podem conter somente anexos, sem texto.
-- Regras de ordenação, paginação e eventual idempotência de envio.
-- Estados de entrega/leitura, caso façam parte do escopo aprovado; não foram incluídos como atributos obrigatórios nesta versão porque precisam de rastreabilidade explícita a requisito.
+**Regras:**
+- O sistema deve permitir confirmação de leitura e horário de leitura.
+- O sistema deve calcular/exibir a quantidade de mensagens não lidas.
+- A estrutura física pode usar tabela de recibos, cursor de leitura ou abordagem híbrida; a decisão deve preservar confirmação/horário por mensagem e contador de não lidas.
+- Não confundir confirmação de leitura com entrega ou confirmação de persistência.
 
-edited_at, deleted_at, deleted_by_profile_id e tabelas de histórico são candidatos para discussão, não campos aprovados.
+### 5.6 attachments — metadados dos anexos
 
-**Índice candidato:** (conversation_id, created_at) para paginação e ordenação das mensagens; avaliar índice adicional por autor conforme consultas reais e volume esperado (Q-016).
+**Requisitos confirmados:** RF-011 a RF-013; RN-008, RN-011; RNF-010.
 
-### 5.5 attachments — metadados dos anexos
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador interno. |
+| message_id | Obrigatório | Mensagem vinculada. |
+| storage_object_key | Obrigatório | Referência privada ao objeto, sem URL pública permanente. |
+| original_filename | Obrigatório | Nome tratado/normalizado; entrada do cliente não confiável. |
+| detected_mime_type | Obrigatório | Tipo real detectado no servidor, restrito a PDF/JPEG. |
+| size_bytes | Obrigatório | Tamanho real em bytes. |
+| scan_status | Obrigatório | Pendente, aprovado, bloqueado/reprovado ou inconclusivo, conforme modelo técnico. |
+| scan_result / scanned_at | Condicional | Resultado e instante da análise. |
+| released_by_profile_id / released_at | Condicional | Ação administrativa de liberação realizada pelo TI. |
+| metadata_removed_at | Condicional | Evidência de remoção de EXIF/GPS da imagem. |
+| created_at | Obrigatório | Instante de recebimento. |
 
-**Status:** Proposta técnica. Não há migration identificada.
-
-**Finalidade:** registrar os metadados e a localização dos arquivos anexados às mensagens. O conteúdo binário deve ser tratado pelo serviço de armazenamento privado previsto na ADR-008, não armazenado diretamente como coluna binária no PostgreSQL sem decisão arquitetural.
-
-| Campo candidato | Tipo sugerido | Obrigatório | Regra / observação | Status |
-|---|---|---:|---|---|
-| id | uuid | Sim | Chave primária. | Proposta técnica |
-| message_id | uuid | Sim | FK para messages.id. | Proposta técnica |
-| storage_path | text | Sim | Caminho/chave do objeto no storage privado; não deve ser URL pública permanente. | Proposta técnica |
-| original_filename | text | Sim | Nome apresentado pelo usuário; tratar como dado não confiável. | Proposta técnica |
-| mime_type | text | Sim | Valores permitidos a validar: application/pdf e image/jpeg. | Derivado dos requisitos |
-| size_bytes | bigint | Sim | Tamanho real do objeto em bytes. | Proposta técnica |
-| created_at | timestamptz | Sim | Data/hora do registro. | Proposta técnica |
-
-**Regras funcionais relacionadas:**
-
-- Formatos permitidos: PDF e JPEG.
-- Validar conteúdo real do arquivo, não apenas extensão ou MIME declarado pelo cliente.
-- O download deve exigir autorização para a mensagem/conversa correspondente.
-- A localização do objeto não deve permitir acesso público irrestrito.
-- O anexo precisa manter vínculo com a mensagem que o compartilha.
-
-**Decisões pendentes:**
-
-- Tamanho máximo, quotas e quantidade de arquivos (Q-011).
-- Política de retenção e exclusão (Q-010).
-- Antimalware, estados de varredura e comportamento em caso de falha (Q-011 e ADR-008).
-- Confirmação sobre JPEG de arquivos existentes versus captura pela câmera (Q-004).
-- Limites de nomes, checksum e necessidade de metadados adicionais.
-
-Não definir scan_status nem liberar o download de arquivo não verificado como comportamento final antes da decisão de segurança e da ADR-008.
-
-### 5.6 audit_events — eventos de auditoria
-
-**Status:** Necessidade funcional confirmada; estrutura e política propostas e pendentes de definição na Issue #102.
-
-**Finalidade:** registrar operações relevantes para responsabilização e investigação. A consulta administrativa do TI a conversas precisa gerar registro, conforme RF-016 e RN-014.
-
-| Campo candidato | Tipo sugerido | Obrigatório | Regra / observação | Status |
-|---|---|---:|---|---|
-| id | uuid | Sim | Chave primária. | Proposta técnica |
-| actor_profile_id | uuid | A validar | FK para profiles.id; deve identificar o operador em consulta administrativa. Para eventos automáticos, a necessidade de ator nulo deve ser definida. | Requisito parcial confirmado |
-| event_type | text | Sim | Tipo do evento, por exemplo conversation.admin_view; catálogo a aprovar. | Pendente de #102 |
-| conversation_id | uuid | Condicional | FK para conversations.id quando o evento estiver relacionado à consulta de uma conversa. | Proposta técnica |
-| resource_type | text | Não | Tipo genérico do recurso alvo, se necessário. | Proposta técnica |
-| resource_id | uuid | Não | Identificador do recurso alvo. Se usado de forma polimórfica, não terá FK simples; avaliar alternativa. | Pendente de desenho |
-| occurred_at | timestamptz | Sim | Momento do evento, preferencialmente gerado no servidor/banco. | Proposta técnica |
-| reason | text | A validar | Justificativa do acesso, caso a política aprovada a exija. | Pendente de Q-009 |
-| metadata | jsonb | Não | Metadados estritamente necessários; nunca incluir segredos, tokens ou conteúdo excessivo. | Proposta técnica |
-
-**Regras funcionais e de segurança:**
-
-- Toda consulta administrativa de conversa deve ser rastreável ao operador e ao alvo consultado.
-- O registro deve ser realizado em contexto confiável, não depender de um evento enviado livremente pelo navegador.
-- O evento não deve armazenar senha, token, chave secreta ou cópia integral do conteúdo da conversa.
-- Recomenda-se um padrão append-only para eventos de auditoria; mecanismo de proteção contra alteração, acesso aos registros e retenção precisam ser definidos na #102.
-- O desenho final deve considerar como registrar eventos administrativos sem permitir que uma falha da operação de auditoria resulte em acesso administrativo sem rastreabilidade.
-
-**Decisões pendentes:**
-
-- Campos obrigatórios, justificativa, identificação de operador e conteúdo mínimo (Q-009).
-- Tipos de evento e operações que serão auditadas.
-- Retenção, descarte, acesso e proteção contra alteração (Q-010 e #102).
-- Se o registro de eventos será genérico, específico por recurso ou híbrido.
-
-Esta entidade não deve ser considerada concluída apenas por existir uma tabela. A política da Issue #102 precisa ser aprovada e os controles devem ser testados.
+**Regras:**
+- PDF e JPEG são os únicos formatos aceitos.
+- Máximo 10 MB por arquivo e até 5 arquivos por mensagem.
+- TI define quotas individuais e capacidade total; não existe limite por conversa.
+- PDF protegido por senha é rejeitado.
+- JPEG é selecionado da galeria; não há captura por câmera. Metadados EXIF/GPS são removidos.
+- Análise antimalware ocorre na infraestrutura FORD.
+- Falha, indisponibilidade ou inconclusão mantém o anexo bloqueado no fluxo normal; mensagem de texto continua funcionando.
+- TI pode liberar qualquer anexo por operação administrativa auditada. Usuários não podem contornar a análise.
+- TI pode baixar anexos durante investigações; o download é auditado.
+- Links temporários têm validade máxima de 5 minutos e a remoção de participante revoga imediatamente o acesso.
+- O armazenamento binário fica fora das tabelas, em storage privado sob controle da FORD.
 
 ### 5.7 security_alerts — alertas de conteúdo suspeito
 
-**Status:** Entidade candidata; escopo em aberto entre ADR-005, Issue #99 e Issue #122.
+**Requisitos confirmados:** RF-014/RF-015; RN-012/RN-013.
 
-**Finalidade proposta:** relacionar uma mensagem sinalizada a uma ocorrência que o TI possa revisar.
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador do alerta. |
+| message_id | Obrigatório | Mensagem que originou o alerta. |
+| matched_rule / term_reference | Obrigatório | Referência à regra/lista aplicada; não é necessário duplicar texto integral do conteúdo. |
+| severity | Obrigatório | Baixa, média ou alta. |
+| created_at | Obrigatório | Momento da sinalização. |
+| status | Obrigatório | Aberto/em análise/encerrado, ou estados equivalentes. |
+| reviewed_by_profile_id | Condicional | TI que analisou/encerrou. |
+| reviewed_at / closed_at | Condicional | Datas do tratamento/encerramento. |
 
-Possíveis atributos para discussão: id, message_id, referência à regra de detecção, classificação, severidade, momento da sinalização, situação do alerta, responsável pela análise e momento da revisão.
+**Regras:**
+- A detecção usa regras e lista de termos mantida pelo TI, incluindo palavrões.
+- Não há análise contextual ou IA externa.
+- A detecção não bloqueia automaticamente mensagem ou conta.
+- A fila TI prioriza severidade e prazo: alta imediata (até 1h), média até 1 dia útil, baixa até 3 dias úteis.
+- TI pode encerrar alerta sem justificativa obrigatória.
 
-**Não definir ainda** catálogo de regras, limiares, severidade, estados, dados de contexto ou bloqueio de mensagens. Esses pontos dependem de Q-007 e Q-008 e do trabalho da Issue #122.
+### 5.8 monitoring_terms — lista de termos/regras
 
-A necessidade funcional de análise e alerta está registrada em RF-014 e RF-015. A inclusão física desta tabela na entrega da #99 depende da resolução de escopo indicada na seção 12.
+**Necessidade funcional confirmada:** o TI mantém a lista de termos/regras de detecção.
 
-### 5.8 Configurações persistentes — entidade ainda não definida
+A estrutura lógica deve permitir manter os termos habilitados, sua regra/categoria e o histórico mínimo de administração necessário. Campos físicos (por exemplo, termo, status, versão, criado/alterado por e timestamps) são candidatos e devem ser revistos tecnicamente. Não criar uma tabela genérica de configurações para armazenar qualquer parâmetro sem inventário.
 
-**Status:** Necessidade mencionada na Issue #99; inventário não especificado.
+A lista e o processamento devem permanecer dentro da infraestrutura FORD. Nenhum texto de mensagem pode ser enviado a serviço externo.
 
-A Issue #99 menciona configurações, enquanto a ADR-005 cita alertas no conjunto mínimo de entidades e não descreve uma tabela de configurações.
+### 5.9 audit_events — eventos de auditoria
 
-Antes de criar uma tabela genérica configs, é necessário listar quais configurações serão persistidas no banco, quem pode alterá-las, quais valores possuem histórico e quais são apenas variáveis de ambiente ou parâmetros de deploy.
+**Requisitos confirmados:** RF-022; RNF-004; RN-014, RN-021 e RN-025.
 
-Não armazenar segredos, tokens, chaves de serviço ou credenciais em uma tabela genérica de configurações. Segredos operacionais devem permanecer no mecanismo de gerenciamento de segredos da plataforma.
+| Campo lógico | Obrigatoriedade | Regra |
+|---|---|---|
+| id | Obrigatório | Identificador do evento. |
+| actor_profile_id | Obrigatório para ação administrativa | Operador responsável. |
+| event_type | Obrigatório | Tipo de ação executada. |
+| resource_type / resource_id | Obrigatório conforme evento | Recurso afetado. |
+| occurred_at | Obrigatório | Instante gerado em contexto confiável. |
+| metadata | Condicional | Dados mínimos para rastreabilidade; sem senhas, tokens, chaves ou conteúdo integral. |
 
-## 6. Relacionamentos e cardinalidades
+**Catálogo funcional mínimo:**
+- login administrativo;
+- criação/alteração/desativação/reativação de contas;
+- criação/encerramento/desativação/reativação de grupos;
+- inclusão/remoção de participantes;
+- consulta administrativa de conversas;
+- consulta e encerramento de alertas;
+- download e liberação administrativa de anexos;
+- exportação de conversas;
+- edição/exclusão administrativa de mensagens;
+- alteração de configurações.
 
-| Origem | Relação | Destino | Cardinalidade esperada | Observação |
-|---|---|---|---|---|
-| auth.users | identidade de | profiles | 1:1 | Relação implementada pela FK de profiles.id. |
-| profiles | cria | conversations | 1:N | Autor de criação; permissões dependem do tipo de conversa. |
-| conversations | possui | memberships | 1:N | Uma conversa reúne seus participantes. |
-| profiles | participa por | memberships | 1:N | Um perfil pode participar de várias conversas. |
-| conversations | contém | messages | 1:N | Cada mensagem pertence a uma conversa. |
-| profiles | envia | messages | 1:N | Cada mensagem possui um autor. |
-| messages | pode conter | attachments | 1:N | Quantidade máxima ainda não definida. |
-| profiles | executa | audit_events | 1:N | Eventos administrativos devem identificar o operador. |
-| conversations | pode ser alvo de | audit_events | 1:N | Necessário para registrar consulta administrativa de conversa. |
-| messages | pode gerar | security_alerts | 1:N | Relação candidata; depende de #122 e decisão de escopo. |
+**Regras:**
+- Operações administrativas listadas devem ser registradas.
+- Somente TI consulta e gerencia registros; Usuários não consultam, alteram ou excluem.
+- Os registros não sofrem exclusão automática enquanto o sistema operar.
+- Exclusões autorizadas e descarte após ciclo de backup são registrados.
+- Consulta administrativa não exige campo justificativa obrigatório.
+- O desenho deve impedir que uma falha de auditoria resulte em operação administrativa sem rastreabilidade.
 
-### 6.1 Invariantes funcionais a preservar
+### 5.10 Configurações persistentes
 
-- Uma mensagem não pode existir sem conversa e autor.
-- Um anexo não pode existir sem mensagem associada.
-- Usuário comum só pode ler e escrever em conversas das quais seja participante autorizado.
-- Uma mensagem em grupo só pode ser enviada por participante ativo e autorizado.
-- Uma conta inativa não pode executar operações de envio.
-- A consulta administrativa de conversa pelo TI é uma exceção de leitura prevista no requisito e deve gerar auditoria; não transforma o TI em participante da conversa.
-- Grupos são criados e administrados pelo TI.
-- Conversa individual deverá representar comunicação entre dois usuários; a regra de unicidade por par ainda precisa de decisão.
-- O histórico de mensagens, anexos e eventos não deve ser eliminado automaticamente por exclusão de um participante sem política aprovada.
+Não criar uma tabela genérica `configs` sem inventário. As configurações funcionais confirmadas incluem a lista de termos/regras e parâmetros administrados pelo TI. Outras configurações de UX/deploy ou segredos operacionais não devem ser presumidas como dados de negócio. Segredos e chaves permanecem em mecanismo seguro sob controle da FORD, não em tabela genérica.
+
+## 6. Relacionamentos e invariantes
+
+| Origem | Relação | Destino | Cardinalidade lógica |
+|---|---|---|---|
+| profiles | cria | conversations | 1:N |
+| conversations | possui | memberships | 1:N |
+| profiles | participa por | memberships | 1:N |
+| conversations | contém | messages | 1:N |
+| profiles | envia | messages | 1:N |
+| messages | recebe confirmações | message_reads | 1:N |
+| profiles | registra leitura | message_reads | 1:N |
+| messages | possui | attachments | 1:N |
+| messages | pode gerar | security_alerts | 1:N |
+| profiles | revisa | security_alerts | 1:N |
+| profiles | administra | monitoring_terms | 1:N |
+| profiles | executa | audit_events | 1:N |
+
+Invariantes:
+- Mensagem pertence a uma conversa e tem autor validado no servidor.
+- Anexo pertence a uma mensagem.
+- Usuário só lê conversas em que seja participante autorizado.
+- Membro incluído pelo TI pode enviar mensagens ao grupo; não membro não pode ler nem enviar.
+- Remoção de participante revoga acesso ao histórico e anexos anteriores.
+- TI pode consultar conversas sem membership, mas a consulta é auditada.
+- Nenhuma role adicional é criada para participantes.
+- Desativação de conta, remoção de membership e encerramento de grupo não implicam exclusão automática do histórico.
 
 ## 7. Constraints, integridade e índices candidatos
 
-Os itens desta seção são recomendações para revisão técnica, não DDL aprovado.
+Propostas para revisão técnica:
+- unicidade de `username` normalizado;
+- CHECK de role limitada a `user` e `ti`;
+- CHECK de conversa individual/grupo;
+- FK de membership para perfil e conversa;
+- unicidade de membership ativa por perfil/conversa, considerando histórico;
+- FK de mensagem para conversa e autor;
+- FK de recibo de leitura para mensagem e perfil, com unicidade por mensagem/perfil;
+- validação de MIME/tamanho do anexo no servidor; constraints não substituem inspeção do conteúdo;
+- evento de consulta administrativa deve identificar operador, conversa-alvo e horário;
+- não usar cascatas destrutivas incompatíveis com retenção e preservação de histórico.
 
-### 7.1 Chaves e referências
+Índices candidatos: `memberships(profile_id, conversation_id)`, `memberships(conversation_id, profile_id)`, `messages(conversation_id, created_at)`, `message_reads(profile_id, message_id)`, `attachments(message_id)`, `audit_events(actor_profile_id, occurred_at)` e `audit_events(resource_type, resource_id, occurred_at)`. Índices finais dependem de consultas e metas de carga alinhadas.
 
-- Usar UUID como candidato a chave primária para novas entidades, alinhado à chave já utilizada por Supabase Auth.
-- Definir FKs entre mensagens, conversas, participantes, anexos, perfis e eventos auditáveis.
-- Revisar as ações ON DELETE de cada FK. Não propagar exclusões em cascata por mensagens, anexos ou auditoria sem aprovação de retenção.
-- Considerar desativação lógica de contas por profiles.is_active como mecanismo normal de bloqueio, separando-a de exclusão física da identidade.
+## 8. Segurança, autorização e RLS
 
-### 7.2 Restrições candidatas
-
-| Entidade | Restrição candidata | Finalidade |
-|---|---|---|
-| profiles | CHECK role IN (user, ti) | Já implementada. |
-| conversations | CHECK kind IN (direct, group) | Impedir tipo inválido de conversa. |
-| memberships | FK para conversa e perfil | Impedir participação órfã. |
-| memberships | Unicidade de participação ativa por conversa/perfil, possivelmente por índice parcial | Evitar duplicidade de membro ativo; depende do ciclo de vida Q-003. |
-| messages | FKs para conversa e autor | Preservar autoria e conversa de origem. |
-| attachments | CHECK de MIME permitido e tamanho positivo | Validar metadados; validação do conteúdo real ocorre fora da constraint. |
-| audit_events | evento de consulta administrativa exige operador e conversa alvo | Assegurar rastreabilidade mínima do RF-016. |
-
-### 7.3 Índices candidatos
-
-- memberships(profile_id, conversation_id) para listar conversas de um usuário.
-- memberships(conversation_id, profile_id) para listar participantes e validar participação.
-- messages(conversation_id, created_at) para paginação de mensagens por conversa.
-- attachments(message_id) para recuperar anexos de uma mensagem.
-- audit_events(actor_profile_id, occurred_at) para consulta de eventos por operador e período.
-- audit_events(conversation_id, occurred_at) para trilha de acesso administrativo por conversa.
-- Índices adicionais devem ser justificados pelas consultas reais e pela estimativa de carga da Q-016.
-
-A revisão deve considerar seletividade, ordenação, custo de escrita e necessidade de índices compostos. Não criar índices indiscriminadamente.
-
-## 8. Segurança, RLS e acesso aos dados
-
-A ADR-006 foi aceita somente para o contrato de autorização de perfis e a migration existente. Ela não aprova políticas de RLS para conversas, participantes, mensagens, anexos ou auditoria.
-
-Princípios para a implementação futura:
-
-1. Autenticar a identidade no servidor, sem confiar em profile_id, papel ou estado informados pelo cliente.
-2. Aplicar autorização server-side nas operações e complementar com políticas RLS no PostgreSQL.
-3. Validar participação na conversa para leitura e envio por usuários comuns.
-4. Restringir criação, inclusão e remoção administrativa de participantes de grupos ao TI autorizado.
-5. Permitir consulta administrativa de conversa somente conforme RF-016 e a governança aprovada, sempre com registro de auditoria.
-6. Não expor a service-role key ao browser, bundles, variáveis NEXT_PUBLIC_* ou logs.
-7. Proteger os objetos do storage e autorizar cada download com base no acesso à mensagem/conversa.
-8. Negar acesso por padrão quando identidade, participação ou regra de autorização não puder ser validada.
-
-A matriz da Issue #100 e sua aprovação independente pelo SQA devem ser respeitadas. A implementação das políticas de domínio e dos testes de isolamento pertence também à Issue #101. Este documento não antecipa a aprovação dessas políticas.
+- A matriz da Issue #100 define os atores e regras funcionais; o parecer funcional do PO foi registrado em comentário da issue.
+- A implementação RLS de domínio e testes de isolamento pertencem também à Issue #101.
+- Autenticação, autorização e armazenamento devem operar dentro da fronteira da FORD.
+- Autorização server-side é obrigatória; RLS no banco é defesa adicional quando suportada pela implantação.
+- Role, estado e membership não podem ser aceitos de dados enviados livremente pelo navegador.
+- Negar por padrão quando identidade, membership ou permissão não puderem ser verificadas.
+- TI tem exceções administrativas explicitamente definidas para consulta/exportação, administração de mensagens, anexos, alertas e auditoria, todas rastreáveis.
+- A migration Supabase existente só cobre `profiles` e é legado; não comprova RLS de domínio nem define o modelo final.
 
 ## 9. Retenção, exclusão e histórico
 
-A retenção ainda não pode ser implementada com regras definitivas. As decisões de Q-010 e Q-024 afetam diretamente o comportamento do banco.
+- Mensagens, anexos, alertas, logs de auditoria e registros administrativos não sofrem exclusão automática enquanto o sistema operar.
+- O TI autoriza exclusões e decide quando preservar informações durante investigações.
+- Backups diários são retidos por 12 meses.
+- Após exclusão autorizada, os dados saem dos backups ao final do ciclo de retenção; o descarte é registrado em auditoria.
+- Desativação de conta e remoção de participante não são exclusão de dados.
+- O modelo físico deve suportar preservação e descarte autorizado sem perda não intencional de histórico.
 
-Até que haja aprovação:
+## 10. Rastreabilidade atualizada
 
-- Não definir exclusão em cascata de conversas, mensagens, anexos ou auditoria como comportamento de negócio.
-- Não presumir que excluir uma conta significa apagar seu histórico.
-- Não presumir que mensagens editadas ou apagadas deixam de existir para fins de auditoria.
-- Não definir prazo de retenção por conveniência técnica.
-- Preservar a distinção entre desativação de conta, remoção de participante, encerramento de conversa e exclusão definitiva de dados.
+| Entidade | Requisitos principais |
+|---|---|
+| profiles | RF-001 a RF-004; RN-001 a RN-005 |
+| conversations | RF-005, RF-007 a RF-010, RF-016, RF-021 |
+| memberships | RF-005, RF-006, RF-008, RF-010, RF-019 |
+| messages | RF-008 a RF-010, RF-019, RF-020 |
+| message_reads | RF-019 |
+| attachments | RF-011 a RF-013; RN-008/RN-011; RNF-010 |
+| security_alerts | RF-014/RF-015; RN-012/RN-013 |
+| monitoring_terms | Lista de termos/regras administrada pelo TI; RN-012 |
+| audit_events | RF-016, RF-020 a RF-022; RNF-004 |
 
-A política final deve ser documentada na Issue #102 e refletida nas migrations, constraints, rotinas de descarte e testes.
+## 11. Questões e estado na baseline v0.4
 
-## 10. Rastreabilidade com requisitos e issues
-
-| Elemento do modelo | Requisitos / regras | Issues e decisões relacionadas |
+| Questão | Estado atual | Impacto residual |
 |---|---|---|
-| profiles | RF-001 a RF-004; RN-001 a RN-005 | #99, #103, #104, #105; ADR-004 e ADR-006 |
-| conversations | RF-005, RF-007 a RF-010; RN-006, RN-007, RN-010 | #99, #107, #109, #110, #111; Q-003 |
-| memberships | RF-005, RF-006, RF-008, RF-010; RN-007; contagem não lida/marcação básica de leitura | #99, #100, #101, #111, #112, #113; Q-003 |
-| messages | RF-008 a RF-010; RN-006, RN-007; origem temporal para leitura e ordenação | #99, #109, #110, #111; Q-024; ADR-007 |
-| attachments | RF-011 a RF-013; RN-008, RN-011; RNF-010 | #99, #114, #115, #116, #117; Q-004, Q-010, Q-011; ADR-008 |
-| audit_events | RF-016; RN-014; RNF-004 e RNF-011 | #99, #102, #121, #124; Q-009, Q-010; ADR-010 |
-| security_alerts | RF-014, RF-015; RN-012, RN-013 | #122, #123; Q-007, Q-008; ADR-010 |
-| Configurações | RN-003 e responsabilidades administrativas | #99; inventário ainda precisa ser esclarecido |
+| Q-003 — grupos, saída/remoção | Respondida pela FORD v2 | TI administra grupos e membros; usuário não sai voluntariamente; remoção revoga acesso ao histórico e anexos |
+| Q-005 — identificador de login | Respondida | username único, definido/alterado pelo TI |
+| Q-007/Q-008 — regras e alertas | Respondidas/alinhadas | lista de termos do TI; severidade/prazos fixados; sem análise contextual ou bloqueio automático |
+| Q-009/Q-010 — consulta/auditoria/retenção | Respondidas/alinhadas | consulta TI sem justificativa; auditoria catalogada; retenção e backups definidos |
+| Q-011 — anexos | Respondida/alinhada | PDF/JPEG, 10 MB, 5 por mensagem, quotas TI, scanner interno e comportamento fail-closed |
+| Q-016 — desempenho/capacidade | Alinhada com Desenvolvimento | metas e capacidade constam dos requisitos técnicos; não reabrir como pendência de produto |
+| Q-024 — edição/exclusão de mensagens | Respondida | Usuário não edita/exclui; TI pode editar/excluir com auditoria |
+| Q-018/Q-019 | Parcialmente abertos | refinamento de telas/navegação e ativos oficiais de marca |
+| Q-025 | Aberta | compatibilização da arquitetura técnica com infraestrutura sob controle da FORD |
 
-## 11. Decisões pendentes que impactam diretamente o modelo
+## 12. Validações e critérios para migrations
 
-| Questão | Decisão necessária | Impacto |
-|---|---|---|
-| Q-003 | Saída voluntária, remoção de membros, reentrada e encerramento de grupos. | Campos de vigência e histórico em memberships e estado de conversations. |
-| Q-005 | Identificador utilizado no login. | Dados de identificação e unicidade; não confundir com PK. |
-| Q-007 | Regras, termos e categorias de conteúdo suspeito. | Estrutura e referência das ocorrências de alerta. |
-| Q-008 | Severidade, fluxo de investigação e eventual ação após alerta. | Estados e campos de security_alerts. |
-| Q-009 | Governança da consulta administrativa, justificativa, transparência e campos auditáveis. | Estrutura e eventos de audit_events. |
-| Q-010 | Retenção e exclusão de mensagens, anexos, alertas e logs. | FKs, exclusões, histórico, descarte e integridade. |
-| Q-011 | Limites, quotas e verificação antimalware de anexos. | Constraints, metadados, políticas de storage e fluxo de liberação. |
-| Q-016 | Concorrência, volume e desempenho esperados. | Índices, paginação, particionamento futuro e dimensionamento. |
-| Q-024 | Edição e exclusão de mensagens. | Campos de edição, exclusão lógica e histórico de versões. |
+Antes de migrations:
+- [ ] Tech Lead/backend revisam normalização, chaves, cardinalidades, constraints e índices.
+- [ ] TI revisa administração de contas, grupos, consulta/exportação e auditoria.
+- [ ] Matriz #100 e revisão independente SQA são consideradas; o parecer funcional do PO não substitui SQA.
+- [ ] Estratégia de autorização/RLS e testes negativos de domínio são aprovados.
+- [ ] A solução de banco/identidade/storage é compatível com a Q-025 e ADRs revisadas.
+- [ ] Backup/restore e retenção são compatíveis com RN-021/RNF-009.
+- [ ] A revisão ocorre por PR antes de aplicar migrations.
 
-## 12. Decisão de escopo funcional do PO e alinhamento com ADR-005
+A documentação lógica não declara schema aprovado nem migrations executadas.
 
-Existe uma diferença entre os artefatos de governança:
-
-- **Issue #99:** cita profiles, conversations, memberships, messages, attachments, audit_events e configurações.
-- **ADR-005 (Proposed):** menciona perfis, conversas, participantes, mensagens, anexos, alertas e auditoria.
-
-**Decisão do PO — 19/11/2026, validação do escopo funcional conceitual:**
-
-1. **Núcleo de dados confirmado:** profiles, conversations, memberships, messages, attachments e audit_events representam as necessidades funcionais essenciais do MVP descritas nos requisitos.
-2. **Alertas também fazem parte do domínio do produto:** a análise de mensagens suspeitas e a geração de alertas para revisão do TI estão previstas em RF-014/RF-015. Portanto, `security_alerts` deve permanecer no modelo lógico como entidade relacionada às Issues #122/#123. Seus atributos finais, estados e regras dependem das decisões Q-007/Q-008 e da revisão técnica; esta validação não aprova DDL nem política de alertas.
-3. **Configurações permanecem no escopo funcional do console TI, mas sem tabela genérica aprovada:** a funcionalidade administrativa de configurar parâmetros está indicada na visão do produto. Contudo, não há inventário dos parâmetros persistentes, seus tipos, responsáveis, regras de alteração ou necessidade de histórico. Não criar uma tabela genérica `configs` por suposição. O inventário deve ser produzido e validado com PO/TI; os itens que precisarem ser persistidos devem ser incorporados ao modelo antes das migrations correspondentes. Se forem apenas variáveis de ambiente ou segredos operacionais, devem ficar fora de uma tabela de configurações de negócio.
-4. **Organização e autorização:** o escopo inicial continua sendo uma única organização (FORD), sem `tenant_id` ou multi-tenancy adicional. A aplicação mantém somente os perfis `user` e `ti`; não criar um terceiro papel de participante, proprietário ou moderador em `memberships`.
-5. **Preservação do histórico:** desativação de conta ou encerramento de participação não deve ser interpretado automaticamente como exclusão das mensagens, anexos ou eventos de auditoria relacionados. Exclusão física, retenção e descarte dependem de Q-010 e das aprovações institucionais aplicáveis.
-6. **Anexos:** o banco deve manter metadados e vínculo com a mensagem; o conteúdo binário permanece no armazenamento privado previsto, sujeito à revisão da ADR-008 e às regras de anexos.
-7. **Leitura e não lidas:** a Issue #111 faz parte do backlog do produto e exige contagem de mensagens não lidas e marcação básica de leitura. O modelo deve suportar estado de leitura por participante/conversa. `memberships.last_read_at` é uma opção preliminar, não decisão técnica aprovada; Tech Lead/backend devem validar sua suficiência e os impactos em paginação, ordenação e Realtime.
-
-Esta decisão valida o **significado e o limite funcional** das entidades. Não aprova normalização, tipos SQL, constraints, índices, FKs, RLS, cascatas, particionamento, migrações ou a ADR-005; esses itens permanecem sob revisão do Tech Lead, backend, TI, Segurança e SQA conforme aplicável.
-
-**Pendência que permanece na Issue #99:** documentar o inventário de configurações antes de declarar completo o escopo de persistência e antes de encerrar a issue. A ADR-005 deve ser harmonizada com essa delimitação por seus responsáveis técnicos, sem alterar seu status Proposed por esta validação de produto.
-
-## 13. Plano de validação do modelo
-
-Antes de criar migrations das entidades novas:
-
-- [x] PO valida o escopo funcional conceitual das seis entidades centrais e de `security_alerts`; configurações persistentes permanecem condicionadas ao inventário descrito na seção 12.
-- [ ] Tech Lead revisa normalização, chaves, cardinalidades, índices e estratégia de exclusão.
-- [ ] Desenvolvimento backend valida viabilidade do modelo com Supabase/PostgreSQL e necessidades das consultas.
-- [ ] TI valida os fluxos administrativos, participantes e consulta de conversas.
-- [ ] Segurança/Privacidade e responsáveis de negócio esclarecem Q-009 e Q-010.
-- [ ] Decisões pendentes que não impedem a estrutura inicial são registradas com responsável e dependência.
-- [ ] A matriz da #100 é considerada; o modelo não cria permissões além das decisões aprovadas.
-- [ ] O SQA revisa rastreabilidade e cenários positivos/negativos aplicáveis.
-- [ ] O modelo lógico é aprovado por PR antes da implementação das migrations.
-
-## 14. Critérios para considerar o documento pronto para orientar migrations
-
-- [ ] As entidades e seus limites de responsabilidade estão aprovados.
-- [ ] O DER e as cardinalidades foram revisados.
-- [ ] Os campos obrigatórios e opcionais estão definidos ou explicitamente marcados como pendentes.
-- [ ] Chaves, FKs, unicidade, CHECKs e comportamento de exclusão foram revisados.
-- [ ] As regras de participação e autoria são compatíveis com a matriz de autorização.
-- [ ] A consulta administrativa e a trilha de auditoria atendem ao requisito RF-016 e à política aprovada na #102.
-- [ ] As questões de retenção e exclusão não são contraditas pelo modelo.
-- [ ] A divergência entre configurações e alertas foi resolvida na Issue #99 e na ADR-005.
-- [ ] Tech Lead, desenvolvimento backend, PO e SQA registraram suas revisões conforme suas responsabilidades.
-
-## 15. Histórico de revisões
+## 13. Histórico de revisões
 
 | Versão | Data | Alteração | Estado |
 |---|---|---|---|
-| 0.1 | 18/11/2026 | Primeira proposta do modelo lógico, dicionário preliminar, relacionamentos, rastreabilidade e registro das decisões pendentes. | Em revisão |
-| 0.2 | 19/11/2026 | Registra validação do PO sobre o escopo funcional das entidades, inclui `security_alerts` no domínio lógico e delimita configurações persistentes como dependentes de inventário; não aprova schema físico ou migrations. | Aprovado pelo PO quanto ao escopo funcional; revisão técnica pendente |
+| 0.1 | 18/11/2026 | Modelo lógico inicial. | Histórico |
+| 0.2 | 19/11/2026 | Escopo funcional de entidades validado pelo PO. | Histórico |
+| 0.3 | 19/11/2026 | Reconciliado com FORD v2, arquitetura sob controle FORD, recibos de leitura, auditoria ampliada, retenção, anexos e alertas. | Modelo lógico atualizado; revisão física pendente |
 
-## 16. Referências internas
+## 14. Referências
 
-- Issue #99 — Modelar schema PostgreSQL e migrations iniciais.
-- Issue #100 — Definir matriz de autorização e políticas RLS.
-- Issue #101 — Implementar RLS e testes de isolamento.
-- Issue #102 — Definir estratégia de auditoria e retenção de dados.
-- Issue #122 — Implementar detecção de conteúdo suspeito e palavrões.
-- ADR-005 — Banco de dados e modelo de dados.
-- ADR-006 — Autorização server-side e RLS.
-- ADR-008 — Storage e anexos.
-- ADR-010 — Segurança, auditoria e monitoramento.
-- POLY-REQ-001 — Baseline consolidada de requisitos e escopo MVP.
-- Q-003, Q-005, Q-007, Q-008, Q-009, Q-010, Q-011, Q-016 e Q-024.
+- [Baseline POLY-REQ-001 v0.4](../09-baseline-requisitos-mvp.md)
+- [Issue #99 — Modelar schema e migrations](https://github.com/Aluvioz/Polychat/issues/99)
+- [Issue #100 — Matriz de autorização](../issue-100-matriz-autorizacao.md)
+- [Issue #101 — RLS e testes de isolamento](https://github.com/Aluvioz/Polychat/issues/101)
+- [Issue #102 — Auditoria e retenção](https://github.com/Aluvioz/Polychat/issues/102)
+- [ADR-005 — Banco de dados](../adr/ADR-005-dados-postgresql.md)
+- [ADR-008 — Armazenamento e anexos](../adr/ADR-008-storage-anexos.md)
+- [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md)
