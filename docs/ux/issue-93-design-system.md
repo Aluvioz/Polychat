@@ -18,9 +18,9 @@ Os tokens tomam como **ponto de partida provisório** cores existentes em `src/a
 
 1. **Simplicidade:** operações de mensagem e leitura devem ser reconhecíveis; não adicionar recursos fora do escopo confirmado.
 2. **Perfis separados:** Usuário em celular; TI em computador. A restrição visual/dispositivo **não substitui permissão e autorização no servidor**.
-3. **Ação segura:** operações administrativas críticas exigem descrição de consequência e confirmação explícita; informações administrativas dependem de política e finalidade aprovadas.
+3. **Ação segura:** operações administrativas críticas devem deixar clara a consequência e permitir confirmação explícita. A confirmação visual não altera as permissões já definidas para o TI nem cria exigência de justificativa ou segunda aprovação.
 4. **Feedback inequívoco:** distinguir sucesso, erro, carregamento, sem dados, sem conexão e sessão expirada, sempre com texto além da cor.
-5. **Acessibilidade progressiva:** projetar teclado, foco, contraste, rótulos e ordem de leitura desde a biblioteca, sujeitos à validação da política corporativa (Q-020).
+5. **Acessibilidade:** projetar teclado, foco, contraste, rótulos e ordem de leitura desde a biblioteca. A FORD não definiu requisitos adicionais específicos para o programa inicial (Q-020 resolvida); obrigações legais ou corporativas aplicáveis continuam válidas.
 
 ## 3. Tokens propostos
 
@@ -82,12 +82,12 @@ Razões calculadas com luminância relativa sRGB e fórmula `(L_clara + 0,05) / 
 | Navegação | Mobile Usuário, desktop TI | Mostrar funções permitidas; controle real de permissões obrigatoriamente no servidor |
 | Alertas de TI | Pendente, em revisão, encaminhado **se política permitir** | Não presumir bloqueio ou punição automática |
 | Consulta/auditoria TI | Permissão, ausência de registros, erro | Visibilidade, rastreabilidade e retenção dependem de governança aprovada |
-| Anexo | PDF, JPEG, inválido, excedente (limite a definir) | Verificar extensão, conteúdo e tamanho no servidor; não inventar limite aprovado |
+| Anexo | PDF, JPEG, inválido, excedente | Aceitar somente PDF/JPEG; até 10 MB por arquivo e até 5 arquivos por mensagem; quotas individuais e capacidade total definidas pelo TI; PDF protegido por senha deve ser recusado; falha/inconclusão antimalware mantém o arquivo bloqueado no fluxo normal |
 
 ### Uso correto por perfil
 
 - **Usuário mobile:** login por credenciais fornecidas pela TI, lista de conversas, chat individual e de grupo, anexos PDF/JPEG, estados offline e sessão expirada. **Não incluir cadastro aberto, criação de grupos ou convite de participantes.**
-- **TI desktop:** login, dashboard, criação/desativação de contas, criação de grupos, inclusão de participantes, consulta administrativa, alertas e opções administrativas autorizadas. **Remoção de integrantes, exclusão/exportação de conversas, ações em alertas e catálogo de configurações continuam pendentes de política.**
+- **TI desktop:** login, dashboard, criação/alteração/desativação/reativação de contas, criação e gestão de grupos, inclusão/remoção de participantes, consulta e exportação de conversas, alertas, auditoria e configurações sob sua responsabilidade. Todos os administradores TI possuem poderes equivalentes; não há administrador principal nem segunda aprovação. TI pode editar/excluir mensagens e encerrar alertas sem justificativa obrigatória.
 
 ## 6. Layout, responsividade e navegação
 
@@ -130,13 +130,13 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 | Ponto | Referência | Dono sugerido |
 |---|---|---|
 | Azul oficial, logotipo, tipografia e manual da marca Ford | RN-019; Q-019 | Cliente / Comunicação / PO |
-| Obrigações de acessibilidade e evidências de homologação | Q-020; #129 | PO / Jurídico / QA |
-| Navegadores e dispositivos oficiais; tablet e modo desktop | Q-012 | TI / QA |
+| Evidências de acessibilidade/homologação | #129; obrigações aplicáveis, sem requisito adicional específico da FORD (Q-020 resolvida) | PO / SQA / UX |
+| Matriz de navegadores e dispositivos | Q-012 resolvida: Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos | TI / SQA |
 | Exatas páginas, ações e configurações do produto | Q-018 | PO / UX |
-| Câmara/JPEG, anexos e limites | Q-004; Q-011 | PO / TI |
-| Remover integrantes, editar/apagar mensagens | Q-003; Q-024 | PO / TI |
-| Política de alertas e acesso a conversas | Q-007, Q-008, Q-009 | PO / TI / Segurança |
-| Identidade/recuperação de credenciais | Q-005, Q-006 | PO / TI |
+| Regras de câmera/JPEG e limites de anexos | Q-004 e Q-011 resolvidas; implementação e testes permanecem pendentes | Desenvolvimento / SQA |
+| Remoção de integrantes e edição/exclusão de mensagens | Q-003 e Q-024 resolvidas; TI executa ações, com revogação de acesso/auditoria conforme baseline | Desenvolvimento / SQA |
+| Regras de detecção, alertas e consulta administrativa | Q-007, Q-008 e Q-009 resolvidas; implementar fila, severidades/prazos e auditoria conforme baseline | Desenvolvimento / SQA / TI |
+| Username, senha inicial e recuperação | Q-005 e Q-006 resolvidas; implementar provisionamento e recuperação pelo TI | Desenvolvimento / TI |
 | Escolha definitiva de biblioteca de ícones e tecnologia dos componentes | Arquitetura/ADR pendente | Tech Lead |
 
 ## 9. Critérios de aceite da #93 — situação honesta
@@ -150,7 +150,7 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 | Revisão por PR concluída | **Pendente** |
 | Ausência de regressões | **Não demonstrada**; arquivos ficam isolados em `docs/ux`, sem alterar produção |
 
-**O que falta antes de fechar:** revisão por Dante/PO/Tech Lead, validação de marca, inspeção acessível e testes documentados, eventual ajuste de tokens conforme manual oficial e aceite formal. Referência à Epic #78. Não fechar a issue sem satisfazer os critérios.
+**O que falta antes de fechar:** revisão por Tech Lead/SQA/PO, obtenção dos ativos oficiais de marca (Q-019), execução das verificações de acessibilidade pertinentes e registro das evidências. A matriz de dispositivos Q-012 e o escopo de acessibilidade adicional Q-020 não são pendências de requisitos. Referência à Epic #78. Não fechar a issue sem satisfazer os critérios.
 
 *Esta biblioteca não contém permissões funcionais ou sistemas reais e não deve ser vendida como implementação pronta do design system de produção.*
 
@@ -161,7 +161,7 @@ Iconografia: recomendar uma única família de ícones vetoriais para toda inter
 
 O PO considera a versão 0.1 **adequada como proposta de trabalho e referência para continuidade do design**, pois reúne tokens, padrões de componentes, exemplos por perfil, estados de feedback, responsividade e um roteiro inicial de acessibilidade.
 
-Este parecer é **favorável à continuidade da revisão**, não à homologação final do Design System. A versão atual ainda não deve ser tratada como identidade visual oficial da FORD, biblioteca aprovada para produção ou evidência de conformidade completa.
+Este parecer é **favorável à continuidade da revisão**, não à homologação final do Design System. A versão atual ainda não deve ser tratada como identidade visual oficial da FORD, biblioteca aprovada para produção ou evidência de conformidade completa. A implementação funcional do Polychat ainda não começou; os arquivos desta PR são demonstrações estáticas e não componentes integrados ao runtime.
 
 ### 10.2 O que pode ser considerado aceito nesta etapa
 
@@ -169,6 +169,7 @@ Este parecer é **favorável à continuidade da revisão**, não à homologaçã
 - A organização dos tokens em nomes semânticos, com valores provisórios isolados dos estilos da aplicação.
 - O catálogo inicial de botões, campos, listas, avisos, estados vazios e confirmações demonstrativas.
 - A orientação de feedback textual, foco visível, rótulos de formulário, movimento reduzido e alvos de interação ampliados como princípios de design.
+- As regras de negócio atuais por perfil: Usuário mobile e TI desktop, incluindo remoção de participantes, consulta/exportação, alertas, auditoria e gestão de mensagens pelo TI.
 - A distinção explícita entre galeria estática e funcionalidades reais do produto.
 
 Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem autorizar importação dos arquivos de demonstração para o runtime.
@@ -177,14 +178,14 @@ Esses pontos podem orientar a próxima rodada de revisão e refinamento, sem aut
 
 | Tema | Situação | Condição para aprovação |
 |---|---|---|
-| Paleta, tipografia e logotipo oficiais da FORD | Não aprovado; valores atuais são provisórios | Receber manual/ativos oficiais e registrar validação da FORD/Comunicação (Q-019) |
-| Critérios de acessibilidade aplicáveis | Parcialmente documentados | Definir requisitos corporativos/legais aplicáveis e concluir avaliação correspondente (Q-020) |
+| Paleta, tipografia e logotipo oficiais da FORD | Não recebidos/confirmados nesta proposta; valores atuais são provisórios | Receber e aplicar manual/ativos oficiais da marca (Q-019) |
+| Critérios de acessibilidade aplicáveis | Q-020 resolvida: FORD não definiu exigências adicionais para o programa inicial | Manter obrigações legais/corporativas aplicáveis e concluir testes/evidências de acessibilidade pertinentes |
 | Contraste de todos os componentes e estados | Parcial; cálculos cobrem pares selecionados | Medir texto, bordas, ícones, foco, hover, desabilitado e fundos efetivamente renderizados |
 | Navegação por teclado | Testes manuais pendentes | Executar Tab/Shift+Tab e validar ordem, foco e operação dos controles |
 | Zoom e reflow | Testes manuais pendentes | Validar 200%/400% e larguras de referência, sem perda de conteúdo ou funcionalidade |
 | Leitor de tela | Teste pendente | Executar e registrar leitor, versão, ambiente, resultados e problemas |
 | Biblioteca de ícones | Não selecionada | Tech Lead definir família, versão, licença e convenção de uso |
-| Navegadores e dispositivos | Matriz não aprovada | TI/QA definir matriz de homologação (Q-012) |
+| Navegadores e dispositivos | Q-012 resolvida; matriz definida pela FORD | Executar homologação e registrar versões efetivamente testadas na Issue #129 |
 | Publicação da galeria | Arquivos versionados; acesso hospedado precisa de confirmação manual | Abrir a URL do Preview e registrar resultado, ambiente e data |
 | Aplicação no runtime | Não autorizada por esta proposta | Revisão técnica, acessibilidade, design/brand e aceite da etapa concluídos |
 
