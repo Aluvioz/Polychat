@@ -9,7 +9,7 @@
 
 A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por arquivo e até 5 arquivos por mensagem. O TI define limites individuais e a capacidade total de armazenamento; não existe quota por conversa. PDF protegido por senha não é aceito. JPEG deve ser selecionado da galeria, sem captura pela câmera, e os metadados EXIF/GPS devem ser removidos.
 
-A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
+A análise antimalware deve ocorrer no fluxo controlado do Polychat, integrado ao armazenamento privado Supabase Storage, sem encaminhar arquivos a scanners/SaaS externos não aprovados. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
 
 Supabase é uma plataforma oficial do Polychat (ADR-003). Supabase Storage pode ser utilizado como armazenamento de anexos, desde que configurado como privado e integrado aos controles de autorização, antimalware, retenção e revogação definidos neste documento.
 
@@ -21,7 +21,7 @@ Armazenar, analisar e entregar anexos sem expor objetos publicamente, sem permit
 
 ## Alternativas consideradas
 
-1. **Armazenamento de objetos privado sob controle da FORD:** opção preferencial a avaliar, com segregação de ambientes e integração com a aplicação server-side.
+1. **Supabase Storage:** plataforma oficial para objetos privados, com segregação de ambientes e integração server-side.
 2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
 3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
 4. **Supabase Storage:** opção oficial do projeto para objetos/anexos, com buckets privados, acesso autenticado e links temporários; outros serviços de storage exigem aprovação explícita.
@@ -38,7 +38,7 @@ Adotar **Supabase Storage** como opção oficial de armazenamento de anexos, com
 - Rejeitar PDF protegido por senha.
 - Permitir seleção de JPEG existente na galeria; a aplicação não oferece captura de foto pela câmera.
 - Remover metadados EXIF, inclusive GPS/localização, antes da disponibilização.
-- Validar o arquivo recebido e submetê-lo ao scanner antimalware executado na infraestrutura da FORD.
+- Validar o arquivo recebido e submetê-lo ao scanner antimalware integrado ao fluxo oficial, antes de liberar acesso ao objeto armazenado no Supabase Storage.
 - Manter o anexo indisponível até resultado favorável da análise. Falha, indisponibilidade, timeout ou resultado inconclusivo não equivalem a arquivo seguro e mantêm o anexo bloqueado.
 - A indisponibilidade do scanner não bloqueia o envio de mensagens de texto.
 - O TI pode liberar qualquer arquivo por ação administrativa. A ação deve ser autenticada e registrada em auditoria; usuários comuns não podem executar bypass ou alterar o estado da análise.
@@ -57,7 +57,7 @@ Adotar **Supabase Storage** como opção oficial de armazenamento de anexos, com
 
 ### Fronteira de processamento
 
-O storage, o scanner antimalware, o processamento de metadados, a emissão/revogação de links, os backups e os logs relacionados devem permanecer sob controle da FORD. Não enviar arquivos, conteúdo, metadados ou identificadores a serviços externos para varredura, conversão, extração, análise ou armazenamento.
+Supabase Storage é a plataforma oficial de armazenamento. A FORD mantém governança sobre contas, acessos, configurações e retenção. O scanner antimalware deve integrar o fluxo próprio do Polychat; não enviar arquivos, conteúdo, metadados ou identificadores a outros serviços externos para varredura, conversão, extração ou análise.
 
 Bibliotecas e atualizações sem acesso a dados da FORD podem ser utilizadas conforme as regras técnicas e de segurança aplicáveis.
 
