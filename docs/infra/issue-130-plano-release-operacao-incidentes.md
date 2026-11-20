@@ -467,7 +467,7 @@ Se a avaliação identificar possível violação de dados pessoais, risco à se
 7. **Erradicação e correção:** remover a causa, corrigir configuração/código ou aplicar controle temporário.
 8. **Recuperação:** restaurar serviço ou dados por procedimento aprovado.
 9. **Validação:** executar testes de segurança, integridade, autorização e smoke test aplicáveis.
-10. **Comunicação:** atualizar públicos internos e usuários conforme orientação de negócio, Segurança e Jurídico/Privacidade.
+10. **Comunicação:** atualizar públicos internos e usuários conforme orientação do PO, TI e gestão designada da FORD; a FORD trata os encaminhamentos legais/institucionais aplicáveis.
 11. **Encerramento:** registrar causa, impacto, evidência, decisão, ações corretivas e responsáveis.
 12. **Lições aprendidas:** transformar ações em issues priorizadas, atualizar runbooks e revisar riscos.
 
@@ -480,7 +480,7 @@ O plano de comunicação deve definir previamente:
 - públicos internos e externos que podem ser comunicados;
 - canal aprovado por público;
 - conteúdo mínimo e frequência de atualização;
-- processo de revisão por Segurança/Jurídico/Privacidade;
+- processo de revisão por TI (responsável operacional por segurança) e gestão designada da FORD;
 - procedimento para correção de informação incorreta;
 - registro das comunicações enviadas.
 
