@@ -582,19 +582,18 @@ O aceite técnico da equipe não substitui aceite formal da FORD, aprovação de
 
 ## 14. Condições comerciais — valores históricos, sem oferta vigente
 
-- Valores são estimativas hipotéticas em reais, sujeitos à confirmação de tributos, custos de provedores e escopo final.
-- Preço MVP sugerido: **R$ 520.900,00**; preço completo sugerido: **R$ 622.500,00**.
-- Prazo-base: 5 meses para MVP; 6 a 6,5 meses para versão completa, contados após kickoff, acesso aos ambientes e aprovação dos requisitos bloqueadores.
-- Pagamentos conforme marcos da seção 11.2.
-- Custos recorrentes, consumo de provedores, licenças e serviços externos são separados do desenvolvimento.
-- Garantia corretiva pós-aceite e janela de suporte devem ser definidas no contrato; manutenção evolutiva não está incluída no preço inicial.
-- Mudanças de escopo seguem o processo da seção 12.3.
-- **Validade comercial sugerida: 30 dias corridos**, como hipótese, a partir da emissão/entrega desta proposta. Após esse período, revisar taxas, impostos, disponibilidade de equipe e custos de terceiros.
-- Início condicionado à assinatura, indicação dos responsáveis, liberação dos ambientes e resolução das pendências críticas.
+Esta seção registra apenas as premissas de contratação usadas na simulação de 18/11/2026. Os preços, prazos, validade e cronograma abaixo não são uma oferta atual e não devem ser reutilizados como compromisso comercial depois da FORD v2.
+
+- Valores históricos da simulação: MVP **R$ 520.900,00** e versão completa **R$ 622.500,00**; ambos dependem de recontagem APF, reestimativa de esforço/custo e revisão comercial.
+- O plano atual não tem data final obrigatória: será organizado em sprints depois da arquitetura e do escopo técnico compatíveis com a infraestrutura FORD.
+- A referência de **R$ 450.000,00** informada pela FORD inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento; não é teto aprovado.
+- Custos recorrentes precisam ser recalculados com a solução sob controle da FORD. As tabelas anteriores de consumo de serviços gerenciados e mensalidades são apenas simulações históricas da arquitetura antiga.
+- Condições de pagamento, garantia, suporte, validade e marcos contratuais devem ser negociados novamente após a emissão da nova contagem e proposta.
+- Nenhuma estimativa desta versão autoriza contratar serviço externo para acessar, armazenar ou processar dados da FORD.
 
 ## 15. Perguntas da baseline anterior — status atualizado na v0.4
 
-As perguntas abaixo devem ser respondidas antes de transformar esta estimativa em preço fechado. A lista preserva as questões da baseline.
+As perguntas originais abaixo são preservadas como histórico da baseline anterior. Seus estados atuais foram atualizados na tabela §17.5; as questões já respondidas ou alinhadas não devem ser reabertas como pendências de produto.
 
 | ID | Pergunta objetiva | Impacto |
 |---|---|---|
