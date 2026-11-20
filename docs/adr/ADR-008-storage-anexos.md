@@ -1,49 +1,100 @@
-# ADR-008 — Storage e anexos
+# ADR-008 — Armazenamento privado e anexos
 
 - **Status:** Proposed
-- **Data:** 17/11/2026
-- **Issue:** #89
+- **Data de revisão:** 19/11/2026
+- **Issues relacionadas:** #89, #115, #116 e #117
+- **Baseline:** POLY-REQ-001 v0.4
 
 ## Contexto
 
-A baseline permite anexos PDF e JPEG, exige validar o conteúdo real e não inclui captura de fotos pela aplicação. O armazenamento e o fluxo de download precisam respeitar a participação na conversa e as permissões administrativas. Não há bucket, integração Storage ou fluxo de anexos implementado na `main`.
+A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por arquivo e até 5 arquivos por mensagem. O TI define limites individuais e a capacidade total de armazenamento; não existe quota por conversa. PDF protegido por senha não é aceito. JPEG deve ser selecionado da galeria, sem captura pela câmera, e os metadados EXIF/GPS devem ser removidos.
+
+A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
+
+A FORD v2 estabelece ainda que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Portanto, a proposta anterior de Supabase Storage não é uma opção vigente para anexos da FORD (ADR-003).
+
+O repositório não comprova implementação de armazenamento privado, fluxo completo de upload/download ou integração antimalware. A política funcional do produto, entretanto, está consolidada na baseline e nos alinhamentos com Desenvolvimento.
 
 ## Problema
 
-Armazenar e entregar arquivos sem expor buckets publicamente, confiar apenas em extensão/nome ou permitir que uma URL temporária substitua a autorização.
+Armazenar, analisar e entregar anexos sem expor objetos publicamente, sem permitir acesso fora das permissões da conversa e sem transferir arquivos ou metadados a provedores externos.
 
 ## Alternativas consideradas
 
-1. Supabase Storage privado.
-2. Object storage privado compatível com S3 e administrado pela organização.
-3. Armazenar os bytes diretamente nas tabelas do banco.
+1. **Armazenamento de objetos privado sob controle da FORD:** opção preferencial a avaliar, com segregação de ambientes e integração com a aplicação server-side.
+2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
+3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
+4. **Storage gerenciado por terceiro, incluindo Supabase Storage:** não permitido para arquivos da FORD quando o serviço puder acessá-los, armazená-los ou processá-los.
 
 ## Decisão proposta
 
-Usar Supabase Storage privado como opção de implementação, condicionado à validação técnica e de TI. Não criar buckets públicos. O servidor deve autorizar o upload e cada download conforme usuário, conversa e finalidade de acesso. URLs assinadas, caso usadas, devem ter curta validade e ser emitidas somente após autorização.
+Manter os anexos em **armazenamento privado executado dentro da fronteira de controle da FORD**. A tecnologia e a implantação específicas devem ser validadas pelo Tech Lead e TI no contexto da Q-025. Não adotar Supabase Storage nem bucket/serviço externo como arquitetura-alvo.
 
-A implementação deverá validar extensão, MIME detectado e assinatura do arquivo (magic bytes), além de limites de tamanho definidos antes do desenvolvimento. Avaliar quarentena/antimalware antes de disponibilizar o arquivo. Falha do scanner, formato divergente, arquivo corrompido ou arquivo que não possa ser analisado não deve resultar em liberação automática.
+### Regras funcionais consolidadas
 
-O requisito de JPEG não resolve a questão Q-004: permanece pendente se o usuário poderá selecionar fotos já existentes na galeria, sem oferecer captura pela câmera.
+- Aceitar somente PDF e JPEG.
+- Limitar cada arquivo a 10 MB e cada mensagem a, no máximo, 5 arquivos.
+- Aplicar quotas individuais e capacidade total configuradas pelo TI, sem limite específico por conversa.
+- Rejeitar PDF protegido por senha.
+- Permitir seleção de JPEG existente na galeria; a aplicação não oferece captura de foto pela câmera.
+- Remover metadados EXIF, inclusive GPS/localização, antes da disponibilização.
+- Validar o arquivo recebido e submetê-lo ao scanner antimalware executado na infraestrutura da FORD.
+- Manter o anexo indisponível até resultado favorável da análise. Falha, indisponibilidade, timeout ou resultado inconclusivo não equivalem a arquivo seguro e mantêm o anexo bloqueado.
+- A indisponibilidade do scanner não bloqueia o envio de mensagens de texto.
+- O TI pode liberar qualquer arquivo por ação administrativa. A ação deve ser autenticada e registrada em auditoria; usuários comuns não podem executar bypass ou alterar o estado da análise.
+- O TI pode baixar anexos durante investigações, com registro de auditoria.
+- O acesso deve ser privado e condicionado à autorização vigente do usuário para a conversa e o anexo.
+- Links temporários podem ter validade máxima de 5 minutos. A remoção de participante deve revogar imediatamente seu acesso, inclusive por links previamente emitidos; o tempo máximo do link não substitui a verificação de autorização/revogação.
+- Não utilizar URLs públicas permanentes nem expor o caminho físico do objeto.
+
+### Retenção, descarte e backup
+
+- Anexos não sofrem exclusão automática enquanto o sistema estiver em operação.
+- Exclusão depende de autorização do TI, observadas investigações e preservação administrativa.
+- Backups são diários e retidos por 12 meses.
+- Após uma exclusão autorizada, o dado deixa as cópias de backup ao final do ciclo de retenção definido; o descarte deve ser registrado em auditoria.
+- Metadados e eventos de auditoria seguem as regras de retenção consolidadas nos requisitos.
+
+### Fronteira de processamento
+
+O storage, o scanner antimalware, o processamento de metadados, a emissão/revogação de links, os backups e os logs relacionados devem permanecer sob controle da FORD. Não enviar arquivos, conteúdo, metadados ou identificadores a serviços externos para varredura, conversão, extração, análise ou armazenamento.
+
+Bibliotecas e atualizações sem acesso a dados da FORD podem ser utilizadas conforme as regras técnicas e de segurança aplicáveis.
 
 ## Justificativa
 
-Storage privado separa arquivos do banco e permite controlar ciclo de vida, tamanho e acesso. A validação de conteúdo reduz risco de spoofing de tipo, mas não garante detecção de todo arquivo malicioso.
+Armazenamento privado e autorização por requisição preservam o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware interna e a indisponibilidade segura do anexo atendem às regras da FORD sem interromper a comunicação textual. A execução sob controle da organização é obrigatória diante da proibição de terceiros processarem ou armazenarem dados.
 
 ## Consequências
 
-**Positivas:** controle de acesso por conversa; separação de metadados e bytes; escalabilidade.
+**Positivas:**
+- Conformidade da direção de arquitetura com a fronteira de infraestrutura definida pela FORD.
+- Controle de acesso por conversa e revogação após remoção de participante.
+- Análise antimalware sem exposição a serviços externos.
+- Regras de limite, retenção e operação coerentes com a baseline v0.4.
 
-**Negativas:** pipeline de upload/download e varredura; custo adicional; necessidade de definir retenção e descarte.
+**Negativas e cuidados:**
+- A FORD/equipe precisa operar e monitorar storage, scanner, capacidade, disponibilidade e backups.
+- A implementação demanda fluxo de quarentena, liberação administrativa, autorização por download e revogação efetiva.
+- Testes devem cobrir falhas do scanner, acesso indevido, remoção de participante, restauração e descarte.
 
 ## Riscos
 
-URL vazada, arquivo polyglot, parser vulnerável, malware não detectado, bucket público por engano, backup retendo arquivo excluído e scanner indisponível.
+Objeto público por configuração incorreta; URL vazada; link não revogado após remoção; bypass por usuário; liberação administrativa sem auditoria; malware não detectado; scanner indisponível; arquivo corrompido ou incompatível; metadados GPS preservados; backups contendo dados já excluídos até o fim do ciclo; integração externa que acesse dados da FORD.
 
-## Evidências atuais
+## Evidências e estado atual
 
-Não há bucket Supabase, função de upload/download ou política de storage versionada na `main`. Apenas os formatos PDF/JPEG e a necessidade de validação constam na baseline.
+- A baseline POLY-REQ-001 v0.4 e os documentos 01, 03, 04 e 05 registram tipos, limites, fluxo antimalware, comportamento em falha, quotas, links, retenção e poderes do TI.
+- A migration e o middleware Supabase existentes não comprovam implementação de storage.
+- Não foram identificados bucket privado, handlers completos de upload/download ou integração antimalware funcional na main.
+- A política de anexos documenta regras e cenários; sua presença não comprova implementação nem testes de ponta a ponta.
 
 ## Pendências para Accepted
 
-Definir tamanho/quantidade, scanner, tratamento de PDF protegido, metadados EXIF, retenção, exclusão, resposta a indisponibilidade do scanner e exceções administrativas (Q-004, Q-010 e Q-011). Revisão por Tech Lead, Dev backend, TI e Segurança.
+- Selecionar a tecnologia de armazenamento privado compatível com a infraestrutura sob controle da FORD (Q-025).
+- Definir a integração do scanner interno, quarentena, liberação administrativa e monitoramento operacional.
+- Implementar e testar autorização em upload e em cada download, revogação imediata e links temporários de até 5 minutos.
+- Evidenciar remoção de EXIF/GPS e rejeição de PDF protegido por senha.
+- Homologar backup, restauração, retenção e descarte no ambiente aprovado.
+
+Os limites de arquivo, quantidade por mensagem, quotas individuais e total, ausência de quota por conversa, comportamento fail-closed, formatos, retenção, scanner interno e responsabilidades do TI são requisitos consolidados; não devem ser reabertos como pendências de produto nesta ADR.
