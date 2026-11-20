@@ -9,7 +9,7 @@
 - **Limites da aprovação:** não equivale a aprovação técnica de arquitetura/implementação, aceite de Segurança/Privacidade, homologação institucional da FORD ou aprovação independente do SQA.
 - **Data desta revisão:** 20/11/2026.
 
-> Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. A stack prevista para o projeto é Supabase + Vercel, conforme orientação recebida em aula. A compatibilidade dessa stack com as restrições de infraestrutura e tratamento de dados registradas pela FORD deve ser tratada explicitamente na Q-025, sem classificar Supabase/Vercel como arquitetura descartada.
+> Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. A stack tecnológica adotada pelo projeto é Supabase + Vercel. A compatibilidade dessa stack com as restrições de infraestrutura e tratamento de dados registradas pela FORD deve ser tratada explicitamente na Q-025, sem classificar Supabase/Vercel como arquitetura descartada.
 
 ## 1. Como interpretar a matriz
 
@@ -136,7 +136,7 @@ A inspeção anterior do repositório identificou artefatos de autenticação/pe
 | Mensagens, anexos e auditoria | Dependem das entregas de domínio e issues relacionadas | Não declarar policies, Storage, auditoria ou retenção implementados sem evidência |
 | Testes de autorização | Foram documentados 11 testes unitários com provedor simulado | Não equivalem a testes de banco/RLS real, integração, revogação de links ou isolamento de domínio |
 
-**Nota arquitetural:** Supabase + Vercel é a stack definida para o projeto conforme orientação recebida em aula e deve permanecer como referência de implementação. A FORD v2 também registra restrições sobre hospedagem e processamento de dados por terceiros. A compatibilidade entre essas determinações permanece para análise na Q-025; essa pendência não transforma Supabase/Vercel em tecnologias obsoletas nem autoriza sua substituição implícita.
+**Nota arquitetural:** Supabase + Vercel é a stack tecnológica adotada pelo projeto e deve permanecer como referência de implementação. A FORD v2 também registra restrições sobre hospedagem e processamento de dados por terceiros. A compatibilidade entre essas determinações permanece para análise na Q-025; essa pendência não transforma Supabase/Vercel em tecnologias obsoletas nem autoriza sua substituição implícita.
 
 ## 6. Casos positivos e negativos para validação
 
