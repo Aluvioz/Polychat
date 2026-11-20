@@ -52,9 +52,9 @@ Referências vigentes: baseline POLY-REQ-001 v0.4 e documentos 01, 03, 05 e 08. 
 2. **Dispositivo:** o perfil Usuário utiliza celular; o perfil TI utiliza computador. A mensagem exigida em ambiente incompatível para Usuário é **“só pode ser usado em celular”** (CA-017.2); a validação de autorização deve acontecer no servidor, não apenas pela interface.
 3. **Entrada:** após autenticar, abrir **conversas recentes**, conforme RN-010 / CA-007.1. Uma lista sem mensagens deve explicar a situação e oferecer uma ação relevante.
 4. **Conversa individual:** o Usuário pode iniciar conversa com outro usuário ativo, independentemente de seu cargo corporativo, e só pode consultar conversas às quais tem acesso.
-5. **Grupo:** o TI cria grupos e administra participantes. O Usuário acessa apenas grupos permitidos; envio por membros ainda está marcado como **derivado e pendente de validação** (RF-010/Q-003).
-6. **Anexos:** somente PDF e JPEG. O sistema deve explicar formato inválido e falha de upload em estados **distintos**; tamanho máximo e política de seleção de JPEG ainda não estão definidos.
-7. **Feedback:** comunicação visível de carregamento, sessão expirada, acesso negado, ausência de conexão e envio não concluído.
+5. **Grupo:** o TI cria, encerra, desativa e reativa grupos, além de incluir/remover participantes. Usuários incluídos podem enviar mensagens, mas não podem sair voluntariamente. A remoção revoga imediatamente o acesso às mensagens e anexos anteriores do grupo.
+6. **Anexos:** somente PDF e JPEG, até 10 MB por arquivo e no máximo 5 arquivos por mensagem. O TI define quotas individuais e capacidade total, sem quota por conversa. JPEG é selecionado da galeria, sem captura pela câmera, e EXIF/GPS é removido. PDF protegido por senha é rejeitado. O anexo só fica disponível após análise antimalware favorável na infraestrutura FORD; falha ou resultado inconclusivo mantém o arquivo bloqueado, sem impedir mensagens de texto.
+7. **Feedback:** comunicar carregamento, sessão expirada, acesso negado, ausência de conexão e envio não concluído. Exibir confirmação/horário de leitura e contador de mensagens não lidas. Não há notificações push nem notificações do navegador; o aviso de monitoramento é apresentado no primeiro acesso.
 
 ### Decisões de UX ainda não fechadas
 
@@ -72,11 +72,11 @@ Referências vigentes: baseline POLY-REQ-001 v0.4 e documentos 01, 03, 05 e 08. 
 | Identificação e senha, sem cadastro aberto | **Representado** nos wireframes |
 | Conversas recentes e estado vazio | **Representado** |
 | Conversa individual com contato ativo | **Representado** |
-| Grupos criados/administrados por TI | **Restrição documentada**; fluxo exato pendente |
-| PDF/JPEG permitidos e outros arquivos rejeitados | **Representado** |
+| Grupos criados/administrados por TI | **Regra funcional confirmada**; TI administra grupo e participantes, usuários participantes podem enviar e não podem sair voluntariamente |
+| PDF/JPEG, 10 MB por arquivo e até 5 por mensagem; demais formatos e PDF protegido por senha rejeitados | **Regra funcional consolidada; validar implementação futura** |
 | Diferenciar arquivo inválido de erro de upload | **Representado** em estados 05.7/05.8 |
 | Sem captura própria de foto, áudio ou vídeo | **Regra documentada**, conferir implementação futura |
-| Restrições de dispositivo por perfil | **No fluxo**, demanda verificação de texto e autorização em implementação |
+| Restrições de dispositivo por perfil | **Regra consolidada:** Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos |
 | Credenciais inválidas, sessão expirada, offline, acesso negado, falha no envio | **Representado** |
 | Revisão/validação pelo PO/Tech Lead | **Aprovada em 17/11/2026 como baseline de baixa fidelidade** |
 | Testes de usabilidade/acessibilidade e homologação FORD | **Não concluídos por esta issue; continuidade em atividades próprias** |
