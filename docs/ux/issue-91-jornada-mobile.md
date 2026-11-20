@@ -1,6 +1,6 @@
 # UX/UI — Jornada do Usuário mobile (Issue #91)
 
-> **Status:** proposta de UX/UI para revisão; **não aprovada** pelo PO ou pela FORD.  
+> **Status:** aprovada pelo PO/Tech Lead em 17/11/2026 como baseline de UX mobile de baixa fidelidade. Entrega documental concluída na Issue #91; não representa implementação das telas, teste de usabilidade ou homologação institucional da FORD.  
 > **Issue:** [#91 — Mapear jornada, navegação e estados do Usuário mobile](https://github.com/Aluvioz/Polychat/issues/91)  
 > **Artefato visual editável:** [Quadro Miro — POLYCHAT — UX/UI — Issue #91](https://miro.com/app/board/uXjVENIAOT4=/)  
 > **Escopo:** perfil **Usuário**, aplicação **web mobile**. A console de TI desktop pertence a outra entrega (#92).
@@ -11,7 +11,7 @@ Mapear a experiência do funcionário da FORD desde a autenticação até a leit
 
 A atividade reúne fluxogramas e wireframes de **baixa fidelidade** elaborados e revisados no Miro, com auxílio de ferramentas de IA e inspeção manual. São **propostas visuais**, não telas implementadas nem resultados de teste com usuários. Os exemplos de participantes e mensagens são **fictícios**.
 
-Referências consultadas na branch principal: `docs/01-visao-geral-e-escopo.md`, `docs/03-requisitos-funcionais.md`, `docs/05-regras-de-negocio-e-restricoes.md` e `docs/08-glossario-e-questoes-em-aberto.md`. Os documentos de requisitos ainda contêm pendências de validação, portanto não devem ser tratados como aprovação do cliente.
+Referências vigentes: baseline POLY-REQ-001 v0.4 e documentos 01, 03, 05 e 08. As decisões da FORD v2 substituem dúvidas antigas sobre contas, grupos, anexos, dispositivos, leitura e monitoramento. O aceite da UX permanece limitado à baixa fidelidade.
 
 ## 2. Entregáveis no Miro
 
@@ -56,13 +56,14 @@ Referências consultadas na branch principal: `docs/01-visao-geral-e-escopo.md`,
 6. **Anexos:** somente PDF e JPEG. O sistema deve explicar formato inválido e falha de upload em estados **distintos**; tamanho máximo e política de seleção de JPEG ainda não estão definidos.
 7. **Feedback:** comunicação visível de carregamento, sessão expirada, acesso negado, ausência de conexão e envio não concluído.
 
-### Decisões que são propostas, não requisitos aprovados
+### Decisões de UX ainda não fechadas
 
-- Navegação inferior com `Conversas / Contatos / Perfil`; a existência da tela Perfil e o mapa definitivo de páginas dependem de **Q-018**.
-- Comportamento da aplicação offline (histórico em cache, indicadores de reconexão e reenvio) depende de definição técnica e homologação.
-- Indicadores de mensagem enviada/confirmada e detalhes de carregamento dependem de desenho técnico/QA.
-- Uso de cores azuis e brancas segue orientação geral da FORD; códigos, tipografia e ativos oficiais precisam de aprovação (**Q-019**).
-- Textos definitivos, além do que está expressamente previsto nos critérios, ainda devem passar por revisão.
+- O mapa definitivo de telas, navegação e existência/escopo da tela Perfil permanecem no refinamento interno de UX (Q-018). Os wireframes desta issue são baseline de baixa fidelidade, não especificação visual final.
+- Códigos exatos de cor, tipografia, logo e ativos oficiais dependem do material de marca da FORD (Q-019).
+- O estado offline deve comunicar que mensagens não confirmadas pelo servidor não foram enviadas. Persistência de mensagens confirmadas e recuperação após reconexão normal são requisitos; cache offline, fila local e reenvio automático não devem ser inferidos sem desenho técnico.
+- A interface apresenta confirmação/horário de leitura e contador de não lidas. Não há notificações push nem notificações do navegador.
+- O aviso de monitoramento deve ser apresentado no primeiro acesso.
+- A aplicação não oferece captura de foto, áudio ou vídeo. O JPEG é selecionado da galeria.
 
 ## 4. Checklist de conformidade para revisão
 
@@ -77,29 +78,27 @@ Referências consultadas na branch principal: `docs/01-visao-geral-e-escopo.md`,
 | Sem captura própria de foto, áudio ou vídeo | **Regra documentada**, conferir implementação futura |
 | Restrições de dispositivo por perfil | **No fluxo**, demanda verificação de texto e autorização em implementação |
 | Credenciais inválidas, sessão expirada, offline, acesso negado, falha no envio | **Representado** |
-| Revisão/validação pelo PO e cliente | **Pendente** |
-| Teste com usuários representativos, acessibilidade e homologação | **Pendente / escopo de validação subsequente** |
-| Revisão por PR e aceite da issue | **Pendente** |
+| Revisão/validação pelo PO/Tech Lead | **Aprovada em 17/11/2026 como baseline de baixa fidelidade** |
+| Testes de usabilidade/acessibilidade e homologação FORD | **Não concluídos por esta issue; continuidade em atividades próprias** |
+| Revisão por PR e aceite da issue | **Concluídos: PR #141 aprovada (review #5946859734); CI runs #13 e #83 aprovados; Vercel success** |
 
-**Critérios da issue #91:** os fluxos e wireframes precisam ser **aprovados**; todos os estados cobertos; testes relevantes ou evidências documentadas; revisão por PR; ausência de regressão. A presença de artefatos e este arquivo **não satisfaz automaticamente** todos esses critérios.
+**Critérios da Issue #91:** foram aceitos os fluxos e wireframes mobile de baixa fidelidade, os estados alternativos, as evidências documentais, a revisão independente da PR #141 e os checks registrados. O aceite conclui o mapeamento documental; não declara telas implementadas, testes de usabilidade ou homologação FORD.
 
-## 5. Perguntas objetivas ao PO / representante FORD
+## 5. Pontos ainda sujeitos a refinamento de UX
 
-1. O Usuário pode enviar mensagens em todos os grupos dos quais participa? Existem regras de saída/remoção? (**Q-003**)
-2. A escolha de JPEG será apenas por arquivos existentes? Como impedir captura de câmera dentro da aplicação? (**Q-004**)
-3. Qual será o identificador de login e o procedimento de credencial inicial/recuperação? (**Q-005/Q-006**)
-4. Qual é o limite de tamanho/quantidade de anexos e o comportamento de falha? (**Q-011**)
-5. Quais dispositivos/navegadores são homologados? Como lidar com tablets e modo desktop? (**Q-012**)
-6. A navegação `Conversas / Contatos / Perfil` é desejada? Quais páginas são obrigatórias? (**Q-018**)
-7. Quais são os ativos oficiais de marca, a paleta e os padrões de acessibilidade? (**Q-019/Q-020**)
+1. Consolidar o mapa definitivo de telas, navegação e escopo da tela Perfil (Q-018).
+2. Obter os ativos oficiais da identidade visual FORD e definir os detalhes visuais finais (Q-019).
+3. Executar os testes de usabilidade e acessibilidade previstos nas issues relacionadas, sem confundi-los com o aceite documental desta issue.
+
+As regras de credenciais, grupos, anexos, navegadores/dispositivos, recibos de leitura, mensagens não lidas e aviso de monitoramento foram consolidadas na FORD v2 e não devem continuar listadas como perguntas abertas.
 
 ## 6. Evidência e próximos passos
 
 - **Miro:** https://miro.com/app/board/uXjVENIAOT4=/
 - **Issue:** https://github.com/Aluvioz/Polychat/issues/91
-- Revisar visualmente os protótipos em zoom adequado; validar legibilidade, hierarquia, inconsistências e restrições.
-- Solicitar feedback do PO/Tech Lead e registrar o resultado, com data e responsável, no GitHub.
-- Planejar testes de usabilidade e acessibilidade conforme responsabilidades das issues #94 e #129.
-- Manter a issue **aberta** e este PR em **Draft** até revisão/aceite; não declarar implementação, testes ou aprovação que não ocorreram.
+- **PR de entrega:** [#141](https://github.com/Aluvioz/Polychat/pull/141), aprovada pelo PO/Tech Lead em 17/11/2026 (review #5946859734).
+- **Checks registrados:** CI runs #13 e #83 aprovados; Vercel success.
+- **Miro editável:** https://miro.com/app/board/uXjVENIAOT4=/
+- **Estado:** Issue #91 encerrada como concluída em 17/11/2026. O aceite cobre o mapeamento e os wireframes de baixa fidelidade, não implementação, teste de usabilidade ou homologação.
 
-**Histórico deste documento:** versão inicial de documentação UX/UI para revisão, 16/11/2026.
+**Histórico:** v1.0 — entrega inicial para revisão (16/11/2026); v1.1 — registra o aceite formal da baixa fidelidade e alinha as regras à FORD v2 (19/11/2026).
