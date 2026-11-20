@@ -195,3 +195,32 @@ Este registro **não** significa que:
 - Considerar a PR #145 como a entrega documental originalmente aceita.
 - Manter as decisões mais amplas da ADR-009 no fluxo da Issue #89 e das issues operacionais pertinentes, especialmente a #98.
 - Atualizar este relatório por aditivo, preservando as observações e limitações históricas da auditoria de 17/11/2026.
+
+
+## 12. Aditivo — compatibilização com a FORD v2
+
+**Data:** 19/11/2026  
+**Fonte:** baseline POLY-REQ-001 v0.4 e ADRs revisadas após o questionário FORD v2.
+
+### 12.1 Preservação do encerramento
+
+A Issue #96 permanece **encerrada como concluída**. O comentário final do responsável/Tech Lead ([encerramento da #96](https://github.com/Aluvioz/Polychat/issues/96#issuecomment-6963142263)) atesta que as configurações e validações operacionais dos ambientes Supabase e Vercel abrangidas pela issue foram concluídas e autoriza seu fechamento. A confirmação resolve o escopo de gestão da issue conforme a autoridade do responsável.
+
+A tabela e as limitações das seções anteriores são o retrato da auditoria original. A inversão das colunas Supabase/Vercel foi corrigida nesta revisão; não se inventaram project refs, nomes de secrets, domínios ou detalhes administrativos não disponíveis no registro.
+
+### 12.2 Efeito da FORD v2 sobre a arquitetura anterior
+
+A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum terceiro pode acessar, armazenar ou processar dados da organização. A direção Supabase + Vercel foi, por isso, depreciada na ADR-003.
+
+O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser entendido como **registro histórico de configuração e validação operacional do escopo original**. O encerramento da issue não cria exceção à restrição mais recente, não aprova por si só o uso desses serviços com dados reais da FORD e não substitui a decisão de arquitetura pendente da Q-025.
+
+### 12.3 Limites de evidência
+
+- O responsável/Tech Lead atestou a conclusão operacional da issue; a auditoria documental original não foi refeita com acesso administrativo completo a todos os painéis após o encerramento.
+- A confirmação do responsável não fornece, neste relatório, inventário independente de todos os projetos, domínios, variáveis ou permissões.
+- Não se afirma que dados reais da FORD tenham sido armazenados ou processados nesses serviços; a presença ou ausência desses dados não foi determinada por este aditivo.
+- Não se altera o status da Issue #96 nem se declara a ADR-009 aprovada.
+
+### 12.4 Encaminhamento
+
+Manter a Issue #96 fechada e seu aceite preservado. Tratar a substituição/adequação da arquitetura de ambientes como parte da Q-025 e do fluxo técnico subsequente, sem reabrir a issue histórica apenas para refletir a mudança de requisito.
