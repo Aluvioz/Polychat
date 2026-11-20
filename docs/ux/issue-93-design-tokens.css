@@ -1,5 +1,5 @@
-/* Polychat UI Kit v0.1 — proposta com paleta Ford provisória Q-019.
-   Ford Oval depende de arquivo autorizado; tokens isolados, sem alterar runtime. */
+/* Polychat UI Kit v0.1 — proposta acadêmica com paleta Ford provisória Q-019.
+   Ford Oval é referência externa da Wikimedia Commons, não ativo autorizado; tokens isolados, sem alterar runtime. */
 :root {
   color-scheme: light;
   --pc-brand-700: #00095B;
@@ -48,7 +48,7 @@ button{cursor:pointer}
 .pc-shell{max-width:1120px;margin:auto;padding:var(--pc-space-8) var(--pc-space-4)}
 .pc-header{border-bottom:1px solid var(--pc-border);background:var(--pc-surface)}
 .pc-header-inner{max-width:1120px;margin:auto;min-height:70px;padding:var(--pc-space-4);display:flex;align-items:center;justify-content:space-between;gap:var(--pc-space-4)}
-.pc-logo{font-weight:800;color:var(--pc-brand-700);letter-spacing:-.04em;font-size:1.375rem}
+.pc-brand-lockup{display:inline-flex;align-items:center;gap:12px;min-width:0;font-weight:800;color:var(--pc-brand-700);letter-spacing:-.04em;font-size:1.375rem}.pc-brand-lockup a{display:inline-flex;align-items:center;flex:0 0 auto}.pc-ford-mark{display:block;width:104px;height:auto;max-height:42px;object-fit:contain}.pc-brand-lockup span{min-width:0}
 .pc-meta{color:var(--pc-text-secondary);font-size:var(--pc-font-size-sm)}
 .pc-heading{font-size:clamp(1.5rem,3vw,2.5rem);line-height:1.15;margin:0 0 var(--pc-space-2)}
 .pc-lead{max-width:740px;color:var(--pc-text-secondary)}
