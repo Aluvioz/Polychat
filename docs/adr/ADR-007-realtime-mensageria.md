@@ -51,4 +51,4 @@ Não há tabelas de conversa/mensagem, canais realtime, subscriptions ou testes 
 
 ## Pendências para Accepted
 
-Prova de conceito, escolha formal do transporte, políticas de canal, modelo de sequência/idempotência, comportamento de reconexão e testes de isolamento. Revisão por Tech Lead, Dev backend, TI e SQA. Resolver regras de grupo e status de mensagem aplicáveis (Q-003 e Q-024).
+Prova de conceito, revisão de políticas de canal, modelo de sequência/idempotência, comportamento de reconexão e testes de isolamento. As regras funcionais de grupos e status de mensagens foram consolidadas nas Q-003 e Q-024; não são pendências de produto. Revisão técnica por Tech Lead, Dev backend, TI e SQA.
