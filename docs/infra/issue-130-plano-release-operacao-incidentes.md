@@ -163,7 +163,7 @@ São bloqueios, salvo avaliação e decisão formal de autoridade competente qua
 - testes críticos não executados ou sem resultado confiável;
 - defeito crítico ou alto sem correção, contenção ou aceite formal do risco pela autoridade competente.
 
-O Product Owner pode recomendar No-Go e deve registrar a decisão de produto. O PO não pode, sozinho, aceitar riscos técnicos, de segurança, privacidade, infraestrutura ou legais que pertençam a outras autoridades.
+O Product Owner pode recomendar No-Go e deve registrar a decisão de produto. O PO não aceita sozinho riscos técnicos ou operacionais que pertençam à liderança técnica, TI responsável por segurança/operação ou à autoridade institucional da FORD. A FORD trata internamente as obrigações legais aplicáveis.
 
 ### 5.4 Participação na decisão
 
@@ -172,15 +172,15 @@ A decisão deve registrar separadamente:
 - **Tech Lead:** viabilidade técnica, arquitetura, qualidade da implementação e rollback.
 - **SQA:** resultado dos testes, cobertura pertinente, defeitos e limites da homologação.
 - **TI/Operação:** capacidade de operar, monitorar, recuperar e prestar suporte.
-- **Segurança:** avaliação de controles, ameaças e incidentes de segurança.
+- **Segurança operacional:** avaliação dos controles, ameaças e incidentes sob responsabilidade da TI da FORD.
 - **FORD/negócio:** aceite institucional e autorização de disponibilização ao público definido.
-- **Jurídico/Privacidade:** aprovações quando o tratamento de dados, monitoramento, retenção ou comunicação exigir análise dessas áreas.
+- **Responsabilidade institucional:** a FORD trata solicitações legais e obrigações institucionais aplicáveis; não há frente de trabalho separada de Jurídico/Privacidade no projeto.
 
 A decisão final de publicação deve respeitar a governança de release que a FORD vier a aprovar. Até lá, não presumir que o PO ou o Tech Lead tenha autoridade exclusiva de Go.
 
 ### 5.5 Critérios específicos de aceite do produto
 
-A aprovação do PO deve responder se **a versão candidata entrega o escopo prometido ao público definido**, com jornadas utilizáveis, limitações conhecidas e condições de adoção claras. Ela é necessária, mas não substitui as aprovações técnica, de SQA, Segurança, TI/Operação ou da autoridade institucional da FORD.
+A aprovação do PO deve responder se **a versão candidata entrega o escopo prometido ao público definido**, com jornadas utilizáveis, limitações conhecidas e condições de adoção claras. Ela é necessária, mas não substitui as revisões técnica e SQA, o aceite operacional da TI e o Go/No-Go do gestor da FORD.
 
 | Dimensão | Pergunta de aceite do PO | Evidência necessária | Regra de bloqueio |
 |---|---|---|---|
@@ -404,7 +404,7 @@ Os itens abaixo são recomendações para a equipe técnica validar e instrument
 | Storage | Erros de upload/download, capacidade e falhas de autorização. | Proteger anexos e disponibilidade. |
 | Mensageria | Falhas de envio, entrega, persistência e atualização. | Acompanhar o fluxo central do produto. |
 | Backup | Execução, idade da última cópia, falhas e resultado de restauração. | Demonstrar capacidade de recuperação. |
-| Segurança | Alertas, eventos privilegiados e padrões anormais. | Apoiar detecção e resposta. |
+| Segurança operacional | Alertas, eventos privilegiados e padrões anormais. | TI monitora e coordena a resposta. |
 
 ### 10.2 Logs e proteção de informações
 
@@ -454,7 +454,7 @@ A seguinte classificação é uma proposta inicial para revisão. Não define SL
 | SEV-3 — Moderada | Falha parcial com alternativa operacional segura; erro localizado sem evidência de exposição ou perda de dados. | Correção planejada, acompanhamento e comunicação proporcional. |
 | SEV-4 — Baixa | Problema de baixo impacto, dúvida de uso ou defeito cosmético sem risco operacional relevante. | Tratamento pelo suporte/backlog regular. |
 
-Se a avaliação identificar possível violação de dados pessoais, risco à segurança ou obrigação legal, escalar imediatamente para Segurança e Jurídico/Privacidade, independentemente da severidade operacional inicialmente atribuída.
+Se a avaliação identificar possível violação de dados pessoais, risco à segurança ou obrigação legal, escalar imediatamente para TI, responsável operacional por segurança, e para a gestão designada da FORD. A própria FORD trata os encaminhamentos legais/institucionais aplicáveis; isso não cria uma frente de trabalho de Jurídico no projeto.
 
 ### 11.3 Fluxo de resposta
 
@@ -516,9 +516,9 @@ Um runbook deve ser suficientemente claro para que um operador autorizado execut
 | RB-02 | Reverter release | Gatilhos, autoridade, versão estável, aplicação, banco, validação e registro. | Tech Lead + TI/Operação |
 | RB-03 | Executar e verificar backup | Escopo, frequência aprovada, acesso, integridade, falhas e escalonamento. | TI/Operação |
 | RB-04 | Restaurar dados/serviço | Seleção de cópia, destino, isolamento, validação, RPO/RTO e comunicação. | TI/Operação + Tech Lead |
-| RB-05 | Responder a incidente de segurança | Acionamento, contenção, preservação, investigação, comunicação e encerramento. | Segurança |
+| RB-05 | Responder a incidente de segurança | Acionamento, contenção, preservação, investigação, comunicação e encerramento. | TI (responsável por segurança) |
 | RB-06 | Tratar indisponibilidade/degradação | Triagem, dependências, status, mitigação, recuperação e monitoramento. | TI/Operação |
-| RB-07 | Tratar falha de autenticação/autorização | Verificação do provedor, sessão, perfil, RLS, contenção e reteste. | Tech Lead + Segurança |
+| RB-07 | Tratar falha de autenticação/autorização | Verificação do provedor, sessão, perfil, RLS, contenção e reteste. | Tech Lead + TI |
 | RB-08 | Suporte e escalonamento | Receber solicitação, classificar, priorizar, encaminhar, atualizar e encerrar. | TI/Operação + SQA |
 
 A tabela define o inventário esperado, não comprova que os runbooks foram escritos, aprovados ou ensaiados. Cada runbook deve ser publicado e revisado como evidência antes de Go.
