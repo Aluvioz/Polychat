@@ -3,7 +3,7 @@
 **Data de revisão:** 19/11/2026  
 **Baseline funcional:** POLY-REQ-001 v0.4 — `docs/09-baseline-requisitos-mvp.md`  
 **Épico:** #77 · **Issue:** #89  
-**Escopo:** arquitetura lógica sob controle da FORD, frontend, autenticação, banco de dados, autorização/RLS, realtime, storage, ambientes, deploy, segurança e auditoria.
+**Escopo:** arquitetura lógica baseada na stack oficial Supabase + Vercel, sob governança da FORD: frontend, autenticação, banco de dados, autorização/RLS, realtime, storage, ambientes, deploy, segurança e auditoria.
 
 ## Como ler os status
 
@@ -48,17 +48,17 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 - `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration de `profiles` e RLS vinculada à arquitetura anterior.
 - `tests/authorization.test.mjs`: testes unitários com Supabase simulado; não comprovam integração com provedor ou infraestrutura de produção.
 - `.env.example`: placeholders históricos de Supabase, sem credenciais reais.
-- `README.md`: atualizado para registrar a restrição de infraestrutura FORD e remover instruções de deploy Vercel/configuração Supabase como destino do produto.
+- `README.md`: registra Supabase e Vercel como plataformas oficiais e documenta a necessidade de validar a integração funcional por ambiente.
 - `.github/workflows/ci.yml`: testes, ESLint, TypeScript e build em push para `main` e PR para `main`.
 
-A existência de código, migrations, variáveis de exemplo ou sucesso no CI não comprova integração com infraestrutura FORD, aplicação de migrations em ambiente homologado, RLS completa, realtime, storage, antimalware ou fluxos ponta a ponta.
+A existência de código, migrations, variáveis de exemplo ou sucesso no CI não comprova integração completa com Supabase/Vercel, aplicação de migrations em todos os ambientes, RLS de domínio, realtime, storage, antimalware ou fluxos ponta a ponta.
 
 ## Aprovações e responsabilidades pendentes
 
 | Tema | Responsável pela revisão/decisão | Evidência necessária |
 |---|---|---|
 | Arquitetura lógica e infraestrutura compatível com a FORD | Tech Lead + TI | Solução técnica selecionada, fronteiras e responsabilidades registradas na ADR |
-| Autenticação e sessões | Tech Lead + Dev backend + TI | Implementação e testes integrados no ambiente sob controle da FORD |
+| Autenticação e sessões | Tech Lead + Dev backend + TI | Implementação e testes integrados nos ambientes oficiais Supabase/Vercel |
 | Banco de dados e autorização/RLS de domínio | Tech Lead + Dev backend + TI | Migrations, políticas e testes de isolamento no ambiente homologado |
 | Realtime, storage e antimalware | Tech Lead + Dev backend + TI | Prova de conceito e testes de acesso, revogação e falha segura |
 | Ambientes, backup, restauração e operação | TI + Tech Lead | Ambientes isolados, configuração homologada e evidências de recuperação |
