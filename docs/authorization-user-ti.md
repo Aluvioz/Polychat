@@ -97,7 +97,7 @@ A restrição define compatibilidade de uso e experiência. User-agent, viewport
 
 ## 8. Pendências técnicas remanescentes
 
-- Validar a configuração do Supabase Auth por ambiente e sua integração com as rotas reais do Next.js (Q-025/ADR-004).
+- Concluir a integração do Supabase Auth às rotas reais do Next.js e registrar evidências que ainda não estejam cobertas pelos aceites operacionais das Issues #96/#98 (Q-025/ADR-004).
 - Completar e testar o adaptador Supabase já previsto, incluindo sessão, recuperação de senha e revogação.
 - Conectar autenticação e autorização aos handlers/rotas reais da aplicação.
 - Implementar autorização de domínio e políticas do banco coerentes com a matriz #100 e o schema aprovado.
