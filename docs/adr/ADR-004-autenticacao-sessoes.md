@@ -11,24 +11,24 @@ A FORD definiu autenticação por nome de usuário e senha, com contas criadas e
 
 A FORD não exige troca obrigatória de senha no primeiro acesso, expiração periódica ou MFA. A recuperação de senha é realizada exclusivamente pelo TI. As regras de proteção de credenciais e de gestão de chaves foram alinhadas com Desenvolvimento e estão consolidadas nos requisitos não funcionais.
 
-A FORD v2 também determina que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Portanto, o mecanismo de identidade e sessão deve operar dentro da fronteira de controle da FORD. Supabase Auth, presente na proposta anterior, não é uma opção vigente para tratar as identidades do produto (ADR-003).
+Supabase é uma plataforma oficial do Polychat, conforme ADR-003. O serviço Supabase Auth é a direção de identidade do projeto, sujeito à configuração de segurança, proteção de credenciais e validação técnica dos ambientes. A aprovação do serviço não dispensa a verificação de região, acessos, políticas e integração real.
 
-O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são evidências parciais do caminho técnico anterior, não comprovação de autenticação integrada nem autorização para uso do provedor externo.
+O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são scaffold isolado que ilustra o caminho técnico pretendido. Não representam implementação parcial funcional: não há login, sessão, recovery ou provisionamento integrados ao runtime Next.js.
 
 ## Problema
 
-Definir o contrato funcional e as fronteiras de segurança de autenticação e sessão de acordo com o provisionamento centralizado pelo TI e com a infraestrutura sob controle da FORD, sem implementar primitivas criptográficas próprias ou adotar um provedor externo incompatível.
+Definir o contrato funcional e as fronteiras de segurança da autenticação Supabase, de acordo com o provisionamento centralizado pelo TI, sem implementar primitivas criptográficas próprias.
 
 ## Alternativas consideradas
 
-1. **Mecanismo de identidade operado sob controle da FORD:** alternativa compatível com a restrição de infraestrutura; tecnologia específica a validar na arquitetura.
-2. **Provedor externo de identidade/SaaS:** não adotado para credenciais, identidades ou sessões da FORD quando implicar acesso, armazenamento ou processamento por terceiro.
+1. **Supabase Auth:** serviço oficial de identidade do Polychat, com configuração, gestão de acessos e políticas sob governança da FORD.
+2. **Outro provedor externo de identidade/SaaS:** não aprovado para o projeto sem decisão explícita e avaliação técnica/jurídica própria.
 3. **Autenticação artesanal implementada pela aplicação:** não recomendada; a aplicação não deve criar suas próprias primitivas criptográficas ou mecanismos de hash/token sem componente consolidado e revisão técnica.
 4. **SSO corporativo:** não presumido como requisito ou integração aprovada nesta baseline.
 
 ## Decisão proposta
 
-Adotar autenticação por nome de usuário e senha com mecanismo de identidade executado dentro da fronteira de controle da FORD. A tecnologia e a forma final de implantação serão definidas na reconciliação arquitetural (Q-025), com revisão de TI e Tech Lead.
+Adotar Supabase Auth como serviço oficial de identidade, com autenticação por nome de usuário e senha, contas provisionadas pelo TI, perfil/papel validado no servidor e integração com a tabela `profiles`. A configuração específica por ambiente deve ser validada por TI e Tech Lead.
 
 O contrato funcional obrigatório é:
 
@@ -46,23 +46,23 @@ O contrato funcional obrigatório é:
 
 A implementação deve aplicar os requisitos de proteção de credenciais, sessões e gestão de chaves já consolidados em RNF-002 e RNF-003. Esta ADR não cria parâmetros adicionais de senha, MFA, expiração ou timeout que não tenham sido definidos na baseline.
 
-Nenhum componente de autenticação pode enviar credenciais, identificadores, tokens ou dados de sessão a serviço externo que acesse ou processe dados da FORD.
+Credenciais, identificadores e dados de sessão são tratados pelo Supabase Auth, plataforma oficial aprovada do projeto. Não encaminhar esses dados a outros serviços externos, ferramentas de análise ou provedores não aprovados.
 
 ## Justificativa
 
-O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. Manter identidade e sessões sob controle da organização respeita a restrição atual de infraestrutura e permite aplicar o ciclo de vida de contas e a autorização server-side sem dependência de um provedor externo incompatível.
+O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. Manter a gestão de identidade e sessões no Supabase Auth, plataforma oficial do projeto, sob governança de contas e acessos da FORD, permite aplicar o ciclo de vida de contas e a autorização server-side. Não adicionar outro provedor externo sem aprovação.
 
 ## Consequências
 
 **Positivas:**
 - Provisionamento e recuperação centralizados no TI.
 - Ausência de autoinscrição e de alteração de privilégios pelo cliente.
-- Compatibilidade com a exigência de infraestrutura sob controle da FORD.
+- Uso da plataforma oficial de identidade do Polychat, com regras de provisionamento e autorização definidas pela FORD.
 - Revogação imediata de sessões quando uma conta é desativada.
 
 **Negativas e cuidados:**
 - A equipe precisará integrar e operar o mecanismo de identidade no ambiente aprovado pela FORD.
-- O código atual é dependente de Supabase e precisará ser adaptado ou substituído.
+- A implementação funcional ainda não começou; será necessário integrar Supabase Auth ao runtime Next.js e validar os ambientes oficiais.
 - A integração deverá ser testada no runtime e na infraestrutura reais, além dos testes unitários isolados.
 
 ## Riscos
@@ -71,15 +71,15 @@ Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevid
 
 ## Evidências atuais
 
-- `src/auth/authorization.mjs` valida token por `supabase.auth.getUser`, mas depende de cliente fornecido externamente.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria perfis associados a `auth.users`; permanece vinculada à proposta depreciada.
-- Não há fluxo integrado de login, logout, recuperação ou provisionamento na interface.
+- `src/auth/authorization.mjs` é um exemplo isolado que recebe um cliente Supabase externamente; não existe cliente inicializado e integrado ao runtime.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` é uma migration de scaffold versionada; não comprova schema funcional do produto nem aplicação em ambiente hospedado.
+- Não há fluxo integrado de login, logout, recuperação ou provisionamento na interface. A implementação funcional do produto ainda não começou.
 - Testes unitários simulados do middleware não comprovam integração com a solução de identidade definitiva.
 
 ## Pendências para Accepted
 
-- Selecionar, com TI e Tech Lead, o mecanismo de identidade que será executado dentro da infraestrutura sob controle da FORD, como parte da Q-025.
-- Adaptar o módulo de autorização e o modelo de perfil para não depender de Supabase Auth.
+- Validar Supabase Auth nos ambientes oficiais e integrar a autenticação às rotas e sessões reais do Next.js.
+- Completar a integração do módulo de autorização com Supabase Auth, `profiles` e as rotas protegidas da aplicação.
 - Implementar provisionamento administrativo, login, logout, recuperação pelo TI e revogação imediata.
 - Validar testes de integração e segurança no ambiente homologado.
 
