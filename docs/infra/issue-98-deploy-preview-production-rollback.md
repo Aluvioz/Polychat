@@ -3,7 +3,7 @@
 **Data da auditoria:** 18/11/2026  
 **Base inspecionada:** `main` — `3e749397ff535d81fb3bfb055a127120515752e2`  
 **Branch desta documentação:** `docs/issue-98-deploy-rollback-audit`  
-**Estado:** parcial; CI da `main` e sinais de deploy Vercel foram verificados; configuração administrativa de produção/domínios, smoke test funcional e ensaio de rollback permanecem sem comprovação.
+**Estado atual:** Issue #98 encerrada como concluída em 19/11/2026, com base em confirmação expressa do Tech Lead sobre validação do deployment hospedado, smoke tests, ensaio de rollback, produção/domínio/HTTPS e fluxos relacionados. O corpo principal abaixo preserva a auditoria de 18/11/2026, quando esses itens ainda não tinham evidência disponível nesta sessão. A atestação posterior não equivale a nova auditoria administrativa independente.
 
 ## 1. Objetivo, escopo e critérios originais
 
@@ -187,7 +187,7 @@ Para concluir o ensaio, o responsável operacional/Tech Lead precisa indicar o a
 
 Os comandos npm não foram executados localmente nesta sessão. O run [44396627884](https://github.com/Aluvioz/Polychat/actions/runs/44396627884) concluiu com sucesso no commit `7c5579d72f6ae0558786766856d40dc8c0fbb10e`, incluindo testes, lint, typecheck, build e smoke test local. Esses resultados são execuções do GitHub Actions, não execução local nem validação de deployment hospedado.
 
-## 10. Pendências operacionais
+## 10. Pendências operacionais identificadas na auditoria de 18/11/2026
 
 1. **Vercel/TI:** fornecer evidência do painel do projeto `polyford` para Production Branch, deployment de produção atual, commit, domínio(s), ambiente de cada domínio e estado HTTPS/certificado. Não compartilhar valores de secrets.
 2. **Vercel/TI:** confirmar nomes e escopos das variáveis por ambiente (Development, Preview e Production), sem revelar valores, e a associação de cada deployment ao projeto Supabase correspondente.
@@ -214,4 +214,62 @@ Os comandos npm não foram executados localmente nesta sessão. O run [443966278
 | Revisão por PR concluída | **Pendente** | Esta PR precisa de revisão independente |
 | Sem regressão nos fluxos relacionados | **Não verificado** | CI passou, mas não houve smoke/regressão funcional em ambiente hospedado |
 
-**Conclusão:** a Issue #98 permanece parcialmente atendida. Os sinais de Preview e o status Vercel associado à `main` foram registrados com seus limites. Produção, domínio/HTTPS, integração Supabase por ambiente, smoke test funcional e rollback ensaiado continuam pendentes de evidência. Não fechar a issue com base nesta auditoria documental.
+**Conclusão da auditoria de 18/11/2026:** naquele momento, a Issue #98 estava parcialmente atendida com os limites de evidência descritos neste relatório. A situação foi posteriormente atualizada pelo aceite do Tech Lead e encerramento da issue em 19/11/2026; consultar a seção 13. O resultado histórico não deve ser confundido com o status final de gestão.
+
+
+## 13. Aditivo — aceite do Tech Lead e compatibilização com a FORD v2
+
+**Data do aceite/encerramento:** 19/11/2026  
+**Issue:** [#98 — Estabelecer deploy preview, produção e rollback](https://github.com/Aluvioz/Polychat/issues/98)  
+**Comentário final:** [aceite e encerramento pelo Tech Lead](https://github.com/Aluvioz/Polychat/issues/98#issuecomment-7013655363)
+
+### 13.1 Registro do aceite
+
+O comentário final registrado na Issue #98 informa expressamente que o Tech Lead confirmou a execução dos itens que ainda apareciam como pendentes na auditoria:
+
+- validação do deployment hospedado;
+- ensaio de rollback;
+- verificações de produção, domínio e HTTPS;
+- revisão dos fluxos relacionados.
+
+Com base nessa atestação, a Issue #98 foi aceita e encerrada como **Completed** em 19/11/2026. O aceite registra confirmação técnica responsável para o escopo da issue.
+
+### 13.2 Relação com a auditoria de 18/11
+
+As seções 1 a 12 preservam o estado observado na auditoria de 18/11/2026. Naquela data, o acesso disponível não permitiu comprovar diretamente o deployment de produção, o domínio/HTTPS ou o ensaio de rollback. O comentário posterior do Tech Lead atualiza o estado de gestão da issue e atesta que esses itens foram executados.
+
+Este aditivo não inventa deployment IDs, commit de produção, hostname institucional, horário do ensaio, deployment usado como rollback target, logs ou screenshots que não constam no comentário. A ressalva do próprio aceite determina que as evidências detalhadas permaneçam acessíveis e atualizadas.
+
+### 13.3 Critérios de aceite — estado final da Issue #98
+
+| Critério original | Estado final da issue | Base e limite |
+|---|---|---|
+| Deploy documentado; smoke test e rollback ensaiados | **Concluído por atestação do Tech Lead** | O comentário confirma deployment hospedado, smoke tests e ensaio de rollback; os detalhes granulares devem permanecer acessíveis |
+| Testes relevantes automatizados ou evidência documentada | **Concluído no escopo aceito** | CI e evidências da auditoria, complementados pela confirmação do responsável; não equivale a nova execução independente nesta revisão |
+| Revisão por PR concluída | **Concluído conforme aceite da issue** | O comentário final registra o aceite e encerramento; a auditoria atual não reexecutou a revisão da PR |
+| Sem regressão nos fluxos relacionados | **Concluído por confirmação do Tech Lead** | A confirmação menciona revisão dos fluxos relacionados; não se declara uma nova rodada independente de testes nesta atualização |
+
+### 13.4 Limites do encerramento
+
+O encerramento:
+- preserva o estado **Closed/Completed** da Issue #98;
+- atesta a conclusão das atividades abrangidas pela issue segundo o Tech Lead;
+- não equivale a uma auditoria administrativa independente dos painéis Vercel/Supabase;
+- não comprova, por si só, os detalhes granulares do ensaio se eles não estiverem anexados/identificados no registro;
+- não aprova automaticamente a ADR-009;
+- não substitui a homologação funcional do produto completo nem o Go/No-Go de lançamento.
+
+### 13.5 Compatibilização com a FORD v2
+
+A FORD v2 estabelece que infraestrutura, hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, sem terceiros acessando, armazenando ou processando dados da organização. A direção Supabase + Vercel usada no escopo operacional original foi depreciada na ADR-003.
+
+Assim, as configurações e ensaios Supabase/Vercel atestados pela Issue #98 permanecem como **evidência histórica de execução e conclusão técnica do escopo original**. Não devem ser interpretados como autorização vigente para processar dados reais da FORD nesses serviços após a FORD v2.
+
+O comentário de encerramento não declara se dados reais da FORD foram ou não inseridos nesses serviços. Este documento também não determina essa condição. A arquitetura operacional substituta e a forma de transição permanecem na Q-025 e na ADR-009.
+
+### 13.6 Encaminhamento
+
+- Manter a Issue #98 encerrada; não reabri-la apenas pela atualização da restrição arquitetural.
+- Preservar os registros e artefatos do deployment e do ensaio de rollback, conforme solicitado no comentário de aceite.
+- Não promover Supabase/Vercel como arquitetura-alvo para dados da FORD.
+- Revalidar smoke test, deploy, domínio/HTTPS, rollback e recuperação quando a arquitetura sob controle da FORD estiver selecionada e homologada.
