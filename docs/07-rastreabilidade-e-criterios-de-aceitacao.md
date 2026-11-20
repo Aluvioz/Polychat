@@ -1,20 +1,20 @@
 # 07 - Rastreabilidade e critérios de aceitação
 
-Este documento relaciona objetivos, requisitos funcionais, requisitos não funcionais e critérios de aceitação da baseline POLY-REQ-001 v0.3, revisada com base na FORD v2 e nos alinhamentos do PO com Desenvolvimento.
+Este documento relaciona objetivos, requisitos funcionais, requisitos não funcionais e critérios de aceitação da baseline POLY-REQ-001 v0.4, revisada com base na FORD v2 e nos alinhamentos do PO com Desenvolvimento.
 
 A rastreabilidade demonstra a origem e a cobertura documental dos requisitos. Não comprova, por si só, implementação, execução de testes ou homologação.
 
 ## 7.1 Matriz objetivo — requisitos — verificação
 
-| Objetivo | Requisitos funcionais | Requisitos não funcionais | Critérios de aceitação | Diagramas UML |
+| Objetivo | Requisitos funcionais | Requisitos não funcionais | Critérios de aceitação | Situação dos diagramas UML |
 |---|---|---|---|---|
-| OBJ-001 — Canal corporativo próprio sob controle da FORD | RF-001 a RF-006; RF-009 a RF-018; RF-020 a RF-023 | RNF-001 a RNF-005; RNF-007 a RNF-013 | CA-001.x a CA-006.x; CA-009.x a CA-018.x; CA-020.x a CA-023.x | Plataformas Supabase/Vercel confirmadas; implementação e homologação pendentes |
-| OBJ-002 — Comunicação individual entre usuários | RF-007; RF-008; RF-009; RF-019 | RNF-001; RNF-006; RNF-007; RNF-009 | CA-007.x a CA-009.x; CA-019.x | Pendente de seleção |
-| OBJ-003 — Comunicação em grupos administrados pelo TI | RF-005; RF-006; RF-010; RF-019 | RNF-001; RNF-004; RNF-006; RNF-009 | CA-005.x; CA-006.x; CA-010.x; CA-019.x | Pendente de seleção |
-| OBJ-004 — Administração centralizada no TI | RF-002 a RF-006; RF-016; RF-020; RF-021; RF-022 | RNF-001; RNF-002; RNF-003; RNF-004; RNF-011 | CA-002.x a CA-006.x; CA-016.x; CA-020.x; CA-021.x; CA-022.x | Pendente de seleção |
-| OBJ-005 — Monitoramento, alertas e investigação | RF-011 a RF-016; RF-020 a RF-023 | RNF-002; RNF-004; RNF-009; RNF-010; RNF-011; RNF-013 | CA-011.x a CA-016.x; CA-020.x a CA-023.x | Pendente de seleção |
-| OBJ-006 — Restrição de acesso por perfil e dispositivo | RF-017; RF-018; RF-002 | RNF-001; RNF-005 | CA-002.x; CA-017.x; CA-018.x | Pendente de seleção |
-| OBJ-007 — Experiência simples e identidade visual FORD | RF-007; RF-008; RF-015; RF-019; RF-023 | RNF-005; RNF-006 | CA-007.x; CA-008.x; CA-015.x; CA-019.x; CA-023.x | Pendente de seleção |
+| OBJ-001 — Canal corporativo próprio da FORD | RF-001 a RF-006; RF-009 a RF-018; RF-020 a RF-023 | RNF-001 a RNF-005; RNF-007 a RNF-013 | CA-001.x a CA-006.x; CA-009.x a CA-018.x; CA-020.x a CA-023.x | Ver seção 06; não há vínculo UML aprovado nesta matriz |
+| OBJ-002 — Comunicação individual entre usuários | RF-007; RF-008; RF-009; RF-019 | RNF-001; RNF-006; RNF-007; RNF-009 | CA-007.x a CA-009.x; CA-019.x || |
+| OBJ-003 — Comunicação em grupos administrados pelo TI | RF-005; RF-006; RF-010; RF-019 | RNF-001; RNF-004; RNF-006; RNF-009 | CA-005.x; CA-006.x; CA-010.x; CA-019.x || |
+| OBJ-004 — Administração centralizada no TI | RF-002 a RF-006; RF-016; RF-020; RF-021; RF-022 | RNF-001; RNF-002; RNF-003; RNF-004; RNF-011 | CA-002.x a CA-006.x; CA-016.x; CA-020.x; CA-021.x; CA-022.x || |
+| OBJ-005 — Monitoramento, alertas e investigação | RF-011 a RF-016; RF-020 a RF-023 | RNF-002; RNF-004; RNF-009; RNF-010; RNF-011; RNF-013 | CA-011.x a CA-016.x; CA-020.x a CA-023.x || |
+| OBJ-006 — Restrição de acesso por perfil e dispositivo | RF-017; RF-018; RF-002 | RNF-001; RNF-005 | CA-002.x; CA-017.x; CA-018.x || |
+| OBJ-007 — Experiência simples e identidade visual FORD | RF-007; RF-008; RF-015; RF-019; RF-023 | RNF-005; RNF-006 | CA-007.x; CA-008.x; CA-015.x; CA-019.x; CA-023.x || |
 
 ## 7.2 Matriz de cobertura dos requisitos funcionais
 
@@ -51,7 +51,7 @@ Os critérios individuais estão especificados em [03 — Requisitos funcionais]
 | Requisito | Evidência / verificação |
 |---|---|
 | RNF-001 — Controle de acesso | Testes de autorização por perfil, operação, URL/API e políticas de banco |
-| RNF-002 — Proteção de dados | Revisão de arquitetura, criptografia em trânsito/repouso, gestão de chaves e fronteira de processamento FORD |
+| RNF-002 — Proteção de dados | Revisão de arquitetura Supabase/Vercel, criptografia em trânsito/repouso, gestão de chaves, controles de acesso e ausência de serviços adicionais não aprovados |
 | RNF-003 — Credenciais e sessões | Testes de armazenamento/transmissão, provisionamento, redefinição, sessão e revogação |
 | RNF-004 — Auditoria | Testes do catálogo de eventos, consulta/gerenciamento TI, integridade e retenção |
 | RNF-005 — Compatibilidade | Matriz de homologação de sistemas operacionais, navegadores e restrições de dispositivo |
@@ -62,7 +62,7 @@ Os critérios individuais estão especificados em [03 — Requisitos funcionais]
 | RNF-010 — Segurança de anexos | Testes de formato, tamanho, quantidade, quotas, antimalware, falhas, liberação TI, links e metadados |
 | RNF-011 — Monitoramento e dados | Teste do aviso no primeiro acesso, permissões, registros e fluxo operacional de solicitações; observar legislação aplicável |
 | RNF-012 — Acessibilidade | Verificação de obrigações legais/corporativas aplicáveis; não há requisito adicional informado pela FORD |
-| RNF-013 — Infraestrutura e ambientes | Evidência de hospedagem sob controle FORD, ausência de terceiro processando dados e isolamento de desenvolvimento/homologação/produção |
+| RNF-013 — Infraestrutura e ambientes | Evidência de uso das plataformas oficiais Supabase/Vercel, governança de contas/acessos, configuração regional e isolamento de desenvolvimento/homologação/produção; serviços adicionais exigem aprovação explícita |
 
 ## 7.4 Fluxo de validação e aceite
 
