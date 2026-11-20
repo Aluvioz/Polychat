@@ -34,7 +34,7 @@ A paleta de referência do Design System foi atualizada para a direção cromát
 | `--pc-text-secondary` | `#475569` | Texto secundário | Proposta |
 | `--pc-text-muted` | `#64748B` | Metadados em fundo branco | Existente |
 | `--pc-surface` | `#FFFFFF` | Cards/formulários | Existente |
-| `--pc-background` | `#F0F0F0` | Fundo da aplicação | Existente |
+| `--pc-background` | `#F0F0F0` | Fundo neutro da aplicação | Token neutro da paleta provisória |
 | `--pc-border` | `#CBD5E1` | Delimitadores, entradas | Proposta |
 | `--pc-success` | `#027A48` | Sucesso textual em fundo branco | Proposta |
 | `--pc-error` | `#B42318` | Erro e ação destrutiva | Proposta |
