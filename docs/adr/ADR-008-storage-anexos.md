@@ -11,7 +11,7 @@ A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por 
 
 A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
 
-A FORD v2 estabelece ainda que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Portanto, a proposta anterior de Supabase Storage não é uma opção vigente para anexos da FORD (ADR-003).
+Supabase é uma plataforma oficial do Polychat (ADR-003). Supabase Storage pode ser utilizado como armazenamento de anexos, desde que configurado como privado e integrado aos controles de autorização, antimalware, retenção e revogação definidos neste documento.
 
 O repositório não comprova implementação de armazenamento privado, fluxo completo de upload/download ou integração antimalware. A política funcional do produto, entretanto, está consolidada na baseline e nos alinhamentos com Desenvolvimento.
 
@@ -24,11 +24,11 @@ Armazenar, analisar e entregar anexos sem expor objetos publicamente, sem permit
 1. **Armazenamento de objetos privado sob controle da FORD:** opção preferencial a avaliar, com segregação de ambientes e integração com a aplicação server-side.
 2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
 3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
-4. **Storage gerenciado por terceiro, incluindo Supabase Storage:** não permitido para arquivos da FORD quando o serviço puder acessá-los, armazená-los ou processá-los.
+4. **Supabase Storage:** opção oficial do projeto para objetos/anexos, com buckets privados, acesso autenticado e links temporários; outros serviços de storage exigem aprovação explícita.
 
 ## Decisão proposta
 
-Manter os anexos em **armazenamento privado executado dentro da fronteira de controle da FORD**. A tecnologia e a implantação específicas devem ser validadas pelo Tech Lead e TI no contexto da Q-025. Não adotar Supabase Storage nem bucket/serviço externo como arquitetura-alvo.
+Adotar **Supabase Storage** como opção oficial de armazenamento de anexos, com buckets privados, autorização server-side e URLs temporárias de no máximo 5 minutos. O arquivo só pode ser disponibilizado após resultado antimalware limpo; falhas/inconclusões mantêm o arquivo bloqueado. A configuração de região e ambientes será validada na Q-025.
 
 ### Regras funcionais consolidadas
 
@@ -63,7 +63,7 @@ Bibliotecas e atualizações sem acesso a dados da FORD podem ser utilizadas con
 
 ## Justificativa
 
-Armazenamento privado e autorização por requisição preservam o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware interna e a indisponibilidade segura do anexo atendem às regras da FORD sem interromper a comunicação textual. A execução sob controle da organização é obrigatória diante da proibição de terceiros processarem ou armazenarem dados.
+Armazenamento privado e autorização por requisição preservam o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware controlada pelo projeto e a indisponibilidade segura do anexo atendem às regras da FORD sem interromper a comunicação textual. A utilização do Supabase Storage não elimina a necessidade de verificar permissões, privacidade do bucket e ausência de acesso público.
 
 ## Consequências
 
@@ -91,7 +91,7 @@ Objeto público por configuração incorreta; URL vazada; link não revogado ap�
 
 ## Pendências para Accepted
 
-- Selecionar a tecnologia de armazenamento privado compatível com a infraestrutura sob controle da FORD (Q-025).
+- Validar a configuração privada do Supabase Storage, região, políticas de acesso, URLs temporárias, retenção e integração antimalware (Q-025).
 - Definir a integração do scanner interno, quarentena, liberação administrativa e monitoramento operacional.
 - Implementar e testar autorização em upload e em cada download, revogação imediata e links temporários de até 5 minutos.
 - Evidenciar remoção de EXIF/GPS e rejeição de PDF protegido por senha.
