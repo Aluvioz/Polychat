@@ -7,7 +7,7 @@
 
 ## 1. Escopo
 
-Mapear as jornadas da equipe de TI em dashboard, contas, grupos, consulta de conversas e trilha de auditoria, alertas e configurações. Representar explicitamente confirmações para ações críticas e estados alternativos. Trata-se de uma proposta de UX/UI e documentação; **não há implementação, testes automatizados, análise de segurança concluída ou aprovação do cliente nesta entrega**.
+Mapear as jornadas da equipe de TI em dashboard, contas, grupos, consulta de conversas e trilha de auditoria, alertas e configurações. Representar explicitamente confirmações para ações críticas e estados alternativos. Trata-se de wireframes e documentação de UX de baixa fidelidade; **não há implementação do console, testes de usabilidade, análise de segurança concluída ou homologação institucional da FORD nesta entrega**.
 
 Referências vigentes: baseline POLY-REQ-001 v0.4 e documentos 01, 03, 05 e 08. As decisões da FORD v2 substituem premissas antigas sobre autenticação, grupos, consulta administrativa, alertas, auditoria, anexos e infraestrutura. O aceite da UX permanece limitado à baixa fidelidade.
 
@@ -41,7 +41,7 @@ Os dados nas telas são fictícios; números, nomes e eventos não representam d
 ## 4. Estados alternativos e confirmações
 
 1. **08.1 — Confirmar desativação:** alerta sobre perda de acesso, opções Cancelar/Confirmar; nenhuma alteração antes da confirmação.
-2. **08.2 — Gestão não aprovada:** apresenta operação indisponível quando ainda não houver regra autorizando a remoção de integrante.
+2. **08.2 — Confirmar remoção de participante:** informar o efeito da remoção, confirmar a ação crítica e registrar a operação; a remoção é permitida ao TI e revoga imediatamente o acesso às mensagens/anexos anteriores.
 3. **08.3 — Permissão negada:** informação compreensível, saída para o painel; controles de interface não substituem autorização **server-side**.
 4. **08.4 — Fila sem registros:** estado vazio para consultas sem resultado.
 5. **08.5 — Falha administrativa:** erro e nova tentativa; não exibir sucesso se a operação falhou.
@@ -55,10 +55,10 @@ Os dados nas telas são fictícios; números, nomes e eventos não representam d
 |---|---|
 | TI autenticado com perfil e dispositivo permitido | RF-001, RF-002, RF-018; RN-001, RN-015 |
 | Provisionar e desativar conta | RF-003, RF-004; RN-003 a RN-005 |
-| Criar grupos e adicionar usuários | RF-005, RF-006; RN-007 |
+| Criar/administrar grupos e incluir/remover participantes | RF-005, RF-006; RN-007 |
 | Consulta de conversas por TI | RF-016/RF-021; RN-014; RN-022 |
 | Alertas de mensagens sinalizadas | RF-014/RF-015; RN-012/RN-013; severidades e prazos consolidados na FORD v2 |
-| Marca, navegadores e dispositivos | RN-019; Q-012 e Q-019 |
+| Marca, navegadores e dispositivos | RN-015, RNF-005 e RN-019; ativos visuais exatos em Q-019 |
 | Configurações e permissões específicas | Escopo concreto pendente de definição do PO/TI |
 | Auditoria de operações administrativas, consultas, exportações, mensagens e anexos | RF-022; RNF-004; catálogo funcional consolidado na FORD v2 |
 
