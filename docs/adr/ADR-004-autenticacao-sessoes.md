@@ -21,8 +21,8 @@ Definir o contrato funcional e as fronteiras de segurança da autenticação Sup
 
 ## Alternativas consideradas
 
-1. **Mecanismo de identidade operado sob controle da FORD:** alternativa compatível com a restrição de infraestrutura; tecnologia específica a validar na arquitetura.
-2. **Provedor externo de identidade/SaaS:** não adotado para credenciais, identidades ou sessões da FORD quando implicar acesso, armazenamento ou processamento por terceiro.
+1. **Supabase Auth:** serviço oficial de identidade do Polychat, com configuração, gestão de acessos e políticas sob governança da FORD.
+2. **Outro provedor externo de identidade/SaaS:** não aprovado para o projeto sem decisão explícita e avaliação técnica/jurídica própria.
 3. **Autenticação artesanal implementada pela aplicação:** não recomendada; a aplicação não deve criar suas próprias primitivas criptográficas ou mecanismos de hash/token sem componente consolidado e revisão técnica.
 4. **SSO corporativo:** não presumido como requisito ou integração aprovada nesta baseline.
 
@@ -46,7 +46,7 @@ O contrato funcional obrigatório é:
 
 A implementação deve aplicar os requisitos de proteção de credenciais, sessões e gestão de chaves já consolidados em RNF-002 e RNF-003. Esta ADR não cria parâmetros adicionais de senha, MFA, expiração ou timeout que não tenham sido definidos na baseline.
 
-Nenhum componente de autenticação pode enviar credenciais, identificadores, tokens ou dados de sessão a serviço externo que acesse ou processe dados da FORD.
+Credenciais, identificadores e dados de sessão são tratados pelo Supabase Auth, plataforma oficial aprovada do projeto. Não encaminhar esses dados a outros serviços externos, ferramentas de análise ou provedores não aprovados.
 
 ## Justificativa
 
