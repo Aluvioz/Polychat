@@ -51,8 +51,8 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 | Q-015 | Solicitações legais | Solicitações legais dirigidas à FORD ou a fornecedores de infraestrutura são tratadas pela própria FORD. A FORD espera ser informada quando isso for juridicamente permitido. | Resolvida |
 | Q-016 | Carga e desempenho | Capacidade inicial de até 25 conexões simultâneas de usuários finais, além dos administradores TI. Volume esperado de mensagens e anexos baixo/ocasional. Metas de desempenho alinhadas com Desenvolvimento e consideradas completas. | Resolvida |
 | Q-017 | Disponibilidade e recuperação | Disponibilidade mensal de 99%; RPO de até 24 horas em desastre/falha de infraestrutura; RTO de até 24 horas; backups diários de banco e anexos com retenção de 12 meses; manutenção fora do horário comercial com aviso prévio; suporte em horário comercial. | Resolvida |
-| Q-018 | Fluxo e páginas | O escopo prevê tela de conversas recentes e conversa para Usuário; console TI com gestão de usuários, grupos, consultas/exportação, alertas, configurações e auditoria. A arquitetura de informação detalhada, nomes finais de telas e wireframes devem ser consolidados pelo PO/UX a partir desse escopo. | Parcialmente resolvida; refinamento interno de UX |
-| Q-019 | Identidade visual | Azul e branco, com logo da FORD. Os códigos exatos das cores e os ativos oficiais dependem do material de marca disponibilizado para o projeto. | Parcialmente resolvida; insumos de marca |
+| Q-018 | Arquitetura da informação e telas | Catálogo e navegação por perfil consolidados: Usuário mobile com Conversas recentes como área principal, fluxo de nova conversa individual e chat individual/grupo; TI desktop com Dashboard, Usuários, Grupos, Consulta de conversas, Alertas, Auditoria e Configurações restritas aos controles definidos. | Resolvida em 20/11/2026; ver [decisões de produto Q-018/Q-019](ux/decisoes-produto-q018-q019.md) |
+| Q-019 | Identidade visual | Paleta provisória definida: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. O Ford Oval só será aplicado a partir de arquivo oficial autorizado. | Direção cromática provisória resolvida; ativos oficiais de marca ainda pendentes |
 | Q-020 | Acessibilidade | A FORD não definiu requisitos adicionais de acessibilidade para o programa inicial. Obrigações legais ou corporativas aplicáveis continuam válidas. | Resolvida como decisão de escopo |
 | Q-021 | Prazo e concorrência | Não há data limite definida nem marco corporativo condicionando o lançamento. O prazo será combinado conforme o planejamento das sprints. | Resolvida; planejamento de sprint é operacional |
 | Q-022 | Orçamento | R$ 450.000,00 é referência comercial global e inclui implantação. Não inclui infraestrutura, licenças, suporte, manutenção ou treinamento; custos recorrentes ficam com a FORD. O valor não foi declarado teto aprovado. | Resolvida quanto às condições informadas |
@@ -61,12 +61,12 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 
 ## 8.3 Questões que permanecem abertas
 
-Somente os itens abaixo continuam exigindo ação. As oito frentes técnicas alinhadas com Desenvolvimento não são pendências.
+Somente os itens abaixo continuam exigindo ação. Q-018 foi encerrada como decisão de produto; Q-019 está parcialmente concluída e só mantém a obtenção dos ativos oficiais de marca. As frentes técnicas alinhadas com Desenvolvimento não são pendências de definição de produto.
 
 | ID | Tema | Ação necessária | Motivo | Responsável sugerido |
 |---|---|---|---|---|
-| Q-018 | Arquitetura de informação e telas | Consolidar mapa definitivo de telas, navegação e wireframes para Usuário e console TI, respeitando as funcionalidades já definidas. | O escopo funcional está definido, mas a organização visual detalhada ainda depende de refinamento UX/PO. | PO / UX |
-| Q-019 | Insumos de identidade visual | Obter logo, manual de marca e códigos oficiais de cores/tipografia, se ainda não estiverem disponíveis no projeto. | A direção azul/branco e o uso do logo estão definidos; faltam os arquivos oficiais e os valores exatos. | FORD / responsável pela marca / UX |
+
+| Q-019 | Ativos oficiais de marca | Receber/confirmar o arquivo autorizado do Ford Oval e eventuais regras corporativas específicas de aplicação/tipografia. A paleta provisória não depende desses arquivos. | A direção cromática provisória foi definida pelo PO; resta somente a confirmação dos ativos oficiais para uso do logotipo e identidade final. | FORD / responsável pela marca |
 | Q-025 | Compatibilização da arquitetura com a infraestrutura FORD | Revisar as ADRs e decisões técnicas que ainda pressupõem serviços gerenciados Supabase/Vercel. Definir arquitetura que mantenha hospedagem e processamento de dados sob controle da FORD, sem terceiro acessando, armazenando ou processando dados. Preservar tecnologias de aplicação apenas se forem compatíveis com essa restrição. | A documentação e a Issue #88 registram Supabase + Vercel como direção anterior, enquanto a FORD v2 impõe infraestrutura sob seu controle. A exigência do cliente está definida; a solução arquitetural precisa ser reconciliada e documentada. | Tech Lead / Desenvolvimento / TI da FORD / PO |
 
 ## 8.4 Decisões consolidadas que não devem ser reabertas como pendência
@@ -96,5 +96,7 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 - Q-001 a Q-024 são identificadores históricos preservados das versões anteriores.
 - Q-025 foi criado para registrar a reconciliação técnica necessária após a restrição de infraestrutura informada na FORD v2.
 - Questões resolvidas permanecem documentadas para preservar a origem e a decisão.
+- Q-018 foi concluída pelo PO em 20/11/2026; a arquitetura da informação está registrada em `docs/ux/decisoes-produto-q018-q019.md`.
+- Q-019 possui paleta provisória definida pelo PO em 20/11/2026; a obtenção do arquivo oficial do logotipo continua como pendência específica.
 - Quando uma questão parcial for concluída, atualizar seu status e vincular o artefato de UX ou a decisão correspondente.
 - Não reutilizar identificadores encerrados para assuntos diferentes.
