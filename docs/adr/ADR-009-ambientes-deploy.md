@@ -106,14 +106,14 @@ Mistura de dados entre ambientes; vazamento de segredos; pipeline externo com ac
 - Workflow de CI: testes, ESLint, TypeScript e build no GitHub Actions.
 - Baseline POLY-REQ-001 v0.4: isolamento, disponibilidade, RPO/RTO, backup, manutenção e suporte.
 
-As confirmações do Tech Lead são evidência de aceite operacional para as issues, não auditoria administrativa independente das configurações nem prova de conformidade da arquitetura externa com a FORD v2.
+As confirmações do Tech Lead são evidência de aceite operacional para os escopos das Issues #96 e #98. Não equivalem a auditoria administrativa independente de cada configuração nem comprovam, por si só, todas as integrações funcionais; contudo, Supabase e Vercel são as plataformas oficiais aprovadas pela ADR-003.
 
 ## Pendências para Accepted
 
-- Confirmar e documentar projetos Supabase, ambientes Vercel, regiões, acessos, variáveis e evidências de deploy/rollback por ambiente (Q-025).
-- Definir como Preview, homologação e produção serão isolados na infraestrutura-alvo.
-- Documentar a gestão de segredos e o acesso mínimo por ambiente, sem expor valores.
-- Revalidar smoke test, deploy e rollback no ambiente oficial Vercel/Supabase conforme as mudanças implementadas.
-- Registrar evidências e aprovadores de TI/Tech Lead e atualizar esta ADR após a decisão.
+- Revisão técnica desta ADR pelo Tech Lead e TI, sem reabrir a seleção das plataformas.
+- Consolidar o inventário documental de projetos/regiões Supabase, ambientes Vercel, vínculos, domínios e variáveis (nomes/escopos, nunca valores), aproveitando as evidências de #96 e #98 (Q-025).
+- Documentar a gestão de segredos e o acesso mínimo por ambiente, sem expor valores, apenas quando a evidência ainda não estiver registrada.
+- Não repetir configuração de ambientes, smoke test, deploy ou ensaio de rollback já aceitos nas Issues #96 e #98; reexecutar somente após alteração técnica relevante ou identificação de lacuna concreta.
+- Registrar evidências e aprovadores de TI/Tech Lead e atualizar esta ADR após a revisão.
 
 Os requisitos de isolamento, proteção de credenciais, gestão de chaves, metas de disponibilidade, backup, RPO/RTO e operação já alinhados com Desenvolvimento são premissas consolidadas; não devem ser reabertos como pendências de produto.
