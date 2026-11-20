@@ -27,8 +27,8 @@ Registrar como a solução deve proteger conteúdo, operar monitoramento e inves
 ## Alternativas consideradas
 
 1. **E2EE estrita:** não atende às funções confirmadas de monitoramento server-side, consulta administrativa e exportação.
-2. **Criptografia em trânsito e em repouso, com acesso server-side sob controle da FORD:** atende ao modelo funcional confirmado, preservando a capacidade do servidor de processar conteúdo; não é E2EE.
-3. **Processamento de conteúdo por provedor ou IA externa:** incompatível com a restrição da FORD de não permitir terceiros acessando, armazenando ou processando dados.
+2. **Criptografia em trânsito e em repouso nos serviços oficiais Supabase/Vercel, com acesso server-side governado pela FORD:** atende ao modelo funcional confirmado, preservando a capacidade do servidor de processar conteúdo; não é E2EE.
+3. **Processamento de conteúdo por provedor ou IA adicional não aprovado:** não permitido; Supabase e Vercel são as plataformas oficialmente aprovadas do projeto.
 4. **Bloqueio automático de mensagens/contas após detecção:** não está previsto; a detecção deve produzir alerta para análise do TI.
 
 ## Decisão proposta
@@ -121,7 +121,7 @@ O modelo de criptografia definido preserva a capacidade de operação e investig
 - Separação clara entre alerta, revisão humana e decisão administrativa.
 - Rastreabilidade das ações privilegiadas definidas pelo cliente.
 - Retenção e backup alinhados aos requisitos operacionais.
-- Processamento e gestão de chaves dentro da fronteira de controle da FORD.
+- Processamento nos serviços oficiais Supabase/Vercel, com governança de acessos e gestão de chaves conforme os controles definidos pela FORD.
 
 **Negativas e cuidados:**
 - A ausência de E2EE implica que o servidor e administradores tecnicamente autorizados podem acessar conteúdo em claro.
@@ -130,7 +130,7 @@ O modelo de criptografia definido preserva a capacidade de operação e investig
 
 ## Riscos
 
-Acesso indevido por comprometimento de conta TI; exposição de conteúdo em servidor; comprometimento de chaves; uso indevido de capacidade administrativa; falso positivo; falha de registro de auditoria; descarte incompatível com investigação; vazamento de dados em logs; integração com serviço externo incompatível com a FORD v2.
+Acesso indevido por comprometimento de conta TI; exposição de conteúdo em servidor; comprometimento de chaves; uso indevido de capacidade administrativa; falso positivo; falha de registro de auditoria; descarte incompatível com investigação; vazamento de dados em logs; integração com serviço adicional não aprovado.
 
 A igualdade de poderes entre os administradores TI e os riscos correspondentes foram avaliados pelo responsável do projeto. Este registro mantém o risco conhecido, sem reabrir o modelo administrativo como pendência.
 
