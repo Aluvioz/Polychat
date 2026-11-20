@@ -1,13 +1,13 @@
 # ADR-006 — Autorização server-side e RLS
 
 - **Status:** Accepted
-- **Escopo do aceite:** contrato implementado para autenticação/autorização de perfis no módulo e na migration existentes. Não cobre recursos de chat ainda inexistentes.
+- **Escopo do aceite:** contrato de desenho de autorização para os perfis `user` e `ti`, com base em scaffold isolado. Não representa implementação funcional nem cobre recursos de chat.
 - **Data:** 17/11/2026
 - **Issue:** #89 · **Implementação relacionada:** #105
 
 ## Contexto
 
-A baseline prevê dois perfis: Usuário e TI. A camada de autorização versionada valida a identidade pelo Supabase Auth, plataforma oficial, carrega papel e estado da tabela `profiles`, bloqueia papéis desconhecidos e contas inativas e falha fechada quando não consegue validar. A migration habilita RLS em `profiles` e impede escrita direta de clientes sobre dados privilegiados.
+A baseline prevê dois perfis: Usuário e TI. O repositório contém um exemplo isolado de middleware e migration para `profiles`, mas eles não estão integrados ao runtime. A implementação funcional de autenticação e autorização ainda não começou. A decisão desta ADR define o contrato-alvo server-side/RLS.
 
 ## Problema
 
@@ -21,7 +21,7 @@ Impedir que o cliente escolha seu próprio papel, contorne permissões alterando
 
 ## Decisão
 
-Manter RBAC estrito com os papéis `user` e `ti`, com os seguintes controles no escopo atualmente implementado:
+Manter RBAC estrito com os papéis `user` e `ti`, com os seguintes controles obrigatórios para a implementação-alvo:
 
 - O servidor valida o JWT por `supabase.auth.getUser(token)`.
 - O papel e o estado são lidos de `public.profiles`; body, query ou metadados controlados pelo cliente não são fonte de autorização.
@@ -44,15 +44,15 @@ A verificação server-side reduz dependência da UI. RLS fornece uma segunda fr
 
 ## Limite explícito do aceite
 
-O aceite cobre somente o módulo de autorização e a tabela `profiles`. A migration ainda não comprova aplicação em projeto Supabase hospedado. O middleware é Express-compatible e ainda não está conectado às rotas reais da aplicação Next.js. Não há políticas RLS de conversas, participantes, mensagens, anexos ou auditoria; portanto, esta ADR não declara autorizado o acesso a esses recursos.
+Esta ADR aceita o contrato de desenho para perfis e autorização, não uma implementação. O middleware Express-compatible e a migration `profiles` são artefatos de scaffold não integrados ao Next.js e não comprovam aplicação em projeto Supabase hospedado. A implementação funcional ainda não começou; não há RLS de conversas, participantes, mensagens, anexos ou auditoria.
 
-## Evidências e testes
+## Artefatos de scaffold e limites de evidência
 
 - `src/auth/authorization.mjs`
 - `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`
 - `tests/authorization.test.mjs`: 11 casos unitários com Supabase simulado, incluindo token ausente/inválido, conta inativa, perfil ausente, falha de consulta, papel inválido e separação de papel TI/Usuário.
-- O workflow CI executa `npm test`, ESLint, TypeScript e build.
+- O workflow CI executa testes unitários do módulo isolado, ESLint, TypeScript e build; não há testes de integração/RLS real nem implementação funcional.
 
 ## Próxima extensão
 
-Para liberar recursos de domínio, criar políticas RLS específicas para cada tabela, validar participação em conversa/grupo, testar isolamento entre usuários no Supabase real e integrar autenticação/autorização aos handlers Next.js. Requer revisão do Tech Lead, Dev backend e TI.
+Quando a implementação funcional começar, criar políticas RLS específicas para cada tabela, validar participação em conversa/grupo, testar isolamento entre usuários no Supabase real e integrar autenticação/autorização aos handlers Next.js. Requer revisão do Tech Lead, Dev backend e TI.
