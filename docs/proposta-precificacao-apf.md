@@ -101,22 +101,22 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 
 | ID | Requisito funcional | Ator | Estado na baseline | Fonte / seção |
 |---|---|---|---|---|
-| RF-001 | Autenticação por usuário e senha | Usuário/TI | Confirmado; detalhes derivados | `docs/03-requisitos-funcionais.md`, §3.1 e §3.2; `docs/01-visao-geral-e-escopo.md`, §1.5 |
-| RF-002 | Aplicar permissões conforme os dois perfis | Sistema/TI | Confirmado; detalhamento derivado | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-001–RN-003 |
-| RF-003 | Criar e provisionar contas | TI | Confirmado; parâmetros pendentes | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003–RN-005 |
-| RF-004 | Desativar contas | TI | Confirmado; baseline também prevê reativação em RN-003 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003 |
-| RF-005 | Criar grupos de conversa | TI | Confirmado | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003 e RN-007 |
-| RF-006 | Adicionar usuários a grupos | TI | Confirmado; remoção administrativa também confirmada em RN-003/RN-007 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003 e RN-007 |
+| RF-001 | Autenticação por username e senha, provisionados pelo TI | Usuário/TI | Confirmado: username único/alterável, credencial inicial enviada individualmente, recuperação pelo TI; sem MFA/expiração/troca inicial obrigatórios | `docs/03-requisitos-funcionais.md`, §3.1 e §3.2; `docs/01-visao-geral-e-escopo.md`, §1.5 |
+| RF-002 | Aplicar permissões dos perfis `user` e `ti`; poderes equivalentes entre todos TI | Sistema/TI | Confirmado; role distinta de membership, sem hierarquia TI | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-001–RN-003 |
+| RF-003 | Criar contas e provisionar credenciais; definir/alterar username único | TI | Confirmado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003–RN-005 |
+| RF-004 | Desativar/reativar contas; desativação encerra sessões e revoga acesso | TI | Confirmado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003 |
+| RF-005 | Criar, encerrar, desativar e reativar grupos | TI | Confirmado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003 e RN-007 |
+| RF-006 | Incluir/remover participantes; remoção revoga acesso ao histórico/anexos | TI | Confirmado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003 e RN-007 |
 | RF-007 | Exibir conversas recentes | Usuário | Confirmado em nível conceitual | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/01-visao-geral-e-escopo.md`, §1.5 |
-| RF-008 | Abrir e ler conversas | Usuário | Derivado; necessário para o fluxo, sujeito à validação | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/07-rastreabilidade-e-criterios-de-aceitacao.md`, §7.1 |
+| RF-008 | Abrir/ler somente conversas das quais seja participante autorizado | Usuário | Regra ratificada pelo PO na Issue #100 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/07-rastreabilidade-e-criterios-de-aceitacao.md`, §7.1 |
 | RF-009 | Enviar mensagem individual | Usuário | Confirmado | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-006 |
-| RF-010 | Enviar mensagem em grupo | Usuário membro | Confirmado; ciclo de vida adicional pendente | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-007 |
-| RF-011 | Anexar arquivos PDF e JPEG | Usuário | Confirmado; limites pendentes | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-008 |
+| RF-010 | Enviar mensagem em grupo como participante incluído pelo TI | Usuário membro | Confirmado; usuário não sai voluntariamente | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-007 |
+| RF-011 | Anexar PDF/JPEG até 10 MB por arquivo e 5 por mensagem | Usuário | Confirmado/alinhado; quotas individuais e capacidade total pelo TI | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-008 |
 | RF-012 | Rejeitar formatos não permitidos | Sistema | Confirmado | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-008 |
-| RF-013 | Não oferecer captura/gravação de mídia | Sistema | Confirmado; ambiguidade câmera/JPEG | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-011 |
-| RF-014 | Analisar mensagens em busca de conteúdo suspeito | Sistema | Intenção confirmada; critérios pendentes | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-012 |
-| RF-015 | Alertar o TI sobre mensagens sinalizadas | Sistema/TI | Intenção confirmada; canal/severidade pendentes | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-013 |
-| RF-016 | TI consultar qualquer conversa | TI | Confirmado; acesso deve ser auditado | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-014 |
+| RF-013 | Selecionar JPEG da galeria, sem captura por câmera; remover EXIF/GPS | Sistema | Confirmado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-011 |
+| RF-014 | Detectar mensagens por regras/lista de termos TI, sem análise contextual/IA externa | Sistema | Confirmado/alinhado pela FORD v2 | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-012 |
+| RF-015 | Alertas baixa/média/alta, com prazos de resposta definidos e revisão humana | Sistema/TI | Confirmado/alinhado; sem bloqueio automático | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-013 |
+| RF-016 | TI consultar qualquer conversa a qualquer momento, sem justificativa/segunda aprovação | TI | Confirmado; consulta auditada | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-014 |
 | RF-017 | Restringir perfil Usuário a celular | Sistema | Confirmado; critério técnico pendente | `docs/03-requisitos-funcionais.md`, §3.1–3.2; `docs/05-regras-de-negocio-e-restricoes.md`, RN-015 |
 | RF-018 | Restringir perfil TI a computador | Sistema | Confirmado: computadores com Chrome/Edge/Firefox atuais; tablets não permitidos | `docs/03-requisitos-funcionais.md`, RF-018; `docs/09-baseline-requisitos-mvp.md`, v0.4 |
 | RF-019 | Confirmar leitura, exibir horário de leitura e quantidade de mensagens não lidas | Sistema/Usuário | Confirmado na FORD v2 | `docs/03-requisitos-funcionais.md`, RF-019 |
@@ -130,18 +130,18 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | ID | Categoria | Requisito / situação | Fonte / seção |
 |---|---|---|---|
 | RNF-001 | Segurança e controle de acesso | Autorização server-side em todas as funções/dados; testes negativos e revisão | `docs/04-requisitos-nao-funcionais.md`, tabela RNF-001 |
-| RNF-002 | Proteção de dados | Proteger credenciais, mensagens, anexos e sessões em trânsito/repouso; algoritmos e chaves pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-002 |
-| RNF-003 | Credenciais | Não armazenar/transmitir senha em texto puro; MFA, recuperação e sessão pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-003 |
+| RNF-002 | Proteção de dados | Criptografia em trânsito/repouso; sem E2EE; gestão de chaves pelo servidor/TI FORD | `docs/04-requisitos-nao-funcionais.md`, RNF-002 |
+| RNF-003 | Credenciais | Proteção alinhada; sem MFA/expiração periódica/troca inicial obrigatórios; recuperação pelo TI | `docs/04-requisitos-nao-funcionais.md`, RNF-003 |
 | RNF-004 | Auditabilidade | Operações administrativas auditáveis; consulta de conversa pelo TI explicitamente registrada | `docs/04-requisitos-nao-funcionais.md`, RNF-004 |
-| RNF-005 | Compatibilidade | Usuário em celular e TI em computador; SO/navegadores/tablets pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-005 |
+| RNF-005 | Compatibilidade | Usuário Android/iOS em Chrome/Safari móveis atuais; TI computador Chrome/Edge/Firefox atuais; tablets não permitidos | `docs/04-requisitos-nao-funcionais.md`, RNF-005 |
 | RNF-006 | Usabilidade | Interface simples; conversas recentes após login; telas e métricas pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-006 |
 | RNF-007 | Desempenho | Segurança prevalece sobre velocidade; latência e metas não definidas | `docs/04-requisitos-nao-funcionais.md`, RNF-007 |
-| RNF-008 | Capacidade | Público inicial 25 pessoas; concorrência e volumes pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-008 |
-| RNF-009 | Disponibilidade/continuidade | Disponibilidade, backup, RPO/RTO e recuperação pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-009 |
+| RNF-008 | Capacidade | 25 conexões simultâneas de usuários finais, além de administradores TI; limites alinhados | `docs/04-requisitos-nao-funcionais.md`, RNF-008 |
+| RNF-009 | Disponibilidade/continuidade | 99% mensal; backups diários 12 meses; RPO 24h em desastre; RTO 24h; manutenção fora expediente e suporte comercial | `docs/04-requisitos-nao-funcionais.md`, RNF-009 |
 | RNF-010 | Segurança de arquivos | Somente PDF/JPEG, validação do conteúdo real e avaliação antimalware | `docs/04-requisitos-nao-funcionais.md`, RNF-010 |
-| RNF-011 | Privacidade/governança | Política de monitoramento, acesso TI, transparência, retenção, descarte e solicitações legais pendentes | `docs/04-requisitos-nao-funcionais.md`, RNF-011 |
+| RNF-011 | Privacidade/governança | Posição da FORD registrada; aviso no primeiro acesso; regras e retenção v0.4; obrigações legais aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-011 |
 | RNF-012 | Acessibilidade | Despriorizada na visão de produto; obrigações legais/corporativas aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-012 |
-| RNF-013 | Arquitetura/plataforma | Supabase + Vercel é direção técnica da Issue #88; integração/configuração não concluídas | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
+| RNF-013 | Arquitetura/plataforma | Infraestrutura sob controle FORD; nenhum terceiro acessa/armazena/processa dados; Q-025 para decisão técnica | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
 
 **Outras regras/restrições:** somente roles `user` e `ti`; todos os TI com poderes equivalentes; grupos e participantes administrados pelo TI; usuários não saem de grupos; remoção revoga acesso ao histórico; usuários não editam/excluem mensagens; TI edita/exclui e exporta com auditoria; leitura/horário e não lidas; PDF/JPEG (10 MB, 5 por mensagem), quotas individuais e totais pelo TI; scanner interno com bloqueio em falha/inconclusão e liberação TI auditada; monitoramento por lista sem análise contextual/IA externa; severidades/prazos de alertas; auditoria e retenção; infraestrutura FORD. Fonte: POLY-REQ-001 v0.4 e documentos 03 a 05.
 
@@ -195,7 +195,7 @@ Todas as quantidades DET/DER, RET/RLR e ALR da contagem original são **hipótes
 
 O inventário e o total de 124 PF são exclusivamente a contagem preliminar de 18/11/2026, anterior à baseline v0.4. Modelo lógico, requisitos funcionais, fronteira de autenticação e fluxos UX foram alterados/confirmados desde então. A contagem antiga não deve sustentar orçamento ou preço atuais até nova medição.
 
-## 5. Contagem APF: funções de dados
+## 5. Contagem APF: funções de dados — fotografia histórica de 18/11/2026
 
 **DER** é usado aqui como equivalente prático a DET (tipo de dado elementar reconhecido pelo usuário); **RLR** corresponde a RET (subgrupo de dados reconhecível). Para AIE, o grupo é mantido fora da fronteira e referenciado pela aplicação.
 
@@ -208,9 +208,9 @@ O inventário e o total de 124 PF são exclusivamente a contagem preliminar de 1
 | FD-05 | Metadados de anexos | ALI | 8 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-011–RF-013; `docs/adr/ADR-008-storage-anexos.md`, Contexto |
 | FD-06 | Alertas de mensagens sinalizadas | ALI | 8 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-014/RF-015; `docs/05-regras-de-negocio-e-restricoes.md`, RN-012/RN-013 |
 | FD-07 | Eventos de auditoria | ALI | 7 | 1 | Baixa | 7 | `docs/03-requisitos-funcionais.md`, RF-016/CA-016.4; `docs/04-requisitos-nao-funcionais.md`, RNF-004; `docs/adr/ADR-010-seguranca-auditoria-monitoramento.md` |
-| FD-08 | Identidades autenticadas | AIE | 4 | 1 | Baixa | 5 | `docs/adr/ADR-004-autenticacao-sessoes.md`, Contexto/Decisão proposta; `docs/adr/ADR-003-supabase-vercel.md`, Supabase Auth previsto; `docs/09-baseline-requisitos-mvp.md`, RF-001 |
+| FD-08 | Identidades autenticadas — hipótese histórica a reavaliar | AIE (não confirmado na fronteira v0.4) | 4 | 1 | Baixa | 5 (valor histórico, não contar como decisão vigente) | `docs/adr/ADR-004-autenticacao-sessoes.md`, Contexto/Decisão proposta; `docs/adr/ADR-003-supabase-vercel.md`, Supabase Auth previsto; `docs/09-baseline-requisitos-mvp.md`, RF-001 |
 
-### 5.1 Justificativa do AIE
+### 5.1 FD-08/AIE — justificativa histórica, sujeita à recontagem
 
 O AIE FD-08 representa o conjunto de identidades/credenciais mantido pelo provedor de autenticação Supabase Auth, fora da fronteira lógica da aplicação Polychat, mas referenciado por ela para autenticar e associar perfis. A aplicação consulta a identidade validada e usa seu identificador para relacioná-la ao ALI Perfis.
 
@@ -222,7 +222,7 @@ O AIE FD-08 representa o conjunto de identidades/credenciais mantido pelo proved
 - AIEs: 1 × 5 PF = **5 PF**.
 - Total de dados: 49 + 5 = **54 PF**.
 
-## 6. Contagem APF: funções transacionais
+## 6. Contagem APF: funções transacionais — fotografia histórica de 18/11/2026
 
 **ALR** corresponde a ALR/FTR (Arquivo Lógico Referenciado/File Type Referenced). DET/DER são os campos reconhecidos pelo usuário que atravessam a fronteira. As quantidades abaixo são hipóteses e deverão ser revistas com os fluxos/protótipos e schema aprovados.
 
