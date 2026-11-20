@@ -2,7 +2,7 @@
 
 - **Documento:** POLY-SEC-002
 - **Versão:** 0.4 — alinhada à FORD v2 e à Q-025
-- **Data:** 19/11/2026
+- **Data:** 20/11/2026
 - **Status:** requisitos funcionais e operacionais alinhados à FORD v2; implementação funcional ainda não iniciada; permanecem pendentes configuração inicial da lista pelo TI, detalhamento técnico e evidências de teste
 - **Issue principal:** [#122 — Implementar detecção de conteúdo suspeito e palavrões](https://github.com/Aluvioz/Polychat/issues/122)
 - **Épica:** [#86 — Segurança, monitoramento e auditoria](https://github.com/Aluvioz/Polychat/issues/86)
