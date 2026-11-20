@@ -1,6 +1,8 @@
-# Prompt de execução — Issue #88: Consolidar baseline de requisitos e escopo MVP
+# Prompt histórico — Issue #88: Consolidar baseline de requisitos e escopo MVP
 
-> **Uso:** fornecer este prompt a um agente de desenvolvimento para trabalhar na Issue #88 do Polychat.
+> **Status:** prompt preservado como registro da execução original da Issue #88, concluída em 17/11/2026. Foi elaborado com base na visão POLYCHAT — FORD v0.1 e não deve ser reutilizado como instrução vigente para novas alterações após o questionário FORD v2. A baseline vigente é POLY-REQ-001 v0.4 (arquivo `docs/09-baseline-requisitos-mvp.md`).
+>
+> **Uso histórico:** referência para compreender o escopo original e a execução da Issue #88; não é autorização para reabrir a issue ou substituir os alinhamentos posteriores.
 >
 > **Issue:** https://github.com/Aluvioz/Polychat/issues/88  
 > **Repositório:** `Aluvioz/Polychat`
@@ -34,9 +36,9 @@ Inventariar requisitos, decisões, restrições e fora de escopo; eliminar ambig
 
 Esses itens definem os limites da tarefa. Não crie novos objetivos, etapas obrigatórias, funcionalidades ou critérios de aceite que não decorram diretamente deles.
 
-### 2. Fontes de informação
+### 2. Fontes de informação — registro histórico
 
-Use como referência de requisitos o documento **POLYCHAT — FORD: Documento de Visão do Produto e Plano Inicial de Desenvolvimento, versão 0.1**, fornecido pelo solicitante e confirmado por ele como referência aprovada para este trabalho.
+**Fonte histórica da execução original:** o documento POLYCHAT — FORD: Documento de Visão do Produto e Plano Inicial de Desenvolvimento, versão 0.1, foi utilizado na elaboração original deste prompt. Para qualquer revisão atual do produto, a fonte vigente é o questionário FORD v2 e a baseline POLY-REQ-001 v0.4; as decisões posteriores sobre Supabase e Vercel estão registradas na ADR-003 Accepted.
 
 Consulte também a documentação já existente no repositório, especialmente:
 
