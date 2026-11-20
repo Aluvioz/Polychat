@@ -1,68 +1,152 @@
 # ADR-010 — Segurança, auditoria e monitoramento
 
 - **Status:** Proposed
-- **Data:** 17/11/2026
-- **Issue:** #89
-- **Classificação:** aprovação crítica de negócio, TI, Segurança e Jurídico/Privacidade pendente
+- **Data de revisão:** 19/11/2026
+- **Issue de origem:** #89
+- **Baseline:** POLY-REQ-001 v0.4 — questionário FORD v2 e alinhamentos consolidados
+- **Responsabilidade operacional de segurança:** TI da FORD, conforme informado pelo cliente
 
 ## Contexto
 
-A baseline confirma a intenção de analisar mensagens suspeitas e alertar o TI. Também confirma que o TI pode consultar conversas para segurança e que esse acesso deve ser registrado em auditoria. A baseline deixa pendentes os critérios de suspeição, falsos positivos, finalidade, transparência, responsáveis, campos de auditoria e retenção (Q-007 a Q-010 e Q-013 a Q-015).
+A FORD v2 consolidou as regras funcionais de monitoramento, consulta administrativa, auditoria, retenção e proteção de dados. O documento anterior mantinha essas regras como perguntas abertas e propunha controles que não correspondem às decisões atuais. Esta revisão substitui aquelas premissas pela baseline v0.4.
 
-A consulta de conteúdo pelo servidor e a análise automatizada server-side criam um conflito arquitetural com criptografia ponta a ponta estrita (E2EE), na qual o servidor não possui acesso ao conteúdo em claro. Não há decisão aprovada sobre E2EE no repositório.
+O produto deve analisar mensagens por regras e lista de termos mantida pelo TI, incluindo palavrões. Não haverá análise contextual nem uso de IA ou serviço externo para processar o conteúdo. A detecção gera alertas para revisão humana; não bloqueia automaticamente mensagens ou contas.
+
+O TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou aprovação de outro administrador. Também pode exportar conversas, editar ou excluir mensagens e baixar anexos durante investigações. Essas operações e as demais ações administrativas relevantes devem ser auditadas. Todos os administradores TI possuem os mesmos poderes; não há administrador principal ou segunda aprovação. O projeto já avaliou os riscos desse modelo e não os reabre como pendência de produto.
+
+A FORD confirmou criptografia em trânsito e em repouso, sem criptografia ponta a ponta (E2EE). O servidor precisa ter acesso ao conteúdo para executar as funções de monitoramento e administração. As chaves permanecem sob gestão do servidor e da TI FORD.
+
+Supabase e Vercel são as plataformas oficiais do Polychat, conforme ADR-003. O processamento de mensagens, alertas e operações administrativas deve ocorrer nos componentes aprovados dessa stack; nenhum serviço externo adicional ou ferramenta de IA/scanner de terceiros pode receber conteúdo sem aprovação explícita.
+
+A FORD informou que não há política corporativa específica de privacidade para este programa, que Jurídico não será envolvido como frente do projeto e que privacidade/LGPD não é prioridade operacional do programa. TI será o canal para pedidos de acesso, correção e exclusão; pedidos legais serão tratados pela própria FORD, que espera ser informada quando juridicamente permitido. Essas informações registram a posição do cliente e não afastam obrigações legais aplicáveis. A FORD também informou não possuir uma área separada de Segurança da Informação; TI assume essa responsabilidade.
 
 ## Problema
 
-Documentar as opções e salvaguardas sem prometer E2EE em uma arquitetura que precisa ler conteúdo no servidor, nem transformar a capacidade de TI em acesso irrestrito sem justificativa e auditoria.
+Registrar como a solução deve proteger conteúdo, operar monitoramento e investigação, auditar ações privilegiadas e preservar dados, sem apresentar criptografia em trânsito/repouso como E2EE nem acrescentar barreiras operacionais que contrariem as regras confirmadas pela FORD.
 
 ## Alternativas consideradas
 
-1. **E2EE estrita:** chaves de conteúdo permanecem nos dispositivos; servidor/provedor não lê mensagens. Não atende diretamente à consulta de conteúdo pelo TI e à análise server-side previstas na baseline.
-2. **Criptografia em trânsito e em repouso, com processamento server-side controlado:** permite análise e consulta autorizada, mas o serviço e determinados operadores autorizados podem ter acesso ao conteúdo em claro.
-3. **Modelo híbrido com chaves organizacionais/escrow:** pode viabilizar investigação, mas não é E2EE estrita e aumenta muito a complexidade de custódia e governança.
-4. **Análise apenas no cliente:** reduz leitura server-side, mas pode ser contornada e não resolve a consulta administrativa confirmada.
+1. **E2EE estrita:** não atende às funções confirmadas de monitoramento server-side, consulta administrativa e exportação.
+2. **Criptografia em trânsito e em repouso nos serviços oficiais Supabase/Vercel, com acesso server-side governado pela FORD:** atende ao modelo funcional confirmado, preservando a capacidade do servidor de processar conteúdo; não é E2EE.
+3. **Processamento de conteúdo por provedor ou IA adicional não aprovado:** não permitido; Supabase e Vercel são as plataformas oficialmente aprovadas do projeto.
+4. **Bloqueio automático de mensagens/contas após detecção:** não está previsto; a detecção deve produzir alerta para análise do TI.
 
 ## Decisão proposta
 
-Não declarar nem anunciar E2EE enquanto não houver desenho e aprovação explícitos. Para preservar a intenção de consulta de TI e análise server-side, avaliar criptografia em trânsito e em repouso com gestão de chaves, segregação de funções e acesso de conteúdo just-in-time. Essa alternativa **não** oferece E2EE estrita e só poderá ser adotada após aprovação expressa da FORD, TI, Segurança e Jurídico/Privacidade, com finalidade, base legal, transparência e avaliação de impacto quando aplicável.
+### 1. Proteção criptográfica e chaves
 
-### Consulta de conversas pelo TI
+- Proteger dados em trânsito e em repouso.
+- Não declarar nem divulgar o produto como E2EE.
+- O servidor mantém acesso técnico ao conteúdo para monitoramento, consulta administrativa e operação do sistema.
+- A gestão de chaves permanece sob responsabilidade do servidor e da TI FORD, seguindo os requisitos de proteção de credenciais e gestão de chaves já alinhados com Desenvolvimento.
+- Esse processamento deve ocorrer nos componentes oficiais Supabase/Vercel, com acesso mínimo, isolamento por ambiente e proteção de segredos. Não enviar conteúdo, metadados ou chaves para serviços externos adicionais não aprovados.
 
-Como proposta mínima de controle: justificar cada consulta; limitar escopo e período; exigir autenticação reforçada conforme política aprovada; registrar operador, data/hora, conversa consultada, motivo, ação e resultado em trilha protegida contra alteração; monitorar consultas fora do padrão; revisar acessos periodicamente. A baseline autoriza consulta para segurança, mas não autoriza automaticamente exportação em massa, alteração ou exclusão de mensagens.
+### 2. Monitoramento de mensagens
 
-### Monitoramento de mensagens suspeitas
+- A detecção utiliza regras e uma lista de termos administrada pelo TI, incluindo palavrões.
+- Não realizar análise contextual.
+- Não enviar conteúdo para IA, scanner de mensagens ou serviço externo de análise.
+- A detecção gera um alerta para a fila do TI.
+- A detecção, isoladamente, não bloqueia a entrega da mensagem nem desativa a conta do remetente.
+- A regra/lista aplicada e os dados mínimos para investigação devem ser rastreáveis, sem replicar conteúdo desnecessário nos logs.
 
-Começar somente após aprovação dos termos/categorias e critérios. Alertas devem dar suporte à análise do TI, registrar regra/versão e contexto mínimo necessário e permitir classificação de falso positivo. Não implementar bloqueio automático de mensagem ou conta sem requisito e aprovação específicos; a baseline confirma alerta e investigação, não bloqueio automático. Uso de IA ou serviço externo exigirá avaliação própria de privacidade e transferência de dados.
+### 3. Alertas e tratamento pelo TI
 
-### Retenção, descarte e incidentes
+| Severidade | Prazo de resposta consolidado |
+|---|---|
+| Alta | Imediato, em até 1 hora |
+| Média | Até 1 dia útil |
+| Baixa | Até 3 dias úteis |
 
-Definir prazos separados para mensagens, anexos, alertas, auditoria e backups. Estabelecer acesso mínimo, descarte verificável, proteção de logs, preservação de evidências e fluxo de resposta a incidentes. Não fixar prazos nesta ADR porque não constam da baseline.
+- Os alertas são apresentados em fila administrativa para o TI.
+- O TI analisa e pode encerrar um alerta sem justificativa obrigatória.
+- Não há punição, bloqueio de mensagem ou bloqueio de conta automático por força da detecção.
+- A taxonomia, severidades e prazos acima são premissas funcionais consolidadas; não devem ser reabertos como pendências de produto.
+
+### 4. Consulta, exportação e administração de conversas
+
+- Qualquer administrador TI pode consultar qualquer conversa a qualquer momento, mesmo sem ser participante.
+- Não é exigida justificativa nem aprovação de outro administrador para a consulta.
+- O TI pode exportar conversas.
+- O TI pode editar ou excluir mensagens a qualquer momento.
+- O TI pode baixar anexos durante investigações.
+- As permissões são iguais para todos os administradores TI; não criar papel de administrador principal, hierarquia ou fluxo de segunda aprovação.
+- A consulta administrativa, exportação, edição/exclusão de mensagens e download de anexos devem gerar registros de auditoria.
+- A consulta administrativa não transforma o TI em participante da conversa.
+
+### 5. Catálogo mínimo de auditoria
+
+A trilha deve registrar, no mínimo, as seguintes categorias de operações:
+
+- login administrativo;
+- criação, alteração, desativação e reativação de contas;
+- criação, encerramento, desativação e reativação de grupos;
+- inclusão e remoção de participantes;
+- consulta administrativa de conversas;
+- consulta e tratamento/encerramento de alertas;
+- download de anexos pelo TI;
+- liberação administrativa de anexos;
+- exportação de conversas;
+- edição e exclusão administrativa de mensagens;
+- alteração de configurações.
+
+Os registros devem permitir identificar o operador, a ação, o recurso/objeto afetado e o momento do evento, preservando os demais campos técnicos necessários à rastreabilidade. Não se deve incluir senha, token, chave secreta ou cópia integral do conteúdo em logs de auditoria.
+
+- Somente TI pode consultar e gerenciar os registros de auditoria.
+- Usuários comuns não podem consultar, alterar ou excluir registros.
+- A política de retenção consolidada exige que logs e registros administrativos não sofram exclusão automática enquanto o sistema estiver operando.
+- Exclusões dependem de autorização do TI; preservação em investigação e descarte devem seguir a decisão administrativa aplicável e deixar registro de auditoria.
+
+### 6. Retenção, backups e solicitações
+
+- Mensagens, anexos, alertas, logs de auditoria e registros administrativos não são excluídos automaticamente enquanto o sistema operar.
+- O TI autoriza exclusões e decide quando preservar dados durante investigações.
+- Backups são diários e retidos por 12 meses.
+- Após exclusão autorizada, os dados saem dos backups ao final do ciclo de retenção, com descarte registrado em auditoria.
+- TI é o canal operacional informado pela FORD para solicitações de acesso, correção e exclusão.
+- Solicitações legais são tratadas pela FORD; a expectativa de notificação ao fornecedor aplica-se quando juridicamente permitido.
+
+### 7. Transparência
+
+A aplicação deve apresentar aviso de monitoramento no primeiro acesso do funcionário. A tela e o texto final serão detalhados em UX, mantendo o requisito funcional RF-023.
 
 ## Justificativa
 
-As alternativas tornam explícito o trade-off entre confidencialidade técnica e capacidade de análise/consulta do servidor. A opção híbrida ou server-side não deve ser apresentada como E2EE. Governança e auditoria são necessárias para evitar que uma capacidade técnica se converta em acesso sem responsabilização.
+O modelo de criptografia definido preserva a capacidade de operação e investigação solicitada pela FORD, sem prometer E2EE. A detecção baseada em lista, com revisão humana e sem bloqueio automático, respeita o comportamento de alerta confirmado. O registro das ações administrativas permite rastreabilidade sem introduzir justificativa obrigatória, segunda aprovação ou hierarquia não previstas.
 
 ## Consequências
 
-**Positivas:** trade-offs transparentes; capacidade de investigação alinhada aos requisitos, caso aprovada; maior rastreabilidade.
+**Positivas:**
+- Regras de monitoramento e investigação alinhadas à FORD v2.
+- Separação clara entre alerta, revisão humana e decisão administrativa.
+- Rastreabilidade das ações privilegiadas definidas pelo cliente.
+- Retenção e backup alinhados aos requisitos operacionais.
+- Processamento nos serviços oficiais Supabase/Vercel, com governança de acessos e gestão de chaves conforme os controles definidos pela FORD.
 
-**Negativas:** não oferece E2EE estrita; aumenta impacto de comprometimento do servidor ou de conta privilegiada; exige processo, auditoria e revisão contínua.
+**Negativas e cuidados:**
+- A ausência de E2EE implica que o servidor e administradores tecnicamente autorizados podem acessar conteúdo em claro.
+- O modelo requer proteção rigorosa do ambiente, das chaves, das contas TI e dos registros de auditoria.
+- O catálogo de eventos e controles técnicos precisa ser implementado e testado na stack oficial Supabase/Vercel, sob governança da FORD.
 
 ## Riscos
 
-Abuso de privilégio, acesso interno indevido, chave comprometida, falso positivo, monitoramento desproporcional, retenção excessiva, exposição em logs, suboperadores e conflito com expectativas dos funcionários ou obrigações legais.
+Acesso indevido por comprometimento de conta TI; exposição de conteúdo em servidor; comprometimento de chaves; uso indevido de capacidade administrativa; falso positivo; falha de registro de auditoria; descarte incompatível com investigação; vazamento de dados em logs; integração com serviço adicional não aprovado.
 
-## Evidências atuais
+A igualdade de poderes entre os administradores TI e os riscos correspondentes foram avaliados pelo responsável do projeto. Este registro mantém o risco conhecido, sem reabrir o modelo administrativo como pendência.
 
-O repositório não contém implementação de monitoramento, consulta administrativa de mensagens, trilha de auditoria de conteúdo, sistema de alertas ou gestão de chaves para esses fluxos. A migration atual trata somente de perfis. Os requisitos constam da baseline e permanecem sem fluxo funcional implementado.
+## Evidências e estado atual
+
+- POLY-REQ-001 v0.4 e documentos 03, 04 e 05 consolidam monitoramento, severidades, prazos, acesso TI, exportação, edição/exclusão, auditoria, retenção, backup e infraestrutura.
+- RF-019 a RF-023 foram acrescentados para leitura, edição/exclusão administrativa, exportação, auditoria e aviso de monitoramento.
+- O repositório ainda não comprova implementação ponta a ponta de monitoramento, alertas, consulta administrativa, exportação ou auditoria funcional.
+- A presença dos requisitos nesta ADR não significa que os fluxos estejam implementados ou homologados.
 
 ## Pendências para Accepted
 
-- Aprovação da FORD/representante de negócio quanto à finalidade, transparência e modelo de acesso.
-- Aprovação de TI e Segurança sobre controle operacional, chaves, autenticação reforçada, auditoria e resposta a incidentes.
-- Aprovação de Jurídico/Privacidade sobre base legal, avisos, retenção, descarte e avaliação de impacto aplicável.
-- Definição dos critérios de mensagens suspeitas, severidade, falsos positivos e resposta (Q-007/Q-008).
-- Definição de governança da consulta TI e retenção por classe de dado (Q-009/Q-010).
-- Definição de hospedagem, região e solicitações legais (Q-013/Q-015).
+- Definir e revisar tecnicamente o modelo de dados, catálogo de eventos e interfaces de auditoria.
+- Integrar e validar o processamento e armazenamento de alertas, conteúdo e logs nos serviços oficiais Supabase/Vercel, com políticas de acesso e auditoria (Q-025).
+- Implementar os fluxos server-side e as políticas de autorização correspondentes; testar falhas e tentativas não autorizadas.
+- Validar tecnicamente a gestão de chaves, proteção dos logs, backups e restauração.
+- Submeter a ADR à revisão do Tech Lead e da TI no contexto da arquitetura-alvo.
 
-Até essas aprovações, esta ADR permanece Proposed e não autoriza ativar monitoramento de conteúdo nem consulta administrativa em produção.
+Os parâmetros de severidade, prazos, regras de detecção, poderes do TI, retenção e backup já consolidados não são pendências de produto. O posicionamento do cliente sobre privacidade e Jurídico deve ser registrado como tal, sem presumir dispensa de obrigações legais aplicáveis.
