@@ -27,7 +27,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 | [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Proposta anterior dependente de Supabase; precisa ser reconciliada com processamento interno à infraestrutura FORD |
 | [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Storage deve permanecer sob controle da FORD; proposta anterior de Supabase Storage não é opção vigente |
 | [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Vercel/Supabase não são destinos-alvo; ambientes e promoção devem ser definidos na infraestrutura FORD |
-| [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Deve ser reconciliada com a FORD v2, os alinhamentos de requisitos e as obrigações legais aplicáveis |
+| [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Regras funcionais consolidadas na FORD v2; implementação, catálogo técnico e controles na infraestrutura FORD aguardam validação |
 
 ## Decisões e restrições vigentes
 
@@ -38,7 +38,7 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 5. A autenticação deve respeitar o provisionamento exclusivo pelo TI, os identificadores e credenciais definidos pela FORD, a recuperação pelo TI e a revogação imediata de sessões na desativação de conta (ADR-004).
 6. A ADR-006 permanece Accepted somente para o módulo e a migration legados que implementam autorização de perfis vinculados ao Supabase. Esse aceite não aprova o Supabase como provedor-alvo nem cobre os recursos de domínio do Polychat.
 7. Realtime, armazenamento de anexos e ambientes precisam ser redesenhados ou validados para execução dentro da fronteira de controle da FORD (ADRs 007 a 009).
-8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4. A ADR-010 precisa refletir essas decisões e o posicionamento informado pela FORD, sem afastar obrigações legais aplicáveis.
+8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4 e foram incorporados à ADR-010. Seu status permanece Proposed porque implantação, catálogo técnico, evidências de segurança e integração com infraestrutura FORD ainda precisam de revisão.
 
 ## Evidências verificadas no repositório
 
@@ -91,5 +91,6 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 - **17/11/2026** — conjunto inicial revisado contra a baseline então vigente e o conteúdo da `main`.
 - **19/11/2026** — ADR-002 e seu índice atualizados para registrar a recusa de React + Vite e alinhar a stack de frontend.
 - **19/11/2026** — baseline atualizada para POLY-REQ-001 v0.4 após a FORD v2; README e ADRs 001, 003, 004 e 005 revisados para refletir a restrição de infraestrutura sob controle da FORD. ADR-003 passou a Deprecated.
+- **19/11/2026** — ADR-008, ADR-009, ADR-010, modelo de dados, matriz #100, política de anexos, documentação de autorização e proposta APF reconciliados com a FORD v2 na branch `docs/ford-v2-governance-reconciliation`; os arquivos permanecem sujeitos à revisão por PR.
 
 **Regra de fechamento:** a Issue #89 só deve ser fechada depois de as ADRs aplicáveis serem revisadas e aprovadas pelos responsáveis, a arquitetura compatível com a FORD ser formalizada, a PR desta revisão ser aprovada e integrada e os checks passarem. A Epic #77 só deve ser fechada depois que #89 for concluída e seu checklist for atualizado.
