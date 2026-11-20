@@ -408,18 +408,21 @@ Os critérios originais da Issue #122 são preservados. Esta tabela especifica a
 | #117 — Limites, retenção e proteção antimalware | Trata arquivos anexados; não se confunde com detecção de conteúdo textual |
 | #100 e #101 — Matriz de autorização e RLS | Fundamentam o controle de acesso a recursos e dados |
 
-## 17. Condições para evolução deste documento
+## 17. Critérios para implementação e ativação
 
-A especificação registra as regras de produto já definidas e orienta a implementação. Antes de declarar a Issue #122 concluída, é necessário:
+A especificação funcional está alinhada à FORD v2. Antes de considerar a Issue #122 concluída ou ativar o mecanismo no ambiente de produção, devem existir evidências de que:
 
-- implementar e configurar a lista administrada pelo TI;
-- implementar a detecção determinística, sem análise contextual/IA e sem bloqueio automático;
-- implementar a fila TI, severidades/prazos e revisão/encerramento sem justificativa obrigatória;
-- integrar a auditoria e a retenção definidas na baseline v0.4;
-- executar testes positivos/negativos, validar falsos positivos e evidenciar o comportamento de falha;
-- obter revisão técnica/SQA e integrar a PR.
+- a lista inicial de termos, incluindo palavrões, foi configurada pelo TI e possui controle de versão/manutenção;
+- a implementação aplica regras determinísticas, sem análise contextual ou IA de terceiros;
+- os testes cobrem correspondências positivas, negativas, variações e falsos positivos, sem alterar o conteúdo original da mensagem;
+- a ocorrência registra a regra/motivo e os metadados necessários;
+- a fila TI apresenta severidade baixa/média/alta e os prazos de resposta definidos na RN-013;
+- TI consegue revisar e encerrar alertas sem justificativa obrigatória, com trilha de auditoria;
+- nenhuma mensagem é bloqueada ou punida automaticamente pela detecção;
+- falhas do detector são registradas e tratadas tecnicamente sem serem apresentadas como resultado limpo nem provocar bloqueio automático de mensagens;
+- o fluxo está integrado ao runtime real da stack oficial Supabase/Vercel e passa por revisão técnica/SQA.
 
-Não se exige nova decisão de produto sobre Q-007 a Q-010; as regras já foram respondidas/alinhadas pela FORD v2.
+Esses critérios são evidências de implementação e qualidade, não decisões de negócio ainda pendentes. Q-007 a Q-010 estão resolvidas no nível de requisito.
 
 ## 18. Histórico de versões
 
@@ -427,4 +430,4 @@ Não se exige nova decisão de produto sobre Q-007 a Q-010; as regras já foram 
 |---|---|---|
 | 0.1 | 19/11/2026 | Consolida requisitos existentes, propõe modelo de detecção e revisão, registra cenários de teste, dependências e decisões pendentes. Não representa política aprovada nem evidência de implementação. |
 | 0.2 | 19/11/2026 | Registra validação inicial do PO. Foi superada pela reconciliação com FORD v2 nesta versão 0.3. |
-| 0.3 | 19/11/2026 | Atualiza detecção por lista mantida pelo TI, palavrões, ausência de análise contextual/IA, fila TI, severidades/prazos, encerramento sem justificativa e estado real de implementação ainda não iniciada. |
+| 0.3 | 20/11/2026 | Reconcilia regras de detecção, lista TI, palavrões, ausência de análise contextual/IA, fila TI, severidades/prazos, encerramento sem justificativa e critérios de implementação com a FORD v2; registra que a implementação funcional ainda não começou. |
