@@ -47,3 +47,17 @@ O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões
 A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, sem terceiros acessando, armazenando ou processando dados da organização. A direção anterior Supabase + Vercel foi depreciada na ADR-003. Consulte a [baseline v0.4](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md) e a Q-025.
 
 As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica e registram que esses aceites não constituem autorização vigente para serviços externos processarem dados da FORD após a FORD v2.
+
+
+## Dados, autorização e estimativa
+
+- [Modelo lógico de dados — POLY-DATA-001](database/modelo-de-dados.md)
+- [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
+- [Contrato de autenticação e autorização Usuário/TI](authorization-user-ti.md)
+- [Política de anexos e antimalware — POLY-STO-001](storage/politica-anexos-e-antimalware.md)
+- [Proposta de dimensionamento e precificação por APF](proposta-precificacao-apf.md)
+
+## UX
+
+- [Jornada do Usuário mobile — Issue #91](ux/issue-91-jornada-mobile.md)
+- [Console TI desktop — Issue #92](ux/issue-92-console-ti-desktop.md)
