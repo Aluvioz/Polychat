@@ -25,7 +25,7 @@ Estabelecer isolamento de ambientes, gestão de segredos, promoção segura, evi
 
 ## Alternativas consideradas
 
-1. **Ambientes e pipeline sob controle da FORD:** solução-alvo compatível com isolamento, operação, deploy, monitoramento e recuperação dentro da infraestrutura da organização.
+1. **Ambientes oficiais Supabase + Vercel:** projetos/ambientes segregados, com gestão de acessos, variáveis e configurações sob governança da FORD.
 2. **Hospedagem ou pipeline SaaS externo para dados da FORD:** não permitido quando o serviço puder acessar, armazenar ou processar dados, artefatos com dados, segredos ou conteúdo operacional da organização.
 3. **Ambiente único compartilhado:** não atende ao requisito de isolamento entre desenvolvimento, homologação e produção.
 4. **CI de código sem acesso a dados corporativos:** pode ser utilizado para testes e validações de código, desde que não receba dados da FORD, segredos operacionais ou acesso capaz de processá-los.
@@ -53,7 +53,7 @@ Adotar ambientes separados de **desenvolvimento, homologação/Preview e produç
 ### CI, deploy e promoção
 
 - O CI pode executar testes, lint, verificação de tipos e build sobre código sem dados da FORD.
-- A etapa de deploy que tenha acesso a ambientes, segredos, artefatos sensíveis ou sistemas da FORD deve executar dentro da fronteira de controle da organização.
+- O deploy ocorre na Vercel, plataforma oficial. Segredos, permissões e escopos de ambiente devem ser administrados de forma controlada pela FORD; não adicionar pipelines ou serviços externos não aprovados.
 - Deploy de produção deve ocorrer por fluxo controlado após PR revisada, checks aplicáveis, homologação e Go/No-Go do gestor.
 - O lançamento do MVP é único após homologação, sem piloto, conforme RN-024.
 - Toda promoção deve registrar versão/commit, ambiente de origem e destino, responsável, data/hora, aprovação e resultado.
@@ -77,7 +77,7 @@ A direção Supabase/Vercel permanece oficial após o esclarecimento do PO. A co
 
 ## Justificativa
 
-Isolamento e promoção controlada reduzem o risco de contaminação entre estágios e erros de operação. Manter os serviços que tratam dados dentro da infraestrutura da FORD atende à restrição mais recente do cliente. Os encerramentos das issues #96 e #98 demonstram que os escopos operacionais anteriores receberam aceite técnico, mas não substituem a revisão da arquitetura após a atualização de requisitos.
+Isolamento e promoção controlada reduzem o risco de contaminação entre estágios e erros de operação. Manter Supabase e Vercel como plataformas oficiais, com projetos, permissões e configurações governados pela FORD, atende ao alinhamento tecnológico registrado na ADR-003. Os encerramentos das issues #96 e #98 demonstram que os escopos operacionais anteriores receberam aceite técnico, mas não substituem a revisão da arquitetura após a atualização de requisitos.
 
 ## Consequências
 
@@ -90,7 +90,7 @@ Isolamento e promoção controlada reduzem o risco de contaminação entre está
 **Negativas e cuidados:**
 - A FORD/equipe precisa operar a infraestrutura, pipeline de deploy, segredos, backups e recuperação.
 - A migração da configuração externa anterior exige planejamento e validação.
-- Evidências históricas de deploy e rollback precisam ser preservadas, mas a solução substituta também deverá ser testada.
+- As evidências de deploy e rollback das Issues #96 e #98 devem ser preservadas; alterações na configuração oficial também precisam de smoke tests e ensaios controlados.
 
 ## Riscos
 
@@ -113,7 +113,7 @@ As confirmações do Tech Lead são evidência de aceite operacional para as iss
 - Confirmar e documentar projetos Supabase, ambientes Vercel, regiões, acessos, variáveis e evidências de deploy/rollback por ambiente (Q-025).
 - Definir como Preview, homologação e produção serão isolados na infraestrutura-alvo.
 - Documentar a gestão de segredos e o acesso mínimo por ambiente, sem expor valores.
-- Revalidar smoke test, deploy e rollback na arquitetura substituta.
+- Revalidar smoke test, deploy e rollback no ambiente oficial Vercel/Supabase conforme as mudanças implementadas.
 - Registrar evidências e aprovadores de TI/Tech Lead e atualizar esta ADR após a decisão.
 
 Os requisitos de isolamento, proteção de credenciais, gestão de chaves, metas de disponibilidade, backup, RPO/RTO e operação já alinhados com Desenvolvimento são premissas consolidadas; não devem ser reabertos como pendências de produto.
