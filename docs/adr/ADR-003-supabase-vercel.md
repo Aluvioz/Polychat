@@ -1,75 +1,75 @@
-# ADR-003 — Direção tecnológica histórica: Supabase + Vercel
+# ADR-003 — Plataformas oficiais Supabase + Vercel
 
-- **Status:** Deprecated
+- **Status:** Accepted
 - **Data da decisão original:** 17/11/2026
-- **Data da revisão:** 19/11/2026
-- **Issue de origem:** #89 · **Referência original:** #88
-- **Substituição de requisito:** POLY-REQ-001 v0.4 / FORD v2
-- **Escopo:** registro histórico da direção tecnológica anteriormente aceita; não constitui arquitetura-alvo vigente.
+- **Data da confirmação/revisão:** 19/11/2026
+- **Issue de origem:** #89 · **Referência de produto:** #88
+- **Baseline:** POLY-REQ-001 v0.4 e alinhamento complementar do PO com Desenvolvimento
 
 ## Contexto
 
-A versão anterior desta ADR registrou Supabase + Vercel como direção de execução do MVP, com base na Issue #88. A decisão havia sido marcada como Accepted para aquela direção e não representava homologação de produção.
+A Issue #88 e as decisões anteriores do projeto registram Supabase + Vercel como direção tecnológica do MVP. A Issue #96 trata da configuração dos ambientes Supabase e Vercel; a Issue #98 trata de deploy Preview/Production e rollback pela Vercel. Ambas foram encerradas conforme seus critérios originais.
 
-Em 19/11/2026, a FORD v2 consolidou uma restrição incompatível com essa direção: hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização.
-
-A baseline POLY-REQ-001 v0.4 determina que as respostas e decisões atuais da FORD prevalecem sobre premissas tecnológicas anteriores incompatíveis. Portanto, o aceite histórico de Supabase + Vercel não pode ser utilizado como autorização para produção nem como decisão vigente de arquitetura.
-
-## Problema
-
-Registrar a retirada formal da direção anterior sem apagar seu histórico, sem confundir a presença de artefatos no repositório com aprovação do cliente e sem antecipar uma nova escolha de fornecedor ou plataforma antes da revisão de arquitetura.
+Na reconciliação documental de 19/11/2026, a direção foi indevidamente classificada como depreciada, sob uma interpretação de que a restrição de infraestrutura da FORD proibiria o uso dessas plataformas. O PO esclareceu que **Supabase e Vercel são oficiais do projeto e que essa escolha foi alinhada**. Esta ADR corrige aquela interpretação.
 
 ## Decisão
 
-**Retirar Supabase + Vercel como arquitetura-alvo do Polychat.** O status Accepted anterior fica depreciado a partir da revisão da FORD v2.
+**Manter Supabase + Vercel como plataformas oficiais e arquitetura-alvo do Polychat.**
 
-Consequências diretas:
+- **Vercel:** hospedagem e deploy da aplicação Next.js, incluindo os fluxos de Preview e Production e o processo de rollback.
+- **Supabase:** plataforma de backend do Polychat. Auth, PostgreSQL Database, Storage e Realtime são avaliados e especificados nas ADRs 004 a 008, conforme a responsabilidade de cada componente.
+- **Next.js:** permanece como framework da aplicação, conforme ADR-002.
 
-- **Vercel:** não deve ser considerada destino de hospedagem ou execução do Polychat com dados da FORD.
-- **Supabase Auth:** não deve ser adotado como provedor de identidade/sessões para dados e identidades da FORD.
-- **Supabase Database:** não deve ser utilizado como banco hospedado para dados da FORD.
-- **Supabase Storage:** não deve armazenar anexos ou outros dados da FORD.
-- **Supabase Realtime e serviços associados:** não devem processar conteúdo, metadados ou eventos da organização.
+A aprovação das plataformas não significa que todas as integrações, módulos, ambientes ou fluxos estejam implementados e homologados. Cada uso deve ter evidência técnica correspondente.
 
-A restrição não impede o uso do framework Next.js ou de bibliotecas de software que não acessem dados da FORD. A stack de frontend permanece conforme ADR-002, mas deverá ser executada em ambiente sob controle da FORD.
+## Compatibilização com os requisitos da FORD
 
-A arquitetura operacional substituta ainda não está selecionada nesta ADR. A proposta é manter os componentes de aplicação, identidade, persistência, arquivos, antimalware, auditoria, monitoramento, backups e operação dentro da infraestrutura controlada pela FORD, conforme avaliação e decisão a registrar na ADR-001 e nas ADRs específicas. A reconciliação técnica permanece identificada pela Q-025.
+O uso de Supabase e Vercel é uma decisão explícita do projeto, confirmada pelo PO após alinhamento com Desenvolvimento. A restrição contra fornecedores não aprovados deve ser interpretada como vedação à inclusão de outros serviços externos sem aprovação, e não como proibição das duas plataformas oficiais.
+
+A configuração dos serviços oficiais deve observar:
+- segregação entre desenvolvimento, homologação/preview e produção;
+- controle de acesso aos projetos, organizações e deployments;
+- proteção de credenciais e segredos, sem versioná-los no repositório;
+- escolha e validação das regiões de dados e execução aplicáveis;
+- proteção em trânsito e em repouso, políticas RLS e armazenamento privado;
+- backups, restauração, retenção e auditoria conforme os requisitos do produto;
+- ausência de integração com serviços não aprovados para análise de conteúdo, antimalware ou processamento de dados.
 
 ## Justificativa
 
-A decisão atual da FORD é requisito de produto e infraestrutura, não preferência técnica. Manter provedores externos que possam acessar, armazenar ou processar dados contrariaria diretamente essa restrição. O histórico da Issue #88 não se sobrepõe ao questionário atualizado.
+A decisão preserva a arquitetura e o trabalho já alinhados no projeto, mantém continuidade com as Issues #88, #96 e #98 e evita uma migração de plataforma que não foi solicitada nem aprovada. Os requisitos de segurança devem ser implementados por configuração, desenho de acesso e evidências verificáveis nos serviços oficiais.
 
 ## Consequências
 
 **Positivas:**
-- Alinha a direção de arquitetura ao requisito vigente da FORD.
-- Evita presumir autorização de uso de SaaS externo para dados corporativos.
-- Preserva Next.js como framework sem obrigar permanência do backend anterior.
-- Torna explícita a necessidade de selecionar e homologar infraestrutura compatível.
+- Stack de plataforma estável e coerente com a direção de desenvolvimento aprovada.
+- Continuidade das configurações e dos artefatos existentes.
+- Clareza sobre os serviços oficiais e a necessidade de evidências de integração.
 
-**Negativas e impactos:**
-- A integração Supabase anteriormente prevista não pode ser tratada como caminho de implementação.
-- As migrations, o middleware, as variáveis de ambiente e as ADRs que dependem de Supabase precisam ser reavaliados.
-- A hospedagem e operação deixam de ser presumidas como responsabilidade da Vercel; será necessário validar capacidade e responsabilidades operacionais na infraestrutura FORD.
-- A tecnologia substituta e seu plano de migração ainda não foram definidos.
+**Cuidados:**
+- A aprovação da plataforma não substitui auditoria de configuração, avaliação de região, RLS, backups ou homologação.
+- A equipe deve evitar serviços externos adicionais que processem dados sem aprovação explícita.
+- Integrações e fluxos que ainda estejam apenas simulados ou documentados continuam pendentes de implementação.
 
-## Evidências e limites atuais
+## Evidências atuais e limites
 
-- `README.md` anteriormente descrevia Vercel como destino de deploy e Supabase como backend planejado; foi atualizado para refletir a restrição FORD v2.
-- `.env.example` contém placeholders históricos de Supabase, não credenciais reais nem prova de integração.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` é uma migration versionada vinculada ao modelo anterior; sua existência não comprova aplicação hospedada ou autorização de uso futuro.
-- `src/auth/authorization.mjs` depende de cliente Supabase fornecido externamente e não configura, por si só, uma solução de identidade definitiva.
-- A baseline v0.4 estabelece a infraestrutura sob controle FORD como requisito confirmado.
+- Issue #88: registra a arquitetura Supabase + Vercel como direção de implementação.
+- Issue #96: registra a configuração de ambientes Supabase e Vercel; o relatório de auditoria documenta quais ambientes foram efetivamente identificados e os limites de acesso à configuração administrativa.
+- Issue #98: registra deploy Preview/Production e rollback pela Vercel; o runbook preserva os limites dos testes executados.
+- O repositório contém migration de perfis ligada ao Supabase e middleware de autorização que utiliza cliente Supabase.
+- Testes com Supabase simulado não comprovam integração real; build e Preview Ready não comprovam homologação funcional de produção.
 
-## Orientação de transição
+## Pendências de validação
 
-1. Não criar novas integrações ou ambientes produtivos Supabase/Vercel para o Polychat.
-2. Não inserir credenciais desses serviços nem dados reais da FORD em tais plataformas.
-3. Preservar os artefatos versionados como histórico até que uma revisão técnica determine sua adaptação, substituição ou remoção.
-4. Revisar as ADRs de autenticação, dados, autorização, realtime, storage e ambientes para remover dependências incompatíveis.
-5. Registrar a arquitetura operacional substituta após a validação de TI e Tech Lead, mantendo a rastreabilidade com Q-025.
+- Confirmar a matriz de projetos Supabase e ambientes Vercel (Development, Preview/Homologação e Production).
+- Confirmar regiões, domínios, deployments, variáveis e segredos por ambiente sem divulgar valores sensíveis.
+- Validar integração real do Auth, Database, Storage e Realtime conforme as ADRs específicas.
+- Executar testes de autorização/RLS, isolamento de ambientes, backup/restore, smoke test e rollback conforme o plano técnico.
+
+Essas validações são detalhamento técnico da stack aprovada; não são uma decisão pendente sobre substituir Supabase ou Vercel.
 
 ## Histórico da decisão
 
-- **17/11/2026:** direção Supabase + Vercel registrada como Accepted com base na Issue #88, sem equivaler a homologação de produção.
-- **19/11/2026:** direção depreciada após a FORD v2 estabelecer que nenhum terceiro pode acessar, armazenar ou processar dados da organização.
+- **17/11/2026:** Supabase + Vercel registrados como direção Accepted, com base na Issue #88.
+- **19/11/2026:** a revisão documental da FORD v2 marcou indevidamente as plataformas como Deprecated.
+- **19/11/2026:** o PO esclareceu que Supabase e Vercel são oficiais do projeto e que a escolha foi alinhada; esta revisão restaura o status Accepted e corrige as referências documentais.
