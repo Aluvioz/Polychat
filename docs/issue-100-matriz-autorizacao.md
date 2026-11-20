@@ -30,8 +30,8 @@ Três conceitos devem permanecer separados:
 | POLY-REQ-001 v0.4 | Fonte atual de regras, escopo, dispositivos, anexos, monitoramento, auditoria e retenção | Necessidade confirmada não significa implementação concluída |
 | RF-001 a RF-023 | Operações funcionais e critérios de aceitação | Devem ser implementados e testados no servidor |
 | RN-001 a RN-025 | Responsabilidades, restrições e regras de negócio | Não inferir poderes além dos explicitamente atribuídos |
-| ADR-003 | Registra a retirada de Supabase + Vercel como arquitetura-alvo | A presença de código legado não aprova uso futuro desses serviços |
-| ADR-006 | Registra o contrato legado de autenticação/perfil em `profiles` | O aceite limitado não cobre domínio nem define o mecanismo de identidade-alvo |
+| ADR-003 | Registra Supabase + Vercel como plataformas oficiais do Polychat | A aprovação das plataformas não comprova integração funcional nem homologação de cada ambiente |
+| ADR-006 | Registra o contrato de autenticação/perfil em `profiles` via Supabase | O aceite limitado não cobre políticas RLS de domínio nem integração completa às rotas |
 | ADR-004/005/008/009/010 | Restrições e propostas técnicas alinhadas à FORD v2 | Permanecem Proposed e dependem de validação/implementação técnica |
 | Modelo de dados | Entidades lógicas e relações candidatas | Não é schema físico aprovado |
 | Issue #101 | Implementação de RLS e testes de isolamento | Não declarar políticas de domínio prontas antes da implementação |
@@ -98,7 +98,7 @@ Três conceitos devem permanecer separados:
 6. **IDs não são autorização:** conhecer UUID, identificador ou URL não concede acesso.
 7. **Frontend não é enforcement:** ocultar botões ou telas não substitui validação server-side e políticas no banco.
 8. **Segredos:** credenciais, tokens e chaves permanecem fora do browser, bundle e logs.
-9. **Terceiros:** nenhum serviço de terceiro pode acessar, armazenar ou processar dados da FORD. Bibliotecas sem acesso a dados podem ser utilizadas.
+9. **Plataformas:** Supabase e Vercel são os serviços oficiais do projeto. A inclusão de outros serviços externos que acessem ou processem dados exige aprovação explícita.
 10. **Auditoria:** operações privilegiadas devem registrar operador, ação, recurso e momento, sem armazenar senha, token, chave ou conteúdo integral desnecessário.
 11. **Erros:** não revelar dados de conversas, mensagens, anexos ou perfis a atores sem autorização.
 12. **Igualdade de TI:** todos os administradores TI aplicam o mesmo conjunto de poderes; não criar hierarquia nem segunda aprovação.
@@ -107,8 +107,8 @@ Três conceitos devem permanecer separados:
 
 | Componente | Evidência existente | Limite |
 |---|---|---|
-| `src/auth/authorization.mjs` | Middleware Express-compatible que valida JWT via Supabase e consulta `profiles` | Artefato legado; não está conectado a handlers reais e depende da direção Supabase depreciada |
-| Migration `202611160001_profiles_roles_and_account_status.sql` | Cria `profiles` ligada a `auth.users`, RLS para perfil e proteção de role/status | Legado; não é arquitetura-alvo e não cobre domínio |
+| `src/auth/authorization.mjs` | Middleware Express-compatible que valida JWT via Supabase e consulta `profiles` | Implementação parcial na stack oficial; não está conectado a handlers reais |
+| Migration `202611160001_profiles_roles_and_account_status.sql` | Cria `profiles` ligada a `auth.users`, RLS para perfil e proteção de role/status | Artefato existente na stack oficial; cobre apenas perfis e não cobre domínio |
 | Testes `tests/authorization.test.mjs` | 11 testes unitários com Supabase simulado | Não comprovam integração real, RLS de domínio ou Storage |
 | RLS de domínio | Não comprovada no repositório | Conversas, memberships, mensagens, anexos, alertas e auditoria ainda exigem implementação/teste |
 | Autenticação da UI | Não comprovada como fluxo funcional completo | Necessita mecanismo sob controle FORD e integração Next.js |
@@ -152,7 +152,7 @@ A matriz **não está integralmente aprovada**: o registro da Issue #100 mantém
 ## 8. O que esta matriz não aprova
 
 - DDL, migration ou modelo físico de banco.
-- Tecnologia de identidade ou implantação ainda não homologada pela Q-025.
+- Configuração dos serviços oficiais e integração ainda precisam ser validadas pela Q-025.
 - Policies RLS de domínio que não foram implementadas e testadas.
 - Alteração de regra de negócio, incluindo papéis adicionais ou hierarquia de TI.
 - Justificativa obrigatória, segunda aprovação ou limitação da consulta de TI que não exista na baseline.
@@ -162,7 +162,7 @@ A matriz **não está integralmente aprovada**: o registro da Issue #100 mantém
 
 ## 9. Encaminhamento à Issue #101
 
-A Issue #101 deve implementar as regras desta matriz na arquitetura sob controle da FORD, após revisão do schema da #99 e alinhamento com Q-025. Deve incluir testes positivos e negativos para identidade, role, membership, conta ativa/inativa, consulta administrativa TI, grupos, mensagens, anexos e acesso por ID/link conhecido.
+A Issue #101 deve implementar as regras desta matriz na stack oficial Supabase + Vercel, após revisão do schema da #99 e validação técnica da Q-025. Deve incluir testes positivos e negativos para identidade, role, membership, conta ativa/inativa, consulta administrativa TI, grupos, mensagens, anexos e acesso por ID/link conhecido.
 
 A revisão independente SQA da matriz #100 deve permanecer rastreável e não pode ser substituída pelo parecer do PO.
 
