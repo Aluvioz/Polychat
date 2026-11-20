@@ -7,7 +7,7 @@
 
 ## Contexto
 
-A baseline prevê dois perfis: Usuário e TI. A camada de autorização versionada valida a identidade pelo Supabase Auth, carrega papel e estado da tabela `profiles`, bloqueia papéis desconhecidos e contas inativas e falha fechada quando não consegue validar. A migration habilita RLS em `profiles` e impede escrita direta de clientes sobre dados privilegiados.
+A baseline prevê dois perfis: Usuário e TI. A camada de autorização versionada valida a identidade pelo Supabase Auth, plataforma oficial, carrega papel e estado da tabela `profiles`, bloqueia papéis desconhecidos e contas inativas e falha fechada quando não consegue validar. A migration habilita RLS em `profiles` e impede escrita direta de clientes sobre dados privilegiados.
 
 ## Problema
 
