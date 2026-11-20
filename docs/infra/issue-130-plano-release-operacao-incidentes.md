@@ -184,13 +184,13 @@ A aprovação do PO deve responder se **a versão candidata entrega o escopo pro
 
 | Dimensão | Pergunta de aceite do PO | Evidência necessária | Regra de bloqueio |
 |---|---|---|---|
-| Público e rollout | Quem receberá acesso nesta versão? O escopo corresponde à população aprovada? | Lista/grupo de piloto ou critério de provisionamento, composição dos perfis e autorização do responsável da FORD. | Não liberar para público maior por inferência. O contexto do MVP é aproximadamente 25 pessoas do setor técnico; isso não autoriza automaticamente os cerca de 900 funcionários. A composição entre Usuário e TI deve estar confirmada. |
-| Adequação por perfil | O perfil Usuário funciona no contexto móvel e o perfil TI no contexto desktop previsto? | Jornadas e matriz de dispositivos/navegadores homologados por perfil. | Não anunciar suporte a dispositivo/navegador não homologado; resolver ou limitar explicitamente Q-012 antes do aceite. |
+| Público e lançamento único | Quem receberá acesso nesta versão? | Critério de provisionamento e matriz dos perfis/dispositivos: 25 usuários finais do setor técnico, além de cerca de 2–3 TI. | Não executar piloto de produto nem ampliar público por inferência; qualquer alteração exige nova decisão formal. |
+| Adequação por perfil | Os perfis respeitam os dispositivos definidos? | Usuário Android/iOS, Chrome/Safari móveis atuais; TI computador, Chrome/Edge/Firefox atuais; tablets não permitidos. | Executar homologação #129 e registrar versões testadas; Q-012 está resolvida. |
 | Jornadas essenciais | Cada fluxo declarado no escopo foi testado de ponta a ponta para o ator correto? | Rastreabilidade RF → CA → teste; evidências por perfil e por ambiente. | Fluxo crítico anunciado mas inoperante, com falha de autorização ou sem evidência confiável impede Go. |
 | Escopo funcional | Release notes correspondem ao que realmente está implementado? | Lista de funcionalidades incluídas, excluídas, parcialmente entregues e dependências. | Não apresentar mock, tela estática, integração parcial ou proposta documental como funcionalidade entregue. |
 | Qualidade percebida | Defeitos conhecidos afetam tarefa essencial, confiança ou integridade do trabalho? | Lista de defeitos com severidade, impacto ao usuário, workaround, responsável e prazo. | Defeito crítico/alto que comprometa segurança, dados ou jornada principal bloqueia; exceções exigem autoridade competente e aceite formal, nunca silêncio do PO. |
-| Informação ao usuário | A pessoa sabe como acessar, usar, reportar problema e compreender limitações? | Instruções, comunicação, release notes e canal oficial de suporte aprovados. | Não liberar piloto sem orientação mínima e caminho de suporte funcional. |
-| Resultado do piloto | Como será avaliado se a versão atende ao propósito e pode ser expandida? | Objetivos, indicadores, fonte, responsável, período de observação e critério de decisão aprovados. | Não ampliar público nem declarar sucesso sem análise e nova autorização. |
+| Informação ao usuário | A pessoa sabe como acessar, usar, reportar problema e compreender limitações? | Instruções, comunicação, release notes e canal de suporte em horário comercial. | Não realizar o lançamento único sem orientação mínima e caminho de suporte funcional. |
+| Resultado da primeira liberação | Como será avaliado se a versão atende ao propósito declarado? | Critérios de homologação funcional, aceite escrito, decisão Go/No-Go do gestor e evidências por perfil. | Lançamento único após homologação; não criar piloto ou rollout incremental. |
 
 **Referência de escopo do MVP:** 25 usuários finais do setor técnico, além de aproximadamente 2–3 administradores TI; Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos. Q-001 e Q-012 estão resolvidas.
 
@@ -227,7 +227,7 @@ Somente executar casos correspondentes a funcionalidades efetivamente implementa
 | SMK-13 | Verificar health/observabilidade após deploy. | Métricas e logs mostram serviço operante; sem erro crítico novo. | Painel, intervalo observado e versão. |
 | SMK-14 | Verificar suporte e escalonamento. | Responsável de suporte identificado e canal funcional. | Confirmação do canal de teste. |
 | SMK-15 | Confirmar versão publicada. | Versão/commit publicado coincide com o aprovado. | URL, commit, horário e registro de deployment. |
-| SMK-16 | Confirmar acesso restrito ao público piloto e aos perfis/dispositivos homologados. | Somente contas autorizadas do piloto acessam o produto no contexto aprovado; não há ampliação automática. | Critério do piloto, contas sintéticas por perfil e resultado de acesso permitido/negado. |
+| SMK-16 | Confirmar acesso restrito ao público definido para o lançamento único e aos perfis/dispositivos aprovados. | Somente 25 contas de usuários finais e as contas TI provisionadas são autorizadas; perfis e dispositivos obedecem à matriz FORD. | Critério de provisionamento, contas sintéticas por perfil e resultado permitido/negado. |
 
 ### 6.3 Registro de execução
 
@@ -301,16 +301,16 @@ O backup do banco de dados não deve ser presumido como backup dos objetos de st
 
 ### 8.2 Matriz de definição operacional
 
-Os valores abaixo devem ser preenchidos e aprovados por TI/Operação, Tech Lead e responsáveis de negócio. Este documento deliberadamente não inventa frequências ou prazos.
+Os requisitos operacionais da FORD v2 são fixos; a tabela distingue esses parâmetros das evidências/procedimentos técnicos que ainda precisam ser implementados e ensaiados.
 
 | Item | Definição necessária | Responsável pela definição | Estado |
 |---|---|---|---|
-| Escopo de dados | Recursos de banco, storage, logs e configurações cobertos. | TI + Tech Lead | Pendente |
+| Escopo de dados | Banco, anexos, alertas, auditoria e configurações necessárias à recuperação. | TI + Tech Lead | Requisito definido; inventário técnico/evidência pendente |
 | Frequência | Backups diários de banco de dados e anexos. | TI/Operação | Requisito definido; execução/evidência pendente |
 | Retenção | Backups retidos por 12 meses; dados excluídos expiram das cópias ao fim do ciclo. | TI/Operação | Requisito definido; implementação/evidência pendente |
-| Criptografia | Proteção em trânsito e em repouso, chaves e rotação. | Segurança + TI | Pendente |
-| Localização | Região, jurisdição e fornecedor da cópia. | TI + Segurança + Jurídico | Pendente |
-| Acesso | Operadores autorizados, autenticação e trilha de auditoria. | TI + Segurança | Pendente |
+| Criptografia | Criptografia em trânsito e em repouso; gestão de chaves sob controle do servidor e TI da FORD. | TI + Tech Lead | Requisito definido; implementação/evidência pendente |
+| Localização | Configurar e documentar regiões dos projetos oficiais, preferencialmente Brasil. | TI + Tech Lead | Diretriz definida; detalhe dos projetos/configurações conforme Q-025 |
+| Acesso | Somente operadores TI autorizados; autenticação e trilha de auditoria. | TI + Desenvolvimento | Requisito definido; implementação/evidência pendente |
 | RPO | Até 24 horas em desastre/falha de infraestrutura; não se aplica à reconexão normal de mensagens confirmadas. | TI/Operação | Requisito definido; teste/evidência pendente |
 | RTO | Até 24 horas. | TI/Operação | Requisito definido; teste/evidência pendente |
 | Integridade | Verificação de consistência e detecção de cópia incompleta. | TI + Desenvolvimento | Pendente |
@@ -566,19 +566,19 @@ Solicitações envolvendo conteúdo de conversa, anexos, dados pessoais ou acess
 
 ### 13.2 Matriz de responsabilidades
 
-A matriz abaixo é uma proposta de divisão operacional. As pessoas, equipes, substitutos e autoridade final precisam ser formalmente confirmados.
+A matriz abaixo reflete as funções do projeto e a governança informada pela FORD: TI é responsável operacional por segurança; não há equipe separada de Segurança da Informação nem Jurídico como frente de trabalho do projeto.
 
-| Atividade | PO | Tech Lead | Desenvolvimento | SQA | TI/Operação | Segurança | FORD/Negócio / Jurídico |
-|---|---|---|---|---|---|---|---|
-| Definir escopo e prioridade da release | Responsável | Consultado | Consultado | Consultado | Consultado | Consultado | Aprova conforme governança |
-| Revisar arquitetura e risco técnico | Consultado | Responsável | Participa | Consultado | Participa | Participa | — |
-| Implementar e corrigir | Acompanha | Orienta | Responsável | Verifica | Apoia | Apoia | — |
-| Executar testes e homologação | Aceite de produto | Apoia | Corrige | Responsável | Apoia | Avalia segurança | Aceite institucional conforme fluxo |
-| Operar deployment | Acompanha | Responsável técnico | Apoia | Valida | Responsável operacional | Consultado | Autoriza conforme política |
-| Backup/restauração | Acompanha risco/impacto | Apoia | Apoia | Verifica evidência | Responsável | Avalia proteção | Define objetivos e aceita risco de negócio |
-| Resposta a incidente de segurança | Comunicação de produto | Apoia tecnicamente | Corrige | Retesta | Contém/recupera conforme papel | Coordena segurança | Jurídico/Privacidade e negócio decidem comunicações aplicáveis |
-| Suporte aos usuários | Acompanha impacto | Escala falhas técnicas | Corrige | Classifica defeitos | Responsável pelo canal operacional | Atua quando incidente de segurança | FORD define comunicação institucional |
-| Decisão Go/No-Go | Recomenda/aceita produto | Aprova viabilidade técnica | Informa estado | Aprova evidência de qualidade | Aprova prontidão operacional | Aprova aspectos de segurança | Autoridade final conforme governança a formalizar |
+| Atividade | PO | Tech Lead | Desenvolvimento | SQA | TI (operação e segurança) | FORD / gestor |
+|---|---|---|---|---|---|---|
+| Definir escopo e prioridade da release | Responsável | Consultado | Consultado | Consultado | Consultado | Aprova conforme governança |
+| Revisar arquitetura e risco técnico | Consultado | Responsável | Participa | Consultado | Participa | — |
+| Implementar e corrigir | Acompanha | Orienta | Responsável | Verifica | Apoia | — |
+| Executar testes e homologação | Aceite de produto | Apoia | Corrige | Responsável | Apoia | Aceite funcional/Go-No-Go conforme governança FORD |
+| Operar deployment | Acompanha | Responsável técnico | Apoia | Valida | Responsável operacional | Autoriza conforme governança FORD |
+| Backup/restauração | Acompanha risco/impacto | Apoia | Apoia | Verifica evidência | Responsável | Aceita conforme governança FORD |
+| Resposta a incidente de segurança | Comunicação de produto | Apoia tecnicamente | Corrige | Retesta | Coordena operação, contenção e recuperação | FORD trata comunicação institucional/legal aplicável |
+| Suporte aos usuários | Acompanha impacto | Escala falhas técnicas | Corrige | Classifica defeitos | Responsável pelo canal operacional e escalonamento | FORD define comunicação institucional |
+| Decisão Go/No-Go | Recomenda/aceita produto | Aprova viabilidade técnica | Informa estado | Aprova evidência de qualidade | Aprova prontidão operacional e segurança operacional | Gestor autoriza Go/No-Go |
 
 Um mesmo indivíduo pode acumular funções em equipe pequena, mas não deve aprovar sozinho uma alteração que ele próprio implementou quando a governança exige revisão independente.
 
@@ -704,12 +704,12 @@ Aprovação de encerramento:
 |---|---|---|---|
 | OPS-01 | Autoridade final e participantes obrigatórios do Go/No-Go. | FORD + PO + Tech Lead | Aprovação da release |
 | OPS-02 | Janelas de publicação, manutenção e período de acompanhamento. | FORD + TI/Operação | Agendamento da release |
-| OPS-03 | Ambientes, responsáveis, acessos e variáveis por estágio. | TI + Segurança | Publicação segura |
+| OPS-03 | Ambientes, responsáveis, acessos e variáveis por estágio. | TI + Tech Lead | Publicação segura |
 | OPS-04 | Evidenciar backups diários de banco/anexos, retenção de 12 meses e região/configuração dos backups. | TI/Operação | Continuidade; requisito definido, evidência pendente |
 | OPS-05 | Medir e comprovar 99% disponibilidade, RPO 24h em desastre e RTO 24h. | TI/Operação | Aceite operacional; metas já definidas |
 | OPS-06 | Procedimento e periodicidade de teste de restauração. | TI + Tech Lead + SQA | Produção |
 | OPS-07 | Procedimento de rollback para app, migrations, banco e storage. | Tech Lead + TI | Produção |
-| OPS-08 | Ferramentas, métricas, limiares e destinatários de alertas. | TI/Operação + Segurança | Monitoramento |
+| OPS-08 | Ferramentas, métricas, limiares e destinatários de alertas. | TI/Operação | Monitoramento |
 | OPS-09 | Fluxo/canais e escalonamento de incidentes operacionais. Não confundir com alertas de conteúdo suspeito: severidades/prazos desses alertas já estão definidos em RN-013. | TI/Operação | Operação e suporte; alertas de conteúdo já especificados |
 | OPS-10 | Contatos primários, substitutos e cobertura de suporte. | TI + FORD | Operação |
 | OPS-11 | Contatos, comunicação e encaminhamento de incidentes conforme governança interna da FORD. A FORD trata solicitações legais; Jurídico não é frente de trabalho do projeto, sem afastar obrigações legais aplicáveis. | FORD + TI | Incidentes com impacto institucional |
