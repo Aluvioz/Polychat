@@ -220,7 +220,7 @@ A descrição completa está em [05 — Regras de negócio e restrições](05-re
 
 ## 5. Arquitetura e implementação observadas
 
-### 5.1 Restrição de infraestrutura atual
+### 5.1 Plataformas oficiais e governança de infraestrutura
 
 O alinhamento complementar do PO com Desenvolvimento confirma **Supabase e Vercel como plataformas oficiais do Polychat**. Vercel é a plataforma de hospedagem/deploy; Supabase é a plataforma de backend, com os serviços específicos detalhados nas ADRs 004 a 008. Esta decisão corrige a interpretação documental anterior que tratou a stack como depreciada.
 
@@ -237,7 +237,7 @@ A decisão de arquitetura deve separar:
 - Monitoramento, auditoria, backup e recuperação.
 - Ambientes de desenvolvimento, homologação e produção.
 
-A solução final deve manter dados e processamento dentro da fronteira de controle da FORD. A reconciliação será registrada em ADR e na issue técnica pertinente; não é resolvida apenas por esta baseline.
+Supabase e Vercel são as plataformas oficiais; a FORD mantém governança sobre contas, projetos, acessos, configurações e uso dos dados. A decisão está registrada na ADR-003. Não incluir outros serviços de terceiros sem aprovação explícita. Q-025 registra as validações técnicas ainda necessárias, sem reabrir a escolha das plataformas.
 
 ### 5.2 Fotografia técnica do repositório
 
@@ -263,7 +263,7 @@ Snapshot documental consultado na branch main em 19/11/2026:
 - O middleware isolado e os testes simulados não comprovam autorização integrada às rotas reais do produto.
 - A RLS existente cobre profiles; não comprova isolamento de conversas, memberships, mensagens, anexos ou auditoria.
 - Build, lint e testes unitários não comprovam fluxos funcionais, homologação de infraestrutura ou atendimento às metas operacionais.
-- A aplicação não deve ser considerada pronta para produção até que a arquitetura compatível com a FORD esteja formalizada, implementada e homologada.
+- A aplicação não deve ser considerada pronta para produção até que as integrações Supabase/Vercel, controles de autorização, segregação de ambientes e critérios de homologação estejam implementados e aprovados.
 
 ## 6. Autorização e comportamento de erro
 
@@ -277,7 +277,7 @@ O contrato existente no módulo isolado de autorização e coberto por testes si
 - Identidade, papel e estado são obtidos de fonte confiável no servidor, não de body/query fornecidos pelo cliente.
 - Respostas não devem revelar stack trace, tokens, chaves ou mensagens internas do banco.
 
-**Limitação:** esses comportamentos foram observados em módulo isolado e testes com serviço simulado. Ainda não comprovam integração com o runtime definitivo escolhido para a infraestrutura FORD.
+**Limitação:** esses comportamentos foram observados em módulo isolado e testes com serviço simulado. Ainda não comprovam integração com o runtime Next.js e os serviços Supabase/Vercel efetivamente configurados.
 
 ## 7. Testes e evidências
 
@@ -291,7 +291,7 @@ Comandos locais disponíveis no projeto:
 
 O workflow GitHub Actions executa essas etapas. A execução consultada para a main em 17/11/2026 concluiu com sucesso: [GitHub Actions run #44115773963](https://github.com/Aluvioz/Polychat/actions/runs/44115773963).
 
-Essas evidências não comprovam integração com infraestrutura FORD, aplicação de migrations em ambiente homologado, RLS de domínio, autenticação pela interface, mensageria realtime, storage, antimalware, auditoria funcional ou homologação dos critérios completos.
+Essas evidências não comprovam integração real com Supabase/Vercel, aplicação de migrations nos ambientes oficiais, RLS de domínio, autenticação pela interface, mensageria realtime, storage, antimalware, auditoria funcional ou homologação dos critérios completos.
 
 ## 8. Questões e decisões restantes
 
