@@ -64,7 +64,7 @@ Backup, restore, RPO, RTO, compatibilidade de migrations e plano de recuperaçã
 
 ## 6. Registro do ensaio
 
-Preencher somente após execução real:
+A execução foi confirmada pelo Tech Lead no comentário de encerramento da Issue #98. Os campos abaixo devem ser preenchidos/associados às evidências operacionais originais quando recuperadas; não se inventam identificadores que não constam do aceite:
 
 | Campo | Registro |
 |---|---|
@@ -78,4 +78,15 @@ Preencher somente após execução real:
 | Evidência/logs | Pendente |
 | Responsável pela execução | Pendente |
 
-**Estado atual:** procedimento documentado para revisão; smoke test hospedado e rollback real não foram executados. Não marcar como ensaiado até anexar evidência de execução.
+**Estado atual:** a Issue #98 foi encerrada como Completed após atestação do Tech Lead de que o deployment hospedado, smoke tests e ensaio de rollback foram executados. Este runbook não contém todos os metadados da execução; manter os artefatos originais acessíveis e associá-los a este registro quando disponíveis. Não apresentar os campos sem detalhe como evidência independente.
+
+
+## 7. Aditivo — aceite da Issue #98 e limite de uso após a FORD v2
+
+Em 19/11/2026, o Tech Lead confirmou na [Issue #98](https://github.com/Aluvioz/Polychat/issues/98#issuecomment-7013655363) a execução da validação do deployment hospedado, smoke tests e ensaio de rollback, além das verificações de produção/domínio/HTTPS e revisão dos fluxos relacionados. A issue foi encerrada como Completed.
+
+O comentário de aceite ressalva que as evidências de deployment, smoke tests hospedados, ensaio de rollback e configuração de produção devem permanecer acessíveis e atualizadas. Este runbook preserva o procedimento e registra a atestação, mas não substitui os logs, identificadores de deployment, commits, horários ou relatórios originais. Não foram inventados valores para os campos ausentes.
+
+A FORD v2 exige que infraestrutura e processamento de dados permaneçam sob controle da própria FORD e proíbe terceiros de acessar, armazenar ou processar dados da organização. A Vercel/Supabase do escopo original deve ser tratada como ambiente histórico de execução; este runbook não autoriza novos deployments que processem dados reais da FORD nesses serviços. A estratégia de deploy/rollback para a arquitetura-alvo deve ser definida na ADR-009 após a resolução da Q-025.
+
+O encerramento da Issue #98 permanece válido para o escopo operacional atestado e não implica aceite da ADR-009, homologação completa do produto ou autorização geral de produção.
