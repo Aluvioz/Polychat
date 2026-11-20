@@ -68,13 +68,13 @@ Armazenamento privado e autorização por requisição preservam o vínculo entr
 ## Consequências
 
 **Positivas:**
-- Conformidade da direção de arquitetura com a fronteira de infraestrutura definida pela FORD.
+- Consistência com a stack oficial Supabase/Vercel e com a governança de dados, acesso e configuração definida pela FORD.
 - Controle de acesso por conversa e revogação após remoção de participante.
 - Análise antimalware sem exposição a serviços externos.
 - Regras de limite, retenção e operação coerentes com a baseline v0.4.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisa operar e monitorar storage, scanner, capacidade, disponibilidade e backups.
+- A FORD/equipe precisa administrar permissões, quotas, liberação, retenção e evidências; Desenvolvimento precisa integrar e monitorar o scanner e o fluxo de upload/download conforme os recursos e limites do Supabase Storage.
 - A implementação demanda fluxo de quarentena, liberação administrativa, autorização por download e revogação efetiva.
 - Testes devem cobrir falhas do scanner, acesso indevido, remoção de participante, restauração e descarte.
 
