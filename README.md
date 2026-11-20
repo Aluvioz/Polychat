@@ -4,15 +4,15 @@ Aplicação web de comunicação interna em desenvolvimento para a FORD.
 
 **Baseline de produto:** POLY-REQ-001 v0.4, baseada no questionário FORD v2 e nos alinhamentos consolidados em 19/11/2026.
 
-> **Restrição obrigatória de infraestrutura:** hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Não configure provedores externos como destino de produção do Polychat.
+> **Plataformas oficiais do projeto:** Supabase (serviços de backend) e Vercel (hospedagem e deploy). O uso dessas plataformas foi alinhado e integra a arquitetura oficial do Polychat. A configuração deve respeitar os requisitos da FORD, a segregação de ambientes, a proteção de dados e os controles de acesso; outros provedores/serviços externos não estão automaticamente autorizados.
 
 ## Estado atual
 
 O repositório contém a fundação do frontend em Next.js 16, React 19, TypeScript e App Router. A interface atual é uma página institucional. Os fluxos de autenticação, conversas, grupos, mensagens, anexos, alertas e administração ainda não estão implementados de ponta a ponta.
 
-A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript. Isso não aprova, por si só, qualquer serviço externo de hospedagem, identidade, banco de dados ou armazenamento.
+A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript, com Vercel como plataforma oficial de hospedagem/deploy e Supabase como plataforma oficial de backend. O uso de cada produto/serviço Supabase é detalhado nas ADRs específicas.
 
-A direção anterior Supabase + Vercel foi retirada como arquitetura-alvo após a FORD v2; consulte ADR-003. A escolha e homologação da arquitetura operacional compatível com a infraestrutura FORD permanecem em reconciliação técnica (Q-025).
+Supabase + Vercel permanecem como direção tecnológica oficial, conforme ADR-003 e alinhamento complementar do PO com Desenvolvimento. A Q-025 não trata de substituir essas plataformas: permanece limitada à confirmação de configurações técnicas por ambiente, regiões, acessos, segredos e evidências de integração/homologação.
 
 ## Requisitos de desenvolvimento
 
@@ -51,13 +51,14 @@ O GitHub Actions executa testes automatizados, lint, verificação de tipos e bu
 ## Diretrizes de arquitetura e segurança
 
 - O frontend não é uma fronteira de segurança: autenticação, autorização e operações privilegiadas devem ser validadas no servidor.
-- Serviços de identidade, banco de dados, armazenamento, antimalware, auditoria, monitoramento, backup e recuperação devem operar dentro da fronteira de controle da FORD.
+- Supabase e Vercel são os provedores oficiais aprovados para o projeto; as responsabilidades de identidade, dados, armazenamento e hospedagem são detalhadas nas ADRs.
+- Não integrar outros serviços externos que acessem ou processem dados da FORD sem aprovação explícita do projeto e validação aplicável.
 - Bibliotecas e atualizações que não acessem dados da FORD podem ser utilizadas, respeitadas as políticas aplicáveis.
 - Dados em trânsito e em repouso devem ser protegidos conforme os requisitos consolidados; a solução não deve ser apresentada como criptografia ponta a ponta (E2EE).
 - Ambientes de desenvolvimento, homologação e produção devem permanecer isolados.
 - Não trate migrations, variáveis de exemplo, testes unitários ou builds como evidência de integração ou homologação de produção.
 
-Os arquivos de exemplo e referências históricas a Supabase/Vercel não representam autorização para conectar ou usar esses serviços com dados da FORD. A arquitetura final deverá ser formalizada nas ADRs após a compatibilização com a infraestrutura da organização.
+Supabase e Vercel não são referências apenas históricas: são plataformas oficiais do Polychat. Os arquivos de exemplo e testes simulados, contudo, não comprovam por si só integração funcional, configuração de produção, segregação de ambientes ou homologação. Consulte as ADRs e a documentação das Issues #96 e #98.
 
 ## Documentação do produto
 
