@@ -3,7 +3,7 @@
 **Baseline:** POLY-REQ-001 v0.4 (FORD v2)  
 **ADRs relacionadas:** [ADR-004 — Autenticação e sessões](adr/ADR-004-autenticacao-sessoes.md), [ADR-006 — Autorização server-side e RLS](adr/ADR-006-autorizacao-rls.md), [ADR-003 — Plataformas oficiais Supabase + Vercel](adr/ADR-003-supabase-vercel.md)  
 **Issues relacionadas:** #100, #101 e #105  
-**Status:** contrato funcional atualizado; implementação da arquitetura-alvo e revisão técnica ainda necessárias.
+**Status:** contrato funcional documentado; implementação real da autenticação/autorização ainda não começou.
 
 ## 1. Perfis e identidades
 
@@ -75,17 +75,17 @@ O contrato de resposta abaixo preserva o comportamento já exercitado no módulo
 
 Respostas não devem expor stack traces, tokens, chaves, detalhes internos do banco ou existência de conteúdo que o solicitante não está autorizado a acessar.
 
-## 6. Evidência de implementação existente e limite
+## 6. Artefatos de scaffold existentes — não são implementação funcional
 
 O repositório contém:
 
-- `src/auth/authorization.mjs`, módulo Express-compatible que valida token por `supabase.auth.getUser(token)` e consulta `profiles`;
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`, migration de perfil ligada a `auth.users`;
-- `tests/authorization.test.mjs`, com 11 testes unitários usando Supabase simulado.
+- `src/auth/authorization.mjs`: exemplo isolado de middleware Express-compatible que recebe um cliente Supabase por parâmetro;
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration de scaffold para `profiles`, vinculada a `auth.users`;
+- `tests/authorization.test.mjs`: 11 testes unitários do módulo isolado, usando Supabase simulado.
 
-Esses artefatos representam a fundação parcial da implementação Supabase. Não comprovam integração funcional com as rotas Next.js, autenticação completa na interface, aplicação de migration em todos os ambientes nem RLS de conversas, participantes, mensagens, anexos ou auditoria.
+**A implementação funcional do Polychat ainda não começou.** Esses artefatos não estão integrados às rotas/pages do Next.js, não comprovam cliente Supabase funcional, login na interface, provisionamento, sessão, autorização de domínio, aplicação da migration nos ambientes oficiais ou RLS de conversas, participantes, mensagens, anexos e auditoria.
 
-Supabase e Vercel são as plataformas oficiais do Polychat. O módulo e a migration existentes devem ser integrados e evoluídos para cobrir os fluxos reais; não devem ser tratados como implementação completa apenas por já existirem no repositório.
+Supabase e Vercel são as plataformas oficiais do Polychat. O desenvolvimento funcional deverá começar integrando e evoluindo esses artefatos de scaffold para cobrir os fluxos reais; sua presença no repositório não significa que a implementação já tenha começado.
 
 ## 7. Dispositivos
 
@@ -95,7 +95,7 @@ Supabase e Vercel são as plataformas oficiais do Polychat. O módulo e a migrat
 
 A restrição define compatibilidade de uso e experiência. User-agent, viewport ou emulação não são prova confiável de identidade ou role e não substituem a autorização.
 
-## 8. Pendências técnicas remanescentes
+## 8. Trabalho técnico necessário quando a implementação começar
 
 - Concluir a integração do Supabase Auth às rotas reais do Next.js e registrar evidências que ainda não estejam cobertas pelos aceites operacionais das Issues #96/#98 (Q-025/ADR-004).
 - Completar e testar o adaptador Supabase já previsto, incluindo sessão, recuperação de senha e revogação.
