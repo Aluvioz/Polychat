@@ -5,7 +5,7 @@
 - **Status:** Modelo lógico conceitual com escopo funcional validado pelo PO; schema físico, DDL e migrations não aprovados
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados (**Proposed**)
-- **Stack definida para o projeto:** Supabase + Vercel, conforme orientação recebida em aula; PostgreSQL é utilizado via Supabase, enquanto Vercel atende à hospedagem/deploy da aplicação
+- **Stack tecnológica adotada pelo projeto:** Supabase + Vercel; PostgreSQL é utilizado via Supabase, enquanto Vercel atende à hospedagem e ao deploy da aplicação
 
 > **Importante:** este documento registra o modelo lógico conceitual do Polychat e as decisões funcionais validadas pelo PO para a baseline v0.5. Distingue regras confirmadas, evidências legadas e propostas técnicas. Não representa aprovação do schema físico, não aprova tecnologia de autenticação/armazenamento nem autoriza, por si só, a criação ou aplicação de migrations.
 
@@ -491,7 +491,7 @@ Esta aprovação é exclusivamente de produto/negócio e não aprova:
 - desenho físico e operacional detalhado de Supabase Auth, PostgreSQL/RLS, Supabase Storage, Realtime, integração server-side e deploy na Vercel;
 - criação/aplicação de migrations ou homologação em ambiente da FORD.
 
-A stack do projeto é Supabase + Vercel, conforme orientação recebida em aula. A ADR-005 continua com status Proposed e deve ser alinhada a essa direção técnica pelos responsáveis; a Q-025 permanece para tratar a compatibilidade com as restrições registradas pela FORD. A migration Supabase existente é o scaffold inicial da solução, não um artefato a ser descartado.
+A stack tecnológica adotada pelo projeto é Supabase + Vercel. A ADR-005 continua com status Proposed e deve ser alinhada a essa direção técnica pelos responsáveis; a Q-025 permanece para tratar a compatibilidade com as restrições registradas pela FORD. A migration Supabase existente é o scaffold inicial da solução, não um artefato a ser descartado.
 
 **Conclusão do PO:** o escopo funcional conceitual do modelo está validado para a baseline v0.5 e as lacunas de produto listadas na seção 11 estão decididas. A Issue #99 continua aberta; este parecer não declara schema físico, migrations ou implementação concluídos.
 
