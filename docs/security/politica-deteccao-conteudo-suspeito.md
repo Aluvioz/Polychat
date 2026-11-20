@@ -390,7 +390,7 @@ Os critérios originais da Issue #122 são preservados. Esta tabela especifica a
 
 | Critério original | Evidência esperada | Situação na versão 0.3 |
 |---|---|---|
-| Mensagens sinalizadas com contexto mínimo; falsos positivos revisáveis | Registro com regra/versão e contexto mínimo aprovado; fluxo de revisão e classificação de falsos positivos | Parcial: modelo e cenários documentados; política e fluxo precisam de aprovação |
+| Mensagens sinalizadas com contexto mínimo; falsos positivos revisáveis | Registro com regra/versão e contexto mínimo; fluxo de revisão pelo TI e classificação de falsos positivos | Requisitos definidos; implementação e testes ainda não começaram |
 | Testes relevantes automatizados ou evidência documentada | Execução dos cenários DET-01 a DET-14 com conjunto de teste aprovado | Pendente: cenários propostos; não há evidência de execução |
 | Revisão por PR concluída | Revisão técnica, funcional e SQA, com participação de TI como responsável operacional por segurança | Pendente |
 | Sem regressão nos fluxos relacionados | CI e testes dos fluxos de envio, alertas, autorização e auditoria aplicáveis | Pendente |
@@ -410,18 +410,16 @@ Os critérios originais da Issue #122 são preservados. Esta tabela especifica a
 
 ## 17. Condições para evolução deste documento
 
-A versão 0.1 pode orientar refinamento, discussão e preparação dos testes. Ela não autoriza:
+A especificação registra as regras de produto já definidas e orienta a implementação. Antes de declarar a Issue #122 concluída, é necessário:
 
-- ativar monitoramento em produção antes das aprovações necessárias;
-- inventar ou ativar uma lista de termos não aprovada;
-- aplicar limiares ou severidades sem definição;
-- bloquear mensagens, punir usuários ou desativar contas automaticamente;
-- disponibilizar conteúdo de conversa a partir de um alerta sem autorização própria;
-- enviar mensagens a serviços externos ou modelos de IA sem avaliação e aprovação;
-- manter conteúdo ou ocorrências por prazo indefinido;
-- declarar a Issue #122 concluída.
+- implementar e configurar a lista administrada pelo TI;
+- implementar a detecção determinística, sem análise contextual/IA e sem bloqueio automático;
+- implementar a fila TI, severidades/prazos e revisão/encerramento sem justificativa obrigatória;
+- integrar a auditoria e a retenção definidas na baseline v0.4;
+- executar testes positivos/negativos, validar falsos positivos e evidenciar o comportamento de falha;
+- obter revisão técnica/SQA e integrar a PR.
 
-A versão 0.2 deverá incorporar decisões formalmente aprovadas para D-122-01 a D-122-12, incluindo a lista de regras e exemplos positivos/negativos. Uma versão posterior deverá incorporar evidências de implementação, resultados de teste, revisão de falsos positivos e homologação.
+Não se exige nova decisão de produto sobre Q-007 a Q-010; as regras já foram respondidas/alinhadas pela FORD v2.
 
 ## 18. Histórico de versões
 
