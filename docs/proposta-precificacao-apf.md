@@ -17,7 +17,7 @@
 - As seções numéricas derivadas de 18/11/2026 são referência histórica, não uma oferta comercial vigente.
 - A baseline v0.4 altera funções, dados, regras e arquitetura: RF-019 a RF-023; permissões administrativas; leitura; exportação; auditoria ampliada; limites de anexos; monitoramento e retenção; infraestrutura sob controle FORD.
 - Supabase Auth permanece na stack oficial; a fronteira lógica para fins de APF deve ser analisada sem presumir automaticamente classificação como AIE. Preços/planos dos serviços Supabase e Vercel devem ser revalidados na estimativa comercial atual.
-- A decisão de arquitetura técnica permanece em Q-025. A nova contagem dependerá do modelo lógico POLY-DATA-001 v0.3, matriz #100 atualizada, ADRs e fluxos UX #91/#92 aceitos.
+- A escolha da stack está definida pela ADR-003 Accepted. Q-025 permanece para consolidação de evidências técnicas específicas ainda ausentes, sem reabrir a seleção de plataformas. A nova contagem dependerá do modelo lógico POLY-DATA-001 v0.3, matriz #100 atualizada, ADRs e fluxos UX #91/#92 aceitos.
 - A referência FORD de R$ 450.000,00 não é teto aprovado. Inclui implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
 
 ## 1. Identificação e sumário executivo
@@ -138,12 +138,12 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | RNF-007 | Desempenho | Metas de desempenho alinhadas com Desenvolvimento; verificar parâmetros no artefato técnico vigente, sem reabrir a premissa | `docs/04-requisitos-nao-funcionais.md`, RNF-007 |
 | RNF-008 | Capacidade | 25 conexões simultâneas de usuários finais, além de administradores TI; limites alinhados | `docs/04-requisitos-nao-funcionais.md`, RNF-008 |
 | RNF-009 | Disponibilidade/continuidade | 99% mensal; backups diários 12 meses; RPO 24h em desastre; RTO 24h; manutenção fora expediente e suporte comercial | `docs/04-requisitos-nao-funcionais.md`, RNF-009 |
-| RNF-010 | Segurança de arquivos | PDF/JPEG, limites v0.4, scanner na infraestrutura FORD, bloqueio em falha/inconclusão e liberação TI auditada | `docs/04-requisitos-nao-funcionais.md`, RNF-010 |
+| RNF-010 | Segurança de arquivos | PDF/JPEG, limites v0.4, scanner interno integrado ao fluxo controlado da stack Supabase/Vercel, bloqueio em falha/inconclusão e liberação TI auditada | `docs/04-requisitos-nao-funcionais.md`, RNF-010 |
 | RNF-011 | Privacidade/governança | Posição da FORD registrada; aviso no primeiro acesso; regras e retenção v0.4; obrigações legais aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-011 |
 | RNF-012 | Acessibilidade | Despriorizada na visão de produto; obrigações legais/corporativas aplicáveis permanecem | `docs/04-requisitos-nao-funcionais.md`, RNF-012 |
 | RNF-013 | Arquitetura/plataforma | Supabase/Vercel oficiais; Q-025 para validar configuração, regiões e isolamento por ambiente | `docs/04-requisitos-nao-funcionais.md`, RNF-013; `docs/adr/ADR-003-supabase-vercel.md` |
 
-**Outras regras/restrições:** somente roles `user` e `ti`; todos os TI com poderes equivalentes; grupos e participantes administrados pelo TI; usuários não saem de grupos; remoção revoga acesso ao histórico; usuários não editam/excluem mensagens; TI edita/exclui e exporta com auditoria; leitura/horário e não lidas; PDF/JPEG (10 MB, 5 por mensagem), quotas individuais e totais pelo TI; scanner interno com bloqueio em falha/inconclusão e liberação TI auditada; monitoramento por lista sem análise contextual/IA externa; severidades/prazos de alertas; auditoria e retenção; stack oficial Supabase/Vercel e governança FORD. Fonte: POLY-REQ-001 v0.4 e documentos 03 a 05.
+**Outras regras/restrições:** somente roles `user` e `ti`; todos os TI com poderes equivalentes; grupos e participantes administrados pelo TI; usuários não saem de grupos; remoção revoga acesso ao histórico; usuários não editam/excluem mensagens; TI edita/exclui e exporta com auditoria; leitura/horário e não lidas; PDF/JPEG (10 MB, 5 por mensagem), quotas individuais e totais pelo TI; scanner interno integrado à stack oficial, com bloqueio em falha/inconclusão e liberação TI auditada; monitoramento por lista sem análise contextual/IA externa; severidades/prazos de alertas; auditoria e retenção; stack oficial Supabase/Vercel e governança FORD. Fonte: POLY-REQ-001 v0.4 e documentos 03 a 05.
 
 ### 3.3 Divergências e regra de precedência adotada
 
@@ -152,8 +152,8 @@ Os IDs abaixo são preservados conforme a baseline. “Confirmado” significa c
 | README informa que autenticação, conversas, grupos e anexos ainda serão implementados; código contém middleware e migration de perfis | `README.md`, seções “Estado atual” e “Supabase”; `src/auth/authorization.mjs`; `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` | A documentação de requisitos prevalece para escopo. O código é reconhecido como fundação parcial, não como fluxo de negócio entregue. |
 | RF-004 cita desativar, mas RN-003 e baseline incluem reativar | `docs/03-requisitos-funcionais.md`, RF-004; `docs/05-regras-de-negocio-e-restricoes.md`, RN-003; `docs/09-baseline-requisitos-mvp.md`, §4.2 | Incluída uma transação separada de reativação, por ser operação administrativa expressamente descrita na regra/baseline. Validar Q-002. |
 | RF-006 enfatiza adicionar; RN-003/RN-007 e matriz #100 incluem remover participantes | `docs/05-regras-de-negocio-e-restricoes.md`, RN-003/RN-007; `docs/issue-100-matriz-autorizacao.md`, seção “Matriz de autorização” | Incluída remoção administrativa de participante. Não foram inferidos saída voluntária ou efeitos de exclusão de mensagens. |
-| Supabase + Vercel aparecem como direção técnica, mas a visão v0.1 não define stack nem integrações de negócio | `docs/01-visao-geral-e-escopo.md`, §1.9; `docs/adr/ADR-003-supabase-vercel.md` | Considerados plataforma/serviços de implementação, não integração de negócio com WhatsApp/Teams. Supabase Auth foi tratado como fonte externa de identidades na hipótese AIE descrita na seção 5. |
-| ADRs 001/004/005/007/008/009/010 permanecem Proposed | `docs/adr/README.md`, inventário; ADRs individuais | Propostas não foram convertidas em requisitos aprovados. O que não está aprovado fica como hipótese/pendência e não gera função adicional. |
+| Supabase + Vercel aparecem como plataformas oficiais, mas a visão v0.1 não define essa stack nem integrações de negócio | `docs/01-visao-geral-e-escopo.md`, §1.9; `docs/adr/ADR-003-supabase-vercel.md` | Registro histórico da análise de 18/11: as plataformas são serviços de implementação, não integração de negócio com WhatsApp/Teams. A hipótese AIE de Supabase Auth foi mantida apenas como questão de fronteira APF e permanece sujeita à análise lógica descrita na seção 17.3. |
+| ADRs 001/004/005/007/008/009/010 permaneciam Proposed no snapshot APF de 18/11 | `docs/adr/README.md`, inventário; ADRs individuais | Propostas não foram convertidas em requisitos aprovados. O que não está aprovado fica como hipótese/pendência e não gera função adicional. |
 
 **Funcionalidades que existem somente no código:** não foi identificada função de negócio completa sem correspondência documental. Existem detalhes técnicos implementados — validação JWT, respostas 401/403/503, bloqueio fail-closed, leitura de `profiles`, policies RLS da tabela e criação automática de perfil padrão — que são mecanismos de autorização documentados em ADR-006, não novas transações de negócio. A página inicial (`src/app/page.tsx`) contém texto promocional de capacidades futuras, mas não implementa essas capacidades.
 
@@ -212,7 +212,7 @@ O inventário e o total de 124 PF são exclusivamente a contagem preliminar de 1
 
 ### 5.1 FD-08/AIE — justificativa histórica, sujeita à recontagem
 
-O AIE FD-08 representa o conjunto de identidades/credenciais mantido pelo provedor de autenticação Supabase Auth, fora da fronteira lógica da aplicação Polychat, mas referenciado por ela para autenticar e associar perfis. A aplicação consulta a identidade validada e usa seu identificador para relacioná-la ao ALI Perfis.
+O FD-08 representa, como hipótese de contagem, o conjunto de identidades/credenciais gerido pelo Supabase Auth, serviço oficial do projeto e separado logicamente das funções de negócio da aplicação Polychat. A aplicação consulta a identidade validada e relaciona seu identificador ao ALI Perfis. A classificação como AIE depende da fronteira lógica e das regras IFPUG, não do fato de o serviço ser hospedado por fornecedor ou da localização física.
 
 **Ressalva:** Supabase Auth é a plataforma oficial de identidade, mas a classificação de FD-08 como AIE para APF continua sendo hipótese de fronteira lógica. O analista deve confirmar se existe grupo de dados reconhecível mantido pelo serviço fora da fronteira da aplicação Polychat. Não afirmar 119 PF por simples subtração: as demais funções e dados também precisam ser recontados.
 
@@ -761,7 +761,7 @@ A inclusão nesta lista significa que o analista deve examinar o processo segund
 - Next.js permanece como frontend e Vercel é a plataforma oficial de hospedagem/deploy.
 - Supabase é a plataforma oficial de backend; Auth, Database, Storage e Realtime são avaliados nas ADRs específicas e não devem ser tratados como serviços cancelados.
 - PostgreSQL, identidade, storage, auditoria, monitoramento e backups usam a stack oficial Supabase/Vercel sob governança da FORD; o scanner antimalware deve permanecer integrado ao fluxo aprovado e sem serviço externo não autorizado.
-- A classificação AIE/FD-08 da estimativa histórica continua como hipótese APF a validar, apesar de Supabase Auth ser a solução oficial de identidade. Reavaliar se existe arquivo lógico mantido fora da fronteira funcional Polychat dentro da própria infraestrutura FORD; a localização interna por si só não resolve a fronteira APF.
+- A classificação AIE/FD-08 da estimativa histórica continua como hipótese APF a validar, apesar de Supabase Auth ser a solução oficial de identidade. Reavaliar se existe grupo de dados lógico mantido fora da fronteira funcional Polychat pelo Supabase Auth; a localização física do serviço e sua condição de plataforma oficial não resolvem, isoladamente, a classificação APF.
 - A stack Supabase/Vercel está escolhida; Q-025 valida projetos, regiões e configurações. Recalcular os planos, limites e mensalidades atuais antes de emitir nova estimativa comercial.
 - Bibliotecas/dependências que não acessem dados FORD podem ser utilizadas conforme as políticas técnicas aplicáveis.
 
@@ -806,12 +806,12 @@ Os grupos de requisitos técnicos já alinhados com Desenvolvimento (armazenamen
 - 124 PF, 20,67/24,67 pessoa-mês, 5/6–6,5 meses, custos internos, preços de R$520.900/R$622.500 e mensalidades das seções anteriores correspondem à fotografia de 18/11/2026. São mantidos apenas para histórico.
 - Não utilizar os valores antigos em apresentação/negociação como preço vigente.
 - R$450.000,00 é referência comercial global da FORD, não teto aprovado; contempla implantação e exclui infraestrutura, licenças, suporte, manutenção e treinamento.
-- Não há prazo final obrigatório; o cronograma deverá ser organizado por sprints após a arquitetura e o escopo revisados.
-- Custos operacionais devem ser refeitos a partir da infraestrutura sob controle FORD, sem presumir serviços SaaS externos.
+- Não há prazo final obrigatório; o cronograma deverá ser organizado por sprints após a recontagem APF, revisão do escopo e validação dos custos/limites dos planos oficiais.
+- Custos operacionais devem considerar os planos, limites e consumo das plataformas oficiais Supabase e Vercel, além do scanner integrado, suporte, recuperação e operação. Não presumir que os custos de infraestrutura/licenças estejam incluídos na referência de implantação da FORD.
 
 ### 17.7 Condições para nova emissão
 
-1. Fechar a Q-025 após validar projetos, regiões, configurações, integrações e segregação da stack oficial Supabase/Vercel.
+1. Consolidar a Q-025 com as evidências específicas de configuração e integração que ainda não estejam cobertas pelos aceites das Issues #96 e #98; não repetir seus trabalhos de ambiente, smoke test ou rollback.
 2. Revisar fronteira APF e grupos lógicos; definir se há AIE interno/externo ao Polychat.
 3. Recalcular ALI/AIE/EE/SE/CE e DET/RET/ALR com base nos requisitos v0.4, evitando dupla contagem.
 4. Considerar o modelo lógico atualizado POLY-DATA-001 v0.3 e as revisões técnicas da Issue #99.
