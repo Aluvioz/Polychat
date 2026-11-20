@@ -14,7 +14,7 @@ A baseline exige proteção dos dados, isolamento dos ambientes e operação sob
 
 A seleção das plataformas está definida; a Q-025 permanece restrita à validação de configurações concretas (regiões, projetos por ambiente, acessos, segredos, backups, integrações e evidências de homologação). Não se deve inferir que todos os módulos já estejam implementados ou configurados em produção.
 
-O repositório contém Next.js 16, React 19, TypeScript, uma página institucional, um módulo isolado de autorização e uma migration de perfis vinculada ao modelo anterior. Não há implementação funcional ponta a ponta do chat nem comprovação de integração completa com os serviços Supabase/Vercel.
+O repositório contém scaffold Next.js 16/React 19/TypeScript, uma página institucional, um exemplo isolado de middleware de autorização e uma migration de scaffold para perfis. **A implementação funcional do Polychat ainda não começou.** Não há fluxos de negócio integrados nem cliente Supabase conectado ao runtime.
 
 ## Problema
 
@@ -71,9 +71,9 @@ Configuração incorreta de autorização; credenciais privilegiadas expostas; R
 
 ## Evidências e estado atual
 
-A `main` contém Next.js 16/React 19/TypeScript, página institucional, o módulo `src/auth/authorization.mjs` e uma migration de perfis vinculada ao Supabase. Não foram encontradas rotas funcionais de chat, serviços de domínio, armazenamento de anexos, canais realtime ou trilha de auditoria funcional.
+A `main` contém scaffold Next.js 16/React 19/TypeScript, uma página institucional, o exemplo isolado `src/auth/authorization.mjs` e uma migration de scaffold para `profiles`. Não foram encontradas rotas funcionais de chat, cliente Supabase integrado, serviços de domínio, storage, canais realtime ou trilha de auditoria funcional.
 
-A existência desses artefatos comprova apenas uma fundação parcial; não demonstra integração funcional completa, configuração de ambientes ou homologação de produção. Supabase e Vercel são plataformas oficiais, conforme alinhamento registrado nesta ADR e na ADR-003.
+**A implementação funcional real do Polychat ainda não começou.** A existência desses artefatos não representa implementação parcial nem comprova integração, configuração de produção ou homologação. Supabase e Vercel são plataformas oficiais, conforme esta ADR e a ADR-003.
 
 ## Pendências para Accepted
 
