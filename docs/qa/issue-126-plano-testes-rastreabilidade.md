@@ -355,9 +355,9 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 | #99 — modelo de dados | Sem schema revisado não há base definitiva para testes de domínio e membership | Vincular casos de banco/RLS ao modelo revisado |
 | #100 — matriz de autorização | As regras estão documentadas, mas aprovação e enforcement precisam ser confirmados | Preservar os cenários AUTH-01..AUTH-20; não duplicar sua especificação |
 | #101 — RLS | Sem policies de domínio e testes reais, não há prova de isolamento de conversas/grupos/mensagens | Testar em banco real de teste após implementação e revisão |
-| #102 — auditoria | Campos, governança, integridade e retenção não estão completos | Validar evento obrigatório de RF-016 e manter governança pendente identificada |
+| #102 — auditoria | Eventos, acesso e retenção estão definidos; a implementação da trilha, integridade e evidências ainda não começou | Validar os eventos RF-016/RF-022 e retenção conforme baseline v0.4 |
 | #105 — integração Auth | Middleware isolado não comprova login e autorização ponta a ponta | Executar integração e E2E depois de conectar os fluxos reais |
-| #117 — anexos/antimalware | Política e parâmetros finais pendentes | Usar casos exploratórios sem fixar limites não aprovados; formalizar decisões |
+| #117 — anexos/antimalware | Formatos, limites, quotas, scanner interno e falha segura definidos; implementação ainda não começou | Testar os requisitos confirmados, sem reabrir parâmetros de produto |
 | #125 — threat modeling | Controles e cenários de ameaça ainda requerem consolidação | Incorporar ameaças aprovadas à suíte de segurança |
 | #129 — homologação | Execução manual e regressão global são trabalho próprio dessa issue | Transferir roteiros e evidências de execução à #129 |
 | Q-002/Q-006 | Decisões resolvidas: poderes iguais de TI; TI provisiona username/senha e recupera credenciais | Não são pendências; testar conforme RF-002/RF-003/RNF-003 |
@@ -377,8 +377,8 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 | SQA/QA | Manter casos, rastreabilidade, evidências, severidade e parecer independente; validar regressão |
 | Desenvolvimento | Implementar automação, corrigir defeitos, fornecer dados/ambientes e evidência técnica |
 | Tech Lead | Definir contratos técnicos, apoiar critérios verificáveis, revisar arquitetura, CI e cobertura de riscos |
-| Segurança/TI | Validar políticas de segurança, autorização, threat model, auditoria e controles de infraestrutura |
-| Representante da FORD / áreas competentes | Decidir parâmetros de negócio, privacidade, dispositivos, carga, retenção e demais questões Q aplicáveis |
+| TI (responsável por segurança na FORD) | Validar controles operacionais, autorização, threat model, auditoria e infraestrutura |
+| Representante da FORD / gestor | Conduzir homologação funcional, aceite escrito e Go/No-Go conforme governança informada; requisitos de dispositivo, carga e retenção já estão definidos |
 
 ## 16. Critério de aceite documental da Issue #126
 
