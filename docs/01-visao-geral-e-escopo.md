@@ -139,11 +139,11 @@ Todos os administradores do perfil TI possuem os mesmos poderes administrativos.
 
 ## 1.7 Infraestrutura, operação e restrições tecnológicas
 
-Supabase e Vercel são as plataformas oficiais do Polychat, conforme alinhamento complementar do PO com Desenvolvimento. A operação deve respeitar a governança da FORD, preferencialmente com regiões de dados/execução adequadas ao Brasil, isolamento de ambientes e controle de acessos. Outros serviços de terceiros não estão automaticamente autorizados a acessar ou processar dados.
+Supabase e Vercel são as plataformas oficiais do Polychat, conforme alinhamento complementar do PO com Desenvolvimento. A operação deve respeitar a governança da FORD, verificar regiões de dados/execução (preferencialmente adequadas ao Brasil), isolar ambientes e controlar acessos. Outros serviços de terceiros não estão automaticamente autorizados a acessar ou processar dados.
 
-Hospedagem, banco de dados, autenticação, armazenamento de anexos, antimalware, monitoramento, segredos e operação devem respeitar essa fronteira. Os ambientes de desenvolvimento, homologação e produção devem permanecer isolados conforme alinhamento concluído com Desenvolvimento.
+Vercel é a plataforma oficial de hospedagem/deploy e Supabase é a plataforma oficial de backend, abrangendo os serviços definidos nas ADRs específicas. A FORD mantém governança de contas, projetos, acessos, configurações e dados. O antimalware deve integrar o fluxo controlado do Polychat e não poderá encaminhar arquivos a scanners ou serviços de análise externos não aprovados. Os ambientes de desenvolvimento, homologação/Preview e produção devem permanecer isolados conforme alinhamento concluído com Desenvolvimento.
 
-A stack de aplicação existente no repositório não deve ser confundida com autorização para utilizar serviços gerenciados externos. A arquitetura e os documentos de decisão técnica precisam refletir a restrição de controle da FORD antes de qualquer declaração de aderência operacional.
+A aprovação das plataformas não equivale à conclusão de todas as integrações ou à homologação de produção. A Q-025 registra somente evidências e verificações técnicas ainda não demonstradas, sem reabrir a escolha de Supabase/Vercel ou repetir os escopos já aceitos nas Issues #96 e #98.
 
 ## 1.8 Operação, disponibilidade e recuperação
 
