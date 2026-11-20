@@ -96,9 +96,9 @@ Nenhuma variável administrativa/service-role foi encontrada no arquivo de exemp
 
 A documentação consultada estabelece:
 
-- ADR-003: a direção Supabase + Vercel anteriormente registrada foi depreciada após a FORD v2. O ambiente descrito nesta auditoria é evidência histórica da execução anterior, não arquitetura-alvo vigente.
-- ADR-009: **Proposed**. Ambientes isolados e promoção controlada permanecem requisitos; a solução operacional deve ser compatibilizada com a exigência de infraestrutura sob controle da FORD.
-- ADR-006: o aceite legado cobre somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios nem aprova o Supabase como provedor-alvo.
+- ADR-003: Supabase + Vercel são as plataformas oficiais do Polychat. Esta auditoria preserva a evidência de configuração e registra os limites de inspeção administrativa disponíveis na execução.
+- ADR-009: **Proposed**. Vercel e Supabase são a stack oficial; a documentação registra a necessidade de validação dos projetos, regiões, domínios, variáveis e segregação por ambiente.
+- ADR-006: o aceite cobre somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios nem comprova a RLS de domínio.
 
 O aceite da Issue #96 atesta a conclusão de seu escopo operacional original. A FORD v2 prevalece para a arquitetura-alvo e impede presumir autorização de serviços externos para dados reais da organização.
 
@@ -210,9 +210,9 @@ A tabela e as limitações das seções anteriores são o retrato da auditoria o
 
 ### 12.2 Efeito da FORD v2 sobre a arquitetura anterior
 
-A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum terceiro pode acessar, armazenar ou processar dados da organização. A direção Supabase + Vercel foi, por isso, depreciada na ADR-003.
+Supabase e Vercel são as plataformas oficiais do Polychat, conforme ADR-003 e alinhamento complementar do PO com Desenvolvimento. A configuração dessas plataformas foi o objeto da Issue #96; seu encerramento deve ser preservado como evidência de execução e aceite do escopo original.
 
-O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser entendido como **registro histórico de configuração e validação operacional do escopo original**. O encerramento da issue não cria exceção à restrição mais recente, não aprova por si só o uso desses serviços com dados reais da FORD e não substitui a decisão de arquitetura pendente da Q-025.
+A auditoria documental distingue a confirmação do responsável/Tech Lead sobre a conclusão das configurações e validações operacionais daquilo que foi inspecionado diretamente nesta execução. O uso oficial das plataformas não elimina a necessidade de validar projetos, regiões, acessos, variáveis, domínios e segregação por ambiente, conforme Q-025.
 
 ### 12.3 Limites de evidência
 
@@ -223,4 +223,4 @@ O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser 
 
 ### 12.4 Encaminhamento
 
-Manter a Issue #96 fechada e seu aceite preservado. Tratar a substituição/adequação da arquitetura de ambientes como parte da Q-025 e do fluxo técnico subsequente, sem reabrir a issue histórica apenas para refletir a mudança de requisito.
+Manter a Issue #96 fechada e seu aceite preservado. Tratar a validação final da configuração da stack oficial como parte da Q-025 e do fluxo técnico subsequente, sem reabrir a issue histórica apenas para refletir a correção documental.
