@@ -38,7 +38,7 @@ A descrição original da Issue #94 utiliza a expressão “público técnico”
 
 Os participantes não devem ser misturados, e os resultados devem ser analisados separadamente por perfil. A decisão não amplia automaticamente o público inicial para os aproximadamente 900 funcionários da FORD.
 
-**Validação presencial do PO — 19/11/2026:** o PO confirma que o público-alvo, a composição dos grupos de participantes, o dimensionamento proposto, os pilotos e as premissas de autorização e privacidade foram discutidos presencialmente e estão validados para fins de planejamento desta pesquisa. Mantém-se a referência amostral deste documento como recomendação qualitativa, não estatística, sujeita à disponibilidade dos representantes elegíveis e às limitações registradas durante o recrutamento.
+**Validação presencial do PO — 19/11/2026:** o PO confirma o público-alvo dos dois perfis, o dimensionamento qualitativo proposto e a realização de sessões-piloto como pré-teste do roteiro de pesquisa. Essas sessões-piloto são atividades de usabilidade e não constituem piloto de lançamento do produto. A FORD definiu lançamento único após homologação, sem grupo piloto de produto.
 
 A confirmação do PO resolve a ambiguidade de escopo da pesquisa #94. Ela não altera por si só os números da baseline geral nem substitui a observância dos procedimentos institucionais acordados para convite, consentimento e tratamento das evidências.
 
@@ -46,7 +46,7 @@ A confirmação do PO resolve a ambiguidade de escopo da pesquisa #94. Ela não 
 
 - Homologar segurança, autorização server-side, RLS, autenticação real ou isolamento de dados.
 - Comprovar funcionamento de envio, entrega, upload, sincronização ou modo offline em produção.
-- Aprovar políticas de consulta de conversas, retenção, alertas, punições ou administração ainda não decididas.
+- Redefinir políticas de consulta de conversas, retenção, alertas ou administração: essas regras já foram definidas na FORD v2 e devem ser representadas corretamente nos protótipos.
 - Homologar a identidade visual oficial da FORD ou declarar conformidade de acessibilidade.
 - Substituir testes funcionais, automatizados, integração, E2E, segurança, regressão ou homologação da Issue #129.
 
@@ -159,8 +159,8 @@ As tarefas abaixo devem ser executadas com os materiais da Issue #92. A validaç
 
 **Limites obrigatórios para a trilha TI:**
 
-- Em T-04, não avaliar como regra aprovada qualquer política de consulta, justificativa, retenção ou acesso a conversas. As decisões de governança (Q-009/Q-010) precisam ser resolvidas pelas áreas responsáveis.
-- Em T-05, não presumir bloqueio, punição ou decisão automática a partir de um alerta. Regras e encaminhamentos (Q-007/Q-008) continuam pendentes.
+- Em T-04, avaliar a compreensão da jornada de consulta administrativa já definida: TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação, com registro de auditoria. A sessão testa somente a compreensão do protótipo; não comprova implementação.
+- Em T-05, avaliar se o participante compreende a fila TI, as severidades baixa/média/alta e os prazos definidos (alta: imediatamente/até 1 hora; média: até 1 dia útil; baixa: até 3 dias úteis). Não representar bloqueio automático; TI pode encerrar o alerta sem justificativa obrigatória.
 - Em T-06, não tratar como catálogo aprovado os parâmetros ilustrativos de configurações. O catálogo real precisa de decisão do PO/TI.
 - Não executar operações administrativas reais durante a sessão. Utilizar apenas cenário fictício e protótipo estático.
 
@@ -331,14 +331,14 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 - [ ] Preparar convite, consentimento e orientação de privacidade.
 - [ ] Confirmar que todos os cenários usam dados fictícios.
 - [ ] Identificar versões dos protótipos #91 e #92 e conferir se estão acessíveis.
-- [ ] Identificar explicitamente decisões pendentes que não podem ser testadas como regras aprovadas.
+- [ ] Identificar apenas os pontos que continuam em aberto (Q-018 e Q-019) e separar limitações do wireframe de regras de negócio já confirmadas.
 - [ ] Preparar roteiro, planilha/log de tarefas e modelo de achados.
 - [ ] Definir facilitador, observador, local/ferramenta e armazenamento autorizado.
-- [ ] Realizar piloto e ajustar o roteiro, registrando a versão.
+- [ ] Realizar sessão-piloto de usabilidade (pré-teste do roteiro), ajustar o instrumento se necessário e registrar a versão. Esta atividade não é piloto de lançamento do produto.
 - [ ] Após a coleta, consolidar evidências, priorizar achados e atualizar protótipos.
 
 ---
 
-**Parecer do PO — 19/11/2026:** plano de trabalho v0.1 **APROVADO pelo PO**, após alinhamento presencial sobre público-alvo, dois perfis, dimensionamento, pilotos e premissas de autorização/privacidade. A aprovação autoriza a organização das sessões conforme este plano. Não declara sessões realizadas, achados obtidos, protótipos atualizados ou experiência final aprovada. A execução deve respeitar os procedimentos institucionais acordados, o consentimento aplicável e o uso de dados fictícios/anônimos descrito neste documento.
+**Parecer do PO — 19/11/2026:** plano de trabalho v0.1 **APROVADO pelo PO** para organizar sessões de usabilidade com os perfis Usuário mobile e TI desktop. A aprovação autoriza sessões de pesquisa, inclusive sessões-piloto para validar o roteiro; não autoriza piloto de lançamento nem altera a regra de lançamento único após homologação. Não declara sessões realizadas, achados obtidos, protótipos atualizados ou experiência final aprovada. Utilizar dados fictícios/anônimos e seguir os procedimentos institucionais aplicáveis ao recrutamento e registro.
 
-A Issue #94 permanece aberta até que as sessões sejam realizadas, os achados priorizados, os protótipos atualizados quando necessário e as evidências/revisões previstas nos critérios de aceite sejam apresentadas.
+A Issue #94 permanece aberta até que as sessões sejam realizadas, os achados priorizados, os protótipos atualizados quando necessário e as evidências/revisões previstas nos critérios de aceite sejam apresentadas. A implementação funcional do Polychat ainda não começou; os materiais #91/#92 são wireframes de baixa fidelidade e não podem ser apresentados como telas implementadas ou protótipo funcional.
