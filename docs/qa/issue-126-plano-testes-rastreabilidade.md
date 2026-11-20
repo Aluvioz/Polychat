@@ -241,8 +241,8 @@ Os casos abaixo são especificações de teste. O executor deve completar pré-c
 | TC-COMP-002 | Executar perfil TI em computador com Chrome/Edge/Firefox atuais | Fluxos administrativos funcionam; smartphones e tablets não são permitidos para o perfil TI |
 | TC-UX-001 | Usuários representativos executam tarefas definidas no plano da #94 | Registrar sucesso, tempo, erros, dúvidas e severidade; métricas devem ser aprovadas antes da avaliação |
 | TC-A11Y-001 | Executar avaliação manual/automatizada das obrigações aplicáveis | Evidenciar teclado, foco, contraste, zoom/reflow e leitor de tela conforme #93/#129; Q-020 não adiciona critério específico FORD |
-| TC-PERF-001 | Medir latência das operações críticas | Comparar com metas quantitativas aprovadas em Q-016; sem meta, registrar medição exploratória sem declarar aprovação |
-| TC-PERF-002 | Simular carga do público inicial | Verificar até 25 conexões simultâneas de usuários finais, além de administradores TI; registrar volumes/latência conforme metas alinhadas |
+| TC-PERF-001 | Medir latência das operações críticas | Comparar com as metas de desempenho/latência já alinhadas com Desenvolvimento; utilizar valores registrados nos artefatos técnicos aprovados, sem inventar thresholds. Registrar medição e resultado. |
+| TC-PERF-002 | Simular carga do público inicial | Verificar até 25 conexões simultâneas de usuários finais, além de administradores TI; registrar volumes/latência contra metas já alinhadas. Q-016 está resolvida; execução pendente. |
 | TC-REC-001 | Executar restauração controlada de banco e anexos | Comprovar backup diário, retenção de 12 meses, integridade, RPO até 24h em desastre e RTO até 24h |
 
 ## 10. Regras para execução e registro de resultado
