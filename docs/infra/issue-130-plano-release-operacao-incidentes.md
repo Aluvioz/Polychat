@@ -3,9 +3,9 @@
 **Issue:** #130 — Preparar release, operação e plano de incidentes  
 **Epic:** #87 — SQA, validação e release  
 **Documento:** POLY-OPS-130  
-**Versão:** 0.2 — 19/11/2026  
+**Versão:** 0.3 — 20/11/2026  
 **Estado:** proposta operacional para revisão; não representa aprovação institucional nem comprova execução de procedimentos  
-**Responsáveis pela validação:** Product Owner, Tech Lead, Desenvolvimento, SQA, TI/Operação, Segurança e representantes da FORD, conforme o assunto
+**Responsáveis pela validação:** Product Owner, Tech Lead, Desenvolvimento, SQA, TI/Operação e representantes designados da FORD. A TI da FORD é responsável operacional por segurança; não há uma área separada de Segurança da Informação como frente do projeto.
 
 ---
 
@@ -15,7 +15,7 @@ Estabelecer o processo mínimo para preparar, avaliar, autorizar, publicar, acom
 
 O plano atende ao objetivo da Issue #130: checklist de release, backups, monitoramento, incidentes, rollback e suporte. Ele conecta os resultados das atividades de requisitos, arquitetura, segurança, testes e homologação, sem substituir os respectivos documentos.
 
-Este documento define **o que precisa ser verificado, quem participa, quais decisões devem ser registradas e quais evidências devem existir**. Procedimentos técnicos específicos, parâmetros de infraestrutura, canais, prazos e níveis de serviço só serão considerados definidos depois de confirmação pelos responsáveis competentes.
+Este documento define **o que precisa ser verificado, quem participa, quais decisões devem ser registradas e quais evidências devem existir**. Os parâmetros de produto e operação já alinhados pela FORD v2 são referências obrigatórias; permanecem pendentes sua implementação operacional, procedimentos executáveis e evidências de teste.
 
 ## 2. Estado, limites e regras de interpretação
 
@@ -48,7 +48,7 @@ Uma recomendação deste documento não se transforma automaticamente em políti
 Este plano não:
 - configura Supabase, Vercel, GitHub Actions, monitoramento ou alertas;
 - cria credenciais, secrets, usuários, ambientes ou regras de acesso;
-- define por conta própria RPO, RTO, disponibilidade, janelas de manutenção, retenção ou SLA;
+- altera os valores de RPO, RTO, disponibilidade, retenção, manutenção ou suporte já definidos pela FORD;
 - declara que backups/restaurações, rollback, smoke tests ou testes de incidente já foram executados;
 - aprova a ADR-009 ou a ADR-010;
 - substitui o plano de testes da Issue #126, o modelo de ameaças da Issue #125 ou a homologação da Issue #129;
@@ -59,15 +59,15 @@ Este plano não:
 
 ### 3.1 Arquitetura e ambientes
 
-A Issue #88 determina Supabase + Vercel como direção de execução. A auditoria produzida na Issue #96 registrou o projeto Supabase Polyford como ambiente de desenvolvimento, um Preview Deployment Vercel observado como Ready e limites de verificação sobre a configuração administrativa dos ambientes. Posteriormente, o responsável/Tech Lead registrou na Issue #96 que as configurações e validações operacionais descritas naquela issue estavam concluídas, e autorizou seu encerramento.
+A Issue #88 e a ADR-003 registram Supabase + Vercel como plataformas oficiais. A Issue #96 foi encerrada após aceite de seu escopo operacional de ambientes. A Issue #98 também foi encerrada após aceite do escopo de Preview/Production, smoke test e rollback.
 
-Esse encerramento deve ser respeitado como registro da decisão do responsável. Ainda assim, esta proposta não presume detalhes que não estejam documentados no repositório, como project refs de cada estágio, domínios, inventário de variáveis, permissões administrativas ou os procedimentos efetivos de recuperação.
+Os encerramentos #96/#98 devem ser respeitados e reutilizados como evidência dos respectivos escopos. A Q-025 consolida somente detalhes objetivos de configuração/integração não cobertos por esses aceites; não reabre a escolha das plataformas nem repete criação/configuração de ambientes, smoke tests ou rollback.
 
 A existência de um Preview Deployment ou de um projeto de desenvolvimento não comprova, isoladamente, segregação de dados, integração funcional completa, homologação ou prontidão de produção.
 
 ### 3.2 Estado do produto e da validação
 
-A baseline técnica POLY-REQ-001 v0.3 registra uma fotografia do código e das evidências observadas em 17/11/2026. O README da main ainda descreve uma estrutura inicial e informa que funcionalidades centrais — autenticação, conversas, grupos, anexos e administração — não estão implementadas e validadas como produto completo naquele registro.
+A baseline vigente é POLY-REQ-001 v0.4. A implementação funcional do produto ainda não começou: o repositório contém estrutura inicial Next.js e artefatos isolados de scaffold (middleware, migration de perfil e testes com Supabase simulado), mas não há fluxos reais integrados de autenticação, conversas, grupos, anexos, alertas, console TI ou auditoria.
 
 O workflow de CI executa testes automatizados, ESLint, verificação TypeScript e build. Esses checks são necessários, mas não demonstram por si só:
 - integração real com Supabase hospedado;
@@ -84,12 +84,12 @@ A avaliação de release deve usar a evidência mais recente da versão candidat
 | Referência | Conteúdo reutilizado | Limite |
 |---|---|---|
 | docs/09-baseline-requisitos-mvp.md | Escopo, requisitos, restrições e fotografia de implementação. | Não é homologação do produto. |
-| docs/04-requisitos-nao-funcionais.md | RNF-009: disponibilidade, backup, retenção, RPO e RTO. | Os parâmetros continuam dependendo de definição. |
-| docs/08-glossario-e-questoes-em-aberto.md | Q-008, Q-009, Q-010, Q-013, Q-014, Q-015, Q-016 e Q-017. | As questões não são resolvidas por este plano. |
+| docs/04-requisitos-nao-funcionais.md | RNF-009: disponibilidade, backup, retenção, RPO e RTO. | Valores definidos na FORD v2; execução e evidência operacional pendentes. |
+| docs/08-glossario-e-questoes-em-aberto.md | Histórico das questões e Q-018/Q-019/Q-025 abertas. | Demais questões foram respondidas/alinhadas; Q-025 não reabre #96/#98. |
 | docs/10-governanca-desenvolvimento.md | DoR/DoD, PR, revisão independente, CI e evidências. | Checks de CI não substituem testes funcionais e aceite. |
 | docs/infra/issue-96-auditoria-ambientes.md | Auditoria histórica de ambientes e limites de verificação. | Deve ser lida junto com o comentário posterior de encerramento da Issue #96. |
-| docs/adr/ADR-009-ambientes-deploy.md | Proposta de ambientes, secrets, promoção, backup e recuperação. | Status Proposed; não tratar como decisão técnica aceita. |
-| docs/adr/ADR-010-seguranca-auditoria-monitoramento.md | Propostas de segurança, auditoria, monitoramento e incidentes. | Status Proposed; aprovações institucionais pendentes. |
+| docs/adr/ADR-009-ambientes-deploy.md | Detalha ambientes/deploy das plataformas oficiais. | Status Proposed para revisão técnica; a seleção Supabase/Vercel é Accepted na ADR-003 e os aceites #96/#98 são preservados. |
+| docs/adr/ADR-010-seguranca-auditoria-monitoramento.md | Detalha segurança, auditoria e monitoramento especificados na baseline. | Status Proposed para revisão técnica; TI é responsável operacional por segurança. |
 | Issue #125 / PR #154 | Modelo de ameaças e mitigação. | Documento estava em PR Draft na consulta; não declarar integrado ou aprovado. |
 | Issue #126 / PR #153 | Plano de testes e rastreabilidade. | Documento estava em PR Draft na consulta; acompanhar sua integração e revisão. |
 | Issues #127, #128 e #129 | Automação, E2E, homologação, acessibilidade e regressão. | Evidências devem ser obtidas antes de Go. |
@@ -132,22 +132,22 @@ Não se deve converter ausência de evidência em aprovação presumida.
 | GO-04 | Testes unitários e de integração relevantes aprovados. | Relatório, casos, ambiente e resultado. | SQA + Desenvolvimento | Obrigatório |
 | GO-05 | Fluxos E2E críticos aprovados. | Evidências da Issue #128 ou execução equivalente. | SQA | Obrigatório para fluxos implementados |
 | GO-06 | Regressão e homologação concluídas. | Matriz de navegador/dispositivo, defeitos e aceite. | SQA + PO | Obrigatório |
-| GO-07 | Riscos de segurança avaliados e controles críticos implementados. | Modelo de ameaças, testes e revisão de Segurança. | Segurança + Tech Lead | Obrigatório |
-| GO-08 | Questões de privacidade, monitoramento e acesso administrativo aprovadas quando aplicáveis. | Decisão formal das áreas competentes. | FORD + Segurança + Jurídico/Privacidade | Obrigatório para funcionalidades relacionadas |
-| GO-09 | Ambientes e variáveis da versão confirmados; nenhum segredo em código ou bundle cliente. | Inventário sem valores secretos, revisão de configuração e permissões. | TI/Operação + Tech Lead | Obrigatório |
-| GO-10 | Backup anterior à mudança e capacidade de restauração demonstrados. | Registro de backup e teste de restauração compatível. | TI/Operação | Obrigatório antes de mudanças com risco aos dados |
-| GO-11 | RPO/RTO e disponibilidade aplicáveis definidos e aceitos. | Decisão de negócio/operação e evidência de teste. | FORD + TI | Obrigatório antes da produção |
+| GO-07 | Riscos técnicos avaliados e controles críticos implementados/testados. | Modelo de ameaças, testes e revisão técnica com TI (responsável pela segurança na FORD) e SQA. | Tech Lead + TI + SQA | Obrigatório |
+| GO-08 | Regras de monitoramento, consulta administrativa, auditoria e aviso no primeiro acesso implementadas conforme a baseline v0.4. | Evidências de RF-014 a RF-016 e RF-022/RF-023; não exigir nova deliberação de produto sobre Q-007 a Q-010. Obrigações legais aplicáveis permanecem válidas. | TI + Tech Lead + SQA | Obrigatório para funcionalidades relacionadas |
+| GO-09 | Ambientes oficiais e variáveis da versão confirmados; nenhum segredo em código ou bundle cliente. | Reutilizar aceites #96/#98; complementar somente lacunas técnicas objetivas via Q-025, sem repetir configurações aceitas. | TI/Operação + Tech Lead | Obrigatório |
+| GO-10 | Backups diários de banco e anexos, retenção de 12 meses e restauração demonstrados. | Registro de backup e teste compatível com RPO até 24h em desastre e RTO até 24h. | TI/Operação | Obrigatório antes de mudanças com risco aos dados |
+| GO-11 | RPO/RTO e disponibilidade definidos e atendidos na evidência operacional. | Disponibilidade mensal 99%; RPO até 24h em desastre/falha de infraestrutura; RTO até 24h; evidência de teste/monitoramento. | TI/Operação + SQA | Obrigatório antes da produção |
 | GO-12 | Plano de rollback viável para aplicação, configuração e banco. | Runbook revisado e evidência de ensaio quando aplicável. | Tech Lead + TI/Operação | Obrigatório |
 | GO-13 | Monitoramento, alertas e acesso aos registros operacionais disponíveis. | Painéis/alertas testados e responsáveis de plantão identificados. | TI/Operação | Obrigatório |
 | GO-14 | Runbooks, suporte e escalonamento disponíveis. | Procedimentos e contatos aprovados. | TI/Operação + SQA | Obrigatório |
 | GO-15 | Comunicação e janela de release aprovadas. | Plano de comunicação e responsáveis. | PO + FORD | Obrigatório |
 | GO-16 | Defeitos e riscos residuais registrados e tratados. | Lista de defeitos, severidade, plano e aceite formal quando cabível. | PO + Tech Lead + responsáveis pelo risco | Obrigatório |
-| GO-17 | Público-alvo, escopo do piloto e perfis/dispositivos autorizados confirmados para a versão. | Registro do público incluído, composição Usuário/TI, escopo e matriz de dispositivos/navegadores homologados. | PO + FORD + TI + UX/SQA | Obrigatório |
+| GO-17 | Público-alvo e perfis/dispositivos confirmados para o lançamento único. | 25 usuários finais do setor técnico, além de aproximadamente 2–3 administradores TI; Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos. Não haverá grupo piloto. | PO + FORD + TI + SQA | Obrigatório |
 | GO-18 | Jornadas críticas de cada perfil incluídas na release aceitas pelo PO. | Matriz requisito/critério/caso e evidências de execução dos fluxos Usuário-mobile e TI-desktop efetivamente incluídos. | PO + SQA + UX | Obrigatório para os fluxos incluídos |
 | GO-19 | Funcionalidades anunciadas ou comprometidas no escopo estão disponíveis, ou limitações são explicitamente excluídas e comunicadas. | Release notes, matriz de escopo, defeitos conhecidos e decisão do PO. | PO + Tech Lead | Obrigatório |
 | GO-20 | Aceite de produto registrado separadamente das aprovações técnica, de qualidade, segurança e operação. | Parecer do PO com versão/commit, escopo, critérios, defeitos conhecidos e ressalvas; aprovações de outros domínios em seus próprios registros. | PO | Obrigatório |
-| GO-21 | Orientações de uso, comunicação inicial e canal de suporte compreensíveis ao público do piloto. | Mensagem de lançamento, instruções mínimas, limitações conhecidas, canal e responsável de suporte confirmados. | PO + UX + TI/Operação + FORD | Obrigatório |
-| GO-22 | Objetivos e indicadores do piloto definidos antes da disponibilização, sem ampliar público automaticamente. | Hipóteses/objetivos, métricas, fonte, responsável, período de acompanhamento aprovado e critério de decisão para expansão. | PO + FORD + TI | Obrigatório para piloto; expansão exige nova decisão |
+| GO-21 | Orientações de uso e canal de suporte compreensíveis aos usuários finais e administradores TI do lançamento único. | Mensagem de lançamento, instruções mínimas, limitações conhecidas, canal e responsável de suporte confirmados; suporte em horário comercial. | PO + UX + TI/Operação + FORD | Obrigatório |
+| GO-22 | Homologação funcional, aceite escrito e Go/No-Go do gestor registrados antes do lançamento único. | Homologação conduzida por Fábio Silva Cerqueira com representantes TI; aceite formal por escrito; decisão Go/No-Go do gestor. Não há piloto nem expansão incremental. | PO + representante FORD + gestor + TI | Obrigatório |
 
 ### 5.3 Condições que exigem No-Go
 
@@ -192,11 +192,11 @@ A aprovação do PO deve responder se **a versão candidata entrega o escopo pro
 | Informação ao usuário | A pessoa sabe como acessar, usar, reportar problema e compreender limitações? | Instruções, comunicação, release notes e canal oficial de suporte aprovados. | Não liberar piloto sem orientação mínima e caminho de suporte funcional. |
 | Resultado do piloto | Como será avaliado se a versão atende ao propósito e pode ser expandida? | Objetivos, indicadores, fonte, responsável, período de observação e critério de decisão aprovados. | Não ampliar público nem declarar sucesso sem análise e nova autorização. |
 
-**Referência de escopo do MVP:** o contexto de produto registra aproximadamente 25 pessoas do setor técnico como público inicial, dois perfis (Usuário e TI), Usuário em smartphone e TI em desktop. A questão Q-001 ainda exige confirmar a composição entre usuários finais e TI; Q-012 ainda exige definir dispositivos/navegadores. O PO deve preservar esses limites até a confirmação competente.
+**Referência de escopo do MVP:** 25 usuários finais do setor técnico, além de aproximadamente 2–3 administradores TI; Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos. Q-001 e Q-012 estão resolvidas.
 
 **Aceite de produto por release:** registrar versão, commit, escopo e público, critérios funcionais atendidos, jornadas testadas, defeitos e limitações conhecidas, orientação ao usuário, riscos de produto e decisão (Aprovado, Reprovado ou Aprovado com ressalvas formalmente autorizadas). O PO não deve aprovar itens não demonstrados nem transformar aprovação de produto em autorização final de produção.
 
-**Expansão do piloto:** qualquer ampliação além do público e dos dispositivos aprovados constitui nova decisão de produto/operação, com revisão de capacidade, segurança, suporte e homologação. Não ocorre automaticamente após um deployment bem-sucedido.
+**Lançamento:** a FORD definiu lançamento único, sem grupo piloto, após homologação e aceite escrito. Não há rollout experimental ou expansão gradual no escopo aprovado.
 
 ## 6. Smoke test
 
@@ -306,13 +306,13 @@ Os valores abaixo devem ser preenchidos e aprovados por TI/Operação, Tech Lead
 | Item | Definição necessária | Responsável pela definição | Estado |
 |---|---|---|---|
 | Escopo de dados | Recursos de banco, storage, logs e configurações cobertos. | TI + Tech Lead | Pendente |
-| Frequência | Frequência de backup e eventual ponto de recuperação contínua. | TI + FORD | Pendente |
-| Retenção | Prazo por classe de dado e cópia. | FORD + Jurídico/Privacidade + TI | Pendente |
+| Frequência | Backups diários de banco de dados e anexos. | TI/Operação | Requisito definido; execução/evidência pendente |
+| Retenção | Backups retidos por 12 meses; dados excluídos expiram das cópias ao fim do ciclo. | TI/Operação | Requisito definido; implementação/evidência pendente |
 | Criptografia | Proteção em trânsito e em repouso, chaves e rotação. | Segurança + TI | Pendente |
 | Localização | Região, jurisdição e fornecedor da cópia. | TI + Segurança + Jurídico | Pendente |
 | Acesso | Operadores autorizados, autenticação e trilha de auditoria. | TI + Segurança | Pendente |
-| RPO | Perda máxima de dados aceitável por cenário. | FORD + TI | Pendente |
-| RTO | Tempo máximo de recuperação por cenário. | FORD + TI | Pendente |
+| RPO | Até 24 horas em desastre/falha de infraestrutura; não se aplica à reconexão normal de mensagens confirmadas. | TI/Operação | Requisito definido; teste/evidência pendente |
+| RTO | Até 24 horas. | TI/Operação | Requisito definido; teste/evidência pendente |
 | Integridade | Verificação de consistência e detecção de cópia incompleta. | TI + Desenvolvimento | Pendente |
 | Restauração | Procedimento e ambiente seguro para teste. | TI + Tech Lead | Pendente |
 | Evidência | Resultado, data, executor, duração e divergências do teste. | TI + SQA | Pendente |
@@ -705,19 +705,19 @@ Aprovação de encerramento:
 | OPS-01 | Autoridade final e participantes obrigatórios do Go/No-Go. | FORD + PO + Tech Lead | Aprovação da release |
 | OPS-02 | Janelas de publicação, manutenção e período de acompanhamento. | FORD + TI/Operação | Agendamento da release |
 | OPS-03 | Ambientes, responsáveis, acessos e variáveis por estágio. | TI + Segurança | Publicação segura |
-| OPS-04 | Frequência, escopo, retenção e região de backups. | TI + Segurança + Jurídico/Privacidade | Continuidade |
-| OPS-05 | Valores de RPO/RTO e disponibilidade. | FORD + TI | Aceite operacional |
+| OPS-04 | Evidenciar backups diários de banco/anexos, retenção de 12 meses e região/configuração dos backups. | TI/Operação | Continuidade; requisito definido, evidência pendente |
+| OPS-05 | Medir e comprovar 99% disponibilidade, RPO 24h em desastre e RTO 24h. | TI/Operação | Aceite operacional; metas já definidas |
 | OPS-06 | Procedimento e periodicidade de teste de restauração. | TI + Tech Lead + SQA | Produção |
 | OPS-07 | Procedimento de rollback para app, migrations, banco e storage. | Tech Lead + TI | Produção |
 | OPS-08 | Ferramentas, métricas, limiares e destinatários de alertas. | TI/Operação + Segurança | Monitoramento |
-| OPS-09 | Severidade oficial, canais, prazos e escalonamento de incidentes. | FORD + TI + Segurança | Operação e suporte |
+| OPS-09 | Fluxo/canais e escalonamento de incidentes operacionais. Não confundir com alertas de conteúdo suspeito: severidades/prazos desses alertas já estão definidos em RN-013. | TI/Operação | Operação e suporte; alertas de conteúdo já especificados |
 | OPS-10 | Contatos primários, substitutos e cobertura de suporte. | TI + FORD | Operação |
-| OPS-11 | Política de comunicação de incidentes e notificações. | FORD + Segurança + Jurídico/Privacidade | Incidentes com impacto institucional |
-| OPS-12 | Retenção e acesso a logs, auditoria e evidências. | Segurança + Jurídico/Privacidade + TI | Monitoramento e investigação |
-| OPS-13 | Critérios de segurança, privacidade e tratamento de riscos residuais. | FORD + Segurança + Jurídico/Privacidade | Go/No-Go |
-| OPS-14 | Metas de carga, latência e volume para monitoramento. | FORD + TI + Tech Lead | Aceite de desempenho |
+| OPS-11 | Contatos, comunicação e encaminhamento de incidentes conforme governança interna da FORD. A FORD trata solicitações legais; Jurídico não é frente de trabalho do projeto, sem afastar obrigações legais aplicáveis. | FORD + TI | Incidentes com impacto institucional |
+| OPS-12 | Implementar acesso exclusivo TI e retenção/descarte de logs conforme baseline v0.4, com eventos auditáveis. | TI/Operação + Desenvolvimento | Monitoramento e investigação; requisito definido, implementação pendente |
+| OPS-13 | Revisar controles e riscos residuais técnicos com TI (responsável operacional por segurança) e Tech Lead; não reabrir riscos já avaliados do modelo de poderes TI. | TI + Tech Lead + SQA | Go/No-Go |
+| OPS-14 | Instrumentar/evidenciar metas de desempenho alinhadas, considerando até 25 conexões simultâneas de usuários finais além de TI. | Desenvolvimento + TI | Aceite de desempenho; meta definida, medição pendente |
 
-As decisões OPS-03 a OPS-08 se relacionam especialmente à Q-014 e Q-017 e à ADR-009. OPS-09 a OPS-13 dependem também da Q-007 a Q-010, Q-013 e Q-015 e da ADR-010. OPS-14 se relaciona à Q-016.
+OPS-03/Q-025 consolida evidências específicas da stack oficial, sem reabrir os aceites #96/#98. OPS-04 a OPS-08 tratam de execução/evidência de continuidade, deploy e rollback. OPS-09 trata de incidentes operacionais, não da severidade dos alertas de conteúdo já definida em RN-013. Q-007 a Q-017 estão resolvidas.
 
 ## 18. Dependências e critérios de aceite da Issue #130
 
@@ -729,7 +729,7 @@ As decisões OPS-03 a OPS-08 se relacionam especialmente à Q-014 e Q-017 e à A
 - **Issue #128:** automação E2E; necessário para validar fluxos críticos.
 - **Issue #129:** homologação, acessibilidade e regressão; necessário para aceite de qualidade e produto.
 - **Issue #96:** auditoria de ambientes; reutilizar a auditoria e o registro de encerramento, sem presumir detalhes não presentes.
-- **ADR-009 e ADR-010:** decisões de ambientes/deploy e segurança/monitoramento; permanecem Proposed enquanto não houver as aprovações previstas.
+- **ADR-009 e ADR-010:** permanecem Proposed para revisão técnica específica. ADR-003 Accepted confirma Supabase/Vercel; requisitos de segurança, monitoramento, retenção e alertas estão definidos na baseline v0.4.
 
 Uma dependência não precisa estar encerrada para que este plano seja documentado, mas não se pode declarar a release pronta enquanto faltarem evidências ou aprovações obrigatórias.
 
@@ -757,20 +757,20 @@ A issue só deve ser considerada concluída quando:
 - revisão da PR, checks e ausência de regressão impeditiva estiverem comprovadas;
 - o aceite de produto da versão e do público-alvo estiver registrado separadamente dos aceites técnico, SQA, Segurança e operação;
 - as jornadas incluídas por perfil, limitações conhecidas e comunicação de lançamento estiverem evidenciadas;
-- critérios de acompanhamento do piloto e autorização para eventual expansão estiverem definidos;
+- homologação funcional com aceite escrito e Go/No-Go do gestor estiverem registrados para o lançamento único, sem piloto;
 - decisões e riscos pendentes estiverem resolvidos ou formalmente replanejados pela autoridade competente.
 
 Não marcar todos os critérios como concluídos apenas pela criação deste documento.
 
 ## 19. Parecer do Product Owner
 
-O plano organiza os elementos necessários para transformar uma entrega em release controlada e suportável. A versão 0.1 já cobria o fluxo operacional; a versão 0.2 explicita o que o PO deve aprovar na dimensão do produto: escopo real, público e rollout, adequação das jornadas por perfil, limitações conhecidas, comunicação e critérios de acompanhamento do piloto.
+O plano organiza os elementos necessários para transformar uma entrega em release controlada e suportável. A versão 0.3 reconcilia o plano com a FORD v2: lançamento único sem piloto, público/dispositivos definidos, parâmetros de continuidade, responsabilidades de TI e distinção entre requisitos definidos e evidências operacionais ainda não executadas.
 
 **Validação do PO (19/11/2026):** aprovo os critérios de release do produto descritos nas seções 5.2, 5.4 e 5.5 como baseline de avaliação de cada versão candidata. O aceite do PO deve ser registrado por release e não pode ser inferido de CI verde, deployment Ready, aceite técnico ou aprovação de uma PR documental.
 
 A aprovação do PO cobre aderência ao escopo, critérios funcionais, valor e impacto aos usuários, público autorizado e comunicação. Não aprova arquitetura, segurança, privacidade, infraestrutura, recuperação, RPO/RTO, testes técnicos ou autoridade institucional final de publicação.
 
-**Limites atuais:** este documento não demonstra que o produto esteja pronto para uma primeira release. A baseline técnica consultada em 17/11/2026 registrava que a main ainda não continha os fluxos completos de autenticação, conversas, grupos, anexos e administração. O catálogo de smoke tests é aplicável somente às funcionalidades efetivamente implementadas; casos não aplicáveis devem ser registrados como tal, não como aprovados. A liberação de produto permanece condicionada a evidências novas da versão candidata.
+**Limites atuais:** a implementação funcional do Polychat ainda não começou. A estrutura Next.js, o middleware isolado, a migration de perfis e os testes simulados são scaffold, não funcionalidades entregues. O catálogo de smoke tests será executado somente quando os fluxos reais estiverem implementados; não marcar como aprovados casos apenas especificados ou sem aplicação.
 
 **Status recomendado da Issue #130:** validação dos critérios de produto concluída; entrega documental e operacional ainda parcial. Manter a issue aberta até as revisões, decisões de governança, runbooks, backup/restore, rollback, monitoramento, suporte, testes e evidências de uma release real.
 
@@ -781,4 +781,5 @@ A aprovação do PO cobre aderência ao escopo, critérios funcionais, valor e i
 | Versão | Data | Alteração |
 |---|---|---|
 | 0.1 | 19/11/2026 | Primeira proposta do plano de release, operação, backup/recuperação, rollback, monitoramento, incidentes, suporte e evidências. |
-| 0.2 | 19/11/2026 | Registra validação do PO dos critérios de release de produto; acrescenta gates para público/rollout, jornadas por perfil, escopo real, limitações, comunicação e acompanhamento do piloto; mantém a distinção entre aceite de produto e autorização final de produção. |
+| 0.2 | 19/11/2026 | Registra validação do PO dos critérios de release por versão; acrescenta gates de público, jornadas, escopo, comunicação e acompanhamento. |
+| 0.3 | 20/11/2026 | Corrige parâmetros para FORD v2, remove piloto de lançamento, reconhece Supabase/Vercel oficiais, atualiza RPO/RTO/99%/backups e explicita que a implementação funcional ainda não começou. |
