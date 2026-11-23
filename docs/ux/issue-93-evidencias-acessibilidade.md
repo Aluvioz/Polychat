@@ -67,7 +67,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 | M-01 | Tab/Shift+Tab em todos os controles e foco visível | PARTIAL — Tab/foco visível observado; Shift+Tab completo não comprovado |
 | M-02 | Zoom 200% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
-| M-04 | Larguras 320/390/768 e 1280px | NOT RUN |
+| M-04 | Larguras 320/390/768 e 1280px | PASS por relato — emulação Chrome 320/390/768/1280px sem cortes ou sobreposições; outros browsers/dispositivos pendentes |
 | M-05 | Leitor de tela com títulos, rótulos, erros e alertas | PASS por relato do executor com Narrador Windows/Chrome — títulos, rótulos, erro e 3 avisos; sem homologação independente |
 | M-06 | Contraste não textual e estados de foco | NOT RUN |
 | M-07 | Teclado em modal funcional real (quando existir) | NOT APPLICABLE / PENDENTE DE IMPLEMENTAÇÃO |
@@ -100,7 +100,7 @@ A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.
 | M-01 — foco e teclado | Autor percorreu controles usando Tab; capturas mostraram foco destacado por contorno nos campos Usuário/Anexo e no link “Pular para o conteúdo principal”. | **PARTIAL**: foco visível observado; não foi documentada toda a sequência Tab/Shift+Tab, ausência de armadilhas ou operação por teclado de todos os controles. |
 | M-02 — zoom 200% | Autor declarou: “200% — legível sem cortes” após orientação para ampliar o zoom no Chrome. | **PASS (relato)**: não houve relato de corte; sem vídeo, dimensões de viewport, versão ou confirmação independente de reflow/rolagem horizontal em todas as seções. |
 | M-03 — zoom 400% | Autor declarou: “400% — legível sem cortes”. | **PASS (relato)**: mesma limitação do caso M-02; registrar screenshots no PR para elevar rastreabilidade. |
-| M-04 — múltiplos viewports/navegadores | Nenhuma execução confirmada em 320/390/768px, Edge/Firefox e dispositivos homologados. | **NOT RUN**. |
+| M-04 — múltiplos viewports/navegadores | Em 23/11/2026, executor relatou emulação de viewport no Chrome em 320px, 390px, 768px e 1280px, todos sem cortes/sobreposições. | **PASS por relato nas quatro larguras Chrome**. Não foram verificadas outras engines/navegadores ou aparelhos físicos; screenshots e versões pendentes. |
 | M-05 — leitor de tela | Em 23/11/2026, autor ativou Narrador do Windows no Chrome e relatou navegação/leitura correta dos títulos, dos campos Usuário, Senha, Anexo e da mensagem de erro do anexo. | **PASS por relato nos elementos verificados** (títulos, campos, erro e avisos; ver seção 7.2). Falta anexar evidências auditáveis. Teste com Narrador não demonstra comportamento do NVDA. |
 | M-06 — contraste não textual | Inspeção numérica parcial anterior abrange texto apenas, sem todos os estados e fundos. | **NOT RUN / cobertura incompleta**. |
 | M-07 — modal funcional | A galeria demonstra confirmação estática, sem foco modal, Escape e retorno. | **N/A para a galeria estática**; validar quando o componente funcional existir. |
@@ -129,3 +129,8 @@ O executor confirmou que o Narrador do Windows foi ativado no Chrome com `Ctrl +
 O executor informou que, no teste M-05 utilizando **Narrador do Windows no Chrome**, conseguiu **ler corretamente os três avisos** da seção “Feedback e estados”: sucesso (“Mensagem enviada com sucesso.”), erro (“Não foi possível concluir. Tente novamente.”) e atenção (“Sessão expirada. Faça login novamente.”). **Resultado: PASS por relato para leitura dos três avisos estáticos**. A inspeção do HTML também confirmou os atributos `role="status"` (sucesso e atenção) e `role="alert"` (erro). A leitura de conteúdo estático não demonstra anúncio automático quando uma mensagem é inserida dinamicamente; esta galeria não implementa tal interação.
 
 **Limitações:** a versão do Narrador/Chrome, a URL exata aberta, gravação de voz e evidência auditável anexada ao GitHub não foram fornecidas. O resultado não equivale a certificação geral de acessibilidade nem substitui revisão SQA.
+
+
+### 7.3 Responsividade — Chrome emulação de viewport, 23/11/2026
+
+O executor reportou o caso M-04 com a ferramenta de visualização responsiva do Chrome (F12, modo dispositivo), observando em quatro larguras **320px, 390px, 768px e 1280px** ausência de cortes de texto e de sobreposições. Todos os quatro subcasos foram reportados **PASS**. É uma execução manual baseada no relato do autor, **não teste automatizado**, e não equivale a homologação em Android/iOS ou Edge/Firefox. Versão exata do Chrome, altura do viewport, rolagem lateral em toda a página e capturas de evidência não foram informadas ou anexadas ao PR. Registrar quando disponíveis. A avaliação SQA permanece independente.
