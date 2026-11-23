@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Polychat UI Kit — Issue #93 — proposta</title>
   <style>
-/* Polychat UI Kit v0.1 — PROPOSTA UX (#93), não é marca Ford oficial.
-   Isolado em docs/ux; não substitui CSS da aplicação. */
+/* Polychat UI Kit v0.1 — proposta de interface com paleta Ford provisória Q-019.
+   Ford Oval é referência externa da Wikimedia Commons, não ativo autorizado; tokens isolados, sem alterar runtime. */
 :root {
   color-scheme: light;
   --pc-brand-700: #00095B;
@@ -36,7 +36,7 @@
   --pc-radius-sm: 6px;
   --pc-radius-md: 10px;
   --pc-radius-lg: 16px;
-  --pc-elevation: 0 3px 12px rgba(16,36,62,.10);
+  --pc-elevation: 0 3px 12px rgba(15,15,15,.10);
   --pc-font: Arial, Helvetica, sans-serif;
   --pc-font-size-sm: .875rem;
   --pc-font-size-base: 1rem;
@@ -55,7 +55,7 @@ button{cursor:pointer}
 .pc-shell{max-width:1120px;margin:auto;padding:var(--pc-space-8) var(--pc-space-4)}
 .pc-header{border-bottom:1px solid var(--pc-border);background:var(--pc-surface)}
 .pc-header-inner{max-width:1120px;margin:auto;min-height:70px;padding:var(--pc-space-4);display:flex;align-items:center;justify-content:space-between;gap:var(--pc-space-4)}
-.pc-logo{font-weight:800;color:var(--pc-brand-700);letter-spacing:-.04em;font-size:1.375rem}
+.pc-brand-lockup{display:inline-flex;align-items:center;gap:12px;min-width:0;font-weight:800;color:var(--pc-brand-700);letter-spacing:-.04em;font-size:1.375rem}.pc-brand-lockup a{display:inline-flex;align-items:center;flex:0 0 auto}.pc-ford-mark{display:block;width:104px;height:auto;max-height:42px;object-fit:contain}.pc-brand-lockup span{min-width:0}
 .pc-meta{color:var(--pc-text-secondary);font-size:var(--pc-font-size-sm)}
 .pc-heading{font-size:clamp(1.5rem,3vw,2.5rem);line-height:1.15;margin:0 0 var(--pc-space-2)}
 .pc-lead{max-width:740px;color:var(--pc-text-secondary)}
@@ -104,7 +104,6 @@ button{cursor:pointer}
 @media(max-width:860px){.pc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-swatches{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.pc-shell{padding:var(--pc-space-6) var(--pc-space-3)}.pc-grid{grid-template-columns:1fr}.pc-header-inner{flex-wrap:wrap}.pc-list-item{align-items:flex-start}.pc-swatch span{overflow-wrap:anywhere}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
-
 
 /* A11y: skip link, forced colors and resilient zoom/reflow */
 .pc-skip-link{position:absolute;left:12px;top:-100px;z-index:1000;padding:12px 16px;background:#ffffff;color:#00095B;border:3px solid #b45309;border-radius:6px;font-weight:700}
