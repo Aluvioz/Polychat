@@ -48,7 +48,7 @@ Revisão do Tech Lead: **CHANGES_REQUESTED** em 17/11/2026.
 
 **Não testado:** combinações não textuais, estados hover, placeholder, contraste do foco, ícones e bordas nos fundos reais. Estes pares também não comprovam acessibilidade total.
 
-## 4. Roteiro manual reprodutível — execução pendente
+## 4. Roteiro manual reprodutível — execução parcial relatada em 23/11/2026
 
 A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-standalone.html` em **Raw / Download raw file**, salva como `.html` e aberta no navegador. Não requer Vercel. O deployment Preview do grupo `polychat1` está protegido e não deve ser listado como prova de acesso público.
 
@@ -64,9 +64,9 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 
 | ID | Caso | Status |
 |---|---|---|
-| M-01 | Tab/Shift+Tab em todos os controles e foco visível | NOT RUN |
-| M-02 | Zoom 200% com reflow e leitura preservados | NOT RUN |
-| M-03 | Zoom 400% com reflow e leitura preservados | NOT RUN |
+| M-01 | Tab/Shift+Tab em todos os controles e foco visível | PARTIAL — Tab/foco visível observado; Shift+Tab completo não comprovado |
+| M-02 | Zoom 200% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
+| M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-04 | Larguras 320/390/768 e 1280px | NOT RUN |
 | M-05 | Leitor de tela com títulos, rótulos, erros e alertas | NOT RUN |
 | M-06 | Contraste não textual e estados de foco | NOT RUN |
@@ -89,3 +89,29 @@ Não marcar “aprovado” ou “homologado” somente com estas evidências.
 ## 6. Referência visual Ford Oval — decisão do PO
 
 A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.svg](https://commons.wikimedia.org/wiki/File:Ford_logo.svg) como referência visual da proposta. A origem classifica o desenho como domínio público para fins de copyright nos EUA, mas registra possível proteção marcária em determinadas jurisdições. O uso no protótipo não equivale a autorização da Ford, afiliação, patrocínio, endosso ou aprovação institucional. O caso M-08 permanece `PENDING APPROVAL` para qualquer homologação oficial de marca; a referência visual permanece acompanhada de fonte e ressalva.
+
+
+## 7. Registro incremental de testes humanos — 23/11/2026
+
+**Origem:** execução reportada pelo autor `ponde-web` em conversa de acompanhamento, com capturas de tela apresentadas na conversa (ainda **não** anexadas como arquivos à PR). **Ambiente:** Windows, Google Chrome, galeria HTML autocontida aberta localmente por `file://`; versão exata do navegador, resolução e dimensões da janela não informadas. **Avaliação:** autorrelato e inspeção visual parcial das capturas, não auditoria independente nem homologação SQA.
+
+| Caso | Passos informados / evidência observada | Resultado e limitação |
+|---|---|---|
+| M-01 — foco e teclado | Autor percorreu controles usando Tab; capturas mostraram foco destacado por contorno nos campos Usuário/Anexo e no link “Pular para o conteúdo principal”. | **PARTIAL**: foco visível observado; não foi documentada toda a sequência Tab/Shift+Tab, ausência de armadilhas ou operação por teclado de todos os controles. |
+| M-02 — zoom 200% | Autor declarou: “200% — legível sem cortes” após orientação para ampliar o zoom no Chrome. | **PASS (relato)**: não houve relato de corte; sem vídeo, dimensões de viewport, versão ou confirmação independente de reflow/rolagem horizontal em todas as seções. |
+| M-03 — zoom 400% | Autor declarou: “400% — legível sem cortes”. | **PASS (relato)**: mesma limitação do caso M-02; registrar screenshots no PR para elevar rastreabilidade. |
+| M-04 — múltiplos viewports/navegadores | Nenhuma execução confirmada em 320/390/768px, Edge/Firefox e dispositivos homologados. | **NOT RUN**. |
+| M-05 — leitor de tela | NVDA e Narrador do Windows foram discutidos; não há relato de teste realizado. | **NOT RUN**. O Narrador pode fornecer evidência nomeada de Windows, sem representar cobertura de NVDA. |
+| M-06 — contraste não textual | Inspeção numérica parcial anterior abrange texto apenas, sem todos os estados e fundos. | **NOT RUN / cobertura incompleta**. |
+| M-07 — modal funcional | A galeria demonstra confirmação estática, sem foco modal, Escape e retorno. | **N/A para a galeria estática**; validar quando o componente funcional existir. |
+| M-08 — identidade visual | PO definiu paleta de referência provisória em Q-019; pacote autorizado e regras corporativas permanecem ausentes. | **PARCIAL / PENDING APPROVAL**: não confundir decisão do PO para proposta com homologação da marca. |
+
+### Evidências para anexar e próxima rodada
+
+1. **Autor:** anexar capturas originais dos passos Tab, zoom 200% e 400% à PR ou criar arquivo de evidências com data, browser/versão, dimensão viewport e resultado observado. O presente registro **não afirma** que as capturas foram anexadas no GitHub.
+2. **SQA + autor:** executar Shift+Tab completo, larguras 320/390/768px, testes de leitor de tela (identificar produto/versão), bordas/estados/indicador de foco e registrar PASS/FAIL com imagens ou vídeo. Não marcar sem executar.
+3. **Tech Lead:** definir tecnologia/família/licença de ícones; o `package.json` desta branch atualmente não contém dependência de ícones. **Sugestão a avaliar:** Lucide (pacote React, ícones SVG com rótulos semânticos quando necessários), sujeita à confirmação técnica e da licença antes de registrar como decisão final. Não se adicionou dependência ao runtime.
+4. **Responsável Vercel:** validar preview protegido com acesso autorizado. O acesso local `file://` **não** comprova deploy; comentários recentes do bot Vercel apontaram limite do plano gratuito (mais de 100 deploys/dia), exigindo nova checagem quando a cota permitir.
+5. **Revisores:** nova avaliação após evidências; solicitação `CHANGES_REQUESTED` permanece até reavaliação do Tech Lead.
+
+**Nota de rastreabilidade:** este registro documenta relatos existentes; não transforma relato sem anexos em teste independente e não altera o resultado de revisão SQA.
