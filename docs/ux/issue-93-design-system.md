@@ -35,7 +35,7 @@ A paleta de referência do Design System utiliza a direção cromática provisó
 | `--pc-text-muted` | `#64748B` | Metadados em fundo branco | Existente |
 | `--pc-surface` | `#FFFFFF` | Cards/formulários | Existente |
 | `--pc-background` | `#F0F0F0` | Fundo neutro da aplicação | Token neutro da paleta provisória |
-| `--pc-border` | `#CBD5E1` | Delimitadores, entradas | Proposta |
+| `--pc-border` | `#64748B` | Bordas de campos e delimitadores com contraste ≥ 3:1 sobre branco | Ajuste de acessibilidade em 23/11/2026 |
 | `--pc-success` | `#027A48` | Sucesso textual em fundo branco | Proposta |
 | `--pc-error` | `#B42318` | Erro e ação destrutiva | Proposta |
 | `--pc-warning-text` | `#854D0E` | Texto de cautela | Proposta |
