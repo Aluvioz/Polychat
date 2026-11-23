@@ -17,6 +17,7 @@
 | Botão secundário | #00095B | #FFFFFF | 17,64:1 | 4,5:1 | PASS calculado |
 | Botão secundário hover | #00095B | #F0F0F0 | 15,48:1 | 4,5:1 | PASS calculado |
 | Botão destrutivo | #FFFFFF | #B42318 | 6,57:1 | 4,5:1 | PASS calculado |
+| Botão destrutivo hover | #FFFFFF | #8F1D14 | 8,92:1 | 4,5:1 | PASS calculado |
 | Texto informativo em aviso sucesso | #475569 | #EAF7F0 | 6,88:1 | 4,5:1 | PASS calculado |
 | Texto informativo em aviso erro | #475569 | #FEF3F2 | 6,97:1 | 4,5:1 | PASS calculado |
 | Texto informativo em aviso atenção | #475569 | #FEF9C3 | 7,06:1 | 4,5:1 | PASS calculado |
@@ -35,13 +36,13 @@
 | Borda de badge padrão | #64748B | #FFFFFF | 4,76:1 | 3:1 não textual (se essencial) | PASS calculado |
 | Texto desabilitado | #475569 | #E2E8F0 | 6,15:1 | **Isento WCAG 1.4.3 e 1.4.11**, valor informativo | NÃO APLICÁVEL para mínimo |
 
-**Interpretação:** esta matriz amplia substancialmente a lista de cores avaliadas e cobre estados `hover`, indicadores, bordas e estados definidos pelos tokens. Algumas bordas e indicadores são decorativos, portanto 3:1 não é sempre obrigatório; apresentar a razão calculada não implica obrigação de conformidade se o elemento não transmite informação. O texto em estados desabilitados está isento pelos critérios citados. O `filter:brightness(.85)` do botão destrutivo em hover altera a cor percebida: **não é medido nesta matriz**, pois requer obter a cor efetiva ou o estado renderizado.
+**Interpretação:** esta matriz amplia substancialmente a lista de cores avaliadas e cobre estados `hover`, indicadores, bordas e estados definidos pelos tokens. Algumas bordas e indicadores são decorativos, portanto 3:1 não é sempre obrigatório; apresentar a razão calculada não implica obrigação de conformidade se o elemento não transmite informação. O texto em estados desabilitados está isento pelos critérios citados. O efeito anterior `filter:brightness(.85)` no botão destrutivo hover foi substituído por cor explícita `#8F1D14`, facilitando auditoria estática do par de cores; o aspecto renderizado ainda deve ser verificado.
 
 ## 2. Cobertura e limitações
 
 - **Coberto por cálculo:** principais cores textuais, fundos da galeria, botões normal/hover quando a cor é explicitamente declarada, campos, foco, badges e avisos.
 - **Coberto por testes de fonte:** paridade entre CSS documentado, público e standalone, verificações de pares explícitos e tokens em `tests/issue-93-a11y.test.mjs`; **execução completa no CI precisa ser verificada**.
-- **Ainda não coberto:** pixels e estados renderizados por navegador (incluindo o filtro de hover destrutivo), imagens/ícones se forem semanticamente essenciais, estilos computados com media queries/forced-colors, tecnologias assistivas, modais funcionais, contraste de conteúdo real do runtime, e avaliação independente.
+- **Ainda não coberto:** pixels e estados renderizados por navegador, imagens/ícones se forem semanticamente essenciais, estilos computados com media queries/forced-colors, tecnologias assistivas, modais funcionais, contraste de conteúdo real do runtime, e avaliação independente.
 - **Sem falsa declaração:** não foram inventados nomes ou versões de navegador, Windows ou Narrador; ambiente conhecido é Windows + Chrome + Narrador, DevTools emulado, `file://` para a galeria local. Falta coletar números de versão para reprodutibilidade completa.
 - **Regressão:** a galeria demonstrativa não muda o runtime; verificações estáticas não substituem testes de fluxos funcionais.
 - **Revisão:** Tech Lead continua `CHANGES_REQUESTED` até revisão; SQA deve inspecionar o que foi calculado e executar validações próprias.
