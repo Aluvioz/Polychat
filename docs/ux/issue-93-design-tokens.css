@@ -66,7 +66,7 @@ button{cursor:pointer}
 .pc-button-secondary{background:white;color:var(--pc-brand-700);border-color:var(--pc-brand-700)}
 .pc-button-secondary:hover{background:var(--pc-brand-050)}
 .pc-button-danger{background:var(--pc-error);color:white}
-.pc-button-danger:hover{filter:brightness(.85)}
+.pc-button-danger:hover{background:#8f1d14}
 .pc-button:disabled{background:var(--pc-disabled-bg);color:var(--pc-disabled-ink);border-color:var(--pc-disabled-bg);cursor:not-allowed}
 .pc-field{display:flex;flex-direction:column;gap:6px;max-width:440px}
 .pc-field label{font-weight:700}
