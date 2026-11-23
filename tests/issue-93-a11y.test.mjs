@@ -62,8 +62,8 @@ function contrast(fg,bg) {
 }
 test('pares textuais demonstrativos possuem contraste WCAG AA normal', () => {
   for (const [fg,bg] of [
-    ['#003478','#ffffff'],['#001f4d','#ffffff'],['#1769aa','#ffffff'],
-    ['#10243e','#ffffff'],['#64748b','#ffffff'],['#475569','#ffffff'],
+    ['#00095b','#ffffff'],['#00142e','#ffffff'],['#ffffff','#066fef'],
+    ['#0f0f0f','#ffffff'],['#64748b','#ffffff'],['#475569','#ffffff'],
     ['#027a48','#ffffff'],['#b42318','#ffffff']
   ]) assert.ok(contrast(fg,bg) >= 4.5, fg + '/' + bg + ' = ' + contrast(fg,bg).toFixed(2));
 });
@@ -89,4 +89,67 @@ test('logo Ford standalone usa limite responsivo e CSS sincronizado', () => {
   assert.match(html, /width:104px;height:auto;max-height:42px/);
   assert.match(html, /\.pc-brand-lockup\s*\{/);
   assert.match(css, /\.pc-ford-mark\s*\{/);
+});
+
+ 
+// Auditoria estatica incremental: cores efetivamente declaradas nas classes e tokens da galeria.
+// NAO substitui inspecao renderizada, zoom, tecnologias assistivas ou QA independente.
+function token(name) {
+  const value = css.match(new RegExp('--' + name + ':\\s*(#[0-9a-f]{6})\\b', 'i'))?.[1];
+  assert.ok(value, 'Token não encontrado: ' + name);
+  return value;
+}
+function classRule(name) {
+  const escaped = name.replaceAll('-', '\\-');
+  const match = css.match(new RegExp('\\.' + escaped + '\\s*\\{([^}]+)\\}'));
+  assert.ok(match, 'Classe não encontrada: ' + name);
+  return match[1];
+}
+test('tokens e estilos de cada galeria permanecem sincronizados', () => {
+  const embedded = html.match(/<style>\s*([\s\S]*?)\s*<\/style>/)?.[1];
+  assert.ok(embedded, 'CSS standalone ausente');
+  assert.equal(embedded.trim(), css.trim(), 'CSS standalone diferente da fonte');
+  assert.equal(publicCss, css, 'CSS público diferente da fonte');
+});
+test('contraste textual das variantes presentes, inclusive hover, atende 4,5:1', () => {
+  for (const [name, fore, back] of [
+    ['texto principal', token('pc-ink'), token('pc-surface')],
+    ['texto secundário', token('pc-text-secondary'), token('pc-surface')],
+    ['texto muted', token('pc-text-muted'), token('pc-surface')],
+    ['primário', '#ffffff', token('pc-brand-700')],
+    ['primário hover', '#ffffff', token('pc-brand-900')],
+    ['secundário', token('pc-brand-700'), '#ffffff'],
+    ['secundário hover', token('pc-brand-700'), token('pc-brand-050')],
+    ['perigo', '#ffffff', token('pc-error')],
+    ['aviso sucesso', token('pc-text-secondary'), '#eaf7f0'],
+    ['aviso erro', token('pc-text-secondary'), '#fef3f2'],
+    ['aviso atenção', token('pc-text-secondary'), token('pc-warning-bg')],
+    ['badge sucesso', token('pc-success'), '#ffffff'],
+    ['badge pendente', token('pc-warning-text'), token('pc-warning-bg')],
+    ['Skyview com branco (referência)', '#ffffff', token('pc-brand-600')],
+  ]) assert.ok(contrast(fore,back) >= 4.5, name + ': ' + contrast(fore,back).toFixed(2));
+  assert.match(classRule('pc-button-primary'), /background:var\(--pc-brand-700\);color:white/);
+  assert.match(classRule('pc-button-secondary'), /color:var\(--pc-brand-700\)/);
+  assert.match(classRule('pc-button-danger'), /background:var\(--pc-error\);color:white/);
+});
+test('contraste não textual de controles essenciais, foco e estados, mínimo 3:1', () => {
+  for (const [name, fore, back] of [
+    ['input', token('pc-border'), '#ffffff'],
+    ['input inválido', token('pc-error'), '#ffffff'],
+    ['foco sobre branco', token('pc-focus'), '#ffffff'],
+    ['foco sobre cinza', token('pc-focus'), token('pc-background')],
+    ['foco em botão primário', token('pc-focus'), token('pc-brand-700')],
+    ['borda secundária', token('pc-brand-700'), '#ffffff'],
+    ['aviso sucesso', token('pc-success'), '#eaf7f0'],
+    ['aviso erro', token('pc-error'), '#fef3f2'],
+    ['aviso atenção', token('pc-warning-text'), token('pc-warning-bg')],
+    ['badge padrão', token('pc-border'), '#ffffff'],
+  ]) assert.ok(contrast(fore,back) >= 3, name + ': ' + contrast(fore,back).toFixed(2));
+  assert.match(css, /:focus-visible\{outline:3px solid var\(--pc-focus\)/);
+  assert.match(classRule('pc-button'), /min-height:44px/);
+  assert.match(css, /\.pc-field input,\.pc-field select,\.pc-field textarea\{/);
+});
+test('controle desativado é exceção de contraste e não deve criar falso FAIL', () => {
+  assert.match(css, /\.pc-button:disabled\{background:var\(--pc-disabled-bg\);color:var\(--pc-disabled-ink\)/);
+  assert.ok(contrast(token('pc-disabled-ink'), token('pc-disabled-bg')) >= 1);
 });
