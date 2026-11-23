@@ -67,7 +67,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 | M-01 | Tab/Shift+Tab em todos os controles e foco visível | PASS por relato para percurso direto/reverso e foco visível no Chrome; cobertura da galeria estática, sem certificação independente |
 | M-02 | Zoom 200% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
-| M-04 | Larguras 320/390/768 e 1280px | PASS por relato — emulação Chrome 320/390/768/1280px sem cortes ou sobreposições; outros browsers/dispositivos pendentes |
+| M-04 | Larguras 320/390/768 e 1280px | REOPENED — novos prints mostraram logo Ford excessivo e cortado; CSS standalone corrigido, reteste pendente |
 | M-05 | Leitor de tela com títulos, rótulos, erros e alertas | PASS por relato do executor com Narrador Windows/Chrome — títulos, rótulos, erro e 3 avisos; sem homologação independente |
 | M-06 | Contraste não textual e estados de foco | PARTIAL — inspeção visual PASS por relato; borda padrão falhou 1,48:1 e foi corrigida para 4,76:1; cálculos CSS, não auditoria renderizada completa |
 | M-07 | Teclado em modal funcional real (quando existir) | NOT APPLICABLE / PENDENTE DE IMPLEMENTAÇÃO |
@@ -164,3 +164,12 @@ Após baixar a galeria independente atualizada e inspecionar a seção de formul
 ### 7.6 Complemento M-01 — percurso reverso com Shift + Tab (23/11/2026)
 
 Após orientar que Shift + Tab retorna **um elemento por vez** (e não diretamente ao topo), o executor confirmou **sim** às duas perguntas: (1) Shift + Tab repetido permitiu voltar pelos elementos ao link “Pular para o conteúdo principal”; (2) a indicação visual de foco permaneceu visível e não houve bloqueio/armadilha de teclado percebido. **Resultado: PASS por relato para avanço com Tab e retorno com Shift + Tab na galeria estática em Chrome/Windows.** Não houve gravação do percurso nem versão exata de Chrome informada; isso não valida interações de um modal funcional nem substitui revisão SQA.
+
+
+### 7.7 Reavaliação M-04 — defeito real identificado em novas capturas (23/11/2026)
+
+O executor enviou capturas de **390×780, 768×780 e 1280×780 px** usando modo Responsivo do Chrome DevTools. As capturas mostraram **Ford Oval desproporcionalmente grande**, cortado à direita no viewport de 390px, e ocupando área excessiva em 768px e 1280px. Portanto, o resultado anterior M-04 `PASS por relato` **não pode ser usado como validação global**. O escopo está **REOPENED/FAIL observado nas capturas antigas**. As capturas devem ser preservadas como **evidência de defeito pré-correção**, não como aprovação. O print de 320px mostrou seção de cards mas não todo o cabeçalho.
+
+**Causa raiz no código:** a galeria autocontida `docs/ux/issue-93-galeria-standalone.html` continha `<img class="pc-ford-mark">` sem as regras `.pc-ford-mark` e `.pc-brand-lockup` presentes em `docs/ux/issue-93-design-tokens.css`. Em consequência, o navegador renderizou o SVG/PNG do logotipo sem dimensão limitada no HTML standalone. **Correção commit `f9bcc801d3bfa0b5d8afbe45e819afbaea038c8f`:** sincronizamos o bloco `<style>` da galeria standalone com a folha CSS documentada, incluindo `width:104px`, `height:auto`, `max-height:42px` e estilos da marca; o CSS principal já continha esses limites. **Teste estático de regressão:** `tests/issue-93-a11y.test.mjs` atualizado para exigir as regras da imagem e do lockup também no standalone.
+
+**Status correto:** **FIXED IN SOURCE / RETEST PENDING**. Fazer download **novo** do HTML atualizado e repetir as dimensões 320/390/768/1280px; verificar cabeçalho, cards e ausência de rolagem horizontal. Somente depois registrar `PASS` para a correção. Não alegar que o bug foi validado em dispositivo físico ou que passou em CI sem conferir workflows.
