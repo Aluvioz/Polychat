@@ -68,7 +68,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 | M-02 | Zoom 200% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-04 | Larguras 320/390/768 e 1280px | NOT RUN |
-| M-05 | Leitor de tela com títulos, rótulos, erros e alertas | NOT RUN |
+| M-05 | Leitor de tela com títulos, rótulos, erros e alertas | PARTIAL — títulos, três rótulos e erro PASS por relato com Narrador; alertas não testados |
 | M-06 | Contraste não textual e estados de foco | NOT RUN |
 | M-07 | Teclado em modal funcional real (quando existir) | NOT APPLICABLE / PENDENTE DE IMPLEMENTAÇÃO |
 | M-08 | Homologação institucional da marca e dos tokens oficiais pela Ford (não exigida para referência ilustrativa) | PENDING APPROVAL |
@@ -101,7 +101,7 @@ A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.
 | M-02 — zoom 200% | Autor declarou: “200% — legível sem cortes” após orientação para ampliar o zoom no Chrome. | **PASS (relato)**: não houve relato de corte; sem vídeo, dimensões de viewport, versão ou confirmação independente de reflow/rolagem horizontal em todas as seções. |
 | M-03 — zoom 400% | Autor declarou: “400% — legível sem cortes”. | **PASS (relato)**: mesma limitação do caso M-02; registrar screenshots no PR para elevar rastreabilidade. |
 | M-04 — múltiplos viewports/navegadores | Nenhuma execução confirmada em 320/390/768px, Edge/Firefox e dispositivos homologados. | **NOT RUN**. |
-| M-05 — leitor de tela | NVDA e Narrador do Windows foram discutidos; não há relato de teste realizado. | **NOT RUN**. O Narrador pode fornecer evidência nomeada de Windows, sem representar cobertura de NVDA. |
+| M-05 — leitor de tela | Em 23/11/2026, autor ativou Narrador do Windows no Chrome e relatou navegação/leitura correta dos títulos, dos campos Usuário, Senha, Anexo e da mensagem de erro do anexo. | **PARTIAL — PASS nos elementos relatados**. Falta verificar avisos de sucesso, erro e atenção, e anexar evidências auditáveis. Teste com Narrador não demonstra comportamento do NVDA. |
 | M-06 — contraste não textual | Inspeção numérica parcial anterior abrange texto apenas, sem todos os estados e fundos. | **NOT RUN / cobertura incompleta**. |
 | M-07 — modal funcional | A galeria demonstra confirmação estática, sem foco modal, Escape e retorno. | **N/A para a galeria estática**; validar quando o componente funcional existir. |
 | M-08 — identidade visual | PO definiu paleta de referência provisória em Q-019; pacote autorizado e regras corporativas permanecem ausentes. | **PARCIAL / PENDING APPROVAL**: não confundir decisão do PO para proposta com homologação da marca. |
@@ -115,3 +115,10 @@ A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.
 5. **Revisores:** nova avaliação após evidências; solicitação `CHANGES_REQUESTED` permanece até reavaliação do Tech Lead.
 
 **Nota de rastreabilidade:** este registro documenta relatos existentes; não transforma relato sem anexos em teste independente e não altera o resultado de revisão SQA.
+
+
+### 7.1 Complemento de leitor de tela — 23/11/2026
+
+O executor confirmou que o Narrador do Windows foi ativado no Chrome com `Ctrl + Windows + Enter` e anunciou títulos de seção corretamente ao navegar com o recurso de cabeçalhos. Em seguida reportou resultados `pass` para os três campos identificados como **Usuário**, **Senha** e **Anexo**, além da **mensagem de erro do anexo**. Nenhuma observação adversa foi relatada. O ambiente de teste informado é Windows + Chrome, sem versões exatas; a URL/instância exata (local versus publicada) dessa etapa não foi confirmada.
+
+**Classificação:** M-05 **PARTIAL / PASS nos subcasos relatados**. Os feedbacks de sucesso/erro/atenção e sua exposição pelo leitor ainda não foram verificados. Captura da narração, vídeo, versões de software e aprovação independente SQA permanecem pendentes. Não tratar como homologação geral de acessibilidade.
