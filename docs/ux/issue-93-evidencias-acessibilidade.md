@@ -67,7 +67,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 | M-01 | Tab/Shift+Tab em todos os controles e foco visível | PASS por relato para percurso direto/reverso e foco visível no Chrome; cobertura da galeria estática, sem certificação independente |
 | M-02 | Zoom 200% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
-| M-04 | Larguras 320/390/768 e 1280px | REOPENED — novos prints mostraram logo Ford excessivo e cortado; CSS standalone corrigido, reteste pendente |
+| M-04 | Larguras 320/390/768 e 1280px | RETESTE VISUAL PASS PARCIAL — prints atualizados confirmam cabeçalho/logo e cards iniciais em 320/390/768/1280px; demais seções/dispositivos não cobertos |
 | M-05 | Leitor de tela com títulos, rótulos, erros e alertas | PASS por relato do executor com Narrador Windows/Chrome — títulos, rótulos, erro e 3 avisos; sem homologação independente |
 | M-06 | Contraste não textual e estados de foco | PARTIAL — inspeção visual PASS por relato; borda padrão falhou 1,48:1 e foi corrigida para 4,76:1; cálculos CSS, não auditoria renderizada completa |
 | M-07 | Teclado em modal funcional real (quando existir) | NOT APPLICABLE / PENDENTE DE IMPLEMENTAÇÃO |
@@ -173,3 +173,8 @@ O executor enviou capturas de **390×780, 768×780 e 1280×780 px** usando modo 
 **Causa raiz no código:** a galeria autocontida `docs/ux/issue-93-galeria-standalone.html` continha `<img class="pc-ford-mark">` sem as regras `.pc-ford-mark` e `.pc-brand-lockup` presentes em `docs/ux/issue-93-design-tokens.css`. Em consequência, o navegador renderizou o SVG/PNG do logotipo sem dimensão limitada no HTML standalone. **Correção commit `f9bcc801d3bfa0b5d8afbe45e819afbaea038c8f`:** sincronizamos o bloco `<style>` da galeria standalone com a folha CSS documentada, incluindo `width:104px`, `height:auto`, `max-height:42px` e estilos da marca; o CSS principal já continha esses limites. **Teste estático de regressão:** `tests/issue-93-a11y.test.mjs` atualizado para exigir as regras da imagem e do lockup também no standalone.
 
 **Status correto:** **FIXED IN SOURCE / RETEST PENDING**. Fazer download **novo** do HTML atualizado e repetir as dimensões 320/390/768/1280px; verificar cabeçalho, cards e ausência de rolagem horizontal. Somente depois registrar `PASS` para a correção. Não alegar que o bug foi validado em dispositivo físico ou que passou em CI sem conferir workflows.
+
+
+### 7.8 Reteste após correção do logotipo — 23/11/2026
+
+O executor enviou novas capturas do Chrome DevTools após baixar a galeria standalone com CSS sincronizado. **390×780 px:** logotipo reduzido e íntegro, cabeçalho em duas linhas, cartões em uma coluna. **320×780 px:** logotipo proporcional, texto e cartão inicial sem corte perceptível na região exibida. **768×780 px:** cabeçalho compacto e paleta organizada em duas colunas. **1280×780 px:** cabeçalho compacto e paleta em quatro colunas. **Resultado: PASS visual no trecho fotografado das quatro larguras, confirmando a correção do logo.** Comparar com os prints de falha pré-correção mantidos no histórico. As capturas e o ZIP consolidado foram montados na conversa do executor, mas **não foram anexados ao GitHub neste commit**. Ainda não comprova percurso integral da página, outros navegadores ou dispositivos físicos; SQA deve avaliar se exige as capturas das seções 03 e 04 em cada dimensão.
