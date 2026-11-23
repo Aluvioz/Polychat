@@ -121,6 +121,7 @@ test('contraste textual das variantes presentes, inclusive hover, atende 4,5:1',
     ['secundário', token('pc-brand-700'), '#ffffff'],
     ['secundário hover', token('pc-brand-700'), token('pc-brand-050')],
     ['perigo', '#ffffff', token('pc-error')],
+    ['perigo hover', '#ffffff', '#8f1d14'],
     ['aviso sucesso', token('pc-text-secondary'), '#eaf7f0'],
     ['aviso erro', token('pc-text-secondary'), '#fef3f2'],
     ['aviso atenção', token('pc-text-secondary'), token('pc-warning-bg')],
@@ -131,6 +132,7 @@ test('contraste textual das variantes presentes, inclusive hover, atende 4,5:1',
   assert.match(classRule('pc-button-primary'), /background:var\(--pc-brand-700\);color:white/);
   assert.match(classRule('pc-button-secondary'), /color:var\(--pc-brand-700\)/);
   assert.match(classRule('pc-button-danger'), /background:var\(--pc-error\);color:white/);
+  assert.match(css, /\.pc-button-danger:hover\{background:#8f1d14\}/);
 });
 test('contraste não textual de controles essenciais, foco e estados, mínimo 3:1', () => {
   for (const [name, fore, back] of [
