@@ -69,3 +69,17 @@ test('pares textuais demonstrativos possuem contraste WCAG AA normal', () => {
 });
 // LIMITAÇÃO: são verificações estáticas. Não substituem navegação por teclado
 // no navegador, zoom/reflow, leitores de tela, nem contraste não textual.
+
+test('bordas essenciais, foco e erro cumprem contraste nao textual minimo 3:1', () => {
+  const border = css.match(/--pc-border:\s*(#[0-9a-f]{6})/i)?.[1];
+  const focus = css.match(/--pc-focus:\s*(#[0-9a-f]{6})/i)?.[1];
+  const error = css.match(/--pc-error:\s*(#[0-9a-f]{6})/i)?.[1];
+  assert.ok(border && focus && error, 'tokens de contraste não encontrados');
+  for (const [name, fg, bg] of [
+    ['borda input sobre branco', border, '#ffffff'],
+    ['foco sobre branco', focus, '#ffffff'],
+    ['foco sobre fundo cinza', focus, '#f0f0f0'],
+    ['borda de erro sobre branco', error, '#ffffff'],
+    ['borda de erro em aviso', error, '#fef3f2'],
+  ]) assert.ok(contrast(fg,bg) >= 3, name + ': ' + contrast(fg,bg).toFixed(2) + ':1');
+});
