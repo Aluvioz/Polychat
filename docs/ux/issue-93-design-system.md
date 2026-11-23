@@ -224,3 +224,14 @@ Q-018 foi resolvida pelo PO: o mapa de telas e a navegação por perfil estão r
 ## Decisão do PO — referência visual do Ford Oval (20/11/2026)
 
 A pedido do PO, a galeria desta proposta de interface exibe a imagem do Ford Oval publicada na [Wikimedia Commons — File:Ford logo.svg](https://commons.wikimedia.org/wiki/File:Ford_logo.svg). A imagem é carregada da miniatura hospedada pela Wikimedia Commons, sem edição do desenho. A página de origem classifica o arquivo como domínio público para fins de copyright nos Estados Unidos e informa que restrições de marca ainda podem existir em certas jurisdições. Esta inclusão é **exclusivamente ilustrativa**: não declara que o Polychat seja produto oficial, afiliado, patrocinado ou endossado pela Ford; não representa aprovação do manual de marca; e não autoriza uso comercial ou aplicação no runtime. A fonte é indicada no README e na galeria. Para adoção institucional ou produtiva, o pacote de marca autorizado e as regras oficiais da Ford continuam necessários.
+
+
+## Atualização após a rodada manual de 23/11/2026 — ler antes de usar o checklist histórico
+
+As seções 4, 7, 9 e 10 acima descrevem o **estado documental inicial** e não refletem todas as evidências produzidas posteriormente. Para o estado atualizado, consultar o [relatório manual](./issue-93-relatorio-execucao-manual-2026-11-23.md), o [registro de acessibilidade](./issue-93-evidencias-acessibilidade.md), o [índice de imagens](./evidencias-issue-93/README.md) e a [auditoria estática ampliada de contraste](./issue-93-auditoria-contraste-e-pendencias-2026-11-23.md).
+
+- Houve **testes manuais autodeclarados** de foco, teclado, zoom, Narrador e responsividade, com 20 referências de imagem no PR #143; a SQA ainda não executou/atestou avaliação independente. Não interpretar frases antigas como “teste manual pendente” como ausência absoluta de qualquer execução; significam ausência de homologação completa.
+- A borda padrão foi corrigida para `#64748B`; o logo do HTML standalone foi dimensionado para até 104×42px, ambos com retestes parciais. O hover do botão destrutivo passou a usar cor explícita `#8F1D14`, sem filtro de brilho, para contraste auditável.
+- A matriz adicional cobre pares textuais, bordas, alertas, badges, foco e estados hover com cálculo sRGB. **Ainda não é medição de interface renderizada.**
+- O preview Vercel `polyford` na equipe `polychat1` não teve sua publicação validada por falta de permissão nesta conexão (HTTP 403; autorização não concluída). Não afirmar publicação concluída.
+- Status de aprovação continua: SQA **NÃO APROVAR**, Tech Lead `CHANGES_REQUESTED`, PR **Draft**. Liberação institucional da marca e escolha definitiva de ícones/licença ainda não foram obtidas.
