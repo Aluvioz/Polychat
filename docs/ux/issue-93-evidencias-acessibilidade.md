@@ -178,3 +178,13 @@ O executor enviou capturas de **390×780, 768×780 e 1280×780 px** usando modo 
 ### 7.8 Reteste após correção do logotipo — 23/11/2026
 
 O executor enviou novas capturas do Chrome DevTools após baixar a galeria standalone com CSS sincronizado. **390×780 px:** logotipo reduzido e íntegro, cabeçalho em duas linhas, cartões em uma coluna. **320×780 px:** logotipo proporcional, texto e cartão inicial sem corte perceptível na região exibida. **768×780 px:** cabeçalho compacto e paleta organizada em duas colunas. **1280×780 px:** cabeçalho compacto e paleta em quatro colunas. **Resultado: PASS visual no trecho fotografado das quatro larguras, confirmando a correção do logo.** Comparar com os prints de falha pré-correção mantidos no histórico. As capturas e o ZIP consolidado foram montados na conversa do executor, mas **não foram anexados ao GitHub neste commit**. Ainda não comprova percurso integral da página, outros navegadores ou dispositivos físicos; SQA deve avaliar se exige as capturas das seções 03 e 04 em cada dimensão.
+
+
+### 7.9 Componentes mobile 320×780 — botões e formulários (23/11/2026)
+
+O executor enviou duas novas capturas de **Chrome DevTools, modo Responsive 320×780 px**, usando a galeria standalone após sincronização das regras CSS de cabeçalho:
+
+- **E14 — seção 03 Botões e estados:** aparecem os botões Ação principal, Ação secundária, Desativar conta (TI) e Indisponível, organizados verticalmente em um cartão. Nenhum corte ou sobreposição perceptível na região capturada.
+- **E15 — seção 04 Formulários e validação:** cartões de Identificador de usuário, Senha e Exemplo de erro são exibidos em uma coluna; rótulos, campos e mensagem “Formato não permitido. Selecione PDF ou JPEG.” aparecem legíveis e sem cortes perceptíveis na área capturada.
+
+**Resultado: PASS visual no trecho registrado (320×780), por inspeção das capturas e relato do executor.** As imagens foram incluídas em um ZIP de evidências gerado nesta conversa, com os nomes `E14_reteste_320px_botoes_estados.png` e `E15_reteste_320px_formularios_validacao.png`. **O arquivo ZIP e seus PNGs ainda não foram anexados ao GitHub**, portanto o revisor precisa receber os anexos para avaliação independente. O teste não comprova automaticamente toda a página, operação dos botões demonstrativos nem a execução em dispositivo Android/iOS real.
