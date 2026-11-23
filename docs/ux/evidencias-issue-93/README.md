@@ -4,7 +4,7 @@
 **Relatório de execução:** [M-01 a M-08](../issue-93-relatorio-execucao-manual-2026-11-23.md)  
 **Avaliação de acessibilidade:** [Matriz e achados](../issue-93-evidencias-acessibilidade.md)
 
-Este índice relaciona imagens fornecidas pelo executor durante o teste com o Chrome em Windows. **Os arquivos PNG e o pacote ZIP não estão armazenados neste diretório do GitHub**; esta página é apenas um manifesto para facilitar o anexo e a revisão independente. A publicação dos arquivos ainda depende de upload de anexos ao comentário do PR ou de um meio de transferência de arquivos binários autorizado. Não marcar como prova anexada antes disso.
+Este índice relaciona imagens fornecidas pelo executor durante o teste com Chrome em Windows. Os anexos foram publicados na [discussão do PR #143](https://github.com/Aluvioz/Polychat/pull/143#issuecomment-7113613570). **Dos 20 arquivos do pacote, 18 possuem referências de imagem completas no comentário. E12 e E13 tiveram suas URLs truncadas durante a inserção e permanecem pendentes de reenvio.** A E14 possui URL completa, embora tenha sido apontada como ausente na leitura inicial da SQA. As imagens originais E12 e E13 foram confirmadas como PNGs íntegros no pacote gerado nesta conversa; a existência local não equivale a anexá-las no GitHub.
 
 | ID / arquivo no pacote | Evidência representada | Limitação |
 |---|---|---|
@@ -26,4 +26,4 @@ Este índice relaciona imagens fornecidas pelo executor durante o teste com o Ch
 
 **Notas:** a gravação do leitor de tela não foi anexada. O Narrador do Windows foi executado pelo autor, com resultados relatados como PASS para títulos, campos, erro e avisos estáticos. A galeria demonstra conteúdo, mas não ações de produto funcionais. Aprovação de Dante (SQA) e Luiz (Tech Lead) permanece pendente.
 
-**Ao anexar os PNGs:** enviar a partir do ZIP `polychat_issue93_evidencias_componentes_320.zip` à discussão do PR, distinguindo capturas “antes da correção” das “após correção”. Revisores devem consultar o relatório e avaliar escopo e suficiência das provas.
+****Para concluir a integridade das evidências:** fazer upload somente de `E12_reteste_768px_corrigido.png` e `E13_reteste_1280px_corrigido.png` em novo comentário da Conversation do PR, ou anexá-las no comentário original. Não reuploadar as demais 18 imagens sem necessidade. A aprovação continua sujeita à avaliação independente da SQA.
