@@ -64,7 +64,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 
 | ID | Caso | Status |
 |---|---|---|
-| M-01 | Tab/Shift+Tab em todos os controles e foco visível | PARTIAL — Tab/foco visível observado; Shift+Tab completo não comprovado |
+| M-01 | Tab/Shift+Tab em todos os controles e foco visível | PASS por relato para percurso direto/reverso e foco visível no Chrome; cobertura da galeria estática, sem certificação independente |
 | M-02 | Zoom 200% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-04 | Larguras 320/390/768 e 1280px | PASS por relato — emulação Chrome 320/390/768/1280px sem cortes ou sobreposições; outros browsers/dispositivos pendentes |
@@ -97,7 +97,7 @@ A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.
 
 | Caso | Passos informados / evidência observada | Resultado e limitação |
 |---|---|---|
-| M-01 — foco e teclado | Autor percorreu controles usando Tab; capturas mostraram foco destacado por contorno nos campos Usuário/Anexo e no link “Pular para o conteúdo principal”. | **PARTIAL**: foco visível observado; não foi documentada toda a sequência Tab/Shift+Tab, ausência de armadilhas ou operação por teclado de todos os controles. |
+| M-01 — foco e teclado | Autor percorreu controles usando Tab; capturas mostraram foco destacado por contorno nos campos Usuário/Anexo e no link “Pular para o conteúdo principal”. | **PASS por relato da navegação sequencial e reversa**: em 23/11/2026, autor confirmou que Shift+Tab repetido retorna até o link inicial, preservando foco visível e sem bloqueios. A galeria contém controles demonstrativos não funcionais; operação de ações funcionais e revisão independente permanecem fora do escopo confirmado. |
 | M-02 — zoom 200% | Autor declarou: “200% — legível sem cortes” após orientação para ampliar o zoom no Chrome. | **PASS (relato)**: não houve relato de corte; sem vídeo, dimensões de viewport, versão ou confirmação independente de reflow/rolagem horizontal em todas as seções. |
 | M-03 — zoom 400% | Autor declarou: “400% — legível sem cortes”. | **PASS (relato)**: mesma limitação do caso M-02; registrar screenshots no PR para elevar rastreabilidade. |
 | M-04 — múltiplos viewports/navegadores | Em 23/11/2026, executor relatou emulação de viewport no Chrome em 320px, 390px, 768px e 1280px, todos sem cortes/sobreposições. | **PASS por relato nas quatro larguras Chrome**. Não foram verificadas outras engines/navegadores ou aparelhos físicos; screenshots e versões pendentes. |
@@ -159,3 +159,8 @@ O executor reportou inspeção visual **PASS** para bordas, foco e estados dos b
 ### 7.5 Reteste visual de bordas após correção — 23/11/2026
 
 Após baixar a galeria independente atualizada e inspecionar a seção de formulários no Chrome, o executor informou: **“as bordas estão mais nítidas e sem problemas”**. Registro **PASS por relato** para o reteste visual da borda padrão corrigida (`--pc-border` de `#CBD5E1` para `#64748B`). O contraste calculado do novo token sobre branco é **4,76:1**, acima de 3:1; o reteste visual complementa, mas não substitui, a medição numérica. Não foi fornecida captura de tela do reteste nem versão exata do Chrome. M-06 continua com escopo mais amplo parcialmente pendente (demais estados, contraste de ícones e componentes renderizados, revisão SQA).
+
+
+### 7.6 Complemento M-01 — percurso reverso com Shift + Tab (23/11/2026)
+
+Após orientar que Shift + Tab retorna **um elemento por vez** (e não diretamente ao topo), o executor confirmou **sim** às duas perguntas: (1) Shift + Tab repetido permitiu voltar pelos elementos ao link “Pular para o conteúdo principal”; (2) a indicação visual de foco permaneceu visível e não houve bloqueio/armadilha de teclado percebido. **Resultado: PASS por relato para avanço com Tab e retorno com Shift + Tab na galeria estática em Chrome/Windows.** Não houve gravação do percurso nem versão exata de Chrome informada; isso não valida interações de um modal funcional nem substitui revisão SQA.
