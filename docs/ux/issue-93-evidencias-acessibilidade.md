@@ -69,7 +69,7 @@ A galeria autocontida pode ser obtida no PR como `docs/ux/issue-93-galeria-stand
 | M-03 | Zoom 400% com reflow e leitura preservados | PASS (relato do executor; cobertura/viewport não documentados) |
 | M-04 | Larguras 320/390/768 e 1280px | PASS por relato — emulação Chrome 320/390/768/1280px sem cortes ou sobreposições; outros browsers/dispositivos pendentes |
 | M-05 | Leitor de tela com títulos, rótulos, erros e alertas | PASS por relato do executor com Narrador Windows/Chrome — títulos, rótulos, erro e 3 avisos; sem homologação independente |
-| M-06 | Contraste não textual e estados de foco | NOT RUN |
+| M-06 | Contraste não textual e estados de foco | PARTIAL — inspeção visual PASS por relato; borda padrão falhou 1,48:1 e foi corrigida para 4,76:1; cálculos CSS, não auditoria renderizada completa |
 | M-07 | Teclado em modal funcional real (quando existir) | NOT APPLICABLE / PENDENTE DE IMPLEMENTAÇÃO |
 | M-08 | Homologação institucional da marca e dos tokens oficiais pela Ford (não exigida para referência ilustrativa) | PENDING APPROVAL |
 
@@ -102,7 +102,7 @@ A galeria apresenta a imagem publicada em [Wikimedia Commons — File:Ford logo.
 | M-03 — zoom 400% | Autor declarou: “400% — legível sem cortes”. | **PASS (relato)**: mesma limitação do caso M-02; registrar screenshots no PR para elevar rastreabilidade. |
 | M-04 — múltiplos viewports/navegadores | Em 23/11/2026, executor relatou emulação de viewport no Chrome em 320px, 390px, 768px e 1280px, todos sem cortes/sobreposições. | **PASS por relato nas quatro larguras Chrome**. Não foram verificadas outras engines/navegadores ou aparelhos físicos; screenshots e versões pendentes. |
 | M-05 — leitor de tela | Em 23/11/2026, autor ativou Narrador do Windows no Chrome e relatou navegação/leitura correta dos títulos, dos campos Usuário, Senha, Anexo e da mensagem de erro do anexo. | **PASS por relato nos elementos verificados** (títulos, campos, erro e avisos; ver seção 7.2). Falta anexar evidências auditáveis. Teste com Narrador não demonstra comportamento do NVDA. |
-| M-06 — contraste não textual | Inspeção numérica parcial anterior abrange texto apenas, sem todos os estados e fundos. | **NOT RUN / cobertura incompleta**. |
+| M-06 — contraste não textual | Executor relatou bordas, foco e botões distinguíveis; observou vermelho do erro parecido, mas legível. Cálculo sRGB mostrou borda padrão 1,48:1 (falha), corrigida no token para 4,76:1; erro 6,57:1. | **PARTIAL** — erro encontrado e corrigido no código, falta reteste renderizado, itens secundários e evidências. |
 | M-07 — modal funcional | A galeria demonstra confirmação estática, sem foco modal, Escape e retorno. | **N/A para a galeria estática**; validar quando o componente funcional existir. |
 | M-08 — identidade visual | PO definiu paleta de referência provisória em Q-019; pacote autorizado e regras corporativas permanecem ausentes. | **PARCIAL / PENDING APPROVAL**: não confundir decisão do PO para proposta com homologação da marca. |
 
@@ -134,3 +134,23 @@ O executor informou que, no teste M-05 utilizando **Narrador do Windows no Chrom
 ### 7.3 Responsividade — Chrome emulação de viewport, 23/11/2026
 
 O executor reportou o caso M-04 com a ferramenta de visualização responsiva do Chrome (F12, modo dispositivo), observando em quatro larguras **320px, 390px, 768px e 1280px** ausência de cortes de texto e de sobreposições. Todos os quatro subcasos foram reportados **PASS**. É uma execução manual baseada no relato do autor, **não teste automatizado**, e não equivale a homologação em Android/iOS ou Edge/Firefox. Versão exata do Chrome, altura do viewport, rolagem lateral em toda a página e capturas de evidência não foram informadas ou anexadas ao PR. Registrar quando disponíveis. A avaliação SQA permanece independente.
+
+
+### 7.4 Contraste não textual — inspeção e correção, 23/11/2026
+
+O executor reportou inspeção visual **PASS** para bordas, foco e estados dos botões no Chrome, acrescentando que o vermelho do campo “Exemplo de erro” parecia semelhante a outros tons mas era claramente distinguível. **A inspeção visual não substitui medição WCAG.** A análise estática dos tokens CSS encontrou um problema que o teste visual não detectou: borda padrão `--pc-border: #CBD5E1` contra branco com **1,48:1**, inferior à referência WCAG 2.2 AA 1.4.11 para informação visual essencial de componentes (3:1). Corrigimos o token em ambas as folhas CSS e na galeria independente para `#64748B`, que mede **4,76:1** contra branco. O texto e a borda de erro `#B42318` contra branco medem **6,57:1**, portanto o tom vermelho observado não falha nesses pares.
+
+| Par de contraste, cálculo sRGB | Razão | Referência | Resultado |
+|---|---:|---:|---|
+| Borda padrão antes `#CBD5E1` / branco | 1,48:1 | 3:1 | FAIL antes da correção |
+| Borda padrão atual `#64748B` / branco | 4,76:1 | 3:1 | PASS calculado |
+| Borda vermelha inválida `#B42318` / branco | 6,57:1 | 3:1 | PASS calculado |
+| Texto de erro `#B42318` / branco | 6,57:1 | 4,5:1 | PASS calculado |
+| Anel de foco `#B45309` / branco | 5,02:1 | 3:1 | PASS calculado |
+| Anel de foco `#B45309` / fundo `#F0F0F0` | 4,41:1 | 3:1 | PASS calculado |
+| Texto de botão desabilitado `#475569` / `#E2E8F0` | 6,15:1 | não exigido para controle inativo | Informativo |
+| Borda do aviso de erro `#B42318` / `#FEF3F2` | 6,05:1 | 3:1 | PASS calculado |
+| Borda do aviso de sucesso `#027A48` / `#EAF7F0` | 4,91:1 | 3:1 | PASS calculado |
+| Borda do aviso de atenção `#854D0E` / `#FEF9C3` | 6,38:1 | 3:1 | PASS calculado |
+
+**Cuidados:** itens inativos têm exceção específica em WCAG 1.4.11; cartões e divisórias puramente decorativas não exigem automaticamente 3:1. A mudança no token também escurece divisórias decorativas por reutilização, aceitável como proposta mas sujeita à revisão de UX. Um teste novo em `tests/issue-93-a11y.test.mjs` garante um subconjunto dos pares essenciais. Este cálculo é feito para cores especificadas, não comprova opacidade, anti-aliasing, temas, todos os hover/foco e combinação renderizada em navegador. O reteste visual **após a correção** e evidências de execução do CI precisam ser confirmados antes de encerrar M-06.
