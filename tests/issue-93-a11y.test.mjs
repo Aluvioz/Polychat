@@ -83,3 +83,10 @@ test('bordas essenciais, foco e erro cumprem contraste nao textual minimo 3:1', 
     ['borda de erro em aviso', error, '#fef3f2'],
   ]) assert.ok(contrast(fg,bg) >= 3, name + ': ' + contrast(fg,bg).toFixed(2) + ':1');
 });
+
+test('logo Ford standalone usa limite responsivo e CSS sincronizado', () => {
+  assert.match(html, /\.pc-ford-mark\s*\{/);
+  assert.match(html, /width:104px;height:auto;max-height:42px/);
+  assert.match(html, /\.pc-brand-lockup\s*\{/);
+  assert.match(css, /\.pc-ford-mark\s*\{/);
+});
