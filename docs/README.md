@@ -1,6 +1,6 @@
 # Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. A restrição de infraestrutura sob controle da FORD prevalece sobre ADRs e configurações tecnológicas anteriores incompatíveis.
+**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. Supabase + Vercel permanece como stack adotada e obrigatória conforme ADR-003 Accepted (24/11/2026); a Q-025 avalia a compatibilidade da configuração e do modelo de uso com os requisitos da FORD, sem autorizar substituição da stack por inferência.
 
 ## Navegação
 
@@ -18,6 +18,7 @@
 12. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
 13. [Política de anexos e proteção antimalware — Issue #117](storage/politica-anexos-e-antimalware.md)
 14. [Decisões de produto Q-018 e Q-019 — arquitetura da informação e identidade visual provisória](ux/decisoes-produto-q018-q019.md)
+15. [Plano de release, operação e gestão de incidentes — Issue #130](infra/issue-130-plano-release-operacao-incidentes.md)
 
 ## Infraestrutura e deploy
 
@@ -43,8 +44,8 @@ A documentação não cria nem seleciona diagramas UML nesta versão, pois o tip
 O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
 
 
-## Atualização arquitetural — 19/11/2026
+## Atualização arquitetural — 24/11/2026
 
-A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, sem terceiros acessando, armazenando ou processando dados da organização. A direção anterior Supabase + Vercel foi depreciada na ADR-003. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md) e a Q-025.
+Supabase + Vercel permanece como stack adotada e obrigatória do Polychat, conforme ADR-003 — Accepted. A Q-025 documenta a compatibilidade da configuração e do modelo de uso dessa stack com os requisitos da FORD relativos a controle da infraestrutura, hospedagem, localização, processamento, acesso e responsabilidades operacionais. A Q-025 não autoriza retirar ou substituir a stack por inferência. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), o [índice de ADRs](adr/README.md) e a Q-025.
 
-As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica e registram que esses aceites não constituem autorização vigente para serviços externos processarem dados da FORD após a FORD v2.
+As Issues #96 e #98 permanecem encerradas nos escopos que receberam aceite. Seus registros devem ser preservados e reutilizados somente nesses escopos, sem repetir setup, smoke test ou rollback já aceitos e sem inferir, a partir deles, que todas as integrações, controles ou fluxos funcionais estejam homologados.
