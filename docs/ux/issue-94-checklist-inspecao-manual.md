@@ -17,13 +17,13 @@
 | M94-06 | U-05: enviar mensagem fictícia; status avisa que não houve envio real | PENDENTE | — |
 | M94-07 | U-06/U-07: mensagens distintas para arquivo não permitido, acima de 10 MB, mais de 5, PDF com senha, scanner indisponível e bloqueio | PENDENTE | — |
 | M94-08 | U-08: offline, falha e tentativa; offline impede confirmação; volta a online não envia nada real | PENDENTE | — |
-| M94-09 | T-01: login demonstrativo e dashboard TI | PENDENTE | — |
+| M94-09 | T-01: login demonstrativo; dashboard TI é tela auxiliar, não outra tarefa | PENDENTE | — |
 | M94-10 | T-02: busca de conta e vazio; desativação Cancelar/Confirmar e foco restaurado | PENDENTE | — |
 | M94-11 | T-03: grupo, confirmação de remoção e texto sobre revogação imediata | PENDENTE | — |
 | M94-12 | T-04: consulta/exportação/edição fictícias e informação da auditoria | PENDENTE | — |
 | M94-13 | T-05: alertas baixa/média/alta, prazos e ausência de bloqueio automático | PENDENTE | — |
 | M94-14 | T-06: somente lista de termos e quotas; nenhuma configuração genérica extra | PENDENTE | — |
-| M94-15 | Abrir Auditoria TI, perceber que eventos são fictícios e não persistidos | PENDENTE | — |
+| M94-15 | Abrir Auditoria TI (tela auxiliar sem código T-07), perceber que eventos são fictícios e não persistidos | PENDENTE | — |
 
 ## 2. Acessibilidade/compatibilidade
 
