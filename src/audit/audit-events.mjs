@@ -103,7 +103,7 @@ export async function recordAuditEvent({
     throw new TypeError("An audit outcome is required.");
   }
 
-  if (eventType !== "admin_login" && eventType !== "retention_discarded" && !resourceId) {
+  if (eventType !== "admin_login" && !resourceId) {
     throw new TypeError("The affected resource identifier is required for this event.");
   }
 
