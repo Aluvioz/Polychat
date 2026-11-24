@@ -8,11 +8,11 @@
 |---|---|---|---|
 | Modelo de dados da #99 | PR #160 aberta em Draft; modelo conceitual v0.3 na branch da PR | Parecer do PO de 20/11/2026 | Utilizado como referência funcional, sem presumir aprovação de DDL |
 | Tabelas e relações | `main` contém somente a migration de `profiles`; PR #165 propõe o núcleo de domínio | Migrations `202611160001`, `202611240001` e `202611240002` nas branches de trabalho | PR #165 complementada com integridade de mensagens/anexos e inventário mínimo de configurações |
-| `audit_events` | Ausente na `main` e na migration inicial da #99 | Modelo v0.3, seção 5.6 | Migration dedicada nesta PR |
+| `audit_events` | Criada no Polyford; migration remota `issue_102_audit_events` aplicada | Histórico remoto `20261124210245`; tabela consultada em 24/11/2026 | Estrutura, RLS, policies, ACL, triggers e catálogo verificados; INSERT positivo TI ainda pendente |
 | Autorização da auditoria | Não havia tabela nem policy específica | Migration desta PR; `is_active_ti()` existente na migration de profiles | SELECT/INSERT apenas para TI ativo autenticado; sem UPDATE/DELETE |
 | Integridade dos registros | Não havia proteção específica de auditoria | Migration desta PR | Trigger append-only para UPDATE/DELETE/TRUNCATE; limites de owner/superuser documentados |
 | Retenção | Regras funcionais definidas; nenhuma rotina operacional de descarte observada | Issue #102, modelo v0.3 seção 9 | Nenhum job de exclusão automática criado; descarte autorizado ainda requer fluxo operacional |
-| Backup e restauração | Não foi possível verificar configuração do projeto; projeto Supabase listado como `INACTIVE` | `get_project`/`list_projects`; documentação Supabase | Não reativado, não alterado e nenhum restore executado |
+| Backup e restauração | Projeto Polyford `ACTIVE_HEALTHY`; plano e configuração de backup não verificados | `get_project`, consultas SQL e documentação oficial Supabase | Nenhuma configuração alterada; sem evidência de backup de anexos/12 meses ou restore |
 | Testes | Existem testes unitários do módulo de autorização; não havia testes de auditoria | `tests/authorization.test.mjs` | Novos testes unitários escritos; integração PostgreSQL/Supabase permanece pendente |
 
 ## 2. Catálogo persistido
@@ -149,7 +149,7 @@ Referência oficial: [Supabase — Database Backups](https://supabase.com/docs/g
 | Medição de RPO | Não executada |
 | Medição de RTO | Não executada |
 
-Não foi executada restauração destrutiva ou alteração no ambiente compartilhado. O projeto estar INACTIVE impede a validação real nesta execução; reativá-lo exigiria ação operacional autorizada.
+Não foi executada restauração, nem alteração destrutiva no ambiente. O projeto está ativo, mas isso não comprova que backups estejam habilitados ou que um restore tenha sido testado. A validação exige plano/backup acessível e ambiente isolado de restauração.
 
 ## 8. Testes e evidências
 
