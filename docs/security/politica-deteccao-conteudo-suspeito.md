@@ -1,12 +1,12 @@
 # Política de detecção e classificação de conteúdo suspeito
 
 - **Documento:** POLY-SEC-002
-- **Versão:** 0.4 — alinhada à FORD v2 e à Q-025
-- **Data:** 20/11/2026
-- **Status:** requisitos funcionais e operacionais alinhados à FORD v2; implementação funcional ainda não iniciada; permanecem pendentes configuração inicial da lista pelo TI, detalhamento técnico e evidências de teste
+- **Versão:** 0.5 — alinhada à FORD v2 e à stack vigente Supabase + Vercel
+- **Data:** 24/11/2026
+- **Status:** requisitos funcionais e operacionais alinhados à FORD v2 e à stack vigente Supabase + Vercel; implementação funcional ainda não iniciada; permanecem pendentes configuração inicial da lista pelo TI, detalhamento técnico e evidências de teste
 - **Issue principal:** [#122 — Implementar detecção de conteúdo suspeito e palavrões](https://github.com/Aluvioz/Polychat/issues/122)
 - **Épica:** [#86 — Segurança, monitoramento e auditoria](https://github.com/Aluvioz/Polychat/issues/86)
-- **ADR relacionada:** [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md)
+- **ADRs relacionadas:** [ADR-003 — Direção tecnológica: Supabase + Vercel](../adr/ADR-003-supabase-vercel.md) — Accepted; [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md)
 
 > **Aviso de status:** este documento registra o comportamento de produto definido pela FORD v2. A lista concreta de termos é mantida/configurada pelo TI na operação; sua configuração e versionamento ainda dependem da implementação. Esta especificação não autoriza análise contextual, IA de terceiros, bloqueio automático ou medidas disciplinares.
 
@@ -140,7 +140,7 @@ A normalização não deve remover sinais ou transformar o texto de modo que alt
 
 ### 7.3 Contexto e análise contextual
 
-A análise contextual não faz parte do escopo aprovado e não deve ser implementada. Não enviar conteúdo de mensagens a serviços adicionais, modelos externos ou IA. A arquitetura-alvo permanece em reconciliação na Q-025: hospedagem e processamento de dados devem permanecer sob controle da FORD. A ADR-003 (Supabase + Vercel) está Deprecated e não deve ser tratada como decisão vigente de arquitetura.
+A análise contextual não faz parte do escopo aprovado e não deve ser implementada. Não enviar conteúdo de mensagens a serviços adicionais, modelos externos ou IA. **Supabase + Vercel permanece como stack tecnológica vigente e obrigatória do Polychat, conforme a ADR-003 (Accepted).** A Q-025 deve documentar a compatibilidade da configuração e do modelo de utilização dessa stack com as restrições da FORD relativas a hospedagem, armazenamento, processamento, localização dos dados, acessos e responsabilidades operacionais. A Q-025 não autoriza substituir ou depreciar Supabase + Vercel por inferência; eventual incompatibilidade concreta deverá ser apresentada ao PO e aos responsáveis da FORD para decisão explícita antes de qualquer mudança de stack.
 
 ### 7.4 Limiares e pontuação
 
@@ -345,7 +345,7 @@ As regras abaixo são requisitos confirmados, não propostas aguardando nova apr
 5. **Sem punição/bloqueio automático:** a detecção não bloqueia mensagens, não edita/apaga conteúdo, não suspende contas e não aplica sanções.
 6. **Acesso:** o alerta é visível ao TI. TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação; essa consulta gera auditoria.
 7. **Minimização:** alertas e logs usam referência segura e metadados mínimos; não replicar mensagem integral em notificações/logs por padrão.
-8. **Infraestrutura e processamento:** a arquitetura-alvo deve manter hospedagem e processamento de dados sob controle da FORD, conforme a Q-025. A ADR-003 (Supabase + Vercel) está Deprecated; não declarar esses serviços como plataformas oficiais nem presumir integrações ainda não aprovadas. Não encaminhar conteúdo a IA, modelo, scanner SaaS ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
+8. **Infraestrutura e processamento:** Supabase + Vercel é a stack tecnológica vigente e obrigatória do Polychat, conforme ADR-003 (Accepted). A Q-025 deve documentar a compatibilidade da configuração e do modelo de utilização da stack com as restrições da FORD, sem substituí-la ou depreciá-la por inferência. A adoção da stack não declara integrações ou ambientes produtivos homologados. Não encaminhar conteúdo a IA, modelo, scanner SaaS ou serviço adicional não aprovado. O antimalware de anexos é scanner interno da FORD.
 
 ### Trabalho técnico/operacional ainda necessário
 
@@ -431,4 +431,5 @@ Esses critérios são evidências de implementação e qualidade, não decisões
 | 0.1 | 19/11/2026 | Consolida requisitos existentes, propõe modelo de detecção e revisão, registra cenários de teste, dependências e decisões pendentes. Não representa política aprovada nem evidência de implementação. |
 | 0.2 | 19/11/2026 | Registra validação inicial do PO; parecer posteriormente atualizado para refletir as decisões consolidadas da FORD v2. |
 | 0.3 | 20/11/2026 | Reconcilia regras funcionais e operacionais com a FORD v2, sem declarar implementação. |
-| 0.4 | 20/11/2026 | Alinha as referências de infraestrutura à Q-025 e à ADR-003 Deprecated; preserva as decisões de produto e as pendências de implementação/teste. |
+| 0.4 | 20/11/2026 | Alinha as referências de infraestrutura à interpretação então registrada na ADR-003; preserva as decisões de produto e as pendências de implementação/teste. |
+| 0.5 | 24/11/2026 | Restabelece Supabase + Vercel como stack vigente conforme ADR-003 Accepted; esclarece que a Q-025 trata da compatibilização técnica sem substituir a stack por inferência. |
