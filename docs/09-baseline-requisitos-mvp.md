@@ -5,7 +5,7 @@
 **Versão:** 0.5 — 20/11/2026  
 **Fonte primária:** Questionário de Esclarecimento de Requisitos da FORD, versão atualizada (FORD v2), recebido em 19/11/2026.  
 **Fontes complementares:** alinhamentos do PO com Desenvolvimento, premissas consolidadas nos documentos 00 a 08 e decisões de negócio registradas pelo representante da FORD.  
-**Estado:** baseline de produto atualizada com arquitetura da informação por perfil e paleta visual provisória Ford; ativos oficiais de logotipo permanecem pendentes em Q-019 e validação da compatibilidade operacional da stack Supabase + Vercel permanece em Q-025.
+**Estado:** baseline de produto atualizada com arquitetura da informação por perfil e paleta visual provisória Ford; ativos oficiais de logotipo permanecem pendentes em Q-019. A compatibilidade da stack Supabase + Vercel foi aprovada pela TI e pela FORD na Q-025, concluída em 24/11/2026.
 
 Esta versão substitui, para a especificação de produto, a baseline v0.3 baseada principalmente na visão POLYCHAT — FORD v0.1. Os identificadores existentes foram preservados; os novos requisitos funcionais foram acrescentados a partir de RF-019.
 
@@ -84,7 +84,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Usuário acessa somente por celular Android/iOS; TI acessa somente por computador.
 - Interface exclusivamente em português, com paleta Ford provisória: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. Aplicar o Ford Oval somente a partir de arquivo oficial autorizado.
 - Indicador de mensagens não lidas dentro do aplicativo; sem notificações push ou notificações do navegador.
-- Hospedagem e infraestrutura sob controle da FORD, preferencialmente no Brasil; nenhum terceiro pode acessar, armazenar ou processar dados da organização.
+- Hospedagem e infraestrutura sob controle operacional aprovado pela FORD, preferencialmente no Brasil. Supabase e Vercel são provedores nomeados e expressamente aprovados na Q-025; outros terceiros não podem acessar, armazenar ou processar dados da organização sem aprovação específica.
 
 ### 2.2 Fora do escopo inicial
 
@@ -131,7 +131,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 | D-019 | Aviso de monitoramento no primeiro acesso. | Confirmado | RN-025; RF-023 |
 | D-020 | Criptografia em trânsito e em repouso; sem E2EE; chaves administradas pelo servidor sob responsabilidade do TI. | Confirmado/alinhado | RN-016; RNF-002 |
 | D-021 | Retenção sem exclusão automática enquanto o sistema operar; TI autoriza exclusões e preservação em investigação; backups por 12 meses com descarte registrado. | Alinhado com Desenvolvimento | RN-021; RNF-004; RNF-009 |
-| D-022 | Infraestrutura sob controle da FORD, preferencialmente no Brasil; nenhum terceiro acessa, armazena ou processa dados. | Confirmado | RN-022; RNF-013 |
+| D-022 | Infraestrutura e dados sob controle operacional aprovado pela FORD; Supabase e Vercel são provedores nomeados aprovados na Q-025; outros terceiros dependem de aprovação específica. | Confirmado e aprovado | RN-022; RNF-013; Q-025 |
 | D-023 | Disponibilidade 99% mensal; RPO 24h em desastre; RTO 24h; backups diários por 12 meses; manutenção fora do horário comercial; suporte em horário comercial. | Confirmado/alinhado | RN-023; RNF-009 |
 | D-024 | Usuário em Android/iOS, Chrome/Safari móveis atuais; TI em computador, Chrome/Edge/Firefox atuais; tablets não permitidos. | Confirmado/alinhado | RN-015; RF-017; RF-018; RNF-005 |
 | D-025 | Interface em português, paleta Ford provisória (`#00095B`, `#00142E`, `#066FEF`, branco e neutros) e uso do Ford Oval somente com arquivo oficial autorizado; sem push/browser notification. | Direção cromática provisória definida pelo PO em 20/11/2026; arquivo oficial do logo pendente em Q-019 | RN-010; RN-019; RF-023; RNF-006; POLY-UX-DEC-001 |
@@ -204,7 +204,7 @@ A descrição detalhada e os critérios de aceitação estão em [03 — Requisi
 | RNF-010 | Segurança de anexos e antimalware | Confirmado/alinhado |
 | RNF-011 | Monitoramento e tratamento de dados | Regras operacionais registradas; obrigações legais aplicáveis permanecem |
 | RNF-012 | Acessibilidade | Não há requisito adicional informado pela FORD; obrigações aplicáveis permanecem |
-| RNF-013 | Infraestrutura, soberania de dados e isolamento dos ambientes | Restrição FORD confirmada; arquitetura técnica a reconciliar |
+| RNF-013 | Infraestrutura, soberania de dados e isolamento dos ambientes | Requisitos confirmados; modelo Supabase + Vercel aprovado na Q-025 em 24/11/2026 |
 
 A descrição completa está em [04 — Requisitos não funcionais](04-requisitos-nao-funcionais.md).
 
@@ -224,9 +224,9 @@ A descrição completa está em [05 — Regras de negócio e restrições](05-re
 
 ### 5.1 Requisitos de infraestrutura e compatibilidade da stack adotada
 
-A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas.
+A FORD v2 estabelece requisitos de controle de hospedagem, armazenamento e processamento, com preferência por localização no Brasil. A Q-025 formalizou a aprovação de Supabase e Vercel como provedores nomeados da stack do Polychat. Outros serviços de terceiros não estão autorizados a acessar, armazenar ou processar dados sem aprovação específica. Bibliotecas e atualizações sem acesso aos dados permanecem permitidas.
 
-Essa regra permanece um requisito do cliente e deve orientar a configuração e a operação do ambiente. A ADR-003 — Accepted mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. A Q-025 deve avaliar e documentar, com evidências, como o modelo de utilização e a configuração dessa stack atendem aos requisitos da FORD, incluindo controle de hospedagem, localização e fluxo dos dados, acesso de terceiros, armazenamento, processamento, isolamento dos ambientes, segredos, backup e responsabilidades. A existência da decisão Accepted não equivale à homologação de produção nem comprova, isoladamente, a conformidade de cada serviço ou fluxo de dados. A análise não altera nem substitui a decisão arquitetural por inferência; uma incompatibilidade concreta não mitigável deve ser encaminhada ao PO e aos responsáveis da FORD para decisão formal e avaliação de impacto.
+A ADR-003 — Accepted mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. Em 24/11/2026, a TI e a FORD aprovaram na Q-025 o modelo de utilização e a compatibilidade operacional da stack, incluindo hospedagem/execução, localização e fluxo dos dados, acesso de terceiros, armazenamento, processamento, isolamento dos ambientes, segredos, backup e responsabilidades. Supabase e Vercel ficam aprovados como provedores nomeados; qualquer outro fornecedor depende de aprovação específica. A aprovação da arquitetura não substitui a execução dos controles e testes das issues de implementação nem o Go/No-Go de cada release.
 
 A decisão de arquitetura deve separar:
 - Tecnologia e framework de aplicação.
@@ -239,7 +239,7 @@ A decisão de arquitetura deve separar:
 - Monitoramento, auditoria, backup e recuperação.
 - Ambientes de desenvolvimento, homologação e produção.
 
-A avaliação deve considerar a fronteira de controle da FORD, a localização dos dados, os fluxos de acesso/armazenamento/processamento, suboperadores, isolamento dos ambientes, segredos, backup e responsabilidades. A Q-025 e as ADRs técnicas devem registrar a configuração adotada, os controles e as evidências; esta baseline não declara a conformidade operacional como concluída.
+A compatibilidade e o modelo de uso foram aprovados na Q-025. A operação permanece sujeita aos controles e responsabilidades registrados nas ADRs 003, 005, 008 e 009. A aprovação não declara que todos os fluxos funcionais, policies RLS, buckets, scanner, backups/restauração ou testes estejam implementados; essas entregas permanecem nas issues correspondentes.
 
 ### 5.2 Fotografia técnica do repositório
 
@@ -254,12 +254,12 @@ Snapshot técnico reconciliado com a `main` após a integração da PR #165, em 
   - `202611240002_issue_99_integrity_and_configuration.sql`: implementa triggers para exigir texto não vazio ou ao menos um anexo por mensagem e impedir mais de cinco anexos por mensagem; cria `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`.
 - As migrations habilitam RLS nas tabelas de domínio, mas não criam policies de autorização para conversas, memberships, mensagens, anexos, leituras ou alertas; esse enforcement pertence à Issue #101. Nas tabelas de configuração, a segunda migration também habilita RLS e revoga acesso de `public`, `anon` e `authenticated`.
 - As tabelas de quotas/capacidade são estruturas de configuração sem valores padrão ou registros semeados nas migrations. A presença delas não comprova quotas efetivamente configuradas nem enforcement de consumo por usuário/capacidade global.
-- As notas `docs/database/issue-99-implementation-notes.md` documentam aplicação e inspeção das migrations no projeto Supabase de desenvolvimento Polyford, região `sa-east-1`, estado observado `ACTIVE_HEALTHY` e PostgreSQL `17.11.0.019`. O histórico remoto e a consulta de schema confirmaram as tabelas previstas. Essa evidência se limita ao ambiente de desenvolvimento; não comprova homologação de produção nem teste automatizado de integração SQL reproduzível no CI.
+- As notas `docs/database/issue-99-implementation-notes.md` documentam aplicação e inspeção das migrations no projeto Supabase de desenvolvimento Polyford, região `sa-east-1`, estado observado `ACTIVE_HEALTHY` e PostgreSQL `17.11.0.019`. O histórico remoto e a consulta de schema confirmaram as tabelas previstas. Essa evidência se refere ao ambiente de desenvolvimento. A aprovação de compatibilidade do modelo de uso para os demais estágios está registrada na Q-025 e nas Issues #96/#98; isso não substitui teste automatizado de integração SQL reproduzível no CI.
 - O schema e os triggers não comprovam upload/download integrado, bucket privado do Supabase Storage, scanner antimalware, interface, handlers server-side ou fluxos de negócio completos; essas partes continuam pendentes.
 - O arquivo `.env.example` contém placeholders públicos para URL e anon key; não há credenciais reais versionadas.
 - O workflow CI executa testes automatizados, ESLint, TypeScript e build.
 
-**Conclusão técnica do snapshot:** existe implementação parcial do schema de domínio e de invariantes no banco, com aplicação documentada em ambiente de desenvolvimento. As políticas de autorização de domínio, integração funcional da aplicação, armazenamento e scanner de anexos, configuração operacional das quotas e homologação da stack permanecem pendentes. Supabase + Vercel continua sendo a stack adotada conforme ADR-003; sua adoção não equivale à homologação de produção.
+**Conclusão técnica do snapshot:** existe implementação parcial do schema de domínio e de invariantes no banco, com aplicação documentada em desenvolvimento. A compatibilidade do modelo operacional Supabase + Vercel foi aprovada pela TI e pela FORD na Q-025; continuam pendentes, como implementação de produto, policies de autorização de domínio, fluxos funcionais, Storage/scanner e configuração efetiva das quotas. A aprovação da stack não equivale à conclusão desses componentes nem substitui a homologação funcional de cada release.
 
 ### 5.3 Limites da evidência técnica
 
@@ -304,7 +304,7 @@ As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 �
 
 - Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
 - Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
-- Q-025 — Avaliação da compatibilidade da configuração e do modelo de uso da stack Supabase + Vercel, adotada na ADR-003 — Accepted, com os requisitos da FORD sobre controle de hospedagem, armazenamento, processamento, localização, acesso e operação; registrar controles, responsabilidades, evidências, limitações e riscos residuais, sem substituir a stack por inferência.
+- Q-025 — Concluída em 24/11/2026: compatibilidade da stack Supabase + Vercel aprovada pela TI e pela FORD, com provedores nomeados, controles, responsabilidades e limites de utilização registrados; sem substituição da stack por inferência.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
@@ -323,9 +323,9 @@ Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências
 | Anexos e antimalware | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-011 a RF-013 e RNF-010 | Limites, scanner local, liberação TI, links e metadados |
 | Monitoramento e severidades | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-014/RF-015 | Lista de regras, fila, prazos e fluxo TI |
 | Retenção e continuidade | FORD v2 e alinhamento com Desenvolvimento | Atualiza RN-021/RN-023 e RNF-009 | Backups, exclusão, expiração de cópias e evidências |
-| Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Documentar a configuração e as evidências de compatibilidade da stack Supabase + Vercel adotada, conforme ADR-003/Q-025, sem substituição por inferência |
-| Direção tecnológica reafirmada | ADR-003 revisada em 24/11/2026 | Supabase + Vercel permanece como stack adotada | Q-025 documenta a compatibilidade operacional e as evidências; não substitui a stack por inferência |
-| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e avaliação técnica de compatibilidade/configuração da stack adotada |
+| Infraestrutura FORD | FORD v2 / Q-025 | Atualiza RN-022 e RNF-013 | Compatibilidade e modelo de uso Supabase + Vercel aprovados pela TI e pela FORD em 24/11/2026 |
+| Direção tecnológica reafirmada | ADR-003 revisada em 24/11/2026 | Supabase + Vercel permanece como stack adotada e aprovada | Q-025 concluída; provedores nomeados e modelo de utilização aprovados |
+| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 concluída | Permanece Q-019 para obtenção de ativos oficiais de marca; Q-025 não é mais pendência |
 
 ## 10. Referências e documentos relacionados
 
