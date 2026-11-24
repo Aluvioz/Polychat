@@ -19,6 +19,7 @@
 13. [Política de anexos e proteção antimalware — Issue #117](storage/politica-anexos-e-antimalware.md)
 14. [Decisões de produto Q-018 e Q-019 — arquitetura da informação e identidade visual provisória](ux/decisoes-produto-q018-q019.md)
 15. [Plano de release, operação e gestão de incidentes — Issue #130](infra/issue-130-plano-release-operacao-incidentes.md)
+16. [Plano de testes e rastreabilidade — Issue #126](qa/issue-126-plano-testes-rastreabilidade.md)
 
 ## Infraestrutura e deploy
 
