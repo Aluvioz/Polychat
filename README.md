@@ -4,7 +4,7 @@ Aplicação web de comunicação interna em desenvolvimento para a FORD.
 
 **Baseline de produto:** POLY-REQ-001 v0.5, baseada no questionário FORD v2 e nos alinhamentos consolidados em 20/11/2026. A direção tecnológica Supabase + Vercel permanece adotada e obrigatória, conforme ADR-003 — Accepted (revisão de 24/11/2026).
 
- > **Requisitos de infraestrutura da FORD:** hospedagem, armazenamento e processamento de dados devem atender às restrições de controle, localização, acesso e operação registradas na baseline. A configuração e o modelo de uso da stack adotada Supabase + Vercel devem ser avaliados na Q-025 antes da homologação de produção; essa avaliação não altera nem substitui a ADR-003 por inferência.
+> **Requisitos de infraestrutura da FORD:** hospedagem, armazenamento e processamento de dados devem atender às restrições de controle, localização, acesso e operação registradas na baseline. A configuração e o modelo de uso da stack adotada Supabase + Vercel devem ser avaliados na Q-025 antes da homologação de produção; essa avaliação não altera nem substitui a ADR-003 por inferência.
 
 ## Estado atual
 
