@@ -16,6 +16,8 @@
 
   let current = 'start';
   let chatKind = 'individual';
+  let activeContact = 'Marina (exemplo)';
+  let renderedConversation = null;
   let offline = false;
   let confirmOrigin = null;
   let pendingMessage = null;
@@ -65,11 +67,30 @@
   }
 
   function updateChatHeader() {
-    const name = chatKind === 'group' ? 'Equipe técnica (exemplo)' : 'Marina (exemplo)';
+    const name = chatKind === 'group' ? 'Equipe técnica (exemplo)' : activeContact;
     document.getElementById('u-chat-title').textContent = name;
     document.getElementById('chat-kind').textContent =
       chatKind === 'group' ? 'Grupo fictício · autorizado aos membros' : 'Conversa individual · dados fictícios';
     document.getElementById('group-info-link').hidden = chatKind !== 'group';
+    // Cada jornada deve abrir seu próprio histórico fictício, sem herdar mensagens de outro contato.
+    const key = chatKind === 'group' ? 'group' : 'user:' + activeContact;
+    if (renderedConversation !== key) {
+      renderedConversation = key;
+      pendingMessage = null;
+      const list = document.getElementById('chat-messages');
+      list.replaceChildren();
+      const examples = chatKind === 'group'
+        ? ['Atualização de plantão (exemplo)', 'Entendido.']
+        : activeContact.startsWith('Rafael')
+          ? ['Bom dia! Pode verificar os arquivos?', 'Vou conferir.']
+          : ['Vamos revisar o documento?', 'Claro, pode mandar.'];
+      for (const [index, text] of examples.entries()) {
+        const bubble = document.createElement('p');
+        bubble.className = 'bubble ' + (index === 0 ? 'incoming' : 'outgoing');
+        bubble.textContent = text;
+        list.appendChild(bubble);
+      }
+    }
   }
 
   function appendMessage(text, failed = false) {
@@ -88,6 +109,10 @@
     'bad-login': 'Não foi possível entrar. Verifique os dados e tente novamente. Erro fictício; não houve autenticação.',
     'attach-valid': 'Arquivo permitido neste exemplo. Nenhum arquivo foi acessado, carregado ou enviado.',
     'attach-invalid': 'Arquivo inválido: apenas PDF e JPEG são permitidos. Nenhum upload foi iniciado.',
+    'attach-over-limit': 'Arquivo excede 10 MB. Anexo bloqueado por limite de tamanho (simulação).',
+    'attach-too-many': 'São permitidos até 5 anexos por mensagem. O sexto arquivo não seria aceito (simulação).',
+    'attach-protected': 'PDF protegido por senha não é aceito porque não pode ser analisado (simulação).',
+    'attach-scanner-offline': 'Scanner indisponível. Anexos permanecem bloqueados até sua recuperação; mensagens de texto continuam disponíveis (simulação).',
     'attach-error': 'Não foi possível enviar o arquivo fictício. A pessoa pode tentar novamente; nada foi enviado.',
     'attach-blocked': 'Anexo fictício bloqueado na verificação. O usuário não pode liberá-lo pela interface.',
     'reset-user': 'Etapa de redefinição simulada. Nenhuma credencial foi alterada.',
@@ -139,6 +164,9 @@
     if (!button) return;
     if (button.dataset.chat === 'group' || button.dataset.chat === 'individual') {
       chatKind = button.dataset.chat;
+    }
+    if (button.dataset.user) {
+      activeContact = button.dataset.user;
     }
     if (button.dataset.go) {
       activate(button.dataset.go);
