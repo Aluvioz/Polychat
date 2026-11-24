@@ -176,7 +176,7 @@ Esta PR não altera ADRs, baseline, issues, ambientes, secrets, variáveis, pol�
 | Integridade e impossibilidade de alteração/exclusão por usuário comum | UPDATE/DELETE/TRUNCATE tentados como `authenticated` e rejeitados; triggers instalados; owner/superuser fora da fronteira |
 | Política de retenção e descarte autorizado/auditado | Parcial; não existe fluxo integrado de autorização, preservação de investigação, descarte e evento atômico |
 | Backups diários DB+anexos, 12 meses, restore RPO/RTO | Não comprovado; zero buckets Storage, plano/configuração não confirmados, sem restore/RPO/RTO medidos |
-| Integração real Supabase/Vercel, testes, SQA/Tech Lead e evidências | Parcial; migration e SQL test executados; faltam handler/call sites, atomicidade, operação de retenção/backup e aprovações
+| Integração real Supabase/Vercel, testes, SQA/Tech Lead e evidências | Parcial; migration e SQL test executados; faltam handler/call sites, atomicidade, operação de retenção/backup e aprovações |
 
 ## 11. Limites da entrega
 
@@ -189,13 +189,3 @@ Esta PR não altera ADRs, baseline, issues, ambientes, secrets, variáveis, pol�
 - O script SQL de integração foi executado dentro de transação com `ROLLBACK`; não deixou registros de auditoria nem alterações de dados.
 - Nenhum backup/restore foi simulado como evidência.
 - A PR permanece Draft/Open para revisão do SQA e Tech Lead.
-
-
-
-- Nenhuma issue foi fechada ou alterada.
-- Nenhum critério original foi modificado.
-- Nenhuma issue atribuída a outra pessoa foi alterada.
-- Nenhuma ADR foi modificada.
-- Nenhum ambiente foi reativado ou configurado.
-- Nenhum backup/restore foi simulado como evidência.
-- PRs permanecem abertas para revisão do Tech Lead e SQA.
