@@ -166,7 +166,7 @@ Foi adicionado `tests/audit-events.test.mjs`, cobrindo:
 
 Esses testes são unitários com cliente Supabase simulado. Não comprovam RLS, triggers, privilégios, integração real ou backup.
 
-O workflow CI existente deve executar `npm test`, ESLint, TypeScript e build quando a PR for aberta/atualizada. O resultado precisa ser consultado após a execução; não declarar sucesso antes disso.
+**CI executado:** workflow [run 45407475573](https://github.com/Aluvioz/Polychat/actions/runs/45407475573) concluiu com sucesso no commit `c7823b5093bf0b37b3ece65d0656853bac8cfc7b`. O log registra 32 testes aprovados (32 pass, 0 fail), ESLint, TypeScript, build Next.js e smoke test HTTP da página inicial aprovados. Isso valida o código Node/Next incluído no workflow, não as migrations SQL, RLS, triggers, integração hospedada ou backups.
 
 ## 9. Estado das ADRs e governança
 
