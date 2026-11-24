@@ -2,7 +2,7 @@
 
 **Projeto:** Polychat — aplicação de comunicação interna da FORD  
 **Issue:** [#126 — Definir plano de testes e rastreabilidade requisito-caso](https://github.com/Aluvioz/Polychat/issues/126)  
-**Versão:** 0.2 — 20/11/2026  
+**Versão:** 0.3 — 24/11/2026  
 **Status:** proposta de QA/PO para revisão; não representa homologação nem execução de testes  
 **Responsáveis pela validação:** SQA, desenvolvimento, liderança técnica e PO, conforme o tipo de teste
 
@@ -30,10 +30,10 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 | [03 — Requisitos funcionais](../03-requisitos-funcionais.md) | Fonte dos RF-001 a RF-023 e dos critérios CA-xxx.n |
 | [04 — Requisitos não funcionais](../04-requisitos-nao-funcionais.md) | Fonte dos RNF-001 a RNF-013 e respectivos métodos de verificação |
 | [07 — Rastreabilidade e critérios de aceitação](../07-rastreabilidade-e-criterios-de-aceitacao.md) | Relação existente entre objetivos, RFs, RNFs e critérios |
-| [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Histórico Q-001 a Q-024; somente Q-018, Q-019 e Q-025 permanecem abertas; Q-025 trata da compatibilização arquitetural com a infraestrutura sob controle da FORD |
-| [09 — Baseline consolidada do MVP](../09-baseline-requisitos-mvp.md) | Escopo, estado técnico observado, comandos de CI e evidências existentes |
-| [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de autorização e cenários AUTH-01 a AUTH-20 |
-| [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
+| [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Histórico Q-001 a Q-024; somente Q-018, Q-019 e Q-025 permanecem abertas; Q-025 trata da compatibilidade e configuração da stack adotada com os requisitos de infraestrutura da FORD, sem autorizar sua substituição por inferência |
+| [09 — Baseline consolidada do MVP](https://github.com/Aluvioz/Polychat/blob/main/docs/09-baseline-requisitos-mvp.md) | Baseline POLY-REQ-001 v0.5: escopo, RF-001 a RF-023, RNF-001 a RNF-013 e decisões vigentes |
+| [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de autorização e cenários AUTH-01 a AUTH-20; preserva Supabase + Vercel como referência de implementação |
+| [ADR-003 — Supabase + Vercel](https://github.com/Aluvioz/Polychat/blob/main/docs/adr/ADR-003-supabase-vercel.md) | Decisão Accepted, revisada em 24/11/2026: stack vigente e obrigatória; Q-025 trata de compatibilidade/configuração, não de substituição |\n| [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
 | [Issue #110](https://github.com/Aluvioz/Polychat/issues/110) | Histórico paginado, sincronização Realtime, reconexão e deduplicação |
 | [Issue #111](https://github.com/Aluvioz/Polychat/issues/111) | Última mensagem, indicador de não lidas e marcação de leitura |
 | [Issue #113](https://github.com/Aluvioz/Polychat/issues/113) | Remoção de participantes e revogação de acesso |
@@ -81,7 +81,7 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 | Nível/tipo | Objetivo | Exemplos para o Polychat | Evidência esperada |
 |---|---|---|---|
 | Unitário | Verificar funções e regras isoladas | Validação de sessão, estados de conta, validação de conteúdo de arquivo, tratamento de erros | Relatório do executor de testes, resultado por caso e cobertura quando configurada |
-| Integração | Verificar colaboração entre aplicação e serviços reais | Provedor de identidade, banco de dados e mecanismo de autorização/RLS, armazenamento, auditoria e rotas server-side definidos na arquitetura-alvo | Relatório automatizado, logs sanitizados, registros do banco de teste e configuração do ambiente |
+| Integração | Verificar colaboração entre a aplicação e os serviços reais da stack adotada | Supabase (serviços efetivamente integrados, incluindo autenticação, PostgreSQL/RLS, armazenamento e demais capacidades previstas) e aplicação/deployment na Vercel, conforme ADR-003 e configuração técnica registrada | Relatório automatizado, logs sanitizados, registros do banco de teste e configuração do ambiente |
 | E2E | Verificar jornadas completas por perfil | Login, lista de conversas, leitura/envio, administração de grupos e anexos | Relatório do cenário, captura sanitizada e identificação da versão |
 | Segurança | Verificar resistência a uso não autorizado e exposição de dados | Troca de role, IDOR, acesso por URL/API, isolamento de membership, sessão inválida | Relatório SQA/segurança, requisições/respostas sanitizadas e defeitos |
 | Compatibilidade | Verificar perfis nos dispositivos e navegadores homologados | Usuário em smartphone; TI em computador | Matriz de dispositivo/navegador, versão e resultado |
@@ -95,7 +95,7 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 A automação deve ser escolhida pelo risco e pela repetibilidade:
 
 - Regras determinísticas e regressivas devem ser automatizadas sempre que viável.
-- Testes de RLS devem operar no mecanismo de banco escolhido para a arquitetura-alvo, em ambiente de teste isolado e executável. Mocks podem apoiar testes unitários, mas não comprovam a aplicação ou eficácia de políticas de banco. PostgreSQL pode ser usado como ambiente de teste conforme formalização da ADR-005 e resolução de Q-025.
+- Testes de integração e RLS devem validar a implementação real na stack adotada Supabase + Vercel, em ambiente de teste isolado. As políticas devem ser verificadas no PostgreSQL do Supabase; os fluxos devem exercitar os serviços Supabase efetivamente integrados e a aplicação/deployment na Vercel, conforme o escopo implementado e as ADRs aplicáveis. Mocks podem apoiar testes unitários, mas não comprovam integração real nem aplicação/eficácia de RLS. A Q-025 documenta a compatibilidade, a configuração, os controles, a localização/processamento dos dados e as responsabilidades operacionais exigidas pela FORD; não autoriza retirar ou substituir a stack por inferência.
 - Cenários E2E devem validar o comportamento observável dos perfis e das rotas reais.
 - Testes manuais são aceitáveis quando a atividade exigir julgamento humano ou quando a automação não for adequada; nesse caso, o roteiro e a evidência são obrigatórios.
 - Não considerar um mock como evidência de integração com serviço real.
@@ -105,7 +105,7 @@ A automação deve ser escolhida pelo risco e pela repetibilidade:
 A fotografia do repositório registra artefatos iniciais de estrutura, mas a implementação funcional do produto ainda não começou. O que existe não constitui fluxo real integrado ou funcional:
 
 - A aplicação está estruturada em Next.js 16, React 19, TypeScript e App Router.
-- Existe um módulo isolado de autorização Express-compatible e testes unitários com cliente Supabase simulado. Esses artefatos legados demonstram apenas o comportamento isolado daquele módulo; não representam autenticação/autorização integradas à aplicação nem determinam a arquitetura-alvo.
+- Existe um módulo isolado de autorização Express-compatible e testes unitários com cliente Supabase simulado. Esses artefatos demonstram apenas o comportamento isolado daquele módulo: não comprovam integração real com Supabase, aplicação/eficácia de RLS, fluxos ponta a ponta nem deployment na Vercel. Supabase + Vercel permanece a stack adotada conforme ADR-003; a validação integrada depende da implementação e de evidências reproduzíveis no ambiente de teste.
 - Há uma migration de exemplo para `public.profiles`; sua presença versionada não comprova aplicação em um banco de teste ou homologação, integração com o runtime nem implementação funcional de perfis.
 - Não há integração funcional de Auth/handlers do App Router, nem migrations/RLS de domínio para conversas, grupos, mensagens, anexos e auditoria.
 - Nenhuma funcionalidade do Polychat — login, conversas, mensagens, grupos, anexos, alertas, console TI ou auditoria — está implementada de ponta a ponta.
@@ -170,7 +170,7 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 | RNF-010 — segurança de arquivos | Testar PDF/JPEG, 10 MB, 5 arquivos por mensagem, PDF protegido por senha, EXIF/GPS, antimalware interno, falha segura, autorização de upload/download, expiração de link e revogação após remoção de participante | TC-UNIT-003, TC-INT-007, TC-INT-015, TC-E2E-008, TC-E2E-021, TC-SEC-011, TC-SEC-021 a TC-SEC-023 | Requisitos definidos; implementação, integração e evidências de execução pendentes (#116/#117) |
 | RNF-011 — privacidade/governança | Verificar aviso no primeiro acesso, acesso TI conforme regras e tratamento de solicitações descrito pela FORD | TC-SEC-012, TC-E2E-020 | Regras definidas; não exigir trilha separada de aprovação jurídica no projeto; obrigações legais aplicáveis permanecem |
 | RNF-012 — acessibilidade | Verificação de obrigações legais/corporativas aplicáveis | TC-A11Y-001; evidências das #93/#129 | Q-020 resolvida: FORD não estabeleceu requisito adicional específico; obrigações aplicáveis permanecem |
-| RNF-013 — arquitetura/plataforma | Revisar integração real, configuração server-only, autorização/RLS e deployment conforme arquitetura-alvo formalmente definida | TC-INT-001 a TC-INT-015; CI/deployment | Q-025 permanece aberta para compatibilização arquitetural; não presumir Supabase/Vercel como arquitetura-alvo. Integração funcional e evidências permanecem pendentes |
+| RNF-013 — arquitetura/plataforma | Verificar integração real da aplicação/deployment na Vercel e dos serviços Supabase efetivamente adotados, incluindo configuração server-only, autorização/RLS e fronteiras de acesso/processamento | TC-INT-001 a TC-INT-015; CI/deployment | Supabase + Vercel são a stack adotada (ADR-003). Q-025 registra análise de compatibilidade, configuração, controles e responsabilidades perante a infraestrutura FORD; não implica retirada/substituição da stack. Integração funcional e evidências permanecem pendentes |
 
 ## 9. Catálogo mínimo de casos de teste
 
@@ -184,8 +184,8 @@ Os casos abaixo são especificações de teste. O executor deve completar pré-c
 | TC-UNIT-002 | Validar conta ativa, inativa, perfil ausente e role desconhecida | Somente conta ativa com perfil permitido prossegue | Especificado; artefato isolado/mock não equivale à implementação funcional |
 | TC-UNIT-003 | Submeter PDF/JPEG válidos e arquivos com extensão/MIME incompatíveis | Aceitar apenas formatos permitidos após validar conteúdo real; recusar arquivos falsificados | Unitário; pendente de implementação do fluxo de anexos |
 | TC-UNIT-004 | Aplicar regras/lista de termos mantidas pelo TI, incluindo palavrões | Resultado sinalizado conforme regra ativa; sem análise contextual/IA e sem bloqueio automático | Especificado; implementação pendente, Q-007 resolvida |
-| TC-INT-001 | Autenticar conta ativa contra o provedor de identidade definido na arquitetura-alvo e carregar seu perfil | Identidade e perfil correspondem ao usuário validado pelo provedor | Integração; depende de Auth integrado e ambiente de teste compatível com a arquitetura aprovada |
-| TC-INT-002 | Consultar/alterar perfil com políticas de autorização/RLS no banco de teste | Aplicar exatamente as políticas aprovadas para a arquitetura-alvo; acesso não autorizado negado | Integração; execução em banco real de teste pendente, não substituível por mock |
+| TC-INT-001 | Autenticar conta ativa por meio da integração Supabase Auth adotada para o projeto e carregar seu perfil | Identidade e perfil correspondem ao usuário validado pelo Supabase Auth | Integração; depende de Auth integrado e ambiente de teste configurado conforme ADR-003 e Q-025 |
+| TC-INT-002 | Consultar/alterar perfil com políticas de autorização/RLS no PostgreSQL do Supabase em ambiente de teste | Aplicar exatamente as políticas aprovadas; acesso não autorizado negado | Integração; execução no banco real de teste pendente, não substituível por mock |
 | TC-INT-003 | TI provisiona conta com username único e perfil permitido | Conta criada apenas pelo fluxo administrativo; duplicidade rejeitada | Integração; Q-002/Q-006 resolvidas; implementação pendente |
 | TC-INT-004 | TI desativa uma conta já existente | Conta fica impedida de iniciar nova sessão; operação não pode ser feita por Usuário | Integração; depende de fluxo administrativo |
 | TC-INT-005 | Incluir conta ativa em grupo e tentar operação como não membro | Membro incluído pelo TI pode participar conforme regra; não membro não lê nem envia | Integração; depende de modelo #99 e RLS #101 |
@@ -371,7 +371,7 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 | #99 — modelo de dados | Sem schema revisado não há base definitiva para testes de domínio e membership | Vincular casos de banco/RLS ao modelo revisado |
 | #100 — matriz de autorização | As regras estão documentadas, mas aprovação e enforcement precisam ser confirmados | Preservar os cenários AUTH-01..AUTH-20; não duplicar sua especificação |
 | #101 — RLS | Sem policies de domínio e testes reais, não há prova de isolamento de conversas/grupos/mensagens | Testar em banco real de teste após implementação e revisão |
-| #102 — auditoria | Eventos, acesso e retenção estão definidos; a implementação da trilha, integridade e evidências ainda não começou | Validar os eventos RF-016/RF-022 e retenção conforme baseline v0.4 |
+| #102 — auditoria | Eventos, acesso e retenção estão definidos; a implementação da trilha, integridade e evidências ainda não começou | Validar os eventos RF-016/RF-022 e retenção conforme baseline POLY-REQ-001 v0.5 |
 | #105 — integração Auth | Middleware isolado não comprova login e autorização ponta a ponta | Executar integração e E2E depois de conectar os fluxos reais |
 | #110 — histórico e sincronização | Histórico paginado, Realtime, reconexão e deduplicação precisam de verificação integrada | Vincular cenários de recuperação/sincronização ao fluxo de mensagens e evidenciar ausência de duplicidade |
 | #111 — leitura e não lidas | Última mensagem, contador e recibos/horários de leitura precisam de validação por usuário e conversa | Executar cenários de leitura e sincronização conforme os critérios da issue |
@@ -391,7 +391,7 @@ A regressão funcional inclui, quando disponíveis, login, lista e abertura de c
 | Q-012 | Resolvida: matriz mobile Usuário e desktop TI definida pela FORD | Execução/homologação #129 pendente |
 | Q-016/Q-017 | Resolvidas: 25 conexões simultâneas de usuários finais + TI; 99% disponibilidade, RPO 24h, RTO 24h, backups diários por 12 meses | Requisitos definidos; testes de carga/restore pendentes |
 | Q-020 | Resolvida: FORD não definiu requisito adicional específico; obrigações aplicáveis permanecem | Testes/evidências pertinentes em #93/#129 |
-| Q-025 | Arquitetura-alvo e ADRs devem ser reconciliadas com a exigência de infraestrutura sob controle da FORD | Manter casos tecnologicamente neutros; alinhar contratos e testes de integração/RLS à arquitetura aprovada, sem presumir Supabase/Vercel como destino |
+| Q-025 | Compatibilidade e configuração da stack Supabase + Vercel com as exigências de infraestrutura e governança da FORD | Avaliar configuração dos serviços, deployment, localização e processamento dos dados, acessos, controles e responsabilidades operacionais; registrar evidências e limitações concretas. Preservar a stack adotada; qualquer conflito real deve ser apresentado ao PO e à FORD para decisão explícita, sem substituição por inferência |
 
 ## 15. Responsabilidades
 
@@ -420,7 +420,7 @@ A entrega documental desta issue poderá ser considerada pronta para revisão qu
 
 O plano apresenta uma estrutura adequada de planejamento e rastreabilidade, com cobertura documental de RF-001 a RF-023 e RNF-001 a RNF-013. A existência de um caso especificado não comprova implementação, execução ou aprovação. Os artefatos isolados hoje disponíveis — módulo de autorização, migration de exemplo e testes com dependências simuladas — não comprovam integração ponta a ponta, RLS de domínio ou homologação do produto.
 
-A versão 0.2 incorpora os ajustes documentais identificados: os testes por dispositivo foram classificados como compatibilidade/UX; os cenários de anexos foram ampliados para cobrir antimalware, autorização, expiração e revogação; as dependências das Issues #110, #111, #113, #116, #119, #123 e #124 foram explicitadas; TC-E2E-004 foi refinado; e a autoridade para aceitação de risco residual foi delimitada. O plano também deixou de presumir Supabase/Vercel como arquitetura-alvo e mantém a rastreabilidade compatível com a decisão a formalizar em Q-025.
+A versão 0.3 preserva a stack Supabase + Vercel como decisão adotada e obrigatória, conforme ADR-003 Accepted e baseline POLY-REQ-001 v0.5. Q-025 é tratada como análise de compatibilidade e configuração da stack perante as exigências da FORD, sem autorização para sua retirada ou substituição por inferência. A especificação de testes continua separada da implementação e da execução: integrações reais, RLS e deployment somente serão considerados comprovados mediante evidências reproduzíveis.
 
 A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcionalidades e dependências: autenticação/autorização; dados e políticas de acesso; conversas e mensagens; grupos, anexos e auditoria; e, por fim, homologação transversal, compatibilidade, acessibilidade, desempenho e recuperação. A Issue #129 permanece responsável pela homologação, acessibilidade e regressão global executadas.
 
@@ -428,4 +428,4 @@ A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcion
 
 **Histórico:**  
 - 19/11/2026 — v0.1: primeira proposta de estratégia de testes, catálogo inicial e matriz de rastreabilidade para revisão.
-- 20/11/2026 — v0.2: amplia cenários de anexos e download, corrige a classificação dos testes por dispositivo, completa rastreabilidade de dependências, formaliza autoridade para aceitação de risco residual e alinha o plano à arquitetura-alvo pendente de definição em Q-025.
+- 20/11/2026 — v0.2: amplia cenários de anexos e download, corrige a classificação dos testes por dispositivo, completa rastreabilidade de dependências e formaliza autoridade para aceitação de risco residual.\n- 24/11/2026 — v0.3: alinha o plano à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; esclarece que Q-025 trata de compatibilidade/configuração da stack Supabase + Vercel, sem substituição por inferência.
