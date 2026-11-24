@@ -43,6 +43,8 @@ test('ações declaradas têm tratamento explícito', () => {
   const actionsSet = new Set([...js.matchAll(/'([a-z]+(?:-[a-z]+)*)':\s*'/g)].map(x => x[1]));
   actionsSet.add('offline');
   actionsSet.add('fail-message');
+  actionsSet.add('retry-message');
+  actionsSet.add('attach-retry');
   for (const action of actions) assert.ok(actionsSet.has(action), 'Ação sem tratamento: ' + action);
 });
 
@@ -72,4 +74,15 @@ test('regras fundamentais de produto estão rastreáveis no protótipo', () => {
     'revoga acesso imediato', 'até 1 hora', 'até 1 dia útil',
     'até 3 dias úteis', 'sem bloqueio automático'
   ]) assert.ok(html.toLocaleLowerCase('pt-BR').includes(snippet.toLocaleLowerCase('pt-BR')), snippet);
+});
+
+test('estados de erro têm recuperação e busca sem resultados no código', () => {
+  assert.match(html, /id="contacts-empty"/);
+  assert.match(html, /id="ti-users-empty"/);
+  assert.match(html, /id="offline-indicator"/);
+  assert.match(html, /data-action="retry-message"/);
+  assert.match(html, /data-action="attach-retry"/);
+  assert.match(js, /pendingMessage = null/);
+  assert.match(js, /contacts-empty'\)\.hidden/);
+  assert.match(js, /ti-users-empty'\)\.hidden/);
 });
