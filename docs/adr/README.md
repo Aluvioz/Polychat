@@ -45,9 +45,9 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 - `package.json`, `src/app/`, `next.config.ts`: aplicação Next.js 16 / React 19 / TypeScript.
 - `src/app/page.tsx`: página inicial institucional; não comprova fluxos completos de chat.
 - `src/auth/authorization.mjs`: middleware Express-compatible com dependência de cliente Supabase e validação de token.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration de `profiles` e RLS vinculada à arquitetura anterior.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration versionada de `profiles` e RLS no Supabase; permanece como scaffold e não comprova integração ao runtime, policies de domínio ou aplicação/homologação em ambiente real.
 - `tests/authorization.test.mjs`: testes unitários com Supabase simulado; não comprovam integração com provedor ou infraestrutura de produção.
-- `.env.example`: placeholders históricos de Supabase, sem credenciais reais.
+- `.env.example`: placeholders de configuração Supabase, sem credenciais reais; não comprovam configuração do cliente nem integração funcional.
 - `README.md` e arquivos de configuração registram a direção de uso da stack adotada; a presença dessas referências não comprova integração real, conformidade operacional nem homologação de produção.
 - `.github/workflows/ci.yml`: testes, ESLint, TypeScript e build em push para `main` e PR para `main`.
 
