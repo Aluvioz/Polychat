@@ -44,7 +44,7 @@ A documentação não cria nem seleciona diagramas UML nesta versão, pois o tip
 O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
 
 
-## Atualização arquitetural — 19/11/2026
+## Atualização arquitetural — 24/11/2026
 
 A ADR-003 mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. A FORD v2 estabelece requisitos de controle da infraestrutura, localização e tratamento de dados; a Q-025 deve documentar a compatibilidade da configuração e do modelo de utilização da stack com esses requisitos, incluindo evidências e responsabilidades. A adoção não equivale à homologação de produção, e a stack não deve ser substituída por inferência. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md), [ADR-003](adr/ADR-003-supabase-vercel.md) e a Q-025.
 
