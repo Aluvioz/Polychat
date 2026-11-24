@@ -83,3 +83,17 @@ Para ajustes posteriores: ID do achado, tela, versão antes/depois, justificativ
 | Ausência de regressão | **Verificações estáticas/CI ainda a conferir; avaliação independente pendente** |
 
 Não fechar a issue #94, prometer homologação nem retirar o Draft apenas pela existência dos artefatos.
+
+## 8. Complemento de QA automatizado e governança FORD v2
+
+Esta versão de revisão incorpora:
+
+- [Matriz de aderência do protótipo ao questionário FORD v2](./issue-94-matriz-aderencia-ford-v2.md): Q1–Q34, representação no protótipo, lacunas e limites.
+- [Checklist de inspeção manual por UX/SQA](./issue-94-checklist-inspecao-manual.md): navegação, confirmação, foco, zoom, navegadores e leitores de tela; inicialmente sem execução registrada.
+- [Minuta de autorização institucional](./issue-94-minuta-autorizacao-institucional.md): **não enviada** e sem aprovação presumida.
+- [Testes reais de navegação em Chromium](../../tests/browser/issue-94-browser.test.mjs), executados pelo [workflow de browser](../../.github/workflows/issue-94-browser.yml) quando a PR é atualizada. Ao contrário dos testes estáticos, esses navegam via Playwright em HTML real, verificam erros JS/rede, mensagens de feedback, confirmação e reflow em 320/390px. **Apenas o resultado do job registrado no GitHub comprova execução; não inferir PASS a partir do código.**
+- Capturas de tela geradas pelo job (somente dados fictícios), publicadas como artefato de Actions, quando o job executar com sucesso. São capturas automáticas do protótipo, **não evidências de participantes**.
+
+**Ajustes realizados antes de validação humana:** preservar nome/histórico corretos ao alternar entre Marina, Rafael e o grupo; distinguir erro de 10 MB, mais de 5 arquivos, PDF com senha e scanner indisponível (apenas texto demonstrativo). Estes ajustes tratam divergências observadas em inspeção da fonte e não devem ser atribuídos a entrevistas.
+
+**Limite:** Chromium em CI não substitui Android/iOS reais, Safari/Edge/Firefox, leitor de tela, validação de pixels/contraste completo nem pesquisa com pessoas. O formulário da FORD não contém autorização operacional para coleta da pesquisa #94, e sua declaração sobre privacidade/LGPD não afasta obrigações legais aplicáveis.
