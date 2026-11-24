@@ -1,7 +1,7 @@
 # Plano de validação de UX com usuários representativos — Issue #94
 
-> **Versão:** 0.2 — amostragem e condições de execução revisadas  
-> **Data:** 20/11/2026  
+> **Versão:** 0.3 — critérios de encerramento da rodada de validação incluídos  
+> **Data:** 24/11/2026  
 > **Status:** escopo, perfis e dimensionamento ajustados pelo PO conforme baseline FORD v2 e Issue #130; recrutamento e sessões ainda dependem de autorização operacional formal e das condições de governança descritas neste plano  
 > **Issue:** [#94 — Prototipar e validar UX com usuários representativos](https://github.com/Aluvioz/Polychat/issues/94)  
 > **Epic:** [#78](https://github.com/Aluvioz/Polychat/issues/78)  
@@ -312,6 +312,18 @@ Antes de iniciar o recrutamento, devem estar documentados:
 5. versão vigente do roteiro e dos protótipos que serão utilizados.
 
 Enquanto esses itens não estiverem registrados, o plano pode orientar preparação interna, mas **não autoriza recrutamento nem coleta de evidências**.
+
+### 12.2 Critérios de encerramento da rodada de validação
+
+Uma rodada de validação poderá ser considerada encerrada quando:
+
+1. as sessões previstas tiverem sido realizadas conforme a disponibilidade dos participantes, com recusas, ausências e limitações de recrutamento registradas;
+2. cada sessão tiver registro do perfil, código anônimo, tarefas realizadas ou não realizadas, justificativas, versão do protótipo e versão do roteiro;
+3. as observações estiverem consolidadas separadamente por perfil, com os achados classificados por severidade e prioridade; caso não sejam identificados problemas, registrar expressamente essa conclusão no escopo avaliado;
+4. as limitações, tarefas não aplicadas e pontos que dependam de decisão estiverem documentados, com seus encaminhamentos;
+5. houver uma síntese dos resultados de cada perfil, disponível para avaliação do PO, UI/UX e SQA.
+
+A ausência do número indicativo de participantes não impede, por si só, o encerramento da rodada, desde que as tentativas de participação, as limitações e seus impactos estejam registrados e que não se alegue representatividade além das evidências obtidas. **O encerramento da rodada não significa, por si só, o encerramento da Issue #94 nem a aprovação final dos protótipos.**
 
 ## 13. Critérios de aceite da Issue #94
 
