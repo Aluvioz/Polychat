@@ -1,8 +1,9 @@
 # Política de detecção e classificação de conteúdo suspeito
 
 - **Documento:** POLY-SEC-002
-- **Versão:** 0.5 — alinhada à FORD v2 e à stack vigente Supabase + Vercel
+- **Versão:** 0.6 — alinhada à FORD v2, à POLY-REQ-001 v0.5 e à stack vigente Supabase + Vercel
 - **Data:** 24/11/2026
+- **Baseline funcional:** POLY-REQ-001 v0.5
 - **Status:** requisitos funcionais e operacionais alinhados à FORD v2 e à stack vigente Supabase + Vercel; implementação funcional ainda não iniciada; permanecem pendentes configuração inicial da lista pelo TI, detalhamento técnico e evidências de teste
 - **Issue principal:** [#122 — Implementar detecção de conteúdo suspeito e palavrões](https://github.com/Aluvioz/Polychat/issues/122)
 - **Épica:** [#86 — Segurança, monitoramento e auditoria](https://github.com/Aluvioz/Polychat/issues/86)
@@ -62,7 +63,8 @@ Este documento não define nem substitui:
 | CA-015.1 a CA-015.3 | Alerta deve identificar a ocorrência, mensagem/conversa, momento, motivo e severidade; TI revisa e pode encerrar sem justificativa obrigatória | Requisito confirmado; UI e fluxo técnico pendentes |
 | RN-012 — Análise de conteúdo | Detecção por regras/lista de termos mantida pelo TI, incluindo palavrões; sem análise contextual ou IA de terceiros | Confirmado pela FORD v2 |
 | RN-013 — Alerta ao TI | Fila administrativa; alta até 1 hora, média até 1 dia útil e baixa até 3 dias úteis; TI pode encerrar sem justificativa obrigatória | Confirmado pela FORD v2 |
-| RNF-011 — Privacidade e governança | Aviso no primeiro acesso, acesso e retenção conforme baseline; posicionamento da FORD registrado sem dispensar obrigações legais | Requisitos consolidados; implementação/evidência pendente |
+| POLY-REQ-001 v0.5 | Baseline funcional vigente para RF-001 a RF-023 e RNF-001 a RNF-013; inclui as regras aplicáveis a detecção, alertas, governança, acesso e retenção | Referência vigente; implementação e evidências permanecem pendentes conforme cada issue |
+| RNF-011 — Privacidade e governança | Aviso no primeiro acesso, acesso e retenção conforme baseline POLY-REQ-001 v0.5; posicionamento da FORD registrado sem dispensar obrigações legais | Requisitos consolidados; implementação/evidência pendente |
 | Q-007 — Detecção de mensagens suspeitas | Respondida: regras/lista de termos mantida pelo TI, incluindo palavrões; sem análise contextual/IA de terceiros | Resolvida pela FORD v2 |
 | Q-008 — Resposta a alertas | Respondida: fila TI; alta imediata/até 1h, média até 1 dia útil, baixa até 3 dias úteis; encerramento sem justificativa obrigatória | Resolvida pela FORD v2 |
 | Q-009 e Q-010 | Regras de consulta, auditoria e retenção foram consolidadas na FORD v2 e alinhadas com Desenvolvimento | Resolvidas no nível de requisito; implementação/auditoria técnica permanece pendente |
@@ -192,7 +194,7 @@ O critério da Issue #122 exige contexto mínimo. A finalidade é permitir revis
 | Identificador do revisor e data/hora da revisão | Responsabilizar a ação administrativa |
 | Identificador de correlação | Relacionar logs técnicos sem expor conteúdo |
 
-Os campos físicos e a implementação dependem do modelo de dados e da Issue #102. Os requisitos de auditoria e retenção já estão consolidados na baseline v0.4; não são pendências de Q-009/Q-010.
+Os campos físicos e a implementação dependem do modelo de dados e da Issue #102. Os requisitos de auditoria e retenção já estão consolidados na baseline POLY-REQ-001 v0.5; não são pendências de Q-009/Q-010.
 
 ### 9.2 Minimização de conteúdo
 
@@ -249,7 +251,7 @@ O RF-015 exige alertas visíveis ao TI. A fila e o fluxo operacional pertencem �
 | Prazo de resposta | Alta: imediatamente e até 1 hora; média: até 1 dia útil; baixa: até 3 dias úteis | Confirmado |
 | Revisão/encerramento | TI revisa e pode encerrar sem justificativa obrigatória | Confirmado |
 | Consulta da conversa | TI pode consultar qualquer conversa a qualquer momento, sem justificativa ou segunda aprovação; consulta é auditada | Confirmado |
-| Retenção/auditoria | Conforme regras da baseline v0.4 e Issue #102 | Requisito confirmado; implementação pendente |
+| Retenção/auditoria | Conforme regras da baseline POLY-REQ-001 v0.5 e Issue #102 | Requisito confirmado; implementação pendente |
 
 A notificação não deve conter conteúdo integral da mensagem por padrão. O revisor deve acessar o conteúdo somente após autenticação e autorização conforme a política aprovada.
 
@@ -355,7 +357,7 @@ A implementação funcional do Polychat ainda não começou. Permanecem como tra
 - implementar comparação determinística, normalização e testes positivos/negativos, sem análise contextual;
 - implementar fila de alertas TI com severidades baixa/média/alta e prazos: alta imediatamente/até 1 hora; média até 1 dia útil; baixa até 3 dias úteis;
 - implementar revisão/encerramento sem justificativa obrigatória;
-- persistir ocorrência e eventos de auditoria conforme baseline v0.4;
+- persistir ocorrência e eventos de auditoria conforme baseline POLY-REQ-001 v0.5;
 - definir tecnicamente o tratamento de indisponibilidade do detector, sem apresentar falha como resultado limpo nem bloquear automaticamente o envio;
 - implementar, integrar e testar os fluxos no runtime real da arquitetura formalmente definida, sob controle da FORD e compatível com a resolução da Q-025.
 
@@ -377,7 +379,7 @@ A FORD já definiu finalidade, acesso administrativo, auditoria e retenção. O 
 | D-122-06 | Registrar a regra correspondente e classificar o alerta conforme severidades já definidas em RN-013 | Desenvolvimento / TI | RF-014/RF-015 |
 | D-122-07 | Implementar fila TI e prazos baixa/média/alta | Desenvolvimento / TI | RF-015; Q-008 resolvida |
 | D-122-08 | Implementar revisão/encerramento por TI sem justificativa obrigatória e auditar ações | Desenvolvimento / TI | #123/#124 |
-| D-122-09 | Persistir metadados mínimos da ocorrência e aplicar auditoria/retenção da baseline v0.4 | Desenvolvimento / TI | #102; Q-009/Q-010 resolvidas |
+| D-122-09 | Persistir metadados mínimos da ocorrência e aplicar auditoria/retenção da baseline POLY-REQ-001 v0.5 | Desenvolvimento / TI | #102; Q-009/Q-010 resolvidas |
 | D-122-10 | Definir e testar contingência técnica do detector sem bloqueio automático | Desenvolvimento / TI / Tech Lead | Testes DET |
 | D-122-11 | Integrar consulta ao conteúdo e registro de auditoria conforme regras existentes | Desenvolvimento / TI | #121/#124 |
 | D-122-12 | Definir métricas técnicas e procedimento de manutenção/versionamento da lista | TI / Desenvolvimento / SQA | Issue #122 |
@@ -433,3 +435,4 @@ Esses critérios são evidências de implementação e qualidade, não decisões
 | 0.3 | 20/11/2026 | Reconcilia regras funcionais e operacionais com a FORD v2, sem declarar implementação. |
 | 0.4 | 20/11/2026 | Alinha as referências de infraestrutura à interpretação então registrada na ADR-003; preserva as decisões de produto e as pendências de implementação/teste. |
 | 0.5 | 24/11/2026 | Restabelece Supabase + Vercel como stack vigente conforme ADR-003 Accepted; esclarece que a Q-025 trata da compatibilização técnica sem substituir a stack por inferência. |
+| 0.6 | 24/11/2026 | Alinha as referências de auditoria e retenção à baseline POLY-REQ-001 v0.5 e identifica explicitamente a baseline funcional vigente. |
