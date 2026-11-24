@@ -1,10 +1,10 @@
 # ADR-009 — Ambientes, configuração, deploy e rollback
 
 - **Status:** Proposed
-- **Data de revisão:** 19/11/2026
+- **Data de revisão:** 24/11/2026
 - **Issue de origem:** #89
 - **Issues operacionais relacionadas:** #96 e #98
-- **Baseline:** POLY-REQ-001 v0.4
+- **Baseline:** POLY-REQ-001 v0.5
 
 ## Contexto
 
@@ -15,7 +15,7 @@ As Issues #96 e #98 foram encerradas como concluídas, com confirmações expres
 - **Issue #96 — Configurar ambientes Supabase e Vercel:** encerrada em 17/11/2026. O responsável/Tech Lead confirmou a conclusão das configurações e validações operacionais dos ambientes descritas na issue. O registro de auditoria identificou Polyford como projeto Supabase de desenvolvimento e observou Preview Vercel Ready; o comentário de encerramento atesta a conclusão do escopo, sem apresentar inventário administrativo granular de todos os ambientes.
 - **Issue #98 — Estabelecer deploy preview, produção e rollback:** encerrada em 19/11/2026. O Tech Lead confirmou que foram executados a validação do deployment hospedado, os ensaios de rollback, as verificações de produção/domínio/HTTPS e a revisão dos fluxos relacionados. O comentário registra o aceite e a conclusão da issue, mas ressalva que não constitui nova auditoria administrativa independente e que as evidências detalhadas devem permanecer acessíveis e atualizadas.
 
-As issues foram concluídas no contexto da direção técnica anterior Supabase + Vercel, que foi posteriormente retirada como arquitetura-alvo pela FORD v2 (ADR-003). Seus encerramentos continuam válidos como registros históricos de execução e aceite dos escopos originais, mas não autorizam a continuidade de serviços externos para dados reais da FORD sob a nova restrição.
+As issues foram concluídas utilizando a direção técnica Supabase + Vercel. A ADR-003 mantém essa stack como adotada e obrigatória. Os encerramentos continuam válidos para os escopos operacionais originais, mas não substituem a avaliação de compatibilidade/configuração exigida pela Q-025 nem comprovam, isoladamente, homologação de produção sob todos os requisitos da FORD.
 
 O workflow de CI executa testes, ESLint, TypeScript e build em pushes para main e Pull Requests para main. A existência do workflow não comprova proteção administrativa da branch nem autoriza que segredos ou dados de produção sejam expostos a serviços externos.
 
@@ -32,7 +32,7 @@ Estabelecer isolamento de ambientes, gestão de segredos, promoção segura, evi
 
 ## Decisão proposta
 
-Adotar como arquitetura-alvo ambientes separados de **desenvolvimento, homologação e produção**, todos executados sob controle da FORD. A solução específica de hospedagem, pipeline de deploy e gestão de ambientes será registrada após validação técnica de TI e Tech Lead (Q-025).
+Adotar ambientes separados de **desenvolvimento, homologação e produção** utilizando a stack Supabase + Vercel definida pela ADR-003. A topologia, isolamento, configuração, gestão de segredos, fluxo de deploy e responsabilidades devem ser detalhados e validados por TI e Tech Lead na Q-025, frente às restrições da FORD. Esta ADR permanece Proposed e não autoriza retirar ou substituir a stack por inferência.
 
 ### Isolamento e dados
 
@@ -73,11 +73,11 @@ Adotar como arquitetura-alvo ambientes separados de **desenvolvimento, homologa�
 
 O encerramento das Issues #96 e #98 permanece válido para seus escopos originais, com base nas confirmações registradas pelos responsáveis. A existência histórica de ambientes e deployments Supabase/Vercel, inclusive a confirmação de smoke tests e rollback no contexto da #98, deve ser preservada como evidência de execução anterior.
 
-A FORD v2, contudo, prevalece para a arquitetura-alvo. Os ambientes Supabase/Vercel não devem ser presumidos como autorizados para processar dados reais da FORD após a nova restrição. O uso futuro desses serviços com dados da organização depende de uma solução que demonstre atendimento integral ao requisito — não basta a configuração estar funcional ou a issue operacional estar encerrada.
+As exigências da FORD v2 permanecem obrigatórias e devem ser verificadas na configuração e no modelo de uso dos ambientes Supabase/Vercel por meio da Q-025. Até que as evidências de compatibilidade e homologação sejam registradas, não se deve presumir prontidão para produção com dados reais. Essa condição é um gate de validação operacional, não uma retirada implícita da stack estabelecida pela ADR-003.
 
 ## Justificativa
 
-Isolamento e promoção controlada reduzem o risco de contaminação entre estágios e erros de operação. Manter os serviços que tratam dados dentro da infraestrutura da FORD atende à restrição mais recente do cliente. Os encerramentos das issues #96 e #98 demonstram que os escopos operacionais anteriores receberam aceite técnico, mas não substituem a revisão da arquitetura após a atualização de requisitos.
+Isolamento e promoção controlada reduzem o risco de contaminação entre estágios e erros de operação. A configuração dos serviços e dos ambientes deve demonstrar atendimento aos requisitos da FORD sem contradizer a stack adotada pela ADR-003. Os encerramentos das issues #96 e #98 comprovam apenas os escopos operacionais aceitos e não substituem as evidências adicionais da Q-025.
 
 ## Consequências
 
@@ -89,7 +89,7 @@ Isolamento e promoção controlada reduzem o risco de contaminação entre está
 
 **Negativas e cuidados:**
 - A FORD/equipe precisa operar a infraestrutura, pipeline de deploy, segredos, backups e recuperação.
-- A migração da configuração externa anterior exige planejamento e validação.
+- A configuração e eventual adequação da stack adotada exigem planejamento, validação técnica e evidências por ambiente.
 - Evidências históricas de deploy e rollback precisam ser preservadas, mas a solução substituta também deverá ser testada.
 
 ## Riscos
@@ -110,7 +110,7 @@ As confirmações do Tech Lead são evidência de aceite operacional para as iss
 
 ## Pendências para Accepted
 
-- Selecionar e homologar a infraestrutura e o pipeline de deploy sob controle da FORD (Q-025).
+- Documentar e validar a configuração de ambientes e do pipeline de deploy na stack Supabase + Vercel adotada, demonstrando compatibilidade com os requisitos da FORD na Q-025.
 - Definir como Preview, homologação e produção serão isolados na infraestrutura-alvo.
 - Documentar a gestão de segredos e o acesso mínimo por ambiente, sem expor valores.
 - Revalidar smoke test, deploy e rollback na arquitetura substituta.
