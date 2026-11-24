@@ -18,8 +18,8 @@
 | U-03/U-04: busca sem resultados, Rafael correto e conversa em grupo com histórico distinto | PASS Chromium | Log do workflow |
 | U-05/U-08: mensagem fictícia, simulação offline, falha e nova tentativa | PASS Chromium | Log do workflow |
 | U-06/U-07: formatos, 10 MB, cinco anexos, PDF com senha, scanner indisponível | PASS Chromium | Log do workflow e captura mobile 320 |
-| T-01/T-02/T-03: dashboard, busca, confirmação e retorno do foco | PASS Chromium | Log do workflow e captura TI 1280 |
-| T-04/T-05/T-06: consulta administrativa, alertas, configurações e auditoria | PASS Chromium | Log do workflow |
+| T-01 (acesso), T-02 (contas) e T-03 (grupos); dashboard como tela auxiliar; busca, confirmação e foco | PASS Chromium no commit informado | Log do workflow e captura TI 1280 |
+| T-04 (consulta), T-05 (alertas) e T-06 (configurações); auditoria como tela auxiliar | PASS Chromium no commit informado | Log do workflow |
 | Skip link, foco na mudança de tela, reflow em 320 e 390px | PASS Chromium | Log do workflow |
 | axe-core WCAG 2.1 A/AA nas telas selecionadas (início, conversas, chat, anexos, dashboard e usuários TI) | PASS automatizado, sem violações encontradas nessas verificações | Log do workflow |
 
