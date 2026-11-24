@@ -1,7 +1,7 @@
 # Issue #94 — Kit de registro para sessões e achados (MODELOS EM BRANCO)
 
 **Estado:** somente formulários e roteiro de apoio. **Nenhuma sessão, observação ou achado real foi registrado neste arquivo.**  
-**Referência metodológica:** PR #152 / plano de validação UX v0.3.  
+**Referência metodológica aprovada:** PR #152, plano de validação UX v0.3 integrado à `main`. A [proposta de uso complementar clicável](./issue-94-decisao-metodologica-proposta.md) permanece sem decisão do PO/SQA.  
 **Protótipo opcional para revisão prévia:** [navegação exploratória v0.1](./issue-94-prototipo-v01.md).
 
 > Não utilizar este kit para iniciar recrutamento ou coletar dados sem autorização institucional e responsável definidos. Guardar registros brutos no local autorizado pela FORD, não automaticamente no GitHub. Publicar somente sínteses anonimizadas e aprovadas.
@@ -19,7 +19,7 @@
 | Prazo/critério de retenção | A definir | PENDENTE |
 | Texto de consentimento e política de gravação | A definir | PENDENTE |
 | Versão do roteiro e protótipo congelada | A definir | PENDENTE |
-| Acordo PO/SQA sobre usar protótipo clicável vs wireframe estático | A definir | PENDENTE |
+| Decisão escrita PO/SQA sobre usar o protótipo clicável apenas como complemento aos wireframes estáticos | [Proposta pendente](./issue-94-decisao-metodologica-proposta.md); a baseline atual é a pesquisa estática da PR #152 | PENDENTE |
 
 **Se houver qualquer pendência, não recrutar nem executar sessão.** O escopo e a amostra foram validados pelo PO, mas isso não substitui estas condições.
 
