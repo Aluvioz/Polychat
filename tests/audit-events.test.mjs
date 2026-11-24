@@ -171,7 +171,7 @@ test("rejects sensitive metadata keys, including nested keys", async () => {
         nested: { access_token: "must-not-be-recorded" },
       },
     }),
-    /prohibited/,
+    /proibida/,
   );
 
   assert.equal(supabase.calls.length, 0);
