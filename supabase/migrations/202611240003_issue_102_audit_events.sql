@@ -46,6 +46,9 @@ create table if not exists public.audit_events (
   outcome text not null check (length(btrim(outcome)) > 0),
   metadata jsonb not null default '{}'::jsonb
     check (jsonb_typeof(metadata) = 'object'),
+  constraint audit_events_resource_id_required check (
+    event_type = 'admin_login' or resource_id is not null
+  ),
   constraint audit_events_resource_matches_event check (
     (event_type = 'admin_login' and resource_type = 'session')
     or (event_type in (
@@ -181,7 +184,7 @@ for each statement execute function public.reject_audit_event_mutation();
 
 alter table public.audit_events enable row level security;
 
-revoke all on table public.audit_events from public, anon, authenticated;
+revoke all on table public.audit_events from public, anon, authenticated, service_role;
 grant select, insert on table public.audit_events to authenticated;
 
 drop policy if exists audit_events_select_active_ti on public.audit_events;
