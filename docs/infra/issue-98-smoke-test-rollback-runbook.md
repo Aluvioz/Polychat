@@ -1,7 +1,7 @@
 # Issue #98 — Runbook de smoke test e rollback de aplicação
 
 **Status:** procedimento documentado; o Tech Lead confirmou em 19/11/2026 que o smoke test hospedado e o ensaio de rollback abrangidos pela Issue #98 foram executados. O comentário de aceite não reproduz deployment IDs, commits, horários ou logs da execução.  
-**Escopo histórico:** aplicação Next.js hospedada na Vercel. Este runbook preserva o procedimento do ambiente original e não autoriza o uso de Vercel/Supabase para processar dados reais da FORD após a FORD v2. Não define rollback de banco de dados, migrations ou dados.
+**Escopo registrado:** aplicação Next.js hospedada na Vercel, conforme o ambiente operacional da Issue #98. A ADR-003 — Accepted mantém Supabase + Vercel como stack adotada e obrigatória. Este runbook preserva o procedimento e o aceite do escopo original, mas não comprova a compatibilidade integral da configuração com os requisitos da FORD nem a homologação atual de produção; a avaliação correspondente permanece na Q-025. Não define rollback de banco de dados, migrations ou dados.
 
 ## 1. Pré-condições obrigatórias
 
@@ -87,6 +87,6 @@ Em 19/11/2026, o Tech Lead confirmou na [Issue #98](https://github.com/Aluvioz/P
 
 O comentário de aceite ressalva que as evidências de deployment, smoke tests hospedados, ensaio de rollback e configuração de produção devem permanecer acessíveis e atualizadas. Este runbook preserva o procedimento e registra a atestação, mas não substitui os logs, identificadores de deployment, commits, horários ou relatórios originais. Não foram inventados valores para os campos ausentes.
 
-A FORD v2 exige que infraestrutura e processamento de dados permaneçam sob controle da própria FORD e proíbe terceiros de acessar, armazenar ou processar dados da organização. A Vercel/Supabase do escopo original deve ser tratada como ambiente histórico de execução; este runbook não autoriza novos deployments que processem dados reais da FORD nesses serviços. A estratégia de deploy/rollback para a arquitetura-alvo deve ser definida na ADR-009 após a resolução da Q-025.
+A FORD v2 mantém requisitos sobre controle de infraestrutura, hospedagem, armazenamento, processamento, localização e acesso aos dados. A ADR-003 — Accepted mantém Supabase + Vercel como stack adotada e obrigatória; a configuração e o modelo de uso devem ser avaliados na Q-025. Este runbook, por si só, não comprova compatibilidade completa nem homologação atual de produção. A ADR-009 deve detalhar os ambientes, o fluxo de deploy e rollback e os respectivos controles dentro da stack adotada, considerando as evidências e limitações documentadas na Q-025. Uma eventual proposta de substituição exige decisão formal e avaliação de impacto.
 
 O encerramento da Issue #98 permanece válido para o escopo operacional atestado e não implica aceite da ADR-009, homologação completa do produto ou autorização geral de produção.

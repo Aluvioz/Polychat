@@ -1,6 +1,6 @@
 # Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. Supabase + Vercel permanece como stack adotada na ADR-003; a Q-025 documenta sua compatibilidade operacional com os requisitos de infraestrutura da FORD, sem substituição por inferência.
+**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. Supabase + Vercel permanece como stack adotada e obrigatória conforme ADR-003 — Accepted (24/11/2026); a Q-025 avalia e documenta a compatibilidade da configuração e do modelo de uso com os requisitos da FORD, com evidências e responsabilidades, sem autorizar substituição da stack por inferência.
 
 ## Navegação
 
@@ -18,7 +18,9 @@
 12. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
 13. [Política de anexos e proteção antimalware — Issue #117](storage/politica-anexos-e-antimalware.md)
 14. [Decisões de produto Q-018 e Q-019 — arquitetura da informação e identidade visual provisória](ux/decisoes-produto-q018-q019.md)
-15. [Modelo de ameaças e mitigação — Issue #125](security/issue-125-modelo-de-ameacas.md)
+15. [Plano de release, operação e gestão de incidentes — Issue #130](infra/issue-130-plano-release-operacao-incidentes.md)
+16. [Plano de testes e rastreabilidade — Issue #126](qa/issue-126-plano-testes-rastreabilidade.md)
+17. [Modelo de ameaças e mitigação — Issue #125](security/issue-125-modelo-de-ameacas.md)
 
 ## Infraestrutura e deploy
 
@@ -46,6 +48,6 @@ O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões
 
 ## Atualização arquitetural — 24/11/2026
 
-A ADR-003 mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. A FORD v2 estabelece requisitos de controle da infraestrutura, localização e tratamento de dados; a Q-025 deve documentar a compatibilidade da configuração e do modelo de utilização da stack com esses requisitos, incluindo evidências e responsabilidades. A adoção não equivale à homologação de produção, e a stack não deve ser substituída por inferência. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md), [ADR-003](adr/ADR-003-supabase-vercel.md) e a Q-025.
+Supabase + Vercel permanece como stack adotada e obrigatória do Polychat, conforme ADR-003 — Accepted. A Q-025 documenta a compatibilidade da configuração e do modelo de uso dessa stack com os requisitos da FORD relativos a controle da infraestrutura, hospedagem, localização, armazenamento, processamento, acesso e responsabilidades operacionais, incluindo evidências, controles e limitações. A adoção da stack não equivale à homologação de produção, e a Q-025 não autoriza retirar ou substituir a stack por inferência. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), o [índice de ADRs](adr/README.md), a [ADR-003](adr/ADR-003-supabase-vercel.md) e a Q-025.
 
-As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica; esses aceites não substituem a análise de compatibilidade e homologação operacional da configuração Supabase + Vercel na Q-025.
+As Issues #96 e #98 permanecem encerradas nos escopos que receberam aceite. Seus registros devem ser preservados e reutilizados somente nesses escopos, sem repetir setup, smoke test ou rollback já aceitos. Esses registros preservam a evidência histórica, mas não substituem a análise de compatibilidade e homologação operacional da configuração Supabase + Vercel na Q-025 nem comprovam que todas as integrações, controles ou fluxos funcionais estejam homologados.

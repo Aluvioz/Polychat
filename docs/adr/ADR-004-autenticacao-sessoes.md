@@ -1,9 +1,9 @@
 # ADR-004 — Autenticação e sessões
 
 - **Status:** Proposed
-- **Data de revisão:** 19/11/2026
+- **Data de revisão:** 24/11/2026
 - **Issue:** #89
-- **Baseline:** POLY-REQ-001 v0.4
+- **Baseline:** POLY-REQ-001 v0.5
 
 ## Contexto
 
@@ -11,9 +11,9 @@ A FORD definiu autenticação por nome de usuário e senha, com contas criadas e
 
 A FORD não exige troca obrigatória de senha no primeiro acesso, expiração periódica ou MFA. A recuperação de senha é realizada exclusivamente pelo TI. As regras de proteção de credenciais e de gestão de chaves foram alinhadas com Desenvolvimento e estão consolidadas nos requisitos não funcionais.
 
-A FORD v2 também determina que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Portanto, o mecanismo de identidade e sessão deve operar dentro da fronteira de controle da FORD. Supabase Auth, presente na proposta anterior, não é uma opção vigente para tratar as identidades do produto (ADR-003).
+A FORD v2 mantém requisitos sobre controle de acesso, armazenamento e processamento de dados. A ADR-003, entretanto, estabelece Supabase + Vercel como stack adotada e obrigatória. O uso e a configuração de Supabase Auth, os fluxos de identidade/sessão e os controles necessários devem ser avaliados na Q-025. A restrição da FORD não deve ser interpretada isoladamente como retirada ou proibição automática de Supabase Auth nem como alteração do status da ADR-003.
 
-O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são evidências parciais do caminho técnico anterior, não comprovação de autenticação integrada nem autorização para uso do provedor externo.
+O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são scaffold alinhado à plataforma Supabase adotada, mas não comprovam autenticação integrada, aplicação da migration ou homologação de produção.
 
 ## Problema
 
@@ -28,7 +28,7 @@ Definir o contrato funcional e as fronteiras de segurança de autenticação e s
 
 ## Decisão proposta
 
-Adotar autenticação por nome de usuário e senha com mecanismo de identidade executado dentro da fronteira de controle da FORD. A tecnologia e a forma final de implantação serão definidas na reconciliação arquitetural (Q-025), com revisão de TI e Tech Lead.
+Adotar autenticação por nome de usuário e senha, com configuração do mecanismo de identidade e sessão na stack Supabase + Vercel estabelecida pela ADR-003. O desenho detalhado, os limites de acesso e a compatibilidade com os requisitos da FORD devem ser documentados e validados na Q-025, com revisão de TI e Tech Lead. Esta ADR permanece Proposed e não autoriza substituir a stack.
 
 O contrato funcional obrigatório é:
 
@@ -62,7 +62,7 @@ O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado
 
 **Negativas e cuidados:**
 - A equipe precisará integrar e operar o mecanismo de identidade no ambiente aprovado pela FORD.
-- O código atual é dependente de Supabase e precisará ser adaptado ou substituído.
+- O código atual é um scaffold dependente de Supabase e precisa ser integrado, complementado e validado para os fluxos reais de autenticação e autorização.
 - A integração deverá ser testada no runtime e na infraestrutura reais, além dos testes unitários isolados.
 
 ## Riscos
@@ -72,14 +72,14 @@ Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevid
 ## Evidências atuais
 
 - `src/auth/authorization.mjs` valida token por `supabase.auth.getUser`, mas depende de cliente fornecido externamente.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria perfis associados a `auth.users`; permanece vinculada à proposta depreciada.
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria perfis associados a `auth.users`; é um artefato versionado da stack adotada, mas não comprova aplicação em ambiente nem integração funcional.
 - Não há fluxo integrado de login, logout, recuperação ou provisionamento na interface.
 - Testes unitários simulados do middleware não comprovam integração com a solução de identidade definitiva.
 
 ## Pendências para Accepted
 
-- Selecionar, com TI e Tech Lead, o mecanismo de identidade que será executado dentro da infraestrutura sob controle da FORD, como parte da Q-025.
-- Adaptar o módulo de autorização e o modelo de perfil para não depender de Supabase Auth.
+- Detalhar, com TI e Tech Lead, a configuração do mecanismo de identidade/sessão na stack adotada e registrar a análise de compatibilidade na Q-025.
+- Integrar, completar e testar Supabase Auth, o módulo de autorização e o modelo de perfil, com controles adequados à baseline e evidências no ambiente validado.
 - Implementar provisionamento administrativo, login, logout, recuperação pelo TI e revogação imediata.
 - Validar testes de integração e segurança no ambiente homologado.
 

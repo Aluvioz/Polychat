@@ -226,7 +226,7 @@ A descrição completa está em [05 — Regras de negócio e restrições](05-re
 
 A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas.
 
-Essa regra permanece um requisito do cliente e deve orientar a configuração e a operação do ambiente. A ADR-003, revisada em 24/11/2026, mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. A Q-025 deve avaliar e documentar, com evidências, como o modelo de utilização e a configuração dessa stack atendem aos requisitos da FORD. A existência da decisão Accepted não equivale à homologação de produção nem comprova, isoladamente, a conformidade de cada serviço ou fluxo de dados. A stack não deve ser depreciada ou substituída por inferência; uma incompatibilidade concreta que não possa ser mitigada deve ser submetida ao PO e aos responsáveis da FORD para decisão formal.
+Essa regra permanece um requisito do cliente e deve orientar a configuração e a operação do ambiente. A ADR-003 — Accepted mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. A Q-025 deve avaliar e documentar, com evidências, como o modelo de utilização e a configuração dessa stack atendem aos requisitos da FORD, incluindo controle de hospedagem, localização e fluxo dos dados, acesso de terceiros, armazenamento, processamento, isolamento dos ambientes, segredos, backup e responsabilidades. A existência da decisão Accepted não equivale à homologação de produção nem comprova, isoladamente, a conformidade de cada serviço ou fluxo de dados. A análise não altera nem substitui a decisão arquitetural por inferência; uma incompatibilidade concreta não mitigável deve ser encaminhada ao PO e aos responsáveis da FORD para decisão formal e avaliação de impacto.
 
 A decisão de arquitetura deve separar:
 - Tecnologia e framework de aplicação.
@@ -257,7 +257,7 @@ Snapshot documental consultado na branch main em 19/11/2026:
 - O package.json consultado não incluía SDK Supabase nas dependências.
 - O workflow CI executa testes automatizados, ESLint, TypeScript e build em atualizações da main e em Pull Requests direcionadas à main.
 
-**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Supabase + Vercel permanece como stack adotada na ADR-003; a integração funcional, a configuração operacional e as evidências de compatibilidade com os requisitos da FORD continuam pendentes na Q-025 e nas ADRs específicas.
+**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Supabase + Vercel permanece como stack adotada conforme ADR-003; ainda precisam ser concluídas integração funcional, configuração operacional, validação dos controles e evidências de compatibilidade com os requisitos da FORD na Q-025 e nas ADRs específicas. A adoção da stack não equivale à homologação de produção.
 
 ### 5.3 Limites da evidência técnica
 
@@ -301,7 +301,7 @@ As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 �
 
 - Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
 - Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
-- Q-025 — Avaliação técnica e evidências da compatibilidade operacional da stack Supabase + Vercel, adotada na ADR-003, com os requisitos da FORD para infraestrutura, localização, acesso, armazenamento, processamento e responsabilidades.
+- Q-025 — Avaliação da compatibilidade da configuração e do modelo de uso da stack Supabase + Vercel, adotada na ADR-003 — Accepted, com os requisitos da FORD sobre controle de hospedagem, armazenamento, processamento, localização, acesso e operação; registrar controles, responsabilidades, evidências, limitações e riscos residuais, sem substituir a stack por inferência.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
@@ -320,9 +320,9 @@ Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências
 | Anexos e antimalware | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-011 a RF-013 e RNF-010 | Limites, scanner local, liberação TI, links e metadados |
 | Monitoramento e severidades | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-014/RF-015 | Lista de regras, fila, prazos e fluxo TI |
 | Retenção e continuidade | FORD v2 e alinhamento com Desenvolvimento | Atualiza RN-021/RN-023 e RNF-009 | Backups, exclusão, expiração de cópias e evidências |
-| Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Requer documentação da configuração e evidências de compatibilidade da stack Supabase + Vercel adotada, sem substituição por inferência |
-| Direção tecnológica reafirmada | ADR-003 revisada em 24/11/2026 | Supabase + Vercel permanece como stack adotada | Q-025 documenta compatibilidade operacional e evidências; não substitui a stack por inferência |
-| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e validação de compatibilidade operacional da stack adotada |
+| Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Documentar a configuração e as evidências de compatibilidade da stack Supabase + Vercel adotada, conforme ADR-003/Q-025, sem substituição por inferência |
+| Direção tecnológica reafirmada | ADR-003 revisada em 24/11/2026 | Supabase + Vercel permanece como stack adotada | Q-025 documenta a compatibilidade operacional e as evidências; não substitui a stack por inferência |
+| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e avaliação técnica de compatibilidade/configuração da stack adotada |
 
 ## 10. Referências e documentos relacionados
 
