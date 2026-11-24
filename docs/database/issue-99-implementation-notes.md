@@ -30,7 +30,7 @@
 - Não cria tabela genérica `configs`, não semeia regras/quota/capacidade e não inventa valores padrão.
 - Habilita RLS e revoga acesso de `anon`/`authenticated` às tabelas de configuração; policies e exposição pertencem à #101.
 
-Os nomes e campos físicos das três estruturas de configuração são uma proposta mínima derivada do inventário funcional, não uma aprovação de DDL. Permanecem sujeitos à revisão do Tech Lead.
+As estruturas específicas `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity` foram revisadas e aprovadas pelo Tech Lead `luizme7` como parte da baseline inicial do schema, conforme registrado nos comentários da PR. A aprovação não substitui a implementação de autorização/exposição, que permanece no escopo da Issue #101.
 
 ## Pendências e limites restantes
 
@@ -71,11 +71,11 @@ A Q-025 e a ADR-005 Proposed continuam sendo referências pendentes para a homol
 
 ## Validação
 
-No head da PR `2550112050d9da95fe8c1bfa34ed045f62dda1ca`, os dois workflows CI associados concluíram com sucesso:
+No commit documental `f46b7f64e5105c8ba7bd97e4c31fa2e9a20057c4`, os dois workflows CI associados concluíram com sucesso:
 
-- CI run [#270](https://github.com/Aluvioz/Polychat/actions/runs/45407652543) — `success`.
-- CI run [#340](https://github.com/Aluvioz/Polychat/actions/runs/45407652398) — `success`.
+- CI run [#286](https://github.com/Aluvioz/Polychat/actions/runs/45489032173) — `success`.
+- CI run [#356](https://github.com/Aluvioz/Polychat/actions/runs/45489032376) — `success`.
 
 O status do Preview Vercel também retornou `success`. Esses resultados validam os checks de aplicação/build configurados, mas não substituem testes automatizados de integração SQL, RLS ou dos fluxos transacionais no Supabase.
 
-A revisão do Tech Lead `luizme7` está registrada como **APPROVED** para a baseline inicial do schema, com as ressalvas descritas nesta nota. A revisão SQA mais recente de `Dante-Davi` solicita a sincronização destas evidências documentais e da descrição da PR; a confirmação formal final do SQA permanece pendente.
+A revisão do Tech Lead `luizme7` está registrada como **APPROVED** para a baseline inicial do schema, incluindo as três estruturas específicas de configuração, com as ressalvas descritas nesta nota. A confirmação formal final do SQA permanece pendente.
