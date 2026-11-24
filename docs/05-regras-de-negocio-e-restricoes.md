@@ -66,6 +66,6 @@ Este documento consolida as regras de negócio da FORD conforme o questionário 
 ## 5.5 Recomendações e decisões não incorporadas como regra
 
 - O repositório deve manter rastreabilidade entre estas regras, os requisitos funcionais/não funcionais, as decisões arquiteturais e os critérios de teste.
-- A arquitetura deve ser revisada para assegurar que a hospedagem e o processamento de dados respeitem a restrição de infraestrutura sob controle da FORD. A direção Supabase/Vercel registrada anteriormente não prevalece automaticamente sobre a restrição mais recente do cliente.
+- A stack Supabase + Vercel permanece adotada conforme ADR-003 — Accepted. Sua configuração e seu modelo de uso devem ser avaliados na Q-025 para demonstrar compatibilidade com os requisitos da FORD sobre controle de hospedagem, armazenamento, processamento, localização, acessos e operação. Esses requisitos não alteram automaticamente o status da ADR-003; incompatibilidade concreta não mitigável exige decisão formal com avaliação de impacto, conforme a governança arquitetural.
 - Utilizar a paleta Ford provisória definida em POLY-UX-DEC-001 até que os ativos oficiais sejam fornecidos. O Ford Oval e fontes proprietárias só podem ser usados a partir de arquivos/orientações oficiais autorizados pela FORD.
 - Não introduzir requisitos, permissões ou exceções adicionais por inferência.
