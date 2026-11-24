@@ -1,6 +1,6 @@
 # ADR-008 — Armazenamento privado e anexos
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Data de revisão:** 24/11/2026
 - **Issues relacionadas:** #89, #115, #116 e #117
 - **Baseline:** POLY-REQ-001 v0.5
@@ -11,24 +11,33 @@ A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por 
 
 A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
 
-A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. A restrição da FORD v2 sobre acesso, armazenamento e processamento de dados cria uma questão de compatibilidade que deve ser avaliada na Q-025, inclusive para a configuração do Supabase Storage. Esta ADR não pode, por inferência, declarar o serviço retirado nem alterar o status da ADR-003. Se a avaliação identificar incompatibilidade concreta não mitigável, deverá ser apresentada com evidências e impacto para decisão formal.
+A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. A Q-025 foi concluída em 24/11/2026 com aprovação expressa da TI e da FORD para o uso dos serviços Supabase, inclusive Supabase Storage, e da Vercel dentro dos limites e controles registrados para o Polychat. A aprovação dos provedores nomeados não autoriza compartilhar dados com outros serviços externos sem decisão específica.
 
 O repositório não comprova implementação de armazenamento privado, fluxo completo de upload/download ou integração antimalware. A política funcional do produto, entretanto, está consolidada na baseline e nos alinhamentos com Desenvolvimento.
 
 ## Problema
 
-Armazenar, analisar e entregar anexos sem expor objetos publicamente, sem permitir acesso fora das permissões da conversa e sem transferir arquivos ou metadados a provedores externos.
+Armazenar, analisar e entregar anexos em armazenamento privado, sem exposição pública nem acesso fora das permissões da conversa, utilizando os provedores nomeados e aprovados na Q-025 e sem encaminhar arquivos ou metadados a outros serviços externos.
 
 ## Alternativas consideradas
 
 1. **Armazenamento de objetos privado sob controle da FORD:** opção preferencial a avaliar, com segregação de ambientes e integração com a aplicação server-side.
 2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
 3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
-4. **Storage gerenciado na plataforma adotada, incluindo Supabase Storage:** deve ser avaliado quanto à configuração, acessos, processamento, armazenamento, localização e responsabilidades. As restrições da FORD permanecem obrigatórias; eventual incompatibilidade precisa ser demonstrada e encaminhada ao processo formal de mudança, sem reclassificação automática da ADR-003.
+4. **Supabase Storage:** capacidade de armazenamento aprovada pela TI e pela FORD como parte da stack nomeada na ADR-003, sob configuração privada, segregação de ambientes, controle de acesso e operação definidos nesta ADR e na Q-025.
 
-## Decisão proposta
+## Decisão
 
-Manter os anexos em **armazenamento privado e protegido, compatível com a stack Supabase + Vercel adotada**. Supabase Storage é candidato a detalhamento técnico, mas sua configuração, controles, acessos, antimalware, backups e compatibilidade com os requisitos da FORD devem ser demonstrados na Q-025 e revisados por Tech Lead e TI. Esta proposta não declara integração/homologação nem autoriza substituir a stack.
+Adotar **Supabase Storage como capacidade de armazenamento privado de anexos** na stack Supabase + Vercel. A TI e a FORD aprovaram o uso do serviço na Q-025 em 24/11/2026, condicionado aos controles definidos nesta ADR: bucket/objetos privados, autorização server-side, segregação por ambiente, emissão controlada de links temporários, revogação de acesso, scanner antimalware interno e proteção de backups. A decisão aprova a arquitetura-alvo; não declara que a implementação funcional do Storage já esteja concluída.
+
+### Registro de aprovação
+
+**Aprovadores funcionais:** TI e representante da FORD.  
+**Data:** 24/11/2026.  
+**Referência:** Q-025 — Compatibilidade da stack Supabase + Vercel, concluída.  
+**Resultado:** Supabase Storage aprovado como provedor nomeado de armazenamento privado do Polychat. A análise antimalware permanece dentro da infraestrutura e responsabilidade operacional da TI; não há autorização para scanner SaaS ou serviço externo de análise.
+
+A aprovação é da direção arquitetural e do modelo operacional. Bucket, handlers, políticas de acesso, scanner, revogação efetiva de links e testes de ponta a ponta continuam sendo entregas de implementação e homologação nas issues correspondentes.
 
 ### Regras funcionais consolidadas
 
@@ -68,13 +77,13 @@ Armazenamento privado e autorização por requisição preservam o vínculo entr
 ## Consequências
 
 **Positivas:**
-- Conformidade da direção de arquitetura com a fronteira de infraestrutura definida pela FORD.
+- Conformidade da direção de arquitetura com a stack Supabase + Vercel expressamente aprovada pela FORD na Q-025.
 - Controle de acesso por conversa e revogação após remoção de participante.
 - Análise antimalware sem exposição a serviços externos.
 - Regras de limite, retenção e operação coerentes com a baseline v0.4.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisa operar e monitorar storage, scanner, capacidade, disponibilidade e backups.
+- TI responde pela operação e monitoramento de Storage, scanner, capacidade, disponibilidade e backups.
 - A implementação demanda fluxo de quarentena, liberação administrativa, autorização por download e revogação efetiva.
 - Testes devem cobrir falhas do scanner, acesso indevido, remoção de participante, restauração e descarte.
 
@@ -85,16 +94,18 @@ Objeto público por configuração incorreta; URL vazada; link não revogado ap�
 ## Evidências e estado atual
 
 - A baseline POLY-REQ-001 v0.5 e os documentos 01, 03, 04 e 05 registram tipos, limites, fluxo antimalware, comportamento em falha, quotas, links, retenção e poderes do TI.
-- A migration e o middleware Supabase existentes não comprovam implementação de storage nem integração funcional com Supabase Storage.
+- As migrations da #99 criam metadados de anexos e restrições no banco, mas não comprovam bucket privado, handlers de upload/download ou integração funcional com Supabase Storage.
 - Não foram identificados bucket privado, handlers completos de upload/download ou integração antimalware funcional na main.
 - A política de anexos documenta regras e cenários; sua presença não comprova implementação nem testes de ponta a ponta.
 
-## Pendências para Accepted
+## Trabalho de implementação remanescente
 
-- Definir e validar a configuração de armazenamento privado na stack adotada, incluindo a avaliação de Supabase Storage frente aos requisitos da FORD (Q-025).
-- Definir a integração do scanner interno, quarentena, liberação administrativa e monitoramento operacional.
+- Configurar e implementar bucket privado e integração server-side de upload/download.
+- Integrar o scanner interno, quarentena, liberação administrativa e monitoramento operacional.
 - Implementar e testar autorização em upload e em cada download, revogação imediata e links temporários de até 5 minutos.
-- Evidenciar remoção de EXIF/GPS e rejeição de PDF protegido por senha.
-- Homologar backup, restauração, retenção e descarte no ambiente aprovado.
+- Implementar remoção de EXIF/GPS e rejeição de PDF protegido por senha.
+- Executar os testes de backup, restauração, retenção e descarte conforme plano operacional.
+
+Essas entregas não condicionam a aprovação arquitetural da ADR-008 nem reabrem a Q-025; permanecem critérios de implementação e homologação do produto.
 
 Os limites de arquivo, quantidade por mensagem, quotas individuais e total, ausência de quota por conversa, comportamento fail-closed, formatos, retenção, scanner interno e responsabilidades do TI são requisitos consolidados; não devem ser reabertos como pendências de produto nesta ADR.
