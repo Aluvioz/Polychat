@@ -1,15 +1,15 @@
 # ADR-005 — Banco de dados e modelo de dados
 
 - **Status:** Proposed
-- **Data de revisão:** 19/11/2026
+- **Data de revisão:** 24/11/2026
 - **Issue:** #89
-- **Baseline:** POLY-REQ-001 v0.4
+- **Baseline:** POLY-REQ-001 v0.5
 
 ## Contexto
 
 O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, participantes, mensagens, anexos, alertas e eventos de auditoria. O produto atende uma única organização (FORD); a baseline não prevê operação multi-tenant.
 
-A FORD v2 determina que hospedagem e infraestrutura permaneçam sob controle da FORD e que nenhum serviço de terceiro acesse, armazene ou processe dados da organização. A decisão anterior por PostgreSQL gerenciado pelo Supabase não pode ser mantida como escolha de hospedagem ou serviço de banco (ADR-003).
+A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. A FORD v2 mantém requisitos sobre controle de hospedagem, armazenamento e processamento; a compatibilidade da configuração e do modelo de uso do Supabase Database com esses requisitos deve ser avaliada na Q-025. Uma preocupação ou incompatibilidade identificada deve ser registrada e encaminhada para decisão formal, sem retirar ou depreciar a ADR-003 por inferência.
 
 PostgreSQL permanece como tecnologia relacional proposta para o banco, desde que sua instância e operação estejam na infraestrutura sob controle da FORD. A escolha do ambiente operacional e a compatibilização técnica fazem parte da Q-025.
 
@@ -17,7 +17,7 @@ O único esquema de domínio atualmente versionado é `public.profiles`, em migr
 
 ## Problema
 
-Definir uma direção de persistência que preserve integridade referencial, rastreabilidade e isolamento de acesso, sem adotar um banco hospedado por terceiro nem confundir o esquema parcial existente com o modelo de domínio completo.
+Definir a persistência de dados relacionais no contexto da stack adotada, preservando integridade referencial, rastreabilidade e isolamento de acesso, sem confundir o esquema parcial existente com o modelo de domínio completo.
 
 ## Alternativas consideradas
 
@@ -28,7 +28,7 @@ Definir uma direção de persistência que preserve integridade referencial, ras
 
 ## Decisão proposta
 
-Manter **PostgreSQL como tecnologia de banco relacional proposta**, sem vincular a escolha ao Supabase ou a qualquer serviço externo. A instância, seus backups, administração, monitoramento e recuperação devem permanecer sob controle da FORD.
+Manter **PostgreSQL como tecnologia de banco relacional proposta no contexto da plataforma Supabase adotada pela ADR-003**. A configuração da instância, backups, administração, monitoramento, recuperação, acessos e responsabilidades devem ser detalhados e avaliados na Q-025 frente aos requisitos da FORD. Esta ADR não autoriza trocar a stack nem declara a implantação homologada.
 
 O modelo lógico deve contemplar, no mínimo:
 
@@ -69,7 +69,7 @@ O domínio é composto por relações explícitas entre contas, conversas, parti
 **Negativas e cuidados:**
 - A FORD/equipe precisará operar, monitorar, atualizar, proteger e recuperar a instância.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
-- O esquema parcial vinculado ao Supabase precisará ser adaptado ou substituído.
+- O esquema parcial vinculado ao Supabase deverá ser revisado e ampliado para cobrir o domínio, mantendo rastreabilidade e compatibilidade com a stack adotada.
 
 ## Riscos
 
@@ -83,7 +83,7 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Pendências para Accepted
 
-- Confirmar com Tech Lead e TI que PostgreSQL é compatível com a infraestrutura disponibilizada e aprovada pela FORD (Q-025).
+- Confirmar com Tech Lead e TI a configuração do PostgreSQL/Supabase Database na stack adotada e demonstrar sua compatibilidade com os requisitos da FORD na Q-025.
 - Revisar o modelo físico, migrations, índices, políticas de autorização e estratégia de backup/restore no ambiente de homologação.
 - Registrar a decisão técnica, aprovadores e evidências de teste.
 
