@@ -89,7 +89,7 @@
           <p class="eyebrow">U-04 · SELEÇÃO CONTEXTUAL</p><h1 id="u-contacts-title">Selecionar usuário ativo</h1>
           <label for="contact-search">Pesquisar</label><input id="contact-search" type="search" placeholder="Nome de usuário" autocomplete="off">
           <ul class="conversation-list" id="contacts-list"><li><button class="list-button" type="button" data-chat="individual" data-go="u-chat">Marina (exemplo) · Ativa</button></li><li><button class="list-button" type="button" data-chat="individual" data-go="u-chat">Rafael (exemplo) · Ativo</button></li></ul>
-          <p class="detail">Contatos exclusivamente fictícios. A busca apenas filtra o conteúdo deste protótipo.</p>
+          <p id="contacts-empty" class="callout" hidden>Nenhum usuário fictício corresponde à busca.</p><p class="detail">Contatos exclusivamente fictícios. A busca apenas filtra o conteúdo deste protótipo.</p>
         </div>
       </div>
     </section>
@@ -99,9 +99,9 @@
         <div class="phone-content">
           <p class="eyebrow">U-05 · MENSAGENS</p><h1 id="u-chat-title">Marina (exemplo)</h1><p id="chat-kind" class="subtitle">Conversa individual · dados fictícios</p>
           <button id="group-info-link" class="btn text" type="button" data-go="u-group" hidden>Ver participantes do grupo</button>
-          <div class="chat-messages" id="chat-messages" aria-label="Histórico fictício"><p class="bubble incoming">Vamos revisar o documento?</p><p class="bubble outgoing">Claro, pode mandar. <small>Lido às 09:41</small></p></div>
+          <div id="offline-indicator" class="callout" hidden>Sem conexão (simulação). Novos envios não podem ser confirmados.</div><div class="chat-messages" id="chat-messages" aria-label="Histórico fictício"><p class="bubble incoming">Vamos revisar o documento?</p><p class="bubble outgoing">Claro, pode mandar. <small>Lido às 09:41</small></p></div>
           <form id="message-form"><label for="message-text">Escrever mensagem fictícia</label><textarea id="message-text" rows="2" maxlength="280" placeholder="Escreva uma mensagem de teste…"></textarea><div class="inline-actions"><button class="btn primary" type="submit">Simular envio</button><button class="btn secondary" type="button" data-go="u-attach">Anexo</button></div></form>
-          <div class="inline-actions"><button class="btn text" type="button" data-action="fail-message">Simular falha no envio</button><button class="btn text" type="button" data-action="access-denied">Simular acesso negado</button></div>
+          <div class="inline-actions"><button class="btn text" type="button" data-action="fail-message">Simular falha no envio</button><button class="btn text" type="button" data-action="retry-message">Tentar novamente</button><button class="btn text" type="button" data-action="access-denied">Simular acesso negado</button></div>
           <p class="detail">Mensagens não são enviadas, persistidas nem entregues. Indicadores são exemplos.</p>
         </div>
       </div>
@@ -118,7 +118,7 @@
         <div class="phone-content">
           <p class="eyebrow">U-06 · SELETOR DE ANEXO</p><h1 id="u-attach-title">Selecionar anexo</h1>
           <p>Simule um dos estados sem escolher nem carregar um arquivo de verdade.</p>
-          <div class="stack"><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: documento.pdf (permitido)</button><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: foto.jpg da galeria (permitida)</button><button class="btn secondary wide" type="button" data-action="attach-invalid">Exemplo: vídeo.mp4 (não permitido)</button><button class="btn secondary wide" type="button" data-action="attach-error">Exemplo: falha de upload</button><button class="btn secondary wide" type="button" data-action="attach-blocked">Exemplo: arquivo bloqueado pela verificação</button></div>
+          <div class="stack"><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: documento.pdf (permitido)</button><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: foto.jpg da galeria (permitida)</button><button class="btn secondary wide" type="button" data-action="attach-invalid">Exemplo: vídeo.mp4 (não permitido)</button><button class="btn secondary wide" type="button" data-action="attach-error">Exemplo: falha de upload</button><button class="btn secondary wide" type="button" data-action="attach-retry">Tentar novamente após falha</button><button class="btn secondary wide" type="button" data-action="attach-blocked">Exemplo: arquivo bloqueado pela verificação</button></div>
           <p class="detail">Regras do produto: PDF/JPEG; até 10 MB por arquivo e 5 arquivos por mensagem. Sem câmera, áudio ou vídeo. Em produção, proteção e autorização são requisitos do servidor.</p>
         </div>
       </div>
@@ -142,7 +142,7 @@
     <section class="screen" data-screen="t-users" aria-labelledby="t-users-title" hidden>
       <div class="admin-card"><p class="eyebrow">T-03 · GESTÃO</p><h1 id="t-users-title">Usuários</h1><p>Contas fictícias; qualquer ação abaixo é uma simulação local.</p>
         <label for="ti-user-search">Buscar conta</label><input type="search" id="ti-user-search" placeholder="Buscar nome de usuário">
-        <div class="table-wrap"><table><caption>Exemplos de contas</caption><thead><tr><th>Conta</th><th>Status</th><th>Ação</th></tr></thead><tbody><tr><td>marina.exemplo</td><td>Ativa</td><td><button class="btn small danger" type="button" data-confirm="Desativar conta fictícia marina.exemplo?">Desativar</button></td></tr><tr><td>rafael.exemplo</td><td>Ativa</td><td><button class="btn small secondary" type="button" data-action="reset-user">Simular reset</button></td></tr></tbody></table></div>
+        <p id="ti-users-empty" class="callout" hidden>Nenhuma conta fictícia corresponde à busca.</p><div class="table-wrap"><table><caption>Exemplos de contas</caption><thead><tr><th>Conta</th><th>Status</th><th>Ação</th></tr></thead><tbody><tr><td>marina.exemplo</td><td>Ativa</td><td><button class="btn small danger" type="button" data-confirm="Desativar conta fictícia marina.exemplo?">Desativar</button></td></tr><tr><td>rafael.exemplo</td><td>Ativa</td><td><button class="btn small secondary" type="button" data-action="reset-user">Simular reset</button></td></tr></tbody></table></div>
         <button class="btn primary" type="button" data-action="create-user">Simular provisionamento</button>
         <p class="detail">No produto real: somente TI, operações no servidor, auditoria e revogação de acesso após desativação.</p></div>
     </section>
