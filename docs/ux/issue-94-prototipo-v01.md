@@ -3,7 +3,7 @@
 **Proposta:** UX/UI, branch feat/ponde-issue-94-prototipo-ux  
 **Estado:** demonstração pronta para revisão; sessões com participantes NÃO realizadas  
 **Issue:** https://github.com/Aluvioz/Polychat/issues/94  
-**Plano do PO:** PR #152, docs/ux/issue-94-plano-validacao-ux.md, v0.3 (24/11/2026)  
+**Plano-base aprovado:** PR #152, `docs/ux/issue-94-plano-validacao-ux.md`, v0.3 (24/11/2026), aprovado documentalmente por PO/SQA e integrado à `main`  
 **Base:** #91 (mobile), #92 (TI), POLY-UX-DEC-001 (Q-018/Q-019)
 
 ## 1. Abrir
@@ -19,7 +19,7 @@
 
 ## 2. Objetivo e limites
 
-Este é um artefato **adicional** aos wireframes Miro de baixa fidelidade aceitos nas #91/#92, voltado à inspeção de navegação, rótulos e feedback. O plano da PR #152 descreve avaliação moderada de **wireframes estáticos**; substituir a base estática por este protótipo clicável numa sessão requer confirmação prévia de PO/SQA, controle de versão do roteiro e consistência do método. **Interação de demonstrador não equivale a função pronta**.
+Este é um artefato **adicional** aos wireframes Miro de baixa fidelidade aceitos nas #91/#92, voltado à inspeção de navegação, rótulos e feedback. O plano aprovado da PR #152 prevê avaliação moderada de **wireframes estáticos**. Esta PR propõe o protótipo clicável apenas **como material complementar, não como substituto**. A decisão metodológica deve ser formalizada por PO/SQA no [registro de decisão](./issue-94-decisao-metodologica-proposta.md) antes de utilizar o clicável nas sessões, mantendo o roteiro e a versão do instrumento rastreáveis. **Interação de demonstrador não equivale a função pronta**.
 
 Paleta provisória Q-019 (azuis Ford e neutros), **sem Ford Oval** ou fontes proprietárias. Sem Supabase, Vercel API, autenticação, sessão, autorização/RLS, auditoria real, upload, antimalware, Realtime, persistência ou E2E. A restrição mobile/desktop é mostrada visualmente, não aplicada como controle de dispositivo ou segurança.
 
@@ -35,18 +35,18 @@ Paleta provisória Q-019 (azuis Ford e neutros), **sem Ford Oval** ou fontes pro
 | U-06: anexo | u-chat → u-attach | PDF/JPEG, até 10 MB, até 5 anexos |
 | U-07: erros | u-attach e u-chat | Inválido, falha, bloqueio distintos |
 | U-08: indisponibilidade | u-conversations, offline e u-session | Recuperação e limites |
-| T-01: acesso TI | start → t-login → t-dashboard | Encontrar área inicial |
-| T-02: contas | t-users | Busca, desativação e reset simulados |
-| T-03: grupos | t-groups | Gestão e revogação de acesso representadas |
-| T-04: consulta | t-consult | Consulta por TI sem segunda aprovação, com auditoria prevista |
-| T-05: alertas | t-alerts | Severidade, prazo, revisão sem punição automática |
-| T-06: parâmetros | t-settings | Apenas termos/regras e quotas de anexos |
+| T-01: acessar console TI | start → t-login → t-dashboard (apoio) | Acesso e localização da área de trabalho |
+| T-02: localizar conta | t-users | Buscar conta e distinguir consulta/alteração simuladas |
+| T-03: criar grupo e incluir participantes | t-groups | Identificar fluxo e participantes; exemplos de gestão simulada |
+| T-04: consulta administrativa de conversa | t-consult | Consulta por TI sem justificativa/segunda aprovação, com auditoria prevista |
+| T-05: revisar alerta | t-alerts | Severidade, prazo e revisão sem bloqueio automático |
+| T-06: localizar configurações | t-settings | Apenas termos/regras e quotas de anexos |
 
-Incluído também t-audit e estados vazios/sessão expiradas. O catálogo é subordinado à Q-018; não amplia o produto.
+O `t-dashboard` é **etapa de apoio a T-01**, e `t-audit` é **tela auxiliar de governança**: nenhuma dessas telas cria novas tarefas T-07 ou T-08 no roteiro aprovado. Permanecem também estados vazios e de sessão expirada. O catálogo é subordinado à Q-018; não amplia o produto.
 
 ## 4. Pré-condições para recrutar ou coletar
 
-A PR #152 está em Draft. O PO **aprovou o plano e o público**, mas **não concedeu autorização operacional institucional**. Não enviar convites nem coletar dados até documentar:
+A PR #152, com o plano v0.3, **foi aprovada documentalmente por PO/SQA e integrada à `main`**. Esse aceite do planejamento **não concedeu autorização operacional institucional de coleta**, nem validou o clicável como instrumento complementar. Não enviar convites nem coletar dados até documentar:
 
 1. autorização FORD para recrutamento/coleta, escopo e responsável;
 2. quem recruta, facilita, observa e guarda registros;
@@ -74,7 +74,7 @@ Para ajustes posteriores: ID do achado, tela, versão antes/depois, justificativ
 | Critério | Situação |
 |---|---|
 | Protótipo clicável de duas trilhas | **Entregue para revisão** |
-| Plano | Existente na PR #152, v0.3 e ainda Draft |
+| Plano | PR #152, v0.3 **aprovado documentalmente por PO/SQA e integrado à `main`**; autorização para recrutamento e uso do protótipo clicável segue pendente |
 | Governança/autorização de coleta | **PENDENTE FORD** |
 | Sessões com participantes | **NÃO REALIZADAS** |
 | Achados reais e priorização | **NÃO DISPONÍVEIS** |
@@ -97,3 +97,19 @@ Esta versão de revisão incorpora:
 **Ajustes realizados antes de validação humana:** preservar nome/histórico corretos ao alternar entre Marina, Rafael e o grupo; distinguir erro de 10 MB, mais de 5 arquivos, PDF com senha e scanner indisponível (apenas texto demonstrativo). Estes ajustes tratam divergências observadas em inspeção da fonte e não devem ser atribuídos a entrevistas.
 
 **Limite:** Chromium em CI não substitui Android/iOS reais, Safari/Edge/Firefox, leitor de tela, validação de pixels/contraste completo nem pesquisa com pessoas. O formulário da FORD não contém autorização operacional para coleta da pesquisa #94, e sua declaração sobre privacidade/LGPD não afasta obrigações legais aplicáveis.
+
+
+## 9. Rastreabilidade canônica após revisão SQA da PR #164
+
+O [plano v0.3 aprovado na PR #152](https://github.com/Aluvioz/Polychat/pull/152) é a fonte da numeração. **Somente seis telas de tarefa TI exibem `data-task`**; os identificadores `data-screen` não mudam porque são âncoras técnicas de navegação. `t-dashboard` e `t-audit` continuam acessíveis apenas como apoio, sem nova tarefa identificada no protocolo.
+
+| Código do plano | Tela `data-screen` | Rótulo visível | Teste de navegação |
+|---|---|---|---|
+| T-01 | `t-login` | T-01 · Acesso ao console | `tiLogin` verifica `data-task=T-01` |
+| T-02 | `t-users` | T-02 · Consulta de contas | Verificação de busca e diálogo |
+| T-03 | `t-groups` | T-03 · Criação e gestão de grupos | Verificação de grupo e remoção |
+| T-04 | `t-consult` | T-04 · Consulta administrativa | Verificação de consulta |
+| T-05 | `t-alerts` | T-05 · Revisão de alertas | Verificação de alertas |
+| T-06 | `t-settings` | T-06 · Configurações | Verificação de configurações |
+
+Os testes estáticos e Playwright verificam correspondência entre **rótulo, tela e tarefa**, sem afirmar conclusão da pesquisa. A [proposta de decisão metodológica](./issue-94-decisao-metodologica-proposta.md) foi preparada para assinatura/manifestação de PO/SQA; até essa manifestação, **não usar o protótipo clicável como instrumento autorizado de sessão**.
