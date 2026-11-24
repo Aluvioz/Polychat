@@ -36,7 +36,7 @@ Os nomes e campos físicos das três estruturas de configuração são uma propo
 
 ### Issue #102 — auditoria e retenção
 
-A estrutura `audit_events`, seu catálogo, controles append-only e writer são tratados na PR separada #166. A PR #166 deve ser revisada e integrada na sequência correta. A Issue #99 não deve ser considerada concluída apenas pela existência das migrations de domínio.
+A estrutura `audit_events`, seu catálogo, controles append-only e writer são tratados na PR separada #166, aberta contra `main`. Recomenda-se integrar a PR #166 após a PR #165 para preservar a sequência das migrations. A Issue #99 não deve ser considerada concluída apenas pela existência das migrations de domínio.
 
 ### Username de perfis existentes
 
