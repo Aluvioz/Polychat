@@ -85,7 +85,7 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 
 ### Q-025 — Compatibilidade da stack Supabase + Vercel
 
-<badge>Concluída — 24/11/2026</badge>
+**Status: CONCLUÍDA — 24/11/2026**
 
 **Decisão:** a TI e a FORD aprovam a configuração e o modelo de utilização da stack Supabase + Vercel para o Polychat, conforme a ADR-003 — Accepted. A aprovação confirma a compatibilidade da arquitetura adotada com os requisitos de infraestrutura, hospedagem, localização, acesso, armazenamento, processamento e operação definidos para o produto. Não há incompatibilidade impeditiva que exija substituir a stack.
 
