@@ -2,7 +2,7 @@
 
 **Projeto:** Polychat — aplicação de comunicação interna da FORD  
 **Issue:** [#126 — Definir plano de testes e rastreabilidade requisito-caso](https://github.com/Aluvioz/Polychat/issues/126)  
-**Versão:** 0.4 — 24/11/2026  
+**Versão:** 0.5 — 24/11/2026  
 **Status:** proposta de QA/PO para revisão; não representa homologação nem execução de testes  
 **Responsáveis pela validação:** SQA, desenvolvimento, liderança técnica e PO, conforme o tipo de teste
 
@@ -34,6 +34,7 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 | [09 — Baseline consolidada do MVP](https://github.com/Aluvioz/Polychat/blob/main/docs/09-baseline-requisitos-mvp.md) | Baseline POLY-REQ-001 v0.5: escopo, RF-001 a RF-023, RNF-001 a RNF-013 e decisões vigentes |
 | [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de autorização e cenários AUTH-01 a AUTH-20; preserva Supabase + Vercel como referência de implementação |
 | [ADR-003 — Supabase + Vercel](https://github.com/Aluvioz/Polychat/blob/main/docs/adr/ADR-003-supabase-vercel.md) | Decisão Accepted, revisada em 24/11/2026: stack vigente e obrigatória; Q-025 trata de compatibilidade/configuração, não de substituição |
+| [ADR-005 — Banco de dados e modelo de dados](https://github.com/Aluvioz/Polychat/blob/main/docs/adr/ADR-005-dados-postgresql.md) | Status Proposed: PostgreSQL proposto no contexto da plataforma Supabase adotada; formalização da solução, configuração e compatibilidade permanecem sujeitas à Q-025 |
 | [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
 | [Issue #110](https://github.com/Aluvioz/Polychat/issues/110) | Histórico paginado, sincronização Realtime, reconexão e deduplicação |
 | [Issue #111](https://github.com/Aluvioz/Polychat/issues/111) | Última mensagem, indicador de não lidas e marcação de leitura |
@@ -46,6 +47,22 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 | [Issue #129](https://github.com/Aluvioz/Polychat/issues/129) | Execução de homologação, acessibilidade e regressão |
 
 **Regra de precedência:** este plano não altera requisitos nem decide regras de negócio. Quando houver divergência, devem prevalecer os requisitos e decisões formalmente aprovados. Recomendações de teste não podem ser interpretadas como novas funcionalidades ou políticas aprovadas pela FORD.
+
+### 2.1 Correspondência com os critérios de aceite da Issue #126
+
+A tabela abaixo relaciona os critérios já registrados na Issue #126 aos trechos deste plano e ao estado verificável desta entrega documental. **Ela não altera, substitui ou reinterpreta os critérios da Issue**, nem marca seus itens como concluídos no GitHub.
+
+| Critério da Issue #126 | Referência neste plano | Situação nesta entrega |
+|---|---|---|
+| Matriz de cobertura de RF-001 a RF-023 e RNF-001 a RNF-013 | Seções 7 e 8 | **Documentado.** Os requisitos e critérios estão relacionados a casos ou bloqueios. A cobertura documental não significa que os testes tenham sido executados. |
+| Casos positivos/negativos e critérios de entrada/saída | Seções 9, 11 e 12 | **Documentado.** O catálogo descreve cenários e resultados esperados; as condições de entrada e saída estão definidas. A execução depende da disponibilidade das funcionalidades e dos ambientes. |
+| Testes de autorização/RLS executáveis no mecanismo de banco definido, em ambiente real de teste e não apenas por mocks | TC-INT-002, seção 5.1 e seções 11.1/13 | **Especificado, mas não demonstrado como executável nem executado.** Os 11 testes preexistentes usam Supabase simulado e não atendem a este critério. A execução exige mecanismo de banco formalizado, ambiente real de teste, migrations/policies aplicadas e evidências reproduzíveis. A ADR-005 permanece Proposed; a formalização do PostgreSQL no contexto do Supabase e a análise de compatibilidade/configuração da Q-025 continuam pendentes. |
+| Evidências de integração/E2E/segurança/compatibilidade/desempenho/recuperação quando os fluxos forem implementados | Seções 6, 9, 10.2 e 11 | **Processo documentado; evidências funcionais ainda não disponíveis.** As evidências deverão ser registradas à medida que os fluxos forem implementados e testados. Não se declara execução ou aprovação antecipada. |
+| Revisão independente SQA e Tech Lead, CI e ausência de contradições com a baseline | Histórico de revisão da PR; seções 2, 5, 6 e 10 | **Pendente.** As revisões independentes ainda não foram concluídas para a versão atual. O CI deverá ser verificado no commit da branch após sua reconciliação com `main`. A consistência documental é referenciada à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; a ADR-005 segue Proposed e Q-025 permanece aberta. |
+
+**Leitura arquitetural aplicável a este plano:** a ADR-003 — Accepted mantém Supabase + Vercel como stack adotada e obrigatória. A ADR-005 — Proposed apresenta PostgreSQL no contexto da plataforma Supabase, mas ainda não constitui decisão Accepted sobre sua configuração e operação final. A Q-025 deve registrar a análise de compatibilidade, configuração, controles e responsabilidades exigidas pela FORD; não autoriza substituir a stack por inferência. Portanto, a especificação de testes reais de autorização/RLS não equivale à prova de que o mecanismo ou o ambiente já estejam formalizados, configurados ou homologados.
+
+
 
 ## 3. Escopo
 
