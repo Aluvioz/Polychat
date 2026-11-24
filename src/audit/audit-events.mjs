@@ -23,7 +23,7 @@ const EVENT_RESOURCE_TYPES = Object.freeze({
 });
 
 const SENSITIVE_METADATA_KEY =
-  /(^|_)(password|passwd|token|secret|credential|authorization|cookie|api_key|private_key|service_role|access_key|refresh_token|message_body|conversation_body|content_body)(_|$)/i;
+  /(^|_)(password|passwd|token|secret|credential|authorization|cookie|api_key|private_key|service_role|access_key|refresh_token|message_body|conversation_body|content_body)(_|$)|^(body|content|text|message|conversation)$/i;
 
 export const AUDIT_EVENT_TYPES = Object.freeze(
   Object.keys(EVENT_RESOURCE_TYPES),
