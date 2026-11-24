@@ -23,6 +23,8 @@ Manter uma direção tecnológica única e coerente entre ADRs, baseline, issues
 
 **Supabase + Vercel permanece como a stack tecnológica adotada e obrigatória do Polychat. O status desta ADR é Accepted.**
 
+Esta decisão somente poderá ser retirada, substituída ou reclassificada por decisão posterior formalmente aprovada, acompanhada de justificativa, evidências, alternativas e avaliação de impacto, conforme a seção [Governança de decisões arquiteturais](../10-governanca-desenvolvimento.md#8-governanca-de-decisoes-arquiteturais). A Q-025 não substitui esse processo.
+
 - **Vercel:** permanece como plataforma de hospedagem, deployment e execução da aplicação, conforme a configuração técnica aprovada para o projeto.
 - **Supabase:** permanece como plataforma de backend do projeto, incluindo os serviços adotados para autenticação, banco de dados, armazenamento e demais capacidades efetivamente previstas nas ADRs e no desenho técnico.
 - **Frontend:** permanece alinhado à direção registrada na ADR-002 e deve ser integrado à stack Supabase + Vercel.
@@ -75,6 +77,6 @@ O aceite desta ADR define a direção tecnológica do projeto. Isoladamente, nã
 ## Histórico da decisão
 
 - **17/11/2026:** Supabase + Vercel registrados como direção tecnológica Accepted, com base na Issue #88.
-- **19/11/2026:** revisão da FORD v2 levou à classificação temporária da ADR como Deprecated, sob interpretação de incompatibilidade com as restrições de infraestrutura.
+- **19/11/2026:** revisão da FORD v2 levou à classificação documental da ADR como Deprecated, sob interpretação de incompatibilidade com as restrições de infraestrutura; não foi registrada decisão formal de substituição acompanhada de avaliação de impacto.
 - **20/11/2026:** a Issue #100 registrou que Supabase + Vercel deveria ser preservada como stack do projeto e que a Q-025 deveria avaliar compatibilidade sem substituição por inferência.
 - **24/11/2026:** o Product Owner confirmou Supabase + Vercel como stack correta e obrigatória; esta ADR foi revisada para restabelecer o status Accepted e corrigir a interpretação anterior.
