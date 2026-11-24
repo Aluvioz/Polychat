@@ -48,7 +48,10 @@
       if (button.dataset.go === id) button.setAttribute('aria-current', 'page');
       else button.removeAttribute('aria-current');
     }
-    if (id === 'u-chat') updateChatHeader();
+    if (id === 'u-chat') {
+      updateChatHeader();
+      document.getElementById('offline-indicator').hidden = !offline;
+    }
 
     feedback.hidden = true;
     window.clearTimeout(feedbackTimer);
@@ -58,7 +61,7 @@
       title.setAttribute('tabindex', '-1');
       title.focus();
     } else main.focus();
-    window.scrollTo({top: 0, behavior: 'instant'});
+    window.scrollTo({top: 0, behavior: 'auto'});
   }
 
   function updateChatHeader() {
@@ -102,6 +105,7 @@
   function runAction(action) {
     if (action === 'offline') {
       offline = !offline;
+      document.getElementById('offline-indicator').hidden = !offline;
       flash(offline
         ? 'Sem conexão (exemplo). O histórico permanece visível; mensagens não podem ser confirmadas.'
         : 'Conexão demonstrativa restaurada. Não houve comunicação com servidor.');
@@ -111,6 +115,18 @@
       pendingMessage = 'Mensagem não confirmada (exemplo)';
       appendMessage(pendingMessage, true);
       flash('Falha simulada no envio. Tente novamente apenas em uma demonstração; não há entrega real.');
+      return;
+    }
+    if (action === 'retry-message') {
+      if (!pendingMessage) return flash('Não há mensagem pendente nesta simulação.');
+      if (offline) return flash('Ainda sem conexão. A tentativa não pode ser confirmada.');
+      appendMessage(pendingMessage);
+      pendingMessage = null;
+      flash('Nova tentativa simulada. Nenhuma mensagem foi transmitida ou persistida.');
+      return;
+    }
+    if (action === 'attach-retry') {
+      flash('Nova tentativa de upload simulada. Nenhum arquivo foi selecionado ou enviado.');
       return;
     }
     if (Object.prototype.hasOwnProperty.call(messages, action)) {
@@ -168,16 +184,22 @@
 
   document.getElementById('contact-search').addEventListener('input', event => {
     const query = event.target.value.trim().toLocaleLowerCase('pt-BR');
+    let found = 0;
     for (const li of document.querySelectorAll('#contacts-list li')) {
       li.hidden = !li.textContent.toLocaleLowerCase('pt-BR').includes(query);
+      if (!li.hidden) found++;
     }
+    document.getElementById('contacts-empty').hidden = found !== 0;
   });
 
   document.getElementById('ti-user-search').addEventListener('input', event => {
     const q = event.target.value.trim().toLocaleLowerCase('pt-BR');
+    let found = 0;
     for (const tr of document.querySelectorAll('[data-screen="t-users"] tbody tr')) {
       tr.hidden = !tr.textContent.toLocaleLowerCase('pt-BR').includes(q);
+      if (!tr.hidden) found++;
     }
+    document.getElementById('ti-users-empty').hidden = found !== 0;
   });
 
   activate('start');
