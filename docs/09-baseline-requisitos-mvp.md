@@ -243,27 +243,30 @@ A avaliação deve considerar a fronteira de controle da FORD, a localização d
 
 ### 5.2 Fotografia técnica do repositório
 
-Snapshot documental consultado na branch main em 19/11/2026:
+Snapshot técnico reconciliado com a `main` após a integração da PR #165, em 24/11/2026:
 
-- O repositório contém aplicação Next.js 16 com React 19, TypeScript e App Router, além de instruções e integração de deploy historicamente orientadas à Vercel.
-- O README ainda descreve Vercel como destino de hospedagem/deploy e Supabase como backend planejado, declarando que a integração Supabase ainda não foi conectada.
-- A interface principal é uma página institucional. Não foram encontradas telas completas de login, conversas, mensagens, grupos, anexos ou console administrativo.
-- O módulo src/auth/authorization.mjs contém middleware Express-compatible que recebe um cliente Supabase server-side, valida token por supabase.auth.getUser(token), consulta profiles, aceita user e ti, bloqueia perfil ausente/desconhecido e conta inativa, e falha fechada.
-- O middleware não está conectado a handlers/rotas reais do App Router.
-- A migration supabase/migrations/202611160001_profiles_roles_and_account_status.sql cria public.profiles, habilita RLS, permite leitura do próprio perfil ou por TI ativo, revoga escrita direta de anon/authenticated, protege alterações de papel/status e cria perfil padrão user.
-- A migration versionada não comprova aplicação ou homologação em ambiente hospedado.
-- Não foram encontradas migrations/políticas RLS de domínio para conversas, participantes, mensagens, anexos ou auditoria.
-- O arquivo .env.example contém placeholders públicos para URL e anon key; não há credenciais reais versionadas.
-- O package.json consultado não incluía SDK Supabase nas dependências.
-- O workflow CI executa testes automatizados, ESLint, TypeScript e build em atualizações da main e em Pull Requests direcionadas à main.
+- O repositório contém aplicação Next.js 16 com React 19, TypeScript e App Router, além de instruções e integração de deploy orientadas à Vercel.
+- A interface principal ainda não apresenta fluxos completos de login, conversas, mensagens, grupos, anexos ou console administrativo.
+- O módulo `src/auth/authorization.mjs` contém middleware Express-compatible que recebe um cliente Supabase server-side, valida token por `supabase.auth.getUser(token)`, consulta `profiles`, aceita `user` e `ti`, bloqueia perfil ausente/desconhecido e conta inativa, e falha fechada. O middleware não está conectado a handlers/rotas reais do App Router.
+- A migration `202611160001_profiles_roles_and_account_status.sql` cria `public.profiles`, habilita RLS, define leitura do próprio perfil ou por TI ativo, revoga escrita direta de `anon/authenticated`, protege alterações de papel/status e cria perfil padrão `user`.
+- A PR #165 incorporou duas migrations de domínio da Issue #99:
+  - `202611240001_issue_99_initial_domain_schema.sql`: adiciona `profiles.username` e cria `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts`, com FKs, índices e restrições. A tabela `attachments` restringe `size_bytes` a no máximo 10.485.760 bytes.
+  - `202611240002_issue_99_integrity_and_configuration.sql`: implementa triggers para exigir texto não vazio ou ao menos um anexo por mensagem e impedir mais de cinco anexos por mensagem; cria `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`.
+- As migrations habilitam RLS nas tabelas de domínio, mas não criam policies de autorização para conversas, memberships, mensagens, anexos, leituras ou alertas; esse enforcement pertence à Issue #101. Nas tabelas de configuração, a segunda migration também habilita RLS e revoga acesso de `public`, `anon` e `authenticated`.
+- As tabelas de quotas/capacidade são estruturas de configuração sem valores padrão ou registros semeados nas migrations. A presença delas não comprova quotas efetivamente configuradas nem enforcement de consumo por usuário/capacidade global.
+- As notas `docs/database/issue-99-implementation-notes.md` documentam aplicação e inspeção das migrations no projeto Supabase de desenvolvimento Polyford, região `sa-east-1`, estado observado `ACTIVE_HEALTHY` e PostgreSQL `17.11.0.019`. O histórico remoto e a consulta de schema confirmaram as tabelas previstas. Essa evidência se limita ao ambiente de desenvolvimento; não comprova homologação de produção nem teste automatizado de integração SQL reproduzível no CI.
+- O schema e os triggers não comprovam upload/download integrado, bucket privado do Supabase Storage, scanner antimalware, interface, handlers server-side ou fluxos de negócio completos; essas partes continuam pendentes.
+- O arquivo `.env.example` contém placeholders públicos para URL e anon key; não há credenciais reais versionadas.
+- O workflow CI executa testes automatizados, ESLint, TypeScript e build.
 
-**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Supabase + Vercel permanece como stack adotada conforme ADR-003; ainda precisam ser concluídas integração funcional, configuração operacional, validação dos controles e evidências de compatibilidade com os requisitos da FORD na Q-025 e nas ADRs específicas. A adoção da stack não equivale à homologação de produção.
+**Conclusão técnica do snapshot:** existe implementação parcial do schema de domínio e de invariantes no banco, com aplicação documentada em ambiente de desenvolvimento. As políticas de autorização de domínio, integração funcional da aplicação, armazenamento e scanner de anexos, configuração operacional das quotas e homologação da stack permanecem pendentes. Supabase + Vercel continua sendo a stack adotada conforme ADR-003; sua adoção não equivale à homologação de produção.
 
 ### 5.3 Limites da evidência técnica
 
 - A existência de código, migration ou variável de exemplo não comprova integração com serviço hospedado.
 - O middleware isolado e os testes simulados não comprovam autorização integrada às rotas reais do produto.
-- A RLS existente cobre profiles; não comprova isolamento de conversas, memberships, mensagens, anexos ou auditoria.
+- A RLS está habilitada em profiles e nas tabelas de domínio criadas pela #99, mas as policies de domínio ainda não foram implementadas; portanto, o isolamento por usuário, membership e operação não está comprovado.
+- As notas da #99 documentam aplicação das migrations no projeto de desenvolvimento Polyford e inspeção das tabelas; isso não substitui teste automatizado SQL reproduzível, validação das policies RLS ou homologação de produção.
 - Build, lint e testes unitários não comprovam fluxos funcionais, homologação de infraestrutura ou atendimento às metas operacionais.
 - A aplicação não deve ser considerada pronta para produção até que a arquitetura compatível com a FORD esteja formalizada, implementada e homologada.
 
