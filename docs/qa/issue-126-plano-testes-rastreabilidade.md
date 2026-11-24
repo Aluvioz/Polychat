@@ -2,7 +2,7 @@
 
 **Projeto:** Polychat — aplicação de comunicação interna da FORD  
 **Issue:** [#126 — Definir plano de testes e rastreabilidade requisito-caso](https://github.com/Aluvioz/Polychat/issues/126)  
-**Versão:** 0.3 — 24/11/2026  
+**Versão:** 0.4 — 24/11/2026  
 **Status:** proposta de QA/PO para revisão; não representa homologação nem execução de testes  
 **Responsáveis pela validação:** SQA, desenvolvimento, liderança técnica e PO, conforme o tipo de teste
 
@@ -220,6 +220,11 @@ Os casos abaixo são especificações de teste. O executor deve completar pré-c
 | TC-E2E-013 | TI inclui conta ativa em grupo e tenta incluir conta desativada | Inclusão da conta ativa é permitida; conta desativada não se torna participante ativo |
 | TC-E2E-014 | Mensagem sinalizada gera alerta ao TI | Fila mostra severidade e prazo correto; TI revisa/encerra sem justificativa obrigatória; envio da mensagem não é bloqueado automaticamente |
 | TC-E2E-015 | TI consulta conversa da qual não participa | Consulta é permitida a qualquer administrador TI, sem justificativa ou segunda aprovação; evento é auditado; Usuário comum não recebe a função administrativa |
+| TC-E2E-016 | Usuário A envia mensagem a Usuário B; B recebe, consulta a lista de conversas, lê a mensagem e A consulta a confirmação | O sistema registra a leitura da mensagem; A consegue visualizar quando ela foi lida; a lista de B apresenta a quantidade de mensagens não lidas e o estado é atualizado conforme as regras técnicas alinhadas para a mensageria (CA-019.1 a CA-019.4). |
+| TC-E2E-017 | Usuário comum tenta editar e excluir mensagens enviadas; em seguida, TI realiza uma edição e uma exclusão administrativa | As tentativas do Usuário comum são impedidas; TI consegue editar e excluir mensagens; ambas as operações administrativas geram registros de auditoria (CA-020.1 a CA-020.5). |
+| TC-E2E-018 | TI exporta uma conversa individual e uma conversa de grupo; um Usuário comum acessa a área de conversas | TI consegue exportar ambos os tipos de conversa sem justificativa ou autorização prévia de outra pessoa; cada exportação gera registro de auditoria; Usuário comum não dispõe da função de exportação administrativa (CA-021.1 a CA-021.4). |
+| TC-E2E-019 | TI realiza as operações administrativas e de segurança previstas e consulta/gerencia os registros; Usuário comum tenta consultar, alterar e excluir registros | São gerados registros para login administrativo; criação/alteração e desativação/reativação de usuários; criação/encerramento de grupos; inclusão/remoção de participantes; consulta de conversas/alertas; download de anexos; alteração de configurações; exportação; edição/exclusão administrativa de mensagens. Somente TI consegue consultar e gerenciar a auditoria; Usuário comum não consegue consultar, alterar ou excluir registros. Os registros não são excluídos automaticamente; exclusões autorizadas pelo TI seguem a política de retenção alinhada (CA-022.1 a CA-022.11). |
+| TC-E2E-020 | Funcionário acessa a aplicação pela primeira vez, sem histórico anterior de apresentação do aviso | O sistema apresenta o aviso no primeiro acesso e informa que as conversas podem ser monitoradas; a apresentação não depende de notificações push ou do navegador (CA-023.1 a CA-023.3). |
 | TC-E2E-021 | Participante autorizado realiza download de anexo e TI realiza download em contexto administrativo previsto | Download é validado separadamente do upload; acesso é autorizado conforme perfil, vínculo e regra aplicável; download administrativo por TI gera auditoria; pessoa sem autorização é negada |
 
 ### 9.3 Segurança
