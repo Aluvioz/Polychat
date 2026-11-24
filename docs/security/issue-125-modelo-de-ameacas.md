@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.7 — 24/11/2026  
+**Versão:** 0.8 — 24/11/2026  
 **Status:** modelo preliminar; plano consolidado proposto pelo PO, pendente de validação das prioridades, responsabilidades funcionais, marcos e evidências pelo Tech Lead, TI e SQA  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
