@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.9 — 24/11/2026  
+**Versão:** 0.10 — 24/11/2026  
 **Status:** modelo preliminar; plano consolidado proposto pelo PO, pendente de validação das prioridades, responsabilidades funcionais, marcos e evidências pelo Tech Lead, TI e SQA  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
@@ -545,17 +545,19 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 
 ### 16.1 Condições para considerar o threat model revisado
 
-- [ ] Tech Lead revisou arquitetura, fronteiras de confiança, ameaças, severidade e mitigação.
-- [ ] TI, como responsável operacional por segurança na FORD, e Tech Lead revisaram STRIDE, riscos e controles propostos.
-- [ ] TI confirmou o contexto operacional, ambientes, secrets, acesso e recuperação.
-- [ ] A matriz #100 e o modelo #99 foram revisados e alinhados com os riscos de domínio.
-- [x] As decisões Q-002, Q-005, Q-006, Q-009, Q-010, Q-013, Q-014 e Q-015 foram respondidas/alinhadas e estão registradas na baseline v0.5.
-- [ ] As políticas #117 e #122 foram reconciliadas com a FORD v2 e revisadas por TI/Tech Lead/SQA conforme necessário.
-- [ ] Cada risco P0/P1 tem tratamento, responsável, dependência e evidência esperada.
-- [ ] Riscos residuais estão formalmente aceitos, transferidos ou mantidos como impeditivos; nenhum permanece implícito.
-- [ ] Testes SEC-01 a SEC-20 aplicáveis, DOC-01 e regressão foram executados e evidenciados.
-- [ ] A PR recebeu revisão independente e os checks aplicáveis passaram.
-
+- [x] **Revisão preliminar do Tech Lead:** arquitetura, fotografia técnica, ativos, fluxos, fronteiras de confiança, cenários STRIDE e mitigações foram avaliados como coerentes para o modelo preliminar. O parecer de 24/11 foi favorável às correções documentais, mas não constituiu `APPROVE` final da PR nem validação final da matriz 18.2.
+- [x] **Validação operacional do modelo pela TI:** a validação do modelo de ameaças foi registrada como concluída em 24/11, conforme confirmação do PO. Seu escopo é a adequação operacional do modelo; não comprova implementação, execução de testes, homologação de produção ou evidências de operação dos controles.
+- [x] **Compatibilidade da stack:** Q-025 concluída em 24/11/2026, com aprovação da compatibilidade do modelo de utilização Supabase + Vercel pela TI e pela FORD. Essa aprovação não substitui evidências de implementação, integração ou homologação.
+- [x] **Alinhamento das referências #99 e #100:** o modelo de dados foi reconciliado com as migrations da #99 e com a evidência de aplicação em desenvolvimento; a matriz de autorização #100 foi alinhada às regras de produto. As policies RLS de domínio e os testes de isolamento permanecem na #101.
+- [x] **Decisões de produto:** as questões Q-002, Q-005, Q-006, Q-009, Q-010, Q-013, Q-014 e Q-015 foram respondidas/alinhadas e estão registradas na baseline v0.5.
+- [x] **Políticas #117 e #122:** as entregas documentais foram reconciliadas com a FORD v2 e a baseline v0.5. A política de anexos foi integrada pela PR #150; a política de detecção foi integrada pela PR #151, com conformidade documental SQA e aprovação documental do Tech Lead registradas. Implementação funcional, ativação e testes dessas políticas continuam em seus respectivos escopos.
+- [x] **Estrutura da matriz 18.2:** os riscos PRD-001 a PRD-010 possuem tratamento proposto, funções-alvo, marcos, dependências e evidências esperadas. Essa completude documental não significa validação técnica ou operacional dos campos.
+- [ ] **Validação final da matriz 18.2:** Tech Lead, TI e SQA confirmam individualmente classificação técnica, responsáveis funcionais, marcos, evidências e prazos/estimativas para PRD-001 a PRD-010.
+- [ ] **Revisão independente da versão atual:** Tech Lead e SQA reavaliam a versão 0.10 e registram suas decisões formais sobre a entrega documental; os pareceres anteriores foram emitidos sobre versões anteriores e não constituem aprovação automática desta atualização.
+- [ ] **Operacionalização dos controles:** implementação e comprovação dos controles de acesso, ciclo de vida, auditoria, monitoramento, anexos, continuidade, suporte e resposta a incidentes nas issues correspondentes.
+- [ ] **Riscos residuais:** classificação e disposição de cada risco residual documentadas; eventual aceitação formal deve ser registrada pela autoridade competente, sem aceite presumido pelo PO.
+- [ ] **Testes e evidências:** testes SEC-01 a SEC-20 aplicáveis, verificação DOC-01 e regressão executados e registrados com evidências reproduzíveis, vinculadas a versão e ambiente.
+- [ ] **Revisão e integração da PR:** aprovação formal independente e checks aplicáveis concluídos sobre o commit final desta versão.
 ## 17. Plano de evolução do documento
 
 | Versão | Quando atualizar | Conteúdo esperado |
@@ -692,3 +694,4 @@ Um risco só deve ser marcado como tratado após implementação no escopo aplic
 | 0.7 | 24/11/2026 | Consolida o plano de tratamento dos riscos de produto PRD-001 a PRD-010, com prioridades preliminares, responsáveis funcionais propostos, marcos, dependências e evidências esperadas; não declara validação técnica, implementação ou execução de testes. |
 | 0.8 | 24/11/2026 | Reconcilia a fotografia técnica com as migrations de schema/integridade da Issue #99 e a evidência documental de aplicação em desenvolvimento; corrige THR-005, THR-012, THR-020 e THR-024, distinguindo RLS habilitada de policies de domínio implementadas; não declara integração funcional ou homologação. |
 | 0.9 | 24/11/2026 | Registra a aprovação da compatibilidade do modelo de utilização Supabase + Vercel pela TI e pela FORD na Q-025; atualiza as referências a ADR-005, ADR-008 e ADR-009, mantendo separadas a aprovação arquitetural e a implementação/teste dos controles. |
+| 0.10 | 24/11/2026 | Harmoniza a checklist 16.1 com os pareceres registrados do Tech Lead, SQA e TI, as aprovações documentais das PRs #150/#151 e o estado atual da matriz 18.2; mantém pendentes a validação final da matriz, a revisão independente desta versão, a implementação e os testes. |
