@@ -49,7 +49,7 @@ Esta versão é uma análise documental e preliminar. Ela não inclui:
 
 - teste de intrusão ou exploração ativa;
 - varredura autenticada de infraestrutura;
-- revisão da configuração administrativa dos ambientes e serviços Supabase/Vercel e de sua compatibilidade operacional; a configuração detalhada e as evidências permanecem pendentes na Q-025;
+- a compatibilidade da configuração e do modelo de utilização Supabase + Vercel foi aprovada na Q-025 em 24/11/2026. A aprovação não substitui a implementação nem a execução de testes de integração, RLS, Storage ou continuidade;
 - inspeção de secrets reais ou variáveis de ambiente protegidas;
 - teste de segurança em produção;
 - homologação de produção e teste automatizado/reproduzível de integração SQL no CI. As notas da Issue #99 documentam a aplicação e inspeção das migrations no projeto Supabase de desenvolvimento Polyford (`sa-east-1`), mas essa evidência não representa homologação de produção;
@@ -64,12 +64,12 @@ A ausência de evidência no repositório não prova que um controle inexista em
 | [Baseline POLY-REQ-001 — Issue #88](../09-baseline-requisitos-mvp.md) | Baseline v0.5, RF-001 a RF-023, RNF-001 a RNF-013 e fotografia técnica reconciliada com as migrations parciais de schema/integridade da Issue #99; fluxos funcionais e policies de domínio permanecem pendentes. |
 | [Requisitos funcionais](../03-requisitos-funcionais.md) | RF-001 a RF-023, incluindo autenticação, mensagens, leitura, administração, exportação, auditoria e aviso de monitoramento. |
 | [Requisitos não funcionais](../04-requisitos-nao-funcionais.md) | RNF-001 a RNF-013; parâmetros principais já alinhados. Implementação, testes e evidências seguem pendentes. |
-| [Questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Q-018 está resolvida; Q-019 tem paleta provisória definida, restando ativos/regras oficiais somente para uso institucional/produção; Q-025 permanece aberta para validar a compatibilidade operacional da stack adotada. Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas e não devem aparecer como questões pendentes. |
+| [Questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Q-018 está resolvida; Q-019 tem paleta provisória definida, restando ativos/regras oficiais somente para uso institucional/produção; Q-025 foi concluída em 24/11/2026 com aprovação da TI e da FORD para a compatibilidade da stack Supabase + Vercel. Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas. |
 | [Índice de ADRs](../adr/README.md) | Situação de aprovação das decisões arquiteturais. |
-| [ADR-003 — Supabase + Vercel](../adr/ADR-003-supabase-vercel.md) | Stack tecnológica adotada (Accepted); a decisão não comprova integração, compatibilidade operacional ou homologação de produção. A Q-025 registra a validação técnica da configuração e dos fluxos de dados. |
+| [ADR-003 — Supabase + Vercel](../adr/ADR-003-supabase-vercel.md) | Stack tecnológica adotada (Accepted); a compatibilidade do modelo de utilização foi aprovada pela TI e pela FORD na Q-025. A aprovação não equivale à implementação integral dos fluxos ou à homologação funcional de cada release. |
 | [ADR-004 — Autenticação e sessões](../adr/ADR-004-autenticacao-sessoes.md) | Proposta de fluxo de autenticação; permanece Proposed. |
 | [ADR-006 — Autorização e RLS](../adr/ADR-006-autorizacao-rls.md) | Contrato e direção de autorização documentados; políticas RLS de domínio e integração funcional ainda não implementadas. |
-| [ADR-008 — Storage e anexos](../adr/ADR-008-storage-anexos.md) | Proposta de armazenamento privado e fluxo de validação; permanece Proposed. |
+| [ADR-008 — Storage e anexos](../adr/ADR-008-storage-anexos.md) | Direção de armazenamento privado com Supabase Storage aprovada (Accepted); bucket, handlers, scanner e autorização permanecem entregas de implementação. |
 | [ADR-010 — Segurança, auditoria e monitoramento](../adr/ADR-010-seguranca-auditoria-monitoramento.md) | Trade-offs de monitoramento, consulta administrativa, auditoria e criptografia; permanece Proposed. |
 | [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de negócio validadas pelo PO; revisão independente SQA e enforcement de domínio permanecem pendentes. Não reabrir poderes iguais de TI. |
 | [Modelo de dados — Issue #99](https://github.com/Aluvioz/Polychat/pull/149) | PR #149 mantém o modelo documental; as migrations físicas de domínio foram incorporadas à main pela PR #165. O schema e algumas invariantes já estão versionados, mas policies RLS de domínio e integração funcional permanecem na #101 e nas issues correspondentes. |
@@ -112,7 +112,7 @@ A fotografia do repositório registra implementação parcial de banco de dados,
 - Next.js 16, React 19, TypeScript e App Router estão presentes.
 - Existe um módulo de autorização isolado (`src/auth/authorization.mjs`), sem integração com handlers/rotas reais; deve ser tratado como scaffold, não como autenticação integrada ao produto.
 - O módulo de autorização é Express-compatible e não foi identificado como integrado a handlers/rotas reais do App Router.
-- Não há cliente/SDK Supabase integrado aos fluxos de aplicação observados. Supabase + Vercel permanece como stack adotada na ADR-003; a integração e a compatibilidade operacional continuam pendentes de evidência.
+- Não há cliente/SDK Supabase integrado aos fluxos de aplicação observados. Supabase + Vercel permanece como stack adotada na ADR-003, com compatibilidade do modelo operacional aprovada na Q-025; a integração funcional continua pendente.
 - A migration `202611240001_issue_99_initial_domain_schema.sql` adiciona `profiles.username` e cria `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts`, com FKs, índices e restrições de integridade. Na tabela `attachments`, o campo `size_bytes` tem limite superior de 10.485.760 bytes (10 MiB).
 - Essa migration habilita RLS nas tabelas de domínio criadas, mas não define policies de autorização para essas tabelas. A implementação das policies e os testes de isolamento permanecem no escopo da Issue #101.
 - A migration `202611240002_issue_99_integrity_and_configuration.sql` implementa triggers de integridade: uma mensagem deve conter texto não vazio ou ao menos um anexo, e uma mensagem não pode exceder cinco anexos.
@@ -131,10 +131,10 @@ O fluxo abaixo representa a arquitetura de referência a avaliar. Elementos iden
 ~~~mermaid
 flowchart LR
     U["Usuário / TI"] -->|HTTPS| B["Navegador / dispositivo"]
-    B -->|HTTPS| V["Next.js na Vercel — stack adotada; configuração e homologação operacional sujeitas à Q-025"]
+    B -->|HTTPS| V["Next.js na Vercel — stack adotada; modelo de utilização aprovado na Q-025; integração funcional conforme issues"]
     V -->|Identidade| A["Supabase Auth — capacidade prevista na stack adotada; integração pendente (ADR-004)"]
     V -->|Consultas autorizadas| P["Supabase PostgreSQL — schema de domínio da #99 versionado; RLS habilitada sem policies de domínio; integração pendente (ADR-005/006)"]
-    V -->|Upload e download autorizados| S["Supabase Storage privado — fluxo seguro e integração pendentes (ADR-008)"]
+    V -->|Upload e download autorizados| S["Supabase Storage privado — direção aprovada na ADR-008; fluxo e integração pendentes"]
     P -->|Metadados e persistência| D["Dados de domínio"]
     V -->|Eventos de auditoria| L["Trilha de auditoria proposta"]
     V -->|Detecção de mensagem| M["Mecanismo de análise proposto"]
@@ -147,7 +147,7 @@ flowchart LR
 
 1. dispositivo/navegador → aplicação web;
 2. camada cliente → handlers e serviços server-side;
-3. aplicação → Supabase Auth, previsto na stack adotada; integração, configuração e compatibilidade operacional ainda precisam de evidência;
+3. aplicação → Supabase Auth, previsto na stack adotada e aprovado no modelo de uso da Q-025; integração com o runtime permanece pendente;
 4. aplicação → Supabase PostgreSQL; o schema e a habilitação de RLS estão versionados, mas as policies de autorização de domínio e a integração funcional ainda não foram implementadas;
 5. aplicação → Supabase Storage privado, cuja integração e controles permanecem pendentes;
 6. serviços de análise/antimalware → aplicação, caso terceiros venham a ser contratados;
@@ -264,7 +264,7 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 | THR-015 | Logs, alertas ou evidências armazenam conteúdo integral de mensagens, dados pessoais ou tokens além do necessário. | A-03, A-06, A-07; exposição secundária e retenção excessiva. | ADR-010 e PR #151 propõem minimização; políticas finais continuam pendentes. | Definir esquema mínimo; mascarar segredos; restringir acesso; separar logs técnicos de conteúdo; estabelecer retenção; revisar amostras de logs e alertas. | P1 — TI e Desenvolvimento; #102, #122; regras de acesso/retention já definidas na baseline |
 | THR-016 | Alertas de conteúdo suspeito permitem acesso indevido à mensagem original ou expõem conteúdo em notificação. | A-03, A-07; divulgação e uso fora da finalidade. | PR #151 propõe contexto mínimo; a política de acesso e os fluxos não estão aprovados. | Separar permissão de ver alerta da permissão de consultar conversa; usar metadados mínimos; exigir autenticação/autorização no acesso; auditar consulta; proibir conteúdo integral em notificação por padrão até aprovação. | P1 — TI e Desenvolvimento; #122, #123, #121, #102 |
 | THR-017 | Conteúdo enviado por usuário é renderizado sem escaping e executa script no contexto de outro usuário (XSS armazenado/refletido). | A-03, A-04, A-01; roubo de sessão, ação indevida e exposição. | Não há interface de chat implementada identificada na fotografia técnica; nenhum teste XSS de produto foi comprovado. | Usar renderização segura por padrão; evitar HTML não confiável; sanitizar somente quando houver necessidade validada; configurar CSP como defesa em profundidade; proteger cookies; testar payloads de XSS em mensagem, nome de grupo e nome de arquivo. | P1 — Frontend, Tech Lead e SQA; #125, #126 |
-| THR-018 | Serviço adicional não aprovado recebe conteúdo de mensagem/anexo. | A-03, A-05, A-07; exposição a terceiro não autorizado. | Supabase + Vercel permanece como stack adotada na ADR-003; a configuração e o modelo de utilização dos serviços precisam ser avaliados na Q-025 contra os requisitos da FORD. | Utilizar os componentes previstos na stack adotada somente conforme configuração e controles documentados nas ADRs e na Q-025; manter o scanner interno da FORD e não encaminhar conteúdo a serviços adicionais, fornecedores ou IA externa sem aprovação explícita. | P1 — TI / Desenvolvimento; RN-022, #117/#122, Q-025 |
+| THR-018 | Serviço adicional não aprovado recebe conteúdo de mensagem/anexo. | A-03, A-05, A-07; exposição a terceiro não autorizado. | Supabase e Vercel são os provedores nomeados aprovados na Q-025. Não há aprovação geral para outros fornecedores ou subprocessadores. | Utilizar somente os componentes previstos na stack aprovada e os serviços adicionais expressamente autorizados; manter o scanner interno da FORD e não encaminhar conteúdo a IA externa ou scanner SaaS não aprovado. | P1 — TI / Desenvolvimento; RN-022, #117/#122, Q-025 |
 
 ### 8.5 Denial of Service — negação de serviço
 
@@ -289,7 +289,7 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 
 | ID | Cenário de ameaça | Ativo / impacto | Controles existentes observados | Mitigação proposta | Prioridade inicial / responsável |
 |---|---|---|---|---|---|
-| THR-028 | Backups podem não ser produzidos, estar incompletos/corrompidos, ser expostos a acesso indevido ou não permitir restauração confiável quando necessários. | A-11, A-03, A-05, A-06; exposição de cópias, perda de histórico e indisponibilidade prolongada. | A baseline define backup diário de banco/anexos por 12 meses e objetivos RPO/RTO de 24h; esta definição não comprova configuração, execução, integridade, proteção ou restauração em ambiente real. Evidências operacionais permanecem pendentes na Q-025 e #130. | Validar escopo e frequência das cópias, proteção de acesso, confidencialidade e integridade; monitorar falhas; verificar integridade; executar restauração controlada em ambiente autorizado e medir os resultados contra RPO/RTO de 24h. Registrar configuração, responsável, data, resultado e artefatos. Preservar retenção e parâmetros já definidos, sem alterá-los por inferência. | P1 — TI / Tech Lead / SQA; #98, #130, Q-025; SEC-18 |
+| THR-028 | Backups podem não ser produzidos, estar incompletos/corrompidos, ser expostos a acesso indevido ou não permitir restauração confiável quando necessários. | A-11, A-03, A-05, A-06; exposição de cópias, perda de histórico e indisponibilidade prolongada. | A baseline define backup diário de banco/anexos por 12 meses e objetivos RPO/RTO de 24h. A Q-025 aprovou o modelo de operação e os parâmetros; configuração efetiva, execução periódica, integridade e ensaios de restauração são acompanhados na Issue #130 e nos critérios de release. | Validar escopo e frequência das cópias, proteção de acesso, confidencialidade e integridade; monitorar falhas; verificar integridade; executar restauração controlada em ambiente autorizado e medir os resultados contra RPO/RTO de 24h. Registrar configuração, responsável, data, resultado e artefatos. Preservar retenção e parâmetros já definidos, sem alterá-los por inferência. | P1 — TI / Tech Lead / SQA; #98, #130, Q-025; SEC-18 |
 
 ## 9. Mapeamento STRIDE por componente
 
@@ -354,7 +354,7 @@ Os controles abaixo são recomendações para avaliação técnica. A aprovaçã
 - Emitir URLs temporárias somente após autorização e com validade tecnicamente aprovada.
 - Definir quotas, limites, retenção, descarte, EXIF, PDFs protegidos e operação de antimalware.
 
-**Dependências:** ADR-008 Proposed para detalhamento técnico; #115/#116/#117. Q-004/Q-010/Q-011 estão resolvidas.
+**Dependências:** ADR-008 Accepted como direção arquitetural; #115/#116/#117 para implementação e evidências. Q-004/Q-010/Q-011 estão resolvidas.
 
 ### 10.5 Secrets e cadeia de suprimentos
 
@@ -503,11 +503,9 @@ As respostas de produto da FORD v2 foram consolidadas em `docs/08-glossario-e-qu
 
 | ID | Tema em aberto | Impacto no threat model |
 |---|---|---|
-| Q-018 | Refinamento interno de arquitetura de informação/telas pelo PO/UX | Pode alterar apresentação de controles, não os requisitos de segurança já definidos |
 | Q-019 | Recebimento dos ativos oficiais de identidade visual | Impacto limitado à interface e risco de falsificação visual |
-| Q-025 | Compatibilidade operacional da stack Supabase + Vercel com os requisitos da FORD | Documentar configuração, modelo de utilização, localização e fluxo dos dados, acesso de terceiros, armazenamento, processamento, isolamento de ambientes, secrets, backup e responsabilidades da stack adotada. Identificar controles e evidências necessários; não depreciar nem substituir a stack por inferência. Preservar os aceites #96/#98 em seus escopos, sem reabri-los ou extrapolá-los |
 
-As demais Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas. A implementação dos controles continua pendente, mas isso não transforma os requisitos em perguntas abertas.
+Q-018 e Q-025 estão concluídas; Q-001 a Q-017 e Q-020 a Q-024 foram respondidas/alinhadas. A implementação dos controles continua pendente nos seus respectivos escopos, mas isso não transforma os requisitos em perguntas abertas.
 
 ### 14.1 Limites que não devem ser decididos por inferência
 
@@ -693,3 +691,4 @@ Um risco só deve ser marcado como tratado após implementação no escopo aplic
 | 0.6 | 24/11/2026 | Atende aos quatro apontamentos documentais do SQA com DOC-01, THR-028, SEC-19 e SEC-20; mantém os testes planejados e não declara controles implementados ou evidências executadas. |
 | 0.7 | 24/11/2026 | Consolida o plano de tratamento dos riscos de produto PRD-001 a PRD-010, com prioridades preliminares, responsáveis funcionais propostos, marcos, dependências e evidências esperadas; não declara validação técnica, implementação ou execução de testes. |
 | 0.8 | 24/11/2026 | Reconcilia a fotografia técnica com as migrations de schema/integridade da Issue #99 e a evidência documental de aplicação em desenvolvimento; corrige THR-005, THR-012, THR-020 e THR-024, distinguindo RLS habilitada de policies de domínio implementadas; não declara integração funcional ou homologação. |
+| 0.9 | 24/11/2026 | Registra a aprovação da compatibilidade do modelo de utilização Supabase + Vercel pela TI e pela FORD na Q-025; atualiza as referências a ADR-005, ADR-008 e ADR-009, mantendo separadas a aprovação arquitetural e a implementação/teste dos controles. |
