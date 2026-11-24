@@ -1,6 +1,6 @@
 # Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. A restrição de infraestrutura sob controle da FORD prevalece sobre ADRs e configurações tecnológicas anteriores incompatíveis.
+**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. As restrições de infraestrutura da FORD permanecem aplicáveis e devem ser compatibilizadas com a stack adotada Supabase + Vercel, conforme ADR-003 — Accepted e Q-025; não alteram automaticamente o status da decisão arquitetural.
 
 ## Navegação
 
@@ -43,8 +43,8 @@ A documentação não cria nem seleciona diagramas UML nesta versão, pois o tip
 O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
 
 
-## Atualização arquitetural — 19/11/2026
+## Atualização arquitetural — 24/11/2026
 
-A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, sem terceiros acessando, armazenando ou processando dados da organização. A direção anterior Supabase + Vercel foi depreciada na ADR-003. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), [índice de ADRs](adr/README.md) e a Q-025.
+A ADR-003 — **Accepted** mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. As exigências da FORD v2 sobre controle de hospedagem, armazenamento, processamento, localização e acesso continuam válidas e devem ser avaliadas na configuração e no modelo de uso da stack pela Q-025. A Q-025 documenta compatibilidade, controles, responsabilidades, evidências e limitações; não autoriza retirar ou substituir a stack por inferência. Uma incompatibilidade concreta não mitigável deve ser registrada e encaminhada ao PO e às responsabilidades da FORD para decisão formal, acompanhada de avaliação de impacto, conforme a governança de mudanças arquiteturais.
 
-As Issues #96 e #98 permanecem encerradas conforme aceites do responsável/Tech Lead sobre seus escopos operacionais originais. Seus documentos preservam a evidência histórica e registram que esses aceites não constituem autorização vigente para serviços externos processarem dados da FORD após a FORD v2.
+As Issues #96 e #98 permanecem encerradas para seus escopos operacionais originais. Seus aceites e evidências devem ser preservados, mas não equivalem à homologação atual de produção nem dispensam as verificações de compatibilidade e configuração previstas na Q-025.
