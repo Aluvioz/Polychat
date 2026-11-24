@@ -1,6 +1,6 @@
 -- Integration assertions for Issue #102 audit_events.
 -- Run against a disposable/development Supabase PostgreSQL database after the migration.
--- This script is read-only except for a deliberately rejected INSERT inside a rolled-back transaction.
+-- This script uses a rolled-back transaction and expects unauthorized writes to be rejected.
 begin;
 
 do $$
@@ -88,5 +88,39 @@ begin
   end;
 end
 $$;
+
+-- Verify that the authenticated application role cannot execute UPDATE,
+-- DELETE or TRUNCATE. Each statement must fail at the privilege boundary.
+-- No audit rows are required; UPDATE/DELETE use an empty predicate and TRUNCATE
+-- is rejected before it can affect data.
+do $
+declare
+  v_update_blocked boolean := false;
+  v_delete_blocked boolean := false;
+  v_truncate_blocked boolean := false;
+begin
+  begin
+    execute 'update public.audit_events set outcome = ''blocked-test'' where false';
+  exception when insufficient_privilege then
+    v_update_blocked := true;
+  end;
+
+  begin
+    execute 'delete from public.audit_events where false';
+  exception when insufficient_privilege then
+    v_delete_blocked := true;
+  end;
+
+  begin
+    execute 'truncate table public.audit_events';
+  exception when insufficient_privilege then
+    v_truncate_blocked := true;
+  end;
+
+  if not v_update_blocked then raise exception 'UPDATE was not denied'; end if;
+  if not v_delete_blocked then raise exception 'DELETE was not denied'; end if;
+  if not v_truncate_blocked then raise exception 'TRUNCATE was not denied'; end if;
+end
+$;
 
 rollback;
