@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.5 — 24/11/2026  
+**Versão:** 0.6 — 24/11/2026  
 **Status:** modelo preliminar; sujeito à revisão técnica do Tech Lead, TI (responsável operacional por segurança na FORD) e SQA  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
@@ -248,7 +248,7 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 |---|---|---|---|---|---|
 | THR-009 | Consulta administrativa não gera registro íntegro/atribuível, impedindo reconstruir a ação. | A-03, A-06; perda de rastreabilidade. | A regra de auditoria obrigatória está definida; a trilha funcional ainda não foi implementada. | Registrar operador, ação, recurso e momento; proteger integridade e acesso dos eventos; aplicar retenção já definida na baseline; não exigir justificativa para consulta, mas registrar toda consulta. | P0 — Desenvolvimento / TI; #102/#121/#124 |
 | THR-010 | Eventos/logs podem ser apagados ou alterados por operador ou processo comprometido. | A-06, A-10; ocultação de abuso e perda de evidência. | Não foi identificada trilha funcional de conteúdo/ações administrativas na main. | Projetar armazenamento com escrita restrita, proteção contra alteração e separação de funções; monitorar acesso aos logs; definir retenção e descarte; testar integridade e acesso. | P1 — TI e Tech Lead; #102, #124 |
-| THR-011 | A equipe declara um controle como aplicado ou testado sem evidência de ambiente, versão ou resultado. | A-06, A-09; falsa confiança e aceite indevido. | Baseline e plano #126 distinguem evidência existente de teste executado. | Cada evidência deve apontar para commit, ambiente, data, executor, pré-condições, resultado e artefato; SQA deve revisar; não aceitar afirmação verbal como evidência única. | P1 — SQA, PO e Tech Lead; #125, #126, #129 |
+| THR-011 | A equipe declara um controle como aplicado ou testado sem evidência de ambiente, versão ou resultado. | A-06, A-09; falsa confiança e aceite indevido. | Baseline e plano #126 distinguem evidência existente de teste executado. | Associar a verificação documental DOC-01: conferir commit/build/release, ambiente/configuração, data, executor, pré-condições, passos, resultado esperado/observado e artefato verificável. Quando faltar campo obrigatório ou artefato, registrar a afirmação como não comprovada; declaração verbal isolada não constitui evidência. | P1 — SQA, PO e Tech Lead; #125, #126, #129; DOC-01 |
 
 ### 8.4 Information Disclosure — exposição de informações
 
@@ -281,6 +281,12 @@ Os registros abaixo descrevem cenários de ameaça, não vulnerabilidades explor
 | THR-026 | XSS ou CSRF induz usuário autenticado a executar ação sem intenção, inclusive ação administrativa. | A-01, A-02, A-03, A-04; uso indevido da sessão. | Não há fluxo funcional de chat/admin integrado identificado; política de cookies/sessão ainda pendente. | Para CSRF, identificar se a autenticação usa cookies enviados automaticamente; aplicar SameSite, token anti-CSRF e validação Origin/Referer conforme arquitetura; operações mutáveis não devem usar GET; para XSS aplicar controles de saída/CSP. | P1 — Tech Lead, frontend/backend e SQA; ADR-004, #105, #125 |
 | THR-027 | Permissão de role/membership implementada incorretamente concede a Usuário função reservada ao TI ou acesso a conversa alheia. | A-02, A-03, A-04; elevação indevida e exposição. | Matriz #100 define a separação `user`/`ti` e membership; enforcement ainda não foi implementado. | Testar somente dois perfis, com todos os administradores TI equivalentes; verificar operações exclusivas TI e membership por conversa. Não introduzir administrador principal, hierarquia ou segunda aprovação. | P0 — Desenvolvimento / SQA; #100/#101 |
 
+### 8.7 Backup, restauração e integridade — ameaça transversal
+
+| ID | Cenário de ameaça | Ativo / impacto | Controles existentes observados | Mitigação proposta | Prioridade inicial / responsável |
+|---|---|---|---|---|---|
+| THR-028 | Backups podem não ser produzidos, estar incompletos/corrompidos, ser expostos a acesso indevido ou não permitir restauração confiável quando necessários. | A-11, A-03, A-05, A-06; exposição de cópias, perda de histórico e indisponibilidade prolongada. | A baseline define backup diário de banco/anexos por 12 meses e objetivos RPO/RTO de 24h; esta definição não comprova configuração, execução, integridade, proteção ou restauração em ambiente real. Evidências operacionais permanecem pendentes na Q-025 e #130. | Validar escopo e frequência das cópias, proteção de acesso, confidencialidade e integridade; monitorar falhas; verificar integridade; executar restauração controlada em ambiente autorizado e medir os resultados contra RPO/RTO de 24h. Registrar configuração, responsável, data, resultado e artefatos. Preservar retenção e parâmetros já definidos, sem alterá-los por inferência. | P1 — TI / Tech Lead / SQA; #98, #130, Q-025; SEC-18 |
+
 ## 9. Mapeamento STRIDE por componente
 
 Esta matriz resume onde cada categoria precisa ser tratada. Ela complementa, não substitui, o registro de ameaças.
@@ -292,6 +298,7 @@ Esta matriz resume onde cada categoria precisa ser tratada. Ela complementa, nã
 | PostgreSQL / RLS | Identidade/role inconsistente | Alteração de registros | Auditoria adulterável | Leitura cruzada | Consultas abusivas | Policy permissiva / bypass |
 | Conversas / grupos | Conta comprometida | Membership/mensagem adulterada | Envio/consulta negável | IDOR e vazamento | Flood de mensagens | Inclusão/acesso administrativo indevido |
 | Storage / anexos | Usuário forjado no upload | Arquivo disfarçado | Upload/download sem rastreio | Objeto/URL exposto | Upload excessivo | Download sem autorização |
+| Backup / recuperação | Acesso indevido à cópia | Alteração/corrupção da cópia | Restauração sem rastreio | Cópia exposta | Cópia ausente/inrestaurável | Acesso privilegiado indevido |
 | Auditoria / alertas | Operador falso | Evento alterado | Ação não atribuível | Conteúdo excessivo | Fila abusada | Acesso indevido a eventos |
 | CI/CD / secrets | Workflow/identidade comprometido | Código/dependência adulterada | Release sem autoria | Secrets expostos | Pipeline interrompido | Deploy com privilégio excessivo |
 
@@ -389,25 +396,25 @@ As prioridades são iniciais e precisam de revisão por Tech Lead, TI (responsá
 |---|---|---|---|---|
 | P0 | Integrar autenticação e autorização a todos os handlers/rotas reais; validar sessão e conta no servidor | THR-001, 003, 023 | Tech Lead / backend | #105; revisão de código e testes em rotas reais |
 | P0 | Aprovar e implementar RLS de domínio para conversas, memberships, mensagens e anexos; testar isolamento | THR-004, 005, 012, 024 | Tech Lead / backend / TI | #99, #100, #101; testes no Supabase PostgreSQL integrado, após configuração e implementação das policies |
-| P0 | Manter secrets privilegiados exclusivamente server-side; revisar acesso, bundles e workflows | THR-014, 025 | Tech Lead / TI | Revisão de ambiente, artefato de build, CI e procedimento de rotação |
+| P0 | Manter secrets privilegiados exclusivamente server-side; revisar acesso, bundles e workflows e validar o uso de funções privilegiadas | THR-014, 025 | Tech Lead / TI | Revisão de ambiente, artefato de build, CI, grants/owners e funções privilegiadas; SEC-11 e SEC-20 |
 | P0 | Implementar trilha de auditoria para consulta TI e ações privilegiadas conforme baseline | THR-009, 010, 027 | TI / backend / SQA | #102, #121, #124; teste de evento e integridade |
 | P1 | Implementar autenticação, proteção de sessão, recuperação pelo TI, revogação e rate limiting | THR-001, 002, 019 | Desenvolvimento / TI | ADR-004, #103/#104/#105; requisitos de credenciais já definidos; testes |
 | P1 | Implementar validação segura de conteúdo, armazenamento privado, scanner interno e controle de download | THR-007, 013, 020 | Backend / TI | #115, #116, #117; testes STO e evidências de Storage privado |
 | P1 | Prevenir XSS/CSRF e testar dados não confiáveis em todos os pontos de renderização/ações | THR-006, 017, 026 | Frontend / backend / SQA | #125, #126; testes negativos e revisão de headers/cookies |
-| P1 | Implementar detecção por lista TI, minimização, fila e acesso a alertas | THR-015, 016, 018 | TI / backend / SQA | #122, #123; regras e prazos já definidos; testes DET |
+| P1 | Implementar detecção por lista TI, minimização, fila e acesso a alertas | THR-015, 016, 018 | TI / backend / SQA | #122, #123; regras e prazos já definidos; testes DET e SEC-19 |
 | P1 | Proteger CI/CD e dependências; restringir permissões e revisar cadeia de suprimentos | THR-008, 014 | Tech Lead / responsáveis CI | Revisão de workflow, lockfile, permissões e processo de atualização |
 | P1 | Definir tratamento de indisponibilidade de Auth, banco, Storage e scanner; testar fail closed | THR-021 | Tech Lead / TI | ADRs pertinentes; testes de falha e recuperação |
 | P2 | Definir limites de uso, capacidade e proteção de endpoints/realtime | THR-022 | Tech Lead / TI | Q-016 e ADR-007; teste de carga e métricas |
-| P2 | Consolidar evidências específicas de região/configuração e demonstrar backup, RPO/RTO e resposta | THR-018, 021 | FORD / TI / Tech Lead | Q-025 e #98/#130; não reabrir requisitos já alinhados nem aceites #96/#98 |
+| P2 | Consolidar evidências específicas de região/configuração, continuidade e backup/restauração, incluindo RPO/RTO | THR-018, 021, 028 | FORD / TI / Tech Lead / SQA | Q-025, #98/#130 e SEC-18; não reabrir requisitos já alinhados nem aceites #96/#98 |
 
 ## 12. Plano de testes e evidências
 
-Os testes abaixo são cenários necessários ou recomendados. Não foram executados por este documento. A especificação detalhada de casos deve ser mantida no plano da Issue #126 e a execução de homologação/regressão deve ser registrada na Issue #129.
+Os testes e verificações abaixo são cenários necessários ou recomendados. Não foram executados por este documento. A especificação detalhada de casos deve ser mantida no plano da Issue #126 e a execução de homologação/regressão deve ser registrada na Issue #129.
 
 | ID | Teste ou evidência | Ameaças relacionadas | Tipo | Condição para execução |
 |---|---|---|---|---|
 | SEC-01 | Token ausente, inválido, expirado, conta inativa e perfil inexistente | THR-001, 003, 023 | Unitário / Integração | Auth integrado e ambiente de teste |
-| SEC-02 | Tentativa de alterar role/status/actor pelo cliente | THR-004, 025 | Integração / TI | Fluxo real de perfil e operações administrativas |
+| SEC-02 | Tentativa de alterar role/status/actor pelo cliente | THR-004 | Integração / TI | Fluxo real de perfil e operações administrativas; este caso cobre adulteração originada no cliente, não o uso de service role/funções privilegiadas |
 | SEC-03 | Usuário comum tenta acessar rota/ação exclusiva de TI | THR-002, 023, 027 | E2E / TI | Rotas reais implementadas |
 | SEC-04 | IDOR: trocar IDs de conversa, mensagem e grupo | THR-005, 012 | Integração / Segurança | Schema e RLS de domínio implementados |
 | SEC-05 | Testes de RLS com usuários distintos, TI e não membros | THR-005, 012, 024 | Integração / Segurança | #99/#101 concluídas no ambiente de teste |
@@ -416,14 +423,17 @@ Os testes abaixo são cenários necessários ou recomendados. Não foram executa
 | SEC-08 | Upload de extensão permitida com conteúdo divergente/corrompido | THR-007 | Unitário / Integração | Pipeline de anexos e regras da #117 |
 | SEC-09 | Scanner indisponível, inconclusivo ou com resultado malicioso de teste | THR-007, 021 | Integração | Scanner e política de falha aprovados |
 | SEC-10 | Acesso direto a bucket/objeto e reutilização de URL expirada | THR-013 | Segurança | Storage implementado em ambiente isolado |
-| SEC-11 | Inspeção de bundle, logs, workflow e repositório por exposição de secrets | THR-014, 015 | TI / CI | Ferramentas e escopo autorizados |
+| SEC-11 | Inspeção de bundle, logs, workflow e repositório por exposição de secrets/credenciais | THR-014 | TI / CI | Ferramentas e escopo autorizados |
 | SEC-12 | Teste de rate limiting em login, recuperação, envio e upload | THR-019, 020, 022 | Integração / Desempenho | Limites aprovados e ambiente de teste |
 | SEC-13 | Falha de Auth, DB, Storage, scanner e logging | THR-021, 009 | Integração / Resiliência | Ambiente com falhas controladas |
 | SEC-14 | Operador TI consulta conversa e evento de auditoria é criado e protegido | THR-009, 010, 027 | Integração / Segurança | #102/#121/#124 e governança aprovadas |
 | SEC-15 | Operador não autorizado tenta acessar alerta/conversa original | THR-016, 027 | E2E / Segurança | Políticas de alerta e autorização aprovadas |
 | SEC-16 | Revisão de dependências e permissões de CI/CD | THR-008 | Revisão técnica / CI | Lockfile e workflows disponíveis |
 | SEC-17 | Teste de carga em operações críticas e realtime | THR-020, 022 | Desempenho | Metas de carga aprovadas em Q-016 |
-| SEC-18 | Verificação de backup/restauração, integridade e acesso às cópias | THR-018, 021 | Continuidade / TI | RPO/RTO, backup e ambiente aprovados |
+| SEC-18 | Verificação de backup/restauração, integridade, confidencialidade e acesso às cópias | THR-028 | Continuidade / TI | Backup configurado e disponível para ensaio autorizado; ambiente isolado; medir resultado contra RPO/RTO já aprovados |
+| SEC-19 | Verificação de minimização de conteúdo em logs, alertas e evidências; conferir se somente dados necessários são registrados, sem conteúdo integral de mensagens, dados pessoais desnecessários ou tokens | THR-015 | Segurança / TI / SQA | Logging e alertas implementados em ambiente autorizado; usar mensagens e dados sintéticos e inspecionar amostras sanitizadas |
+| SEC-20 | Verificação de service role e funções privilegiadas: uso exclusivamente server-side, permissões/grants mínimos, escopo de execução, SECURITY DEFINER/search_path/owners quando aplicáveis e impossibilidade de invocação não autorizada ou bypass indevido de RLS | THR-025 | Segurança / Integração / TI | Backend e funções integrados, RLS ativa e ambiente isolado; executar com identidades autorizadas e não autorizadas, sem expor secrets reais |
+| DOC-01 | Revisão documental das afirmações de controle implementado/testado e da completude/rastreabilidade das evidências | THR-011 | Verificação documental / SQA | PR, relatório ou evidência disponível para revisão; conferir commit/build/release, ambiente/configuração, data, executor, pré-condições, passos, resultado esperado/observado e artefato verificável. Campo ou artefato ausente implica status não comprovado |
 
 ### 12.1 Registro obrigatório por execução
 
@@ -527,7 +537,7 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 | Critério original | Evidência necessária | Estado nesta versão |
 |---|---|---|
 | Threat model e mitigação priorizada; riscos residuais aceitos formalmente | Modelo revisado por Tech Lead, TI (segurança operacional) e SQA; plano com responsáveis; riscos residuais formalmente aceitos pela autoridade competente | **Parcial:** modelo preliminar produzido; revisão, plano validado e aceitação formal pendentes |
-| Testes relevantes automatizados ou evidência documentada | Testes SEC-01..SEC-18 executados ou evidência justificada, vinculados a commit e ambiente | **Pendente:** cenários especificados; esta versão não executa testes |
+| Testes relevantes automatizados ou evidência documentada | Testes SEC-01..SEC-20 e verificação DOC-01 aplicáveis, executados ou com evidência justificada e vinculados a commit e ambiente | **Pendente:** casos e verificações especificados; esta versão não os executa |
 | Revisão por PR concluída | PR revisada/aprovada por Tech Lead e SQA, com participação da TI como responsável operacional por segurança e checks concluídos | **Pendente** |
 | Sem regressão nos fluxos relacionados | CI e testes de regressão dos fluxos efetivamente implementados | **Pendente:** dependerá da implementação e da Issue #129 |
 
@@ -541,7 +551,7 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 - [ ] As políticas #117 e #122 foram reconciliadas com a FORD v2 e revisadas por TI/Tech Lead/SQA conforme necessário.
 - [ ] Cada risco P0/P1 tem tratamento, responsável, dependência e evidência esperada.
 - [ ] Riscos residuais estão formalmente aceitos, transferidos ou mantidos como impeditivos; nenhum permanece implícito.
-- [ ] Testes relevantes e regressão foram executados e evidenciados.
+- [ ] Testes SEC-01 a SEC-20 aplicáveis, DOC-01 e regressão foram executados e evidenciados.
 - [ ] A PR recebeu revisão independente e os checks aplicáveis passaram.
 
 ## 17. Plano de evolução do documento
@@ -552,25 +562,27 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 | **0.2 — revisada tecnicamente** | Após revisão Tech Lead, TI e SQA | Arquitetura validada, fronteiras confirmadas, probabilidade/impacto revisados e ações priorizadas |
 | **0.3 — alinhada à FORD v2** | Versão histórica, publicada após revisão da baseline e das decisões respondidas | Atualizou riscos, papéis, medidas e dependências sem reabrir regras de produto |
 | **0.4 — alinhada à Q-025** | Versão histórica | Registrou a interpretação temporária de que Supabase + Vercel estava Deprecated; essa classificação foi revertida pela ADR-003 em 24/11/2026 |
+| **0.5 — stack e baseline reconciliadas** | 24/11/2026 | Alinha referências à ADR-003 Accepted e à stack Supabase + Vercel, atualiza Q-025 e baseline para v0.5 e mantém explícitos os limites de integração, configuração e homologação |
+| **0.6 — adequação documental ao SQA** | 24/11/2026 | Associa THR-011 à DOC-01, cria THR-028 para backup/restauração, separa SEC-19 para minimização de logs/alertas e SEC-20 para service role/funções privilegiadas; não executa testes nem declara controles implementados |
 | **1.0 — baseline de segurança** | Após implementação e testes dos controles prioritários | Evidências por ameaça, estado de mitigação, risco residual e aprovação dos responsáveis |
 
 Qualquer mudança relevante de arquitetura, autenticação, RLS, Storage, monitoramento, consulta administrativa ou fornecedor deve provocar revisão do modelo.
 
 ## 18. Parecer do PO
 
-A versão 0.5 é uma base preliminar de ameaças alinhada à baseline POLY-REQ-001 v0.5 e à stack adotada na ADR-003. Ela identifica riscos técnicos que não podem ser considerados mitigados apenas porque existem requisitos, ADRs ou artefatos de scaffold. A direção tecnológica está definida; integração funcional, configuração operacional e evidências de compatibilidade com os requisitos da FORD permanecem pendentes na Q-025 e nas ADRs específicas.
+A versão 0.6 é uma base preliminar de ameaças alinhada à baseline POLY-REQ-001 v0.5 e à stack adotada na ADR-003. Ela identifica riscos técnicos que não podem ser considerados mitigados apenas porque existem requisitos, ADRs ou artefatos de scaffold. A direção tecnológica está definida; integração funcional, configuração operacional e evidências de compatibilidade com os requisitos da FORD permanecem pendentes na Q-025 e nas ADRs específicas.
 
 O maior cuidado de produto é não confundir a capacidade administrativa prevista para TI com autorização irrestrita, nem confundir monitoramento de segurança com permissão para tratamento indiscriminado de mensagens. A consulta de conversas e exportação pelo TI, edição/exclusão administrativa, alerta e auditoria seguem as regras da FORD v2; anexos exigem validação, scanner interno e proteção antes da disponibilização.
 
 Os principais riscos técnicos permanecem como trabalho de implementação e evidência: autorização/RLS de domínio, integração de autenticação, proteção de secrets, auditoria de ações privilegiadas e pipeline de anexos ainda não implementados. Isso não significa que os respectivos requisitos ou decisões estejam em aberto.
 
-**Decisão do PO:** favorável à continuidade do threat model preliminar, sem declarar implementação, homologação ou aceitação de risco residual. A TI é responsável operacional por segurança no projeto; não se cria um workstream separado de Segurança/Jurídico/Privacidade. A Issue #125 deve permanecer aberta até revisão técnica/institucional, mitigação priorizada, testes e evidências, revisão por PR e formalização das decisões de risco.
+**Decisão do PO:** favorável à continuidade do threat model preliminar, sem declarar implementação, homologação ou aceitação de risco residual. Na versão 0.6, os quatro apontamentos documentais do SQA foram tratados: THR-011 possui a verificação DOC-01; SEC-18 foi vinculado à nova ameaça THR-028; THR-015 possui verificação específica SEC-19, mantendo SEC-11 restrito a secrets; e THR-025 possui verificação específica SEC-20, mantendo SEC-02 restrito à adulteração pelo cliente. Os casos permanecem planejados, sem execução ou comprovação de controles nesta atualização. A TI é responsável operacional por segurança no projeto; não se cria um workstream separado de Segurança/Jurídico/Privacidade. A Issue #125 deve permanecer aberta até revisão técnica/institucional, mitigação priorizada, testes e evidências, revisão por PR e formalização das decisões de risco.
 
 ### 18.1 Revisão de riscos sob a perspectiva do produto — parecer do PO (19/11/2026)
 
 A estrutura STRIDE e os cenários constituem uma base para revisão técnica. Contudo, STRIDE não substitui a avaliação de risco do produto. Para o PO, além da possibilidade técnica de exploração, é necessário registrar como o evento afetaria funcionários, confiança, continuidade do trabalho, governança, adoção e compromissos assumidos pela FORD.
 
-A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triagem preliminar do produto; não são cálculo final de probabilidade, severidade técnica ou risco residual. Tech Lead e SQA revisam os aspectos técnicos; TI representa a responsabilidade operacional de segurança informada pela FORD. O modelo de poderes administrativos iguais já foi avaliado e não constitui pendência.
+A tabela abaixo complementa THR-001 a THR-028. As prioridades representam triagem preliminar do produto; não são cálculo final de probabilidade, severidade técnica ou risco residual. Tech Lead e SQA revisam os aspectos técnicos; TI representa a responsabilidade operacional de segurança informada pela FORD. O modelo de poderes administrativos iguais já foi avaliado e não constitui pendência.
 
 | ID | Risco de produto | Consequência para o produto/negócio | Prioridade preliminar do PO | Tratamento/decisão necessária | Responsáveis e rastreabilidade |
 |---|---|---|---|---|---|
@@ -580,7 +592,7 @@ A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triage
 | PRD-004 | Anexo legítimo ficar bloqueado por erro/indisponibilidade do scanner ou arquivo malicioso ser liberado indevidamente | O primeiro caso interrompe uma atividade legítima; o segundo pode expor usuários e documentos a dano. O fail-closed protege contra liberação insegura, mas cria risco de indisponibilidade funcional | P1 — tratamento obrigatório antes da homologação do fluxo | Preservar fail-closed validado pelo PO; diferenciar estados pendente, rejeitado e erro; informar ao usuário sem atribuir culpa; definir retentativa, prazo, suporte/escalonamento e evidência de análise. Nunca liberar automaticamente por conveniência | Backend / TI / UX; #115/#116/#117, Q-011, THR-007/013/020/021 |
 | PRD-005 | Falha ao executar retenção e descarte conforme política já definida | Dados podem permanecer indevidamente em cópias ou ser eliminados antes do ciclo previsto | P1 — implementação/evidência operacional pendente | Implementar retenção sem exclusão automática enquanto sistema operar; backups diários por 12 meses; exclusões autorizadas pelo TI e descarte das cópias ao fim do ciclo, com auditoria. Não reabrir decisão de produto | Desenvolvimento / TI; RN-021, #102/#130 |
 | PRD-006 | Conta desativada mantém sessão/token utilizável | Pessoa inativa consegue continuar acessando operações protegidas | P0 — bloqueia o fluxo de conta se revogação não for comprovada | Implementar revogação imediata de sessões no ato de desativação e negar operações server-side; testar tokens/sessões existentes. Regras de provisionamento e recuperação já definidas | Desenvolvimento / TI; RN-003/RF-004, #103/#104/#105 |
-| PRD-007 | Falha de backup/restore ou de operação impede cumprir os parâmetros já definidos | Perda de histórico ou indisponibilidade além do objetivo aprovado | P1 — implementação/ensaio e evidência ainda pendentes | Implementar backup diário de banco/anexos por 12 meses, medir restauração contra RPO 24h/RTO 24h e disponibilidade mensal de 99%; manter manutenção fora do horário comercial com aviso e suporte em horário comercial | TI / Desenvolvimento / SQA; RN-023, #98/#130 |
+| PRD-007 | Falha de backup/restore ou de operação impede cumprir os parâmetros já definidos | Perda de histórico ou indisponibilidade além do objetivo aprovado | P1 — implementação/ensaio e evidência ainda pendentes | Implementar backup diário de banco/anexos por 12 meses, medir restauração contra RPO 24h/RTO 24h e disponibilidade mensal de 99%; manter manutenção fora do horário comercial com aviso e suporte em horário comercial | TI / Desenvolvimento / SQA; RN-023, #98/#130, THR-028, SEC-18 |
 | PRD-008 | Usuário acessa por dispositivo/perfil não autorizado ou há ampliação indevida do público | Acesso incompatível com o escopo inicial e risco de capacidade/homologação | P1 — validar restrições de perfil e dispositivo antes do lançamento único | Manter 25 usuários finais do setor técnico e aproximadamente 2–3 TI; Usuário em Android/iOS com Chrome/Safari móveis atuais; TI em computador com Chrome/Edge/Firefox atuais; tablets não permitidos. Não haverá piloto de lançamento. | PO / Desenvolvimento / TI / SQA; RN-015/RN-023/RN-024, #106/#129 |
 | PRD-009 | Conteúdo é encaminhado a serviço adicional não aprovado | Exposição de mensagens/anexos a terceiros não autorizados | P1 — não integrar serviço adicional sem aprovação explícita | Supabase + Vercel permanece como stack adotada; a Q-025 deve documentar a compatibilidade operacional da configuração com os requisitos da FORD. O scanner é interno da FORD. Não encaminhar conteúdo a fornecedores adicionais, IA externa ou scanner SaaS não aprovado | TI / Desenvolvimento; RN-022, #117/#122, Q-025, ADR-003/008/010 |
 | PRD-010 | Usuários não entenderem falhas, bloqueios, alertas ou canal de suporte | Repetição de tentativas, perda de trabalho, procura de canais não oficiais e baixa confiança no produto | P1 — resolver nos fluxos e no plano de operação | Definir mensagens de erro e estados compreensíveis, orientação de recuperação/reenvio, canal de suporte e comunicação de incidentes; não exibir detalhes técnicos ou dados sensíveis | PO / UX / TI / Operação / SQA; #91/#92/#117/#126/#129/#130, THR-019/020/021 |
@@ -605,7 +617,7 @@ A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triage
 - [ ] TI/Operação valida capacidade, ciclo de vida, continuidade, recuperação e resposta a incidentes.
 - [ ] A implementação aplica as regras já aprovadas de consulta, monitoramento, retenção e fornecedores; obrigações legais aplicáveis permanecem sob responsabilidade da FORD.
 - [ ] Riscos P0/P1 recebem planos, responsáveis, prazos e evidências; bloqueios de go-live são refletidos no checklist de release.
-- [ ] Testes SEC-01 a SEC-18 aplicáveis são executados e registrados; pentest/auditoria independente, quando exigidos, são tratados como entregáveis próprios.
+- [ ] Testes SEC-01 a SEC-20 aplicáveis e a verificação DOC-01 são executados e registrados; pentest/auditoria independente, quando exigidos, são tratados como entregáveis próprios.
 - [ ] Aceitações residuais são formalizadas pela autoridade competente, sem aceite presumido pelo PO.
 
 **Parecer do PO (19/11/2026):** a análise STRIDE é adequada como base preliminar. As decisões de produto da FORD v2, inclusive confiança e poderes equivalentes dos administradores TI, são consideradas resolvidas. Isso não equivale à implementação dos controles, aprovação técnica final ou homologação. A Issue #125 permanece aberta para revisão técnica, priorização de mitigação, implementação e evidências de teste; não para reabrir requisitos já respondidos.
@@ -621,3 +633,4 @@ A tabela abaixo complementa THR-001 a THR-027. As prioridades representam triage
 | 0.3 | 19/11/2026 | Reconciliou o modelo preliminar com as respostas da FORD v2 e atualizou papéis, riscos e dependências; não aprovou arquitetura nem controles. |
 | 0.4 | 20/11/2026 | Versão histórica que tratou temporariamente a ADR-003 como Deprecated; classificação posteriormente revertida pela decisão Accepted de 24/11/2026. |
 | 0.5 | 24/11/2026 | Alinha referências à ADR-003 Accepted e à stack Supabase + Vercel, atualiza Q-025 e baseline para v0.5 e mantém explícitos os limites de integração, configuração e homologação. |
+| 0.6 | 24/11/2026 | Atende aos quatro apontamentos documentais do SQA com DOC-01, THR-028, SEC-19 e SEC-20; mantém os testes planejados e não declara controles implementados ou evidências executadas. |
