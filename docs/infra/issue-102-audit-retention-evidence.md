@@ -13,7 +13,7 @@
 | Integridade dos registros | Não havia proteção específica de auditoria | Migration desta PR | Trigger append-only para UPDATE/DELETE/TRUNCATE; limites de owner/superuser documentados |
 | Retenção | Regras funcionais definidas; nenhuma rotina operacional de descarte observada | Issue #102, modelo v0.3 seção 9 | Nenhum job de exclusão automática criado; descarte autorizado ainda requer fluxo operacional |
 | Backup e restauração | Projeto Polyford `ACTIVE_HEALTHY`; plano e configuração de backup não verificados | `get_project`, consultas SQL e documentação oficial Supabase | Nenhuma configuração alterada; sem evidência de backup de anexos/12 meses ou restore |
-| Testes | Existem testes unitários do módulo de autorização; não havia testes de auditoria | `tests/authorization.test.mjs` | Novos testes unitários escritos; integração PostgreSQL/Supabase permanece pendente |
+| Testes | Testes unitários e script SQL de integração disponíveis | `tests/audit-events.test.mjs` e `tests/sql/issue-102-audit-events.integration.sql` | Script SQL executado em Polyford; INSERT positivo TI pendente por ausência de identidade de teste |
 
 ## 2. Catálogo persistido
 
@@ -56,19 +56,18 @@ Consultas, exportações e encerramento de alertas não exigem justificativa. O 
 
 ## 3. Acesso e integridade
 
-A migration:
+A migration foi aplicada ao projeto Supabase Polyford. As consultas SQL e o script `tests/sql/issue-102-audit-events.integration.sql` executados em 24/11/2026 confirmaram:
 
-- Habilita RLS em `audit_events`.
-- Permite SELECT somente quando `public.is_active_ti()` é verdadeiro.
-- Permite INSERT somente para o operador autenticado cujo `actor_profile_id` corresponde a `auth.uid()` e que é TI ativo.
-- Não concede UPDATE ou DELETE aos papéis da API.
-- Usa trigger para rejeitar UPDATE, DELETE e TRUNCATE.
-- Sobrescreve `occurred_at` com o relógio do banco.
-- Rejeita chaves de metadados sensíveis também em objetos JSON aninhados.
+- RLS habilitada em `public.audit_events` e exatamente duas policies: SELECT e INSERT para `authenticated`, condicionadas a TI ativo. A policy de INSERT também exige `actor_profile_id = auth.uid()`.
+- ACL: `anon` sem SELECT/INSERT; `authenticated` com SELECT/INSERT e sem UPDATE/DELETE/TRUNCATE. O owner `postgres` mantém privilégios administrativos; esse papel está fora da fronteira de proteção da aplicação.
+- Três triggers instalados: validação de ator/metadados no INSERT, bloqueio de UPDATE/DELETE e bloqueio de TRUNCATE.
+- Catálogo fechado com os 21 tipos de evento.
+- O script SQL executou em transação revertida: INSERT sem identidade TI foi rejeitado; tentativas de UPDATE, DELETE e TRUNCATE como `authenticated` também foram rejeitadas.
+- A validação recursiva detectou uma chave sensível aninhada e aceitou metadados seguros.
 
-**Limite de integridade:** o mecanismo impede mutações pelos papéis de aplicação cobertos, mas não torna a tabela absolutamente imutável contra owner/superuser, alteração de schema, remoção de trigger ou intervenção administrativa no banco. A proteção efetiva depende também da segregação de privilégios operacionais e do controle de acesso ao projeto.
+**Validação positiva pendente:** as consultas retornaram zero linhas em `auth.users`, `public.profiles` e `public.audit_events`. Não existe identidade TI de teste no projeto. Assim, não foi possível realizar INSERT positivo com identidade TI autenticada. Não criei usuário fictício nem inseri dados permanentes para simular essa evidência.
 
-O acesso à tabela via Data API depende da configuração de exposição de schemas do projeto. A migration não altera essa configuração.
+**Histórico de migrations:** o histórico remoto registra `issue_102_audit_events` na versão `20261124210245`, enquanto o arquivo versionado na PR usa o prefixo `202611240003`. A migration está aplicada, mas a divergência de identificadores entre Git e histórico remoto permanece sem reconciliação; não declaro o histórico alinhado.
 
 ## 4. Serviço de registro e falha segura
 
@@ -122,51 +121,40 @@ Portanto, a política está parcialmente sustentada por schema, mas não está i
 
 A Issue #102 exige backups diários de banco e anexos, retenção por 12 meses, descarte de dados excluídos ao final do ciclo e RPO/RTO de até 24 horas.
 
-### 7.1 Limitações verificadas
+### 7.1 Estado observado no Polyford
 
-- O projeto Supabase `Polyford` retornou status `INACTIVE` na consulta desta execução. Não foi reativado.
-- O plano contratado e as configurações atuais de backup não foram confirmados.
-- A documentação oficial do Supabase informa que backups diários automáticos são oferecidos nos planos Pro, Team e Enterprise, com janelas documentadas de 7, 14 e até 30 dias, respectivamente. Isso não comprova retenção de 12 meses.
-- A documentação oficial também informa que objetos do Storage API não são incluídos nos backups do banco. Portanto, o backup dos metadados não cobre os anexos binários.
-- Não há destino de backup de 12 meses aprovado/documentado nesta execução.
-- A ADR-005 continua Proposed e a Q-025 permanece aberta para compatibilidade operacional. A ADR-008 também permanece Proposed para Storage.
-- Nenhuma configuração de backup, Storage, retenção ou infraestrutura foi alterada.
+- O projeto `Polyford` está `ACTIVE_HEALTHY` na consulta de 24/11/2026, com PostgreSQL 17.11.0.019.
+- O plano contratado e as configurações de backup não foram confirmados pelas ferramentas disponíveis nesta execução.
+- A consulta SQL retornou zero buckets em `storage.buckets`. Portanto, não há bucket de anexos criado no projeto consultado. A Issue #117, responsável pelo armazenamento privado e backup de anexos, está atribuída a Berthed.
+- Nenhuma configuração de backup, Storage ou retenção foi alterada; nenhum backup ou restore foi executado.
 
-Referência oficial: [Supabase — Database Backups](https://supabase.com/docs/guides/platform/backups).
+### 7.2 Limites da plataforma e evidências pendentes
 
-### 7.2 Evidências ainda necessárias
+A documentação oficial do Supabase informa que backups automáticos diários estão disponíveis nos planos Pro, Team e Enterprise, com janelas de 7, 14 e até 30 dias, respectivamente. Isso não comprova retenção de 12 meses. A mesma documentação informa que objetos do Storage API não entram nos backups do banco; o backup de metadados não cobre os anexos binários. Referência: [Supabase — Database Backups](https://supabase.com/docs/guides/platform/backups).
 
-| Evidência | Estado |
+| Evidência exigida | Estado verificado |
 |---|---|
-| Plano Supabase e janela real de backups | Não verificado |
-| Backup diário do banco habilitado | Não verificado |
-| Backup diário dos objetos anexos | Não configurado/comprovado |
+| Plano e janela real de backup do Polyford | Não verificados |
+| Backup diário do banco habilitado e executado | Não comprovado |
+| Bucket e backup diário dos anexos | Zero buckets encontrados; não configurado/comprovado |
 | Retenção de 12 meses | Não configurada/comprovada |
-| Processo de descarte de cópias após o ciclo | Não implementado/comprovado |
-| Backup identificado por data/ambiente | Pendente |
+| Descarte de cópias após o ciclo | Não implementado/comprovado |
 | Restauração controlada em ambiente isolado | Não executada |
 | Integridade pós-restauração | Não testada |
 | Medição de RPO | Não executada |
 | Medição de RTO | Não executada |
 
-Não foi executada restauração, nem alteração destrutiva no ambiente. O projeto está ativo, mas isso não comprova que backups estejam habilitados ou que um restore tenha sido testado. A validação exige plano/backup acessível e ambiente isolado de restauração.
+O projeto estar ativo não comprova que backups estejam habilitados. Não foi feita restauração destrutiva nem foi criada infraestrutura de backup sem decisão operacional aprovada. ADR-005 permanece Proposed, Q-025 aberta e ADR-008 Proposed para Storage.
 
 ## 8. Testes e evidências
 
-Foi adicionado `tests/audit-events.test.mjs`, cobrindo:
+`tests/audit-events.test.mjs` contém testes unitários com cliente Supabase simulado. Eles cobrem catálogo, ator TI, timestamp do banco, metadados, validações e falha fechada; não substituem a validação do PostgreSQL real.
 
-- Catálogo de eventos.
-- Registro com operador TI validado.
-- Timestamp gerado no banco, não pelo cliente.
-- Ausência de justificativa obrigatória nos três eventos definidos pelo PO.
-- Rejeição de ator ausente, inativo ou não TI.
-- Rejeição de evento/recurso inválido.
-- Rejeição de chaves sensíveis em metadados aninhados.
-- Falha fechada quando o INSERT falha ou lança exceção.
+O script `tests/sql/issue-102-audit-events.integration.sql` foi ampliado para verificar, em transação revertida, RLS, policies, triggers, grants, catálogo, metadados e tentativas negativas de INSERT, UPDATE, DELETE e TRUNCATE como role `authenticated`. O script foi executado contra Polyford em 24/11/2026 e concluiu sem erro. O teste positivo de INSERT TI continua pendente porque o projeto não possui usuários nem perfis.
 
-Esses testes são unitários com cliente Supabase simulado. Não comprovam RLS, triggers, privilégios, integração real ou backup.
+**CI:** os workflows #354 e #284 concluíram com `success` no head anterior `94423d26026fdc2f3a1285db2c6bb40be913f5c1`. Esses resultados não são atribuídos aos commits posteriores que atualizaram o teste SQL e este documento; os checks do head mais recente precisam ser consultados separadamente. O Preview Ready não comprova RLS, autenticação TI, integração funcional, backup ou restore.
 
-**CI executado:** workflow [run 45407475573](https://github.com/Aluvioz/Polychat/actions/runs/45407475573) concluiu com sucesso no commit `c7823b5093bf0b37b3ece65d0656853bac8cfc7b`. O log registra 32 testes aprovados (32 pass, 0 fail), ESLint, TypeScript, build Next.js e smoke test HTTP da página inicial aprovados. Isso valida o código Node/Next incluído no workflow, não as migrations SQL, RLS, triggers, integração hospedada ou backups.
+**Limites de implementação:** a árvore `src/app` contém `layout.tsx` e `page.tsx`, sem handlers em `src/app/api`. `src/audit` contém o writer reutilizável, mas não há call sites em operações administrativas. A Issue #124, que cobre ações privilegiadas, permanece aberta e atribuída a Dante-Davi. Não criei handlers de produto nem dupliquei o trabalho dessa issue.
 
 ## 9. Estado das ADRs e governança
 
@@ -182,15 +170,27 @@ Esta PR não altera ADRs, baseline, issues, ambientes, secrets, variáveis, pol�
 
 | Critério original da #102 | Situação |
 |---|---|
-| Catálogo persistido e validado | Migration e catálogo versionados; aplicação e validação PostgreSQL pendentes |
-| Campos/metadados sem credenciais/conteúdo desnecessário | Proteções no writer e trigger implementadas; testes reais pendentes |
-| Acesso exclusivo TI | Policy RLS versionada; teste Supabase real pendente |
-| Integridade e impossibilidade de alteração/exclusão por usuário comum | Grants/policies/triggers versionados; teste real pendente |
-| Retenção e descarte autorizado/auditado | Parcial; sem rotina de descarte e fluxo de autorização integrado |
-| Backup diário DB+anexos, 12 meses, restore RPO/RTO | Não atendido; dependência operacional e ambiente INACTIVE |
-| Integração real Supabase/Vercel, testes, SQA/Tech Lead e evidências por ambiente | Não atendido; runtime ainda sem handlers funcionais e projeto Supabase INACTIVE |
+| Catálogo persistido e validado | Migration aplicada em Polyford; catálogo de 21 eventos conferido; INSERT positivo TI ainda pendente |
+| Campos/metadados sem credenciais/conteúdo desnecessário | Validação recursiva e teste de metadados executados |
+| Acesso exclusivo TI e negação a usuários comuns | Policies/ACL verificadas; INSERT sem identidade TI rejeitado; identidade TI real inexistente no projeto |
+| Integridade e impossibilidade de alteração/exclusão por usuário comum | UPDATE/DELETE/TRUNCATE tentados como `authenticated` e rejeitados; triggers instalados; owner/superuser fora da fronteira |
+| Política de retenção e descarte autorizado/auditado | Parcial; não existe fluxo integrado de autorização, preservação de investigação, descarte e evento atômico |
+| Backups diários DB+anexos, 12 meses, restore RPO/RTO | Não comprovado; zero buckets Storage, plano/configuração não confirmados, sem restore/RPO/RTO medidos |
+| Integração real Supabase/Vercel, testes, SQA/Tech Lead e evidências | Parcial; migration e SQL test executados; faltam handler/call sites, atomicidade, operação de retenção/backup e aprovações
 
 ## 11. Limites da entrega
+
+- Nenhuma issue foi fechada ou alterada.
+- Nenhum critério original foi modificado.
+- Nenhuma issue atribuída a outra pessoa foi alterada.
+- Nenhuma ADR foi modificada.
+- Polyford já estava `ACTIVE_HEALTHY` na consulta; não foi reativado.
+- Nenhuma configuração de backup/Storage foi alterada.
+- O script SQL de integração foi executado dentro de transação com `ROLLBACK`; não deixou registros de auditoria nem alterações de dados.
+- Nenhum backup/restore foi simulado como evidência.
+- A PR permanece Draft/Open para revisão do SQA e Tech Lead.
+
+
 
 - Nenhuma issue foi fechada ou alterada.
 - Nenhum critério original foi modificado.
