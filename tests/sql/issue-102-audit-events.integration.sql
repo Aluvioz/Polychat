@@ -93,7 +93,7 @@ $$;
 -- DELETE or TRUNCATE. Each statement must fail at the privilege boundary.
 -- No audit rows are required; UPDATE/DELETE use an empty predicate and TRUNCATE
 -- is rejected before it can affect data.
-do $
+do $audit_mutation$
 declare
   v_update_blocked boolean := false;
   v_delete_blocked boolean := false;
@@ -121,6 +121,6 @@ begin
   if not v_delete_blocked then raise exception 'DELETE was not denied'; end if;
   if not v_truncate_blocked then raise exception 'TRUNCATE was not denied'; end if;
 end
-$;
+$audit_mutation$;
 
 rollback;
