@@ -27,7 +27,7 @@ jobs:
       - name: Install project dependencies
         run: npm install
       - name: Install pinned Playwright for browser smoke
-        run: npm install --no-save --package-lock=false playwright@1.57.0
+        run: npm install --no-save --package-lock=false playwright@1.57.0 axe-core@4.10.3
       - name: Install headless Chromium
         run: npx playwright install --with-deps chromium
       - name: Exercise HTML prototype using Chromium
