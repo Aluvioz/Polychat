@@ -153,7 +153,7 @@ Os identificadores de caso abaixo são a referência planejada para automação 
 | RF-020 — CA-020.1 a CA-020.5 | TC-INT-012, TC-E2E-017, TC-SEC-018 | Integração / E2E / Segurança | Especificado; usuário negado; TI edita/exclui a qualquer momento; ações auditadas; relacionar auditoria com #124 |
 | RF-021 — CA-021.1 a CA-021.4 | TC-INT-013, TC-E2E-018, TC-SEC-019 | Integração / E2E / Segurança | Especificado; TI exporta conversas individuais e grupos, sem justificativa/segunda aprovação, com auditoria |
 | RF-022 — CA-022.1 a CA-022.11 | TC-INT-014, TC-E2E-019, TC-SEC-020 | Integração / E2E / Segurança | Especificado; catálogo de eventos, acesso exclusivo TI, sem exclusão automática e exclusão autorizada auditada; relacionar operações privilegiadas com #124 |
-| RF-023 — CA-023.1 a CA-023.3 | TC-E2E-020, TC-UX-002 | E2E / UX | Especificado; aviso de monitoramento no primeiro acesso, sem depender de push/browser notification |
+| RF-023 — CA-023.1 a CA-023.3 | TC-E2E-020 | E2E | Especificado; aviso de monitoramento no primeiro acesso, com texto informando que conversas podem ser monitoradas, sem depender de push/browser notification |
 
 ## 8. Matriz de rastreabilidade — requisitos não funcionais
 
