@@ -54,3 +54,15 @@ O sucesso em Chromium comprova somente os cenários automatizados listados, sobr
 ## Complemento WCAG automatizado
 
 A suíte também injeta a biblioteca local `axe-core@4.10.3` (sem CDN) e executa regras com tags `wcag2a`, `wcag2aa`, `wcag21a` e `wcag21aa` nas seis telas selecionadas. **Resultado: zero violações reportadas nessas execuções específicas**, o que não garante ausência de defeitos em telas não cobertas, interações, leitura humana ou tecnologias assistivas. Resultado comprovado no [job 45400409724](https://github.com/Aluvioz/Polychat/actions/runs/45400409724).
+
+
+## Reteste pós-revisão SQA — rastreabilidade canônica T-01 a T-06
+
+- **Commit efetivamente testado:** `cb907251b87a99e72f4de18d2296c921c306727e`.
+- **Workflow:** https://github.com/Aluvioz/Polychat/actions/runs/45434807236.
+- **Resultado comprovado no log:** **8 testes Chromium PASS, 0 FAIL, 0 SKIPPED**, incluindo axe-core WCAG 2.1 A/AA nas telas selecionadas.
+- **CI principal:** duas execuções concluídas com `success` nesse mesmo commit.
+- **Nova verificação explícita de rastreabilidade:** T-01=`t-login`, T-02=`t-users`, T-03=`t-groups`, T-04=`t-consult`, T-05=`t-alerts`, T-06=`t-settings`. `t-dashboard` e `t-audit` são etapas auxiliares sem código T-07/T-08. Os testes estáticos verificam rótulo/tela/`data-task`; Playwright verifica os seis códigos diretamente no Chromium.
+- **Capturas da nova versão:** [artefato `ux94-chromium-screenshots`](https://github.com/Aluvioz/Polychat/actions/runs/45434807236/artifacts/14940577193), 3 PNGs fictícios, arquivo ZIP de 310.848 bytes; SHA-256 do ZIP `10b41c1a9fd880023ba6f733f43a4455396320f4c82801e98c1bb5b9a5ca9b35`. Expiração indicada pelo GitHub: 01/12/2026.
+
+**Limites inalterados:** prova automatizada de navegação e ausência de violações nas regras axe selecionadas, mas não sessão real, avaliação de leitor de tela, inspeção SQA independente, autorização institucional FORD nem aceite metodológico para usar o clicável na pesquisa. A [decisão metodológica](./issue-94-decisao-metodologica-proposta.md) permanece **PENDENTE** do PO/SQA; o plano estático v0.3 da PR #152 foi aprovado e integrado à `main`.
