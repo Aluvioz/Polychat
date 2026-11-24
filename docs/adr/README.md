@@ -18,23 +18,23 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 
 | ADR | Tema | Status | Escopo do status |
 |---|---|---|---|
-| [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular; compatibilização dos componentes e da configuração com os requisitos da FORD ainda depende de validação técnica/Q-025 |
+| [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular; a compatibilidade da stack e do modelo de operação foi aprovada na Q-025; detalhamento de componentes permanece no escopo desta ADR |
 | [ADR-002](ADR-002-frontend-nextjs.md) | Frontend | Accepted | Next.js 16 + React 19 + TypeScript; React + Vite explicitamente recusado para o Polychat |
-| [ADR-003](ADR-003-supabase-vercel.md) | Direção tecnológica Supabase + Vercel | **Accepted** | Stack adotada e obrigatória; configuração, compatibilidade e homologação operacional permanecem sujeitas à Q-025 |
+| [ADR-003](ADR-003-supabase-vercel.md) | Direção tecnológica Supabase + Vercel | **Accepted** | Stack adotada e obrigatória; compatibilidade do modelo de utilização aprovada pela TI e FORD na Q-025 (24/11/2026) |
 | [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Supabase Auth é a capacidade prevista na stack adotada; detalhamento, integração, configuração e validação operacional permanecem pendentes |
-| [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL no contexto da plataforma Supabase adotada; schema, políticas, configuração, controles e operação aguardam validação técnica |
+| [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | **Accepted** | PostgreSQL no Supabase aprovado na Q-025; implementação das policies, integrações e testes permanece nas issues de domínio |
 | [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo limitado | Aceite cobre o contrato de perfis e a migration existente; não cobre RLS de domínio nem comprova integração funcional ou homologação de produção |
 | [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Supabase Realtime é capacidade prevista na stack adotada; desenho, prova de conceito, controles e compatibilidade permanecem pendentes |
-| [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Supabase Storage é capacidade prevista; armazenamento privado, scanner interno FORD, autorização, integração e compatibilidade operacional precisam ser validados |
-| [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Configuração de ambientes e deploy na stack Supabase + Vercel adotada; isolamento, regiões, secrets, promoção, rollback, backup e responsabilidades operacionais precisam de validação |
+| [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | **Accepted** | Supabase Storage aprovado como capacidade de armazenamento privado; bucket, handlers, scanner e autorização seguem como entregas de implementação |
+| [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | **Accepted** | Ambientes, segregação, deploy, secrets, rollback e responsabilidades aprovados na Q-025; execução dos testes por release permanece aplicável |
 | [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Deve ser reconciliada com a FORD v2, os alinhamentos de requisitos e as obrigações legais aplicáveis |
 
 ## Decisões e restrições vigentes
 
 1. A stack de frontend adotada é Next.js 16 + React 19 + TypeScript (ADR-002). React + Vite foi explicitamente recusado para o Polychat; não deve ser introduzido nem usado como base de migração sem ADR substitutiva aprovada.
-2. A ADR-003 — Accepted define Supabase + Vercel como stack adotada e obrigatória. As exigências da FORD v2 sobre controle de hospedagem, armazenamento, processamento, localização e acesso continuam válidas e devem ser avaliadas na configuração e no modelo de uso pela Q-025; uma tensão ou incompatibilidade identificada não altera automaticamente o status da ADR-003.
+2. A ADR-003 — Accepted define Supabase + Vercel como stack adotada e obrigatória. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para o modelo de utilização e para os provedores nomeados. Outros terceiros continuam sujeitos a aprovação específica.
 3. Next.js permanece como frontend registrado na ADR-002. Os serviços Supabase e a plataforma Vercel devem ser detalhados e configurados conforme as ADRs pertinentes e a Q-025; não presumir homologação de produção nem tratar esses componentes como proibidos ou depreciados sem decisão formal.
-4. PostgreSQL é a tecnologia relacional considerada na ADR-005 no contexto da plataforma Supabase adotada. A configuração, os controles, a operação e a evidência de compatibilidade com os requisitos da FORD continuam dependentes da Q-025.
+4. PostgreSQL é a tecnologia relacional adotada na ADR-005, no contexto da plataforma Supabase aprovada na Q-025. A implementação de policies, integrações, auditoria e testes permanece nas issues correspondentes.
 5. A autenticação deve respeitar o provisionamento exclusivo pelo TI, os identificadores e credenciais definidos pela FORD, a recuperação pelo TI e a revogação imediata de sessões na desativação de conta (ADR-004), com configuração e validação na stack adotada.
 6. A ADR-006 permanece Accepted no escopo do módulo e da migration de perfis vinculados ao Supabase. Esse aceite não cobre os recursos de domínio do Polychat nem comprova integração/homologação de produção; não contradiz a adoção da plataforma estabelecida pela ADR-003.
 7. Realtime, armazenamento de anexos e ambientes seguem em definição nas ADRs 007 a 009. As alternativas e configurações devem considerar a stack adotada e os requisitos de controle da FORD; eventual substituição exige o processo formal de mudança arquitetural.
@@ -72,7 +72,7 @@ Manter as questões atualizadas em `08-glossario-e-questoes-em-aberto.md`. Perma
 
 - **Q-018:** refinamento interno do mapa de telas, navegação e wireframes pelo PO/UX.
 - **Q-019:** obtenção/validação dos ativos oficiais da identidade visual FORD, caso ainda não estejam disponíveis.
-- **Q-025:** avaliação técnica e documentação da compatibilidade da configuração e do modelo de uso da stack Supabase + Vercel adotada (ADR-003 — Accepted) com os requisitos da FORD para infraestrutura, hospedagem, localização, acesso, armazenamento, processamento e responsabilidades operacionais; registrar controles, evidências, limitações e riscos residuais, sem substituir a stack por inferência.
+- **Q-025 — concluída em 24/11/2026:** compatibilidade do modelo de utilização Supabase + Vercel aprovada pela TI e pela FORD. A aprovação cobre provedores nomeados, ambientes, dados, Storage, segredos, continuidade e responsabilidades; não substitui a implementação e os testes dos controles nas respectivas issues.
 
 Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento de ambientes — não são pendências. A confiança nos administradores TI e a igualdade de seus poderes também não devem ser reabertas como pendência de requisito.
 
@@ -92,6 +92,6 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 - **19/11/2026** — ADR-002 e seu índice atualizados para registrar a recusa de React + Vite e alinhar a stack de frontend.
 - **19/11/2026** — a revisão documental interpretou a FORD v2 como incompatibilidade com Supabase + Vercel e alterou ADR-003 para Deprecated, sem registrar neste índice uma decisão formal de substituição e respectiva avaliação de impacto.
 - **20/11/2026** — a baseline POLY-REQ-001 v0.5 e as Issues #100/#102 reafirmaram a stack Supabase + Vercel como referência adotada; Q-025 permaneceu como avaliação de compatibilidade.
-- **24/11/2026** — ADR-003 revisada para Accepted, preservando Supabase + Vercel como stack adotada; Q-025 permaneceu como validação da configuração, compatibilidade e operação, sem substituir a decisão por inferência.
+- **24/11/2026** — ADR-003 revisada para Accepted, preservando Supabase + Vercel como stack adotada; Q-025 concluída com aprovação da TI e da FORD. ADR-005, ADR-008 e ADR-009 foram aceitas nos respectivos escopos de dados, Storage e operação de ambientes.
 
 **Regra de fechamento:** a Issue #89 só deve ser fechada depois de as ADRs aplicáveis serem revisadas e aprovadas pelos responsáveis, a arquitetura compatível com a FORD ser formalizada, a PR desta revisão ser aprovada e integrada e os checks passarem. A Epic #77 só deve ser fechada depois que #89 for concluída e seu checklist for atualizado.
