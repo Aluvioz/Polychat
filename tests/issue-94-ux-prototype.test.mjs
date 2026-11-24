@@ -86,3 +86,27 @@ test('estados de erro têm recuperação e busca sem resultados no código', () 
   assert.match(js, /contacts-empty'\)\.hidden/);
   assert.match(js, /ti-users-empty'\)\.hidden/);
 });
+
+
+test('rastreabilidade canônica TI T-01..T-06 acompanha o plano v0.3 da PR #152', () => {
+  const canonical = [
+    ['T-01', 't-login', 'ACESSO AO CONSOLE'],
+    ['T-02', 't-users', 'CONSULTA DE CONTAS'],
+    ['T-03', 't-groups', 'CRIAÇÃO E GESTÃO DE GRUPOS'],
+    ['T-04', 't-consult', 'CONSULTA ADMINISTRATIVA'],
+    ['T-05', 't-alerts', 'REVISÃO DE ALERTAS'],
+    ['T-06', 't-settings', 'CONFIGURAÇÕES']
+  ];
+  const taskElements = [...html.matchAll(/<section\b[^>]*\bdata-screen="([^"]+)"[^>]*\bdata-task="(T-\d{2})"[^>]*>([\s\S]*?)(?=<\/section>)/g)]
+    .map(([, screen, task, body]) => ({ screen, task, body }));
+  assert.equal(taskElements.length, canonical.length, 'Exatamente seis telas canônicas, sem IDs extras ou duplicados');
+  for (const [task, screen, label] of canonical) {
+    const match = taskElements.find(item => item.task === task);
+    assert.ok(match, 'Tarefa sem data-task: ' + task);
+    assert.equal(match.screen, screen, 'Tela divergente para ' + task);
+    assert.ok(match.body.includes(task + ' · ' + label), 'Rótulo divergente para ' + task);
+  }
+  for (const auxiliary of ['t-dashboard', 't-audit']) {
+    assert.ok(!taskElements.some(item => item.screen === auxiliary), 'Apoio não pode criar tarefa T-07/T-08');
+  }
+});
