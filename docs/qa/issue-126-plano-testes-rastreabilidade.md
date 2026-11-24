@@ -33,7 +33,8 @@ Este documento complementa, sem substituir, os documentos de requisitos e a matr
 | [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md) | Histórico Q-001 a Q-024; somente Q-018, Q-019 e Q-025 permanecem abertas; Q-025 trata da compatibilidade e configuração da stack adotada com os requisitos de infraestrutura da FORD, sem autorizar sua substituição por inferência |
 | [09 — Baseline consolidada do MVP](https://github.com/Aluvioz/Polychat/blob/main/docs/09-baseline-requisitos-mvp.md) | Baseline POLY-REQ-001 v0.5: escopo, RF-001 a RF-023, RNF-001 a RNF-013 e decisões vigentes |
 | [Matriz de autorização — Issue #100](../issue-100-matriz-autorizacao.md) | Regras de autorização e cenários AUTH-01 a AUTH-20; preserva Supabase + Vercel como referência de implementação |
-| [ADR-003 — Supabase + Vercel](https://github.com/Aluvioz/Polychat/blob/main/docs/adr/ADR-003-supabase-vercel.md) | Decisão Accepted, revisada em 24/11/2026: stack vigente e obrigatória; Q-025 trata de compatibilidade/configuração, não de substituição |\n| [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
+| [ADR-003 — Supabase + Vercel](https://github.com/Aluvioz/Polychat/blob/main/docs/adr/ADR-003-supabase-vercel.md) | Decisão Accepted, revisada em 24/11/2026: stack vigente e obrigatória; Q-025 trata de compatibilidade/configuração, não de substituição |
+| [Issue #101](https://github.com/Aluvioz/Polychat/issues/101) | Implementação e validação de RLS de domínio |
 | [Issue #110](https://github.com/Aluvioz/Polychat/issues/110) | Histórico paginado, sincronização Realtime, reconexão e deduplicação |
 | [Issue #111](https://github.com/Aluvioz/Polychat/issues/111) | Última mensagem, indicador de não lidas e marcação de leitura |
 | [Issue #113](https://github.com/Aluvioz/Polychat/issues/113) | Remoção de participantes e revogação de acesso |
@@ -428,4 +429,5 @@ A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcion
 
 **Histórico:**  
 - 19/11/2026 — v0.1: primeira proposta de estratégia de testes, catálogo inicial e matriz de rastreabilidade para revisão.
-- 20/11/2026 — v0.2: amplia cenários de anexos e download, corrige a classificação dos testes por dispositivo, completa rastreabilidade de dependências e formaliza autoridade para aceitação de risco residual.\n- 24/11/2026 — v0.3: alinha o plano à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; esclarece que Q-025 trata de compatibilidade/configuração da stack Supabase + Vercel, sem substituição por inferência.
+- 20/11/2026 — v0.2: amplia cenários de anexos e download, corrige a classificação dos testes por dispositivo, completa rastreabilidade de dependências e formaliza autoridade para aceitação de risco residual.
+- 24/11/2026 — v0.3: alinha o plano à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; esclarece que Q-025 trata de compatibilidade/configuração da stack Supabase + Vercel, sem substituição por inferência.
