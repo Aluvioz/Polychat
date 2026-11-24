@@ -6,7 +6,7 @@
 
 ## Contexto
 
-O MVP prevê conversas individuais e em grupo. A entrega de mensagens deve preservar histórico e respeitar participantes autorizados. A direção de backend é Supabase, mas não há serviço de mensageria, tabela de mensagens, canal Realtime ou fluxo de chat implementado na `main`.
+O MVP prevê conversas individuais e em grupo. A entrega de mensagens deve preservar histórico e respeitar participantes autorizados. A stack Supabase + Vercel está adotada pela ADR-003; Supabase Realtime é uma alternativa de serviço dentro dessa direção, mas não há serviço de mensageria, tabela de mensagens, canal Realtime ou fluxo de chat implementado na `main`. A decisão específica permanece Proposed e deve considerar a Q-025, sem alterar a stack por inferência.
 
 ## Problema
 
