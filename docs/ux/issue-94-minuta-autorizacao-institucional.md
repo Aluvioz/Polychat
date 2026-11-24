@@ -1,7 +1,7 @@
 # Issue #94 — Minuta de autorização para sessões de usabilidade
 
 **Tipo:** documento de solicitação, **não enviado**; sem assinatura ou aceite institucional.  
-**Base:** plano de pesquisa v0.3 da PR #152; protótipo de simulação da PR #164; questionário FORD v2 Q1, Q2, Q19, Q21, Q24, Q32 e Q34.  
+**Base:** plano v0.3 da PR #152, aprovado documentalmente e integrado à `main`; protótipo de simulação da PR #164, cujo uso em sessão está sujeito à [decisão metodológica pendente de PO/SQA](./issue-94-decisao-metodologica-proposta.md); questionário FORD v2 Q1, Q2, Q19, Q21, Q24, Q32 e Q34.  
 **Destinatário a confirmar:** gestor responsável da FORD e equipe TI que administrará condições operacionais da pesquisa. O PO pode encaminhar; o plano de escopo já aprovado **não supre autorização de recrutamento e coleta**.
 
 ---
@@ -36,7 +36,7 @@ Solicitamos autorização formal para realizar **sessões de avaliação de usab
 | 7. Quem poderá consultar os registros? | Perfis e prazo de acesso |
 | 8. Qual a retenção e destinação dos dados da pesquisa? | Prazo/critério institucional, com exclusão e comprovação quando aplicável |
 | 9. Qual aviso/consentimento será utilizado? | Texto aprovado; separação entre anotações e eventual gravação |
-| 10. O protótipo clicável pode complementar os wireframes estáticos? | Parecer PO/UI-UX/SQA; versão fixa do instrumento |
+| 10. O protótipo clicável pode complementar os wireframes estáticos? | Decisão formal PO/SQA no [registro proposto](./issue-94-decisao-metodologica-proposta.md), sem alterar a metodologia aprovada por conta própria |
 | 11. Como registrar e aprovar resultados? | Responsável pelo parecer, canal e forma escrita do aceite da pesquisa |
 
 **Condição de início:** somente após todas as decisões relevantes serem documentadas, roteiro/protótipo congelados com versão, orientação aos participantes aprovada e revisões metodológicas correspondentes concluídas.
