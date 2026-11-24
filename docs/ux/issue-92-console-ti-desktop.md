@@ -58,8 +58,8 @@ Os dados nas telas são fictícios; números, nomes e eventos não representam d
 | Criar grupos e adicionar usuários | RF-005, RF-006; RN-007 |
 | Consulta de conversas por TI com governança | RF-016; RN-014; Q-009 |
 | Alertas de mensagens sinalizadas | RF-014, RF-015; RN-012 e RN-013; Q-007 e Q-008 |
-| Marca, navegadores e dispositivos | RN-019; Q-012 e Q-019 |
-| Configurações e permissões específicas | Escopo concreto pendente de definição do PO/TI |
+| Marca, navegadores e dispositivos | Q-012 resolvida; paleta provisória Ford definida em Q-019, com arquivo oficial do logotipo pendente |
+| Configurações | Lista de termos/regras de detecção e quotas individuais/capacidade total de anexos; demais controles fora do escopo sem requisito aprovado | Q-018 / baseline de produto |
 | Log de consultas e mudanças administrativas | Recomendação de auditoria a validar pela TI/Segurança/Jurídico |
 
 ## 6. Pendências para PO, TI, Segurança e Jurídico
@@ -67,10 +67,10 @@ Os dados nas telas são fictícios; números, nomes e eventos não representam d
 - **Governança de consulta:** quem, quando, qual finalidade, justificativa, registro e retenção de conversas e trilhas (**Q-009/Q-010**).
 - **Operações de grupos:** critérios para remover participantes, encerrar grupos ou alterar permissões (**Q-003**).
 - **Alertas:** definição das regras, revisão humana, severidades, encaminhamentos e eventual bloqueio, sem presunção de punição automática (**Q-007/Q-008**).
-- **Configurações:** catálogo real de parâmetros e controles que TI poderá consultar ou editar (**Q-002, Q-013, Q-018**, conforme aplicável).
+- **Configurações:** o escopo aprovado limita a área à lista de termos/regras de detecção e às quotas individuais/capacidade total de anexos. Q-018 está resolvida; não acrescentar controles genéricos sem requisito de produto.
 - **Contas:** credencial inicial, entrega, redefinição e proteção de ações privilegiadas (**Q-005/Q-006**).
 - **Dispositivo:** navegadores e sistemas operacionais homologados, casos de tablet e modos híbridos (**Q-012**).
-- **UI:** design system e ativos oficiais, requisitos de acessibilidade (**Q-019/Q-020**).
+- **UI:** paleta Ford provisória definida em Q-019; arquivo oficial do Ford Oval e eventuais regras corporativas de tipografia ainda dependem de material autorizado. Q-020 não definiu requisitos adicionais específicos de acessibilidade; obrigações aplicáveis permanecem.
 
 ## 7. Revisão e critérios de aceite da Issue #92
 
@@ -92,3 +92,8 @@ Não fechar a issue, marcar critérios como cumpridos ou fazer merge sem aprova�
 - Material separado da experiência de Usuário mobile (#91), para não confundir atribuições de TI/Usuário.
 
 *Documentação de proposta UX/UI elaborada em 17/11/2026, sujeita a revisão.*
+
+
+## Atualização do Product Owner — 20/11/2026
+
+A arquitetura da informação e o catálogo de páginas estão consolidados em [POLY-UX-DEC-001](decisoes-produto-q018-q019.md). Q-018 está resolvida no nível de produto. A área Configurações do console fica limitada à lista de termos/regras de detecção e às quotas de anexos já previstas. A paleta cromática Ford provisória de Q-019 também está documentada em POLY-UX-DEC-001; a entrega do arquivo oficial do logotipo permanece pendente.

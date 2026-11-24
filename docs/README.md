@@ -1,6 +1,6 @@
 # Polychat — Baseline de requisitos (POLY-REQ-001)
 
-**Status:** baseline consolidada na execução da Issue #88, com base na visão POLYCHAT — FORD v0.1 confirmada pelo solicitante. A confirmação do solicitante não equivale à aprovação formal do representante da FORD, PO, liderança técnica ou SQA. Políticas de monitoramento/privacidade, decisões técnicas detalhadas e questões listadas em `08-glossario-e-questoes-em-aberto.md` continuam pendentes.
+**Status:** baseline POLY-REQ-001 v0.5, atualizada em 20/11/2026 com decisões de produto para arquitetura da informação (Q-018) e identidade visual provisória Ford (Q-019). A confirmação de requisitos não equivale a comprovação de implementação, teste ou homologação. Supabase + Vercel permanece como stack adotada e obrigatória conforme ADR-003 Accepted (24/11/2026); a Q-025 avalia a compatibilidade da configuração e do modelo de uso com os requisitos da FORD, sem autorizar substituição da stack por inferência.
 
 ## Navegação
 
@@ -16,7 +16,16 @@
 10. [Baseline consolidada e rastreabilidade da Issue #88](09-baseline-requisitos-mvp.md)
 11. [Índice de decisões arquiteturais (ADRs) — Issue #89](adr/README.md)
 12. [Matriz de autorização e RLS — Issue #100](issue-100-matriz-autorizacao.md)
-13. [Plano de testes e rastreabilidade — Issue #126](qa/issue-126-plano-testes-rastreabilidade.md)
+13. [Política de anexos e proteção antimalware — Issue #117](storage/politica-anexos-e-antimalware.md)
+14. [Decisões de produto Q-018 e Q-019 — arquitetura da informação e identidade visual provisória](ux/decisoes-produto-q018-q019.md)
+15. [Plano de release, operação e gestão de incidentes — Issue #130](infra/issue-130-plano-release-operacao-incidentes.md)
+16. [Plano de testes e rastreabilidade — Issue #126](qa/issue-126-plano-testes-rastreabilidade.md)
+
+## Infraestrutura e deploy
+
+- [Auditoria de ambientes Supabase e Vercel — Issue #96](infra/issue-96-auditoria-ambientes.md)
+- [Auditoria de Preview, produção e rollback — Issue #98](infra/issue-98-deploy-preview-production-rollback.md)
+- [Runbook de smoke test e rollback de aplicação — Issue #98](infra/issue-98-smoke-test-rollback-runbook.md)
 
 ## Como interpretar esta versão
 
@@ -34,3 +43,10 @@ A documentação não cria nem seleciona diagramas UML nesta versão, pois o tip
 ## Decisões arquiteturais
 
 O índice em `adr/README.md` registra o estado e a rastreabilidade das decisões da Issue #89. A presença de uma ADR não significa, por si só, que a decisão foi aprovada pela FORD ou que a implementação está concluída. Consulte o status e as condições de aprovação de cada ADR.
+
+
+## Atualização arquitetural — 24/11/2026
+
+Supabase + Vercel permanece como stack adotada e obrigatória do Polychat, conforme ADR-003 — Accepted. A Q-025 documenta a compatibilidade da configuração e do modelo de uso dessa stack com os requisitos da FORD relativos a controle da infraestrutura, hospedagem, localização, processamento, acesso e responsabilidades operacionais. A Q-025 não autoriza retirar ou substituir a stack por inferência. Consulte a [baseline v0.5](09-baseline-requisitos-mvp.md), o [índice de ADRs](adr/README.md) e a Q-025.
+
+As Issues #96 e #98 permanecem encerradas nos escopos que receberam aceite. Seus registros devem ser preservados e reutilizados somente nesses escopos, sem repetir setup, smoke test ou rollback já aceitos e sem inferir, a partir deles, que todas as integrações, controles ou fluxos funcionais estejam homologados.

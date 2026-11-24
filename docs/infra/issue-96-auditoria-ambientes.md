@@ -1,29 +1,32 @@
 # Issue #96 — Auditoria de ambientes Supabase e Vercel
 
-**Data da auditoria:** 17/11/2026  
-**Base inspecionada:** `main`  
-**Estado:** parcial; projeto Supabase oficial confirmado pelo responsável; projeto Vercel e Preview Deployment da PR #145 observados pelo evento automático do Vercel; finalidade do projeto Supabase por estágio e configuração detalhada dos ambientes ainda não documentadas.
+**Data da auditoria original:** 17/11/2026  
+**Data do aditivo:** 19/11/2026  
+**Base inspecionada na auditoria original:** `main`  
+**Estado atual do registro:** a Issue #96 foi encerrada como concluída em 17/11/2026, após aceite documental da PR #145 e confirmação expressa do responsável/Tech Lead sobre a conclusão das configurações e validações operacionais descritas na issue. Este documento preserva o retrato da auditoria original e acrescenta o registro posterior de encerramento na seção 11; a confirmação do responsável não deve ser confundida com uma nova auditoria administrativa independente de cada configuração.
 
 ## 1. Escopo e critérios originais
 
 Issue #96 — Configurar ambientes Supabase e Vercel.
 
-Critérios de aceite consultados diretamente na issue:
+Critérios de aceite consultados diretamente na issue. A lista abaixo preserva o estado registrado durante a auditoria original, antes do comentário posterior de encerramento:
 
 - [ ] Ambientes segregados; secrets fora do código; acessos mínimos.
 - [ ] Testes relevantes automatizados ou evidência documentada.
 - [ ] Revisão por PR concluída.
 - [ ] Sem regressão nos fluxos relacionados.
 
-Esta auditoria não altera nem amplia os critérios da issue.
+**Nota temporal:** os checkboxes acima são um retrato histórico da auditoria de 17/11/2026 e não representam o status final da issue. Na sequência, o responsável/Tech Lead confirmou a conclusão dos itens da issue e autorizou seu encerramento; consulte a seção 11.
 
 ## 2. Resultado resumido
 
-| Ambiente lógico | Vercel | Supabase | Situação |
+**Nota temporal:** a tabela abaixo registra as evidências e limitações observadas na auditoria original em 17/11/2026. Ela não deve ser lida isoladamente como uma lista de bloqueios ainda abertos após o encerramento autorizado pelo responsável/Tech Lead, registrado na seção 11.
+
+| Ambiente lógico | Supabase | Vercel | Situação observada na auditoria original |
 |---|---|---|---|
-| Desenvolvimento | Projeto Supabase Polyford confirmado pelo responsável como ambiente de desenvolvimento | Projeto Vercel `polyford`; Preview da PR #145 observado como `Ready` | Confirmado quanto à finalidade Supabase e ao preview; configuração administrativa detalhada pendente |
-| Preview/homologação | Preview Vercel da PR #145 observado como `Ready`; não equivale a homologação formal | Polyford é desenvolvimento; projeto Supabase específico para preview/homologação não identificado | Parcial |
-| Produção | Branch `main` indicada pela documentação; deployment de produção não auditado nesta execução | Projeto Supabase de produção não identificado | Pendente |
+| Desenvolvimento | Projeto Polyford, confirmado pelo responsável como ambiente de desenvolvimento | Projeto `polyford`; Preview da PR #145 observado como `Ready` | Projeto Supabase identificado e finalidade confirmada; detalhes administrativos do Vercel não auditados integralmente |
+| Preview/homologação | Projeto específico não identificado na consulta original; Polyford é desenvolvimento | Preview Vercel da PR #145 observado como `Ready`; não equivale por si só a homologação formal | Evidência parcial no retrato de 17/11 |
+| Produção | Projeto específico não identificado na consulta original | Branch `main` indicada na documentação; deployment e domínio não auditados integralmente naquela execução | Limites da auditoria original, posteriormente complementados pelo aceite do responsável/Tech Lead |
 
 A evidência automática do Vercel confirma um Preview Deployment `Ready` para a PR #145, mas não demonstra por si só a segregação de dados entre os estágios nem identifica qual projeto Supabase está conectado a cada deployment.
 
@@ -93,13 +96,15 @@ Nenhuma variável administrativa/service-role foi encontrada no arquivo de exemp
 
 A documentação consultada estabelece:
 
-- ADR-003: Supabase + Vercel como direção tecnológica exigida pela Issue #88, sem homologação de produção.
-- ADR-009: **Proposed**. Propõe ambientes separados, isolamento de variáveis e segredos e promoção controlada, mas aguarda confirmação de projetos, regiões, acessos, gestão de segredos, backup/restore, RPO/RTO e processo de release.
-- ADR-006: aceita somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios.
+- ADR-003: Supabase + Vercel permanece como stack adotada e obrigatória (Accepted, revisão de 24/11/2026). Esta auditoria registra a execução operacional original dos ambientes; não comprova, isoladamente, a compatibilidade integral da configuração com os requisitos da FORD nem a homologação atual de produção. Essa validação permanece na Q-025.
+- ADR-009: **Proposed**. Ambientes isolados e promoção controlada permanecem requisitos; a solução operacional deve ser compatibilizada com a exigência de infraestrutura sob controle da FORD.
+- ADR-006: o aceite cobre somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios nem comprova integração/homologação de produção. O uso da plataforma Supabase como parte da stack adotada é estabelecido pela ADR-003.
 
-Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em decisões definitivas nem cria três projetos Supabase por presunção.
+O aceite da Issue #96 atesta a conclusão de seu escopo operacional original. A FORD v2 prevalece para a arquitetura-alvo e impede presumir autorização de serviços externos para dados reais da organização.
 
 ## 7. Validações e evidências
+
+**Nota temporal:** os resultados a seguir descrevem as verificações da auditoria original e são complementados pelo registro posterior de encerramento na seção 11.
 
 | Verificação | Resultado | Observação |
 |---|---|---|
@@ -113,20 +118,26 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 | Proteção da branch e required checks | Não validado | Exige consulta administrativa ao GitHub |
 | Proteção local de arquivos .env | Validado documentalmente | Regra presente em `.gitignore`; não equivale a auditoria histórica de todos os commits |
 | Segredos fora do código | Parcial | Exemplo não contém segredos; secrets externos e histórico completo não auditados |
-| CI da PR #145 | Aprovado na consulta | Dois workflow runs `CI` associados ao commit `6df34ab1...` concluíram com `success`; isso valida os workflows executados, não testes de integração hospedada |
+| CI da PR #145 | Aprovado | Dois workflow runs `CI` associados ao HEAD `6808625b5c486b52fa95caa922637276f8497235` concluíram com `success` ([run 44183081305](https://github.com/Aluvioz/Polychat/actions/runs/44183081305), [run 44183081247](https://github.com/Aluvioz/Polychat/actions/runs/44183081247)); isso valida os workflows executados, não testes de integração hospedada |
+| Revisão independente da PR #145 | Aprovada | Review `APPROVED` registrada antes da integração da PR à `main` em 17/11/2026 |
+| Encerramento da Issue #96 | Concluído | Responsável/Tech Lead confirmou a conclusão operacional e autorizou o encerramento em 17/11/2026; ver seção 11 |
 | Testes de integração Supabase/Vercel | Não executados | Não há associação de ambiente Supabase por estágio confirmada |
 | Migrations | Não aplicável nesta issue | Nenhuma migration foi aplicada |
-| Regressão funcional | Não validada | Esta alteração é documental; fluxos hospedados não foram exercitados |
+| Regressão funcional | Não executada independentemente nesta auditoria documental | A auditoria não exercitou fluxos hospedados; no encerramento, o responsável/Tech Lead atestou a conclusão das validações operacionais previstas na issue |
 
-## 8. Pendências e confirmações necessárias
+## 8. Pendências e confirmações registradas na auditoria original (17/11/2026)
 
-1. **Segregação Supabase:** Polyford está confirmado como desenvolvimento. Permanecem não identificados os projetos Supabase de homologação/preview e produção, se existentes. A aprovação do Tech Lead foi informada pelo responsável; isso não substitui a identificação técnica dos projetos e conexões por ambiente.
-2. **Vercel:** há evidência de Preview Deployment `Ready` para esta PR. Organização, branch de produção efetiva, domínios, variáveis por escopo e ligação Supabase de cada estágio não foram auditados administrativamente. Não houve alteração no Vercel.
-3. **Secrets e Variables do GitHub:** verificar nomes, escopos e permissões no GitHub UI sem revelar valores. A integração utilizada não oferece leitura das famílias de endpoints de secrets/variables.
-4. **ADR-009:** a aprovação global do Tech Lead foi informada pelo responsável, mas a ADR enumera decisões operacionais específicas (projetos/regiões, identidades autorizadas, backup/restore, RPO/RTO, janela de manutenção, release e rollback). Não vou marcar a ADR como `Accepted` sem registrar essas definições concretas e a evidência da aprovação.
-5. **Revisão:** PR #145 ainda não tem reviews registradas. É necessária revisão independente por pessoa diferente do autor antes do merge.
+Os itens abaixo preservam as limitações identificadas no momento da inspeção. **Eles não devem ser interpretados automaticamente como pendências ainda abertas da Issue #96:** no comentário posterior de encerramento, o responsável/Tech Lead declarou concluídas as configurações e validações operacionais descritas na issue e considerou resolvidas, para o escopo da #96, as pendências apontadas na auditoria. A decisão está registrada na seção 11.
 
-## 9. Limites respeitados
+1. **Segregação Supabase:** na auditoria original, Polyford estava confirmado como desenvolvimento, mas os projetos/conexões específicos de homologação e produção não haviam sido identificados no material inspecionado. O encerramento posterior registra a confirmação do responsável de que as configurações e validações operacionais da issue foram concluídas; este aditivo não inventa project refs ou configurações que não constam do registro documental.
+2. **Vercel:** a auditoria original observou um Preview Deployment `Ready` e registrou a confirmação do responsável de que o Vercel estava funcionando. O encerramento posterior ratificou a conclusão das validações operacionais no escopo da issue; não se afirma que tenha ocorrido nova inspeção administrativa independente neste aditivo.
+3. **Secrets e Variables do GitHub:** a auditoria original não teve acesso administrativo aos valores/escopos externos. O responsável declarou as pendências da issue resolvidas no encerramento. Este documento não publica valores secretos nem transforma a confirmação em inventário independente de secrets ou permissões.
+4. **ADR-009:** permanece `Proposed` no índice e no próprio arquivo da ADR consultados nesta atualização. A ADR trata de decisões arquiteturais e operacionais mais amplas que a Issue #96. O encerramento da #96 não altera automaticamente o status da ADR; acompanhar sua revisão no contexto da Issue #89 e das atividades relacionadas, incluindo a #98.
+5. **Revisão da PR #145:** resolvida. A PR recebeu review `APPROVED` e foi integrada à `main` em 17/11/2026. A aprovação foi restrita à documentação e a revisão independente está registrada na própria PR.
+
+## 9. Limites respeitados na auditoria original
+
+Os limites abaixo descrevem as ações da auditoria original; não restringem a atualização documental por aditivo realizada em 19/11/2026.
 
 - Nenhum projeto Supabase foi criado, renomeado, pausado ou modificado.
 - Nenhum domínio, branch de produção ou configuração Vercel foi alterado; a operação do Vercel foi aceita com base na confirmação do responsável.
@@ -137,4 +148,79 @@ Como ADR-009 permanece Proposed, esta auditoria não converte suas propostas em 
 
 ## 10. Status da Issue #96
 
-**Parcialmente concluída.** Polyford foi confirmado como projeto Supabase oficial de desenvolvimento; o projeto Vercel `polyford` e um Preview Deployment `Ready` para a PR #145 foram observados; dois workflows CI associados ao commit anterior concluíram com sucesso. Permanecem sem evidência suficiente a segregação Supabase por estágio, a auditoria administrativa de secrets/variables e permissões, as definições operacionais específicas da ADR-009 e a revisão independente da PR. A Issue #96 não deve ser fechada até que seus critérios originais sejam atendidos e revisados.
+**Concluída e encerrada em 17/11/2026.** A PR #145 foi aprovada por revisão independente e integrada à `main`. No comentário de encerramento, o responsável/Tech Lead declarou que as configurações e validações operacionais dos ambientes Supabase e Vercel descritas na issue estavam concluídas, que as pendências registradas na auditoria eram consideradas resolvidas conforme essa confirmação e autorizou o encerramento da issue como concluída.
+
+A conclusão da #96 está sustentada pelo aceite documental da PR #145 e pela confirmação expressa do responsável/Tech Lead. A auditoria técnica original não foi reexecutada integralmente depois desse comentário; por isso, os limites históricos de observação permanecem registrados neste documento, sem serem apresentados como bloqueios abertos da issue encerrada.
+
+O status `Proposed` da ADR-009 permanece independente e deve ser acompanhado no contexto da Issue #89 e das issues operacionais relacionadas. A conclusão da #96 não representa, por si só, homologação completa do produto nem autorização geral para release em produção.
+
+## 11. Aditivo de encerramento e aceite posterior
+
+**Data do aditivo:** 19/11/2026  
+**Evento registrado:** encerramento autorizado em 17/11/2026  
+**Issue:** [#96 — Configurar ambientes Supabase e Vercel](https://github.com/Aluvioz/Polychat/issues/96)  
+**Pull Request:** [#145 — Auditoria de ambientes](https://github.com/Aluvioz/Polychat/pull/145)
+
+### 11.1 Registro formal do encerramento
+
+Após a revisão documental da PR #145, o responsável/Tech Lead registrou na Issue #96:
+
+> Encerramento autorizado pelo responsável/Tech Lead do Polychat, que atesta que as configurações e validações operacionais dos ambientes Supabase e Vercel descritas nesta issue já foram concluídas. A auditoria documental da PR #145 foi revisada e aprovada; as pendências registradas na auditoria são consideradas resolvidas conforme confirmação do responsável. Issue encerrada como concluída.
+
+[Consultar comentário de encerramento](https://github.com/Aluvioz/Polychat/issues/96#issuecomment-6963142263).
+
+A issue foi encerrada como concluída em **17/11/2026**. Os quatro critérios de aceite aparecem marcados como concluídos no registro final da issue.
+
+### 11.2 Evidências de revisão e CI
+
+- A PR #145 recebeu revisão independente com resultado **APPROVED**, com aprovação restrita à qualidade e precisão do documento de auditoria.
+- A PR #145 foi integrada à `main` em **17/11/2026**.
+- Dois workflows `CI` associados ao HEAD `6808625b5c486b52fa95caa922637276f8497235` concluíram com sucesso: [run 44183081305](https://github.com/Aluvioz/Polychat/actions/runs/44183081305) e [run 44183081247](https://github.com/Aluvioz/Polychat/actions/runs/44183081247).
+- O evento automático da Vercel para a PR #145 registrou Preview Deployment como **Ready**. Esse sinal é evidência do preview daquela PR, não uma auditoria independente de cada configuração administrativa.
+
+### 11.3 Alcance e limites do aceite
+
+O encerramento registra uma confirmação expressa do responsável/Tech Lead de que os itens operacionais abrangidos pela Issue #96 estavam concluídos. Essa confirmação resolve, para fins de gestão e estado da issue, as pendências que o responsável declarou resolvidas.
+
+Este registro **não** significa que:
+- a auditoria original tenha sido refeita com acesso administrativo completo após o encerramento;
+- project refs, domínios, variáveis ou permissões não expostos no relatório tenham sido inventariados neste documento;
+- a ADR-009 tenha mudado de `Proposed` para `Accepted`;
+- as demais decisões de arquitetura, segurança, backup, RPO/RTO, release ou rollback fora do escopo da #96 estejam aprovadas;
+- o produto inteiro tenha sido homologado ou esteja automaticamente liberado para produção.
+
+### 11.4 Encaminhamento documental
+
+- Manter a Issue #96 encerrada; não reabri-la apenas para refletir esta atualização de histórico.
+- Considerar a PR #145 como a entrega documental originalmente aceita.
+- Manter as decisões mais amplas da ADR-009 no fluxo da Issue #89 e das issues operacionais pertinentes, especialmente a #98.
+- Atualizar este relatório por aditivo, preservando as observações e limitações históricas da auditoria de 17/11/2026.
+
+
+## 12. Aditivo — compatibilização com a FORD v2
+
+**Data:** 19/11/2026  
+**Fonte:** baseline POLY-REQ-001 v0.4 e ADRs revisadas após o questionário FORD v2.
+
+### 12.1 Preservação do encerramento
+
+A Issue #96 permanece **encerrada como concluída**. O comentário final do responsável/Tech Lead ([encerramento da #96](https://github.com/Aluvioz/Polychat/issues/96#issuecomment-6963142263)) atesta que as configurações e validações operacionais dos ambientes Supabase e Vercel abrangidas pela issue foram concluídas e autoriza seu fechamento. A confirmação resolve o escopo de gestão da issue conforme a autoridade do responsável.
+
+A tabela e as limitações das seções anteriores são o retrato da auditoria original. A inversão das colunas Supabase/Vercel foi corrigida nesta revisão; não se inventaram project refs, nomes de secrets, domínios ou detalhes administrativos não disponíveis no registro.
+
+### 12.2 Efeito da FORD v2 sobre a arquitetura anterior
+
+A FORD v2 estabelece requisitos de controle sobre hospedagem, armazenamento e processamento de dados, localização e acesso. A ADR-003 — Accepted mantém Supabase + Vercel como stack adotada e obrigatória. A compatibilidade da configuração e do modelo de uso com esses requisitos deve ser avaliada na Q-025; a restrição da FORD não reclassifica, por si só, a ADR-003.
+
+O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser entendido como **registro da configuração e validação operacional do escopo original**. O encerramento da issue comprova o aceite daquele escopo, mas não substitui a avaliação técnica de compatibilidade/configuração e as evidências atuais exigidas na Q-025 nem equivale à homologação integral de produção.
+
+### 12.3 Limites de evidência
+
+- O responsável/Tech Lead atestou a conclusão operacional da issue; a auditoria documental original não foi refeita com acesso administrativo completo a todos os painéis após o encerramento.
+- A confirmação do responsável não fornece, neste relatório, inventário independente de todos os projetos, domínios, variáveis ou permissões.
+- Não se afirma que dados reais da FORD tenham sido armazenados ou processados nesses serviços; a presença ou ausência desses dados não foi determinada por este aditivo.
+- Não se altera o status da Issue #96 nem se declara a ADR-009 aprovada.
+
+### 12.4 Encaminhamento
+
+Manter a Issue #96 fechada e seu aceite preservado. Tratar a validação e eventual adequação da configuração dos ambientes Supabase/Vercel como parte da Q-025, preservando a stack adotada pela ADR-003. Qualquer proposta de substituição deverá seguir o processo formal de mudança arquitetural e avaliação de impacto, sem reabrir a issue histórica apenas para atualizar a documentação.

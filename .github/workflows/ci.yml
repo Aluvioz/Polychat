@@ -36,3 +36,30 @@ jobs:
 
       - name: Build Next.js application
         run: npm run build
+
+      - name: Smoke test built Next.js application
+        run: |
+          npm run start > /tmp/polychat-next-start.log 2>&1 &
+          server_pid=$!
+          cleanup() {
+            kill "$server_pid" 2>/dev/null || true
+            wait "$server_pid" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://127.0.0.1:3000/ --output /tmp/polychat-home.html 2>/dev/null; then
+              if grep --fixed-strings --quiet "PLATAFORMA DE COMUNICAÇÃO INTERNA" /tmp/polychat-home.html; then
+                echo "Smoke test passed: / returned the expected institutional page."
+                exit 0
+              fi
+              echo "HTTP succeeded, but the expected page marker was not found."
+              cat /tmp/polychat-next-start.log
+              exit 1
+            fi
+            sleep 2
+          done
+
+          echo "Next.js server did not become ready within 60 seconds."
+          cat /tmp/polychat-next-start.log
+          exit 1

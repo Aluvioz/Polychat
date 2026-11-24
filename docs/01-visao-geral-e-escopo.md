@@ -2,108 +2,210 @@
 
 ## 1.1 Contexto do problema
 
-O cliente pretende disponibilizar à FORD uma aplicação própria de comunicação corporativa, para reduzir a dependência de aplicativos de mensagens de terceiros e manter sob gestão da organização as contas, os grupos e o acesso às conversas. A motivação relatada foi a preocupação com situações de exposição de mensagens e dados quando a comunicação ocorre em plataformas externas.
+A FORD pretende disponibilizar uma aplicação própria de comunicação corporativa para o setor técnico, mantendo sob sua administração as contas, os grupos, as mensagens, os anexos e o monitoramento de segurança. A motivação informada é reduzir a dependência de aplicativos externos de mensagens e manter os dados e a operação do Polychat sob controle da organização.
 
-A existência de uma aplicação própria, por si só, não impede o cumprimento de ordens judiciais ou solicitações legalmente válidas dirigidas à FORD ou a fornecedores de infraestrutura. Também não garante que a organização seja previamente notificada sobre toda solicitação. Essa expectativa precisa ser revista com as áreas jurídica, de segurança e de infraestrutura e não é tratada como resultado garantido do software.
+A aplicação deve atender inicialmente 25 usuários finais do setor técnico, além da equipe de TI da FORD, estimada em 2 a 3 administradores. Esse público representa uma parcela restrita dos aproximadamente 900 funcionários da empresa. Não há previsão de expansão no escopo atual; eventual extensão a outros níveis ou setores será avaliada após a fase inicial.
 
 ## 1.2 Propósito deste documento
 
-Registrar uma linha de base inicial, clara e verificável, para orientar descoberta, planejamento, desenvolvimento e testes do Polychat. A versão separa informações confirmadas, detalhamentos derivados, recomendações e decisões ainda pendentes. Não substitui validação do cliente, análise jurídica, arquitetura de segurança ou planejamento de projeto.
+Registrar a visão, as fronteiras, os atores, as premissas e as restrições do produto, servindo de referência para especificação, planejamento, desenvolvimento, testes e homologação.
+
+Esta revisão incorpora o questionário atualizado da FORD e os alinhamentos complementares do PO com Desenvolvimento. Os limites de armazenamento, as regras e severidades dos alertas, as metas de desempenho, a proteção de credenciais, a gestão de chaves, a política detalhada de retenção, os critérios de homologação e o isolamento dos ambientes são considerados requisitos completos e alinhados; não devem ser reabertos como lacunas nesta especificação.
 
 ## 1.3 Visão do produto
 
-Polychat é uma aplicação web de comunicação interna da FORD. A experiência dos usuários deve ser simples, com autenticação e uma área de conversas recentes, em modelo de interação semelhante a aplicativos conhecidos de mensagens. O uso inicial foi informado para 25 pessoas do nível técnico da organização. O acesso será segmentado por dois perfis: **Usuário** e **TI**.
+Polychat é uma aplicação web de comunicação interna da FORD, com duas experiências:
+- **Usuário:** interface de comunicação acessada exclusivamente por celular.
+- **TI:** console administrativo acessado exclusivamente por computador.
+
+A experiência do Usuário deve apresentar as conversas mais recentes após o login, com mensagens de texto, conversas individuais e grupos administrados pelo TI. A aplicação também deve permitir anexar arquivos JPEG e PDF, acompanhar leituras, identificar mensagens suspeitas e sincronizar mensagens após reconexão.
+
+O console de TI concentra o gerenciamento de contas e grupos, consulta e exportação de conversas, administração de anexos, fila de alertas, configurações e auditoria.
 
 ## 1.4 Público-alvo e atores
 
-| Ator / stakeholder | Descrição | Necessidades conhecidas |
+| Ator / stakeholder | Descrição | Responsabilidades e necessidades |
 |---|---|---|
-| Usuário | Funcionário da FORD fora da área de TI, independentemente do cargo corporativo. | Conversar com qualquer outro usuário ativo; utilizar grupos dos quais participe. |
-| TI | Pessoa alocada à área de TI e com perfil administrativo. | Criar/desativar contas, criar grupos, adicionar usuários, administrar segurança, receber alertas e consultar conversas. |
-| Patrocinador / representante do cliente | Representante da FORD ainda não identificado. | Aprovar escopo, política de monitoramento, riscos e critérios de aceite. |
-| Product Owner | Papel da equipe de projeto. Responsável nominal a definir. | Ordenar o backlog e validar a especificação com o cliente. |
-| Líder técnico e equipe de desenvolvimento | Papéis técnicos previstos no contexto acadêmico. | Definir arquitetura e implementar requisitos aprovados. |
-| QA | Responsável por verificação e testes, a definir. | Transformar critérios de aceitação em casos de teste. |
+| Usuário | 25 funcionários finais do setor técnico, com perfil Usuário. | Autenticar-se, conversar individualmente e em grupos dos quais participe, anexar arquivos permitidos, consultar histórico e indicadores de leitura. |
+| TI | Equipe reduzida da FORD, estimada em 2 a 3 administradores, fora do total de 25 usuários finais. | Administrar contas e grupos, configurar segurança, monitorar mensagens suspeitas, consultar/exportar conversas, administrar anexos, consultar e gerenciar registros de auditoria e operar o ambiente. |
+| Gestor da FORD | Fábio Silva Cerqueira, representante e gestor informado pelo cliente. | Aprovar decisões de negócio, alterações de escopo e prazo, identidade visual, orçamento, homologação funcional e Go/No-Go. |
+| Product Owner | Responsável de produto do Polychat. | Consolidar necessidades da FORD, manter requisitos e rastreabilidade, priorizar backlog e validar critérios de aceite. |
+| Desenvolvimento / liderança técnica | Equipe responsável pela solução. | Projetar, implementar e validar os requisitos funcionais e não funcionais alinhados. |
+| TI da FORD | Equipe responsável pela infraestrutura e operação. | Administrar credenciais, segredos, ambientes, operação, recuperação e controles técnicos sob responsabilidade da FORD. |
 
-## 1.5 Escopo previsto para a primeira versão
+Todos os administradores do perfil TI possuem os mesmos poderes administrativos. Não existe administrador principal nem exigência de aprovação de uma segunda pessoa para operações privilegiadas. A FORD informou que não possui uma área de Segurança da Informação separada; a responsabilidade por segurança fica com o TI. O cliente confirmou confiança na equipe de TI; os riscos relacionados a esse modelo foram considerados avaliados pelo projeto.
 
-### Incluído, conforme informações recebidas
+## 1.5 Escopo do MVP
 
-- Aplicação web destinada ao uso interno da FORD.
-- Público inicial de 25 pessoas do nível técnico; a distribuição entre os perfis Usuário e TI ainda não foi informada.
-- Dois perfis: Usuário e TI. Não há diferenciação de permissões entre cargos corporativos dentro do perfil Usuário.
-- Autenticação por identificador de usuário e senha criados pelo TI.
-- Administração centralizada pelo TI: criação e desativação de contas, criação de grupos e inclusão de pessoas em grupos.
-- Conversas individuais entre usuários ativos e conversas em grupo; o documento de visão confirma que membros incluídos pelo TI podem enviar mensagens nos grupos.
-- Listagem de conversas recentes e interface simples.
-- Mensagens de texto e anexos PDF/JPEG.
-- Análise automática de mensagens consideradas suspeitas e alerta ao TI.
-- Possibilidade de o TI consultar qualquer conversa.
-- Acesso do perfil Usuário por celular e do perfil TI por computador.
-- Identidade visual alinhada à Ford, com predominância de azul e branco; códigos oficiais de cor ainda não foram fornecidos.
+### Incluído
 
-### Fora do escopo informado para a primeira versão
+- Aplicação web de comunicação corporativa para uso interno da FORD.
+- 25 usuários finais do setor técnico, além de aproximadamente 2 a 3 administradores TI.
+- Perfis de aplicação Usuário e TI.
+- Criação de contas exclusivamente pelo TI, incluindo contas TI.
+- Identificador de acesso como nome de usuário definido pelo TI, único na organização e alterável pelo TI a qualquer momento.
+- Senhas criadas pelo TI e entregues individualmente junto ao link de acesso; sem obrigatoriedade de troca no primeiro acesso e sem expiração periódica.
+- Recuperação de senha realizada exclusivamente pelo TI.
+- Desativação e reativação de contas pelo TI, com revogação imediata de sessões e preservação do histórico.
+- Conversas individuais e em grupos criados e administrados pelo TI.
+- Inclusão e remoção de participantes pelo TI; a remoção revoga imediatamente o acesso do participante às mensagens e aos anexos anteriores do grupo.
+- Mensagens de texto, sem edição ou exclusão pelo Usuário.
+- Edição e exclusão de mensagens pelo TI, a qualquer momento, com registro em auditoria.
+- Confirmação de leitura, horário de leitura e quantidade de mensagens não lidas.
+- Histórico sem limite temporal próprio, sujeito à política de retenção definida para o projeto, com carregamento paginado das mensagens mais recentes primeiro.
+- Sincronização em tempo real e recuperação automática das mensagens pendentes após desconexão normal, sem perda de mensagens confirmadas pelo servidor.
+- Anexos exclusivamente JPEG e PDF, com até 10 MB por arquivo e até 5 arquivos por mensagem.
+- Seleção de JPEG já existente na galeria do celular, sem captura de foto, gravação de vídeo ou áudio pelo aplicativo.
+- Remoção de metadados de imagens, incluindo localização GPS.
+- Análise antimalware de anexos antes da disponibilização; anexos permanecem bloqueados quando o scanner está indisponível ou o resultado é inconclusivo.
+- Possibilidade de liberação administrativa de qualquer arquivo pelo TI, conforme decisão expressa da FORD; usuários não podem contornar a análise.
+- Links temporários com validade máxima de 5 minutos e revogação imediata quando o acesso do participante for removido.
+- Detecção automática de mensagens suspeitas, incluindo palavrões, por regras/lista de termos mantida pelo TI, sem análise contextual e sem IA de terceiros.
+- Fila administrativa de alertas com severidades baixa, média e alta e prazos de resposta definidos.
+- Consulta de qualquer conversa pelo TI a qualquer momento, sem justificativa ou autorização prévia de outra pessoa.
+- Exportação de conversas pelo TI a qualquer momento, com registro em auditoria.
+- Aviso de monitoramento apresentado aos funcionários no primeiro acesso.
+- Auditoria de operações administrativas e de segurança conforme o catálogo estabelecido pela FORD.
+- Criptografia em trânsito e em repouso, sem criptografia ponta a ponta; o servidor pode acessar o conteúdo para as funções de monitoramento e administração previstas.
+- Acesso do Usuário somente por celular e do TI somente por computador.
+- Interface exclusivamente em português, com paleta Ford provisória definida pelo PO: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco e neutros. O Ford Oval só pode ser aplicado a partir de arquivo oficial autorizado.
+- Indicador de mensagens não lidas dentro do aplicativo; sem notificações push ou notificações do navegador.
 
-- Uso por fornecedores, parceiros, agentes externos ou público geral.
-- Cadastro aberto, convite de novos participantes ou autoatendimento de criação de conta.
-- Integrações com outros aplicativos ou serviços externos.
-- Chamadas de áudio/vídeo e gravação de áudio/vídeo.
-- Uso do perfil Usuário em computador e uso do perfil TI em celular.
-- Expansão para os demais funcionários da organização sem nova decisão de escopo.
+### Fora do escopo inicial
 
-A política de captura de fotos precisa de esclarecimento porque JPEG foi permitido como formato de anexo, mas o cliente também declarou que não deseja permitir tirar fotos dentro da aplicação.
+- Expansão imediata para os setores operacional e estratégico ou para os demais funcionários da FORD.
+- Uso por fornecedores, parceiros, prestadores ou público externo.
+- Cadastro aberto, autoinscrição ou convite de usuários por Usuários comuns.
+- Aplicativos nativos instaláveis para Android, iOS ou desktop; o produto contratado é uma aplicação web.
+- Chamadas de voz/vídeo, mensagens de áudio, gravação de áudio/vídeo e captura de fotos pelo aplicativo.
+- Formatos de anexos diferentes de JPEG e PDF.
+- Notificações push e notificações do navegador.
+- Integrações com outros aplicativos ou serviços de comunicação externos.
 
-## 1.6 Premissas e restrições
+## 1.6 Regras centrais de negócio
 
-### Informações tratadas como confirmadas
+### Contas e autenticação
 
-1. A aplicação será web e destinada somente à FORD.
-2. O primeiro público informado é de 25 pessoas do nível técnico, dentro de uma organização com cerca de 900 funcionários.
-3. Existem apenas dois perfis de aplicação: Usuário e TI.
-4. O TI é responsável pela administração e os usuários comuns apenas utilizam os recursos de comunicação.
-5. Não haverá integrações com outros aplicativos nesta versão.
-6. Segurança tem prioridade sobre velocidade e privacidade individual no contexto corporativo, sem afastar a necessidade de governança, transparência e cumprimento das obrigações legais aplicáveis.
-7. O orçamento informado foi de R$ 450.000,00. Não foi esclarecido se é teto aprovado, estimativa ou orçamento global do projeto.
+- Somente TI cria contas, inclusive contas com perfil TI.
+- Todos os TIs possuem os mesmos poderes administrativos.
+- O identificador é um nome de usuário único na organização, definido e alterável somente pelo TI.
+- A senha é criada pelo TI, enviada individualmente e não precisa ser trocada no primeiro acesso.
+- Não existe expiração periódica de senha nem MFA exigido pela FORD.
+- Recuperação de senha, reativação e desativação são operações exclusivas do TI.
+- Desativação encerra imediatamente as sessões e revoga os acessos; o histórico é preservado.
 
-### Restrições
+### Conversas, grupos e mensagens
 
-- Não oferecer convites nem cadastro realizado pelo usuário.
-- Não oferecer funções de captura/gravação de áudio e vídeo.
-- Aceitar somente PDF e JPEG como formatos de arquivo informados.
-- Restringir o tipo de dispositivo conforme o perfil.
-- Não introduzir hierarquia de permissões baseada no cargo corporativo do usuário comum.
+- Usuários não podem sair voluntariamente de grupos.
+- Somente TI cria, encerra, desativa e reativa grupos, além de incluir e remover integrantes.
+- A remoção de integrante bloqueia imediatamente o acesso às mensagens e anexos anteriores daquele grupo.
+- Usuários não editam nem excluem mensagens.
+- TI pode consultar qualquer conversa, sem justificativa ou autorização prévia, e pode exportar conversas.
+- TI pode alterar ou excluir mensagens a qualquer momento; as operações administrativas previstas devem ser registradas em auditoria.
+- Mensagens confirmadas pelo servidor são persistidas; a reconexão normal recupera automaticamente as mensagens pendentes.
 
-### Premissas de trabalho a validar
+### Anexos
 
-- Membros incluídos pelo TI podem enviar mensagens nos grupos (POLYCHAT — FORD v0.1, seção 4.1). Regras de saída, remoção de mensagens e encerramento do grupo permanecem pendentes.
-- A aplicação deve apresentar os alertas dentro da área administrativa do TI, evitando pressupor integração externa; o canal e a urgência dos alertas ainda precisam ser aprovados.
-- O público inicial de 25 pessoas é do setor técnico. A composição entre Usuário e TI, inclusive se os administradores estão incluídos nesse número, permanece pendente.
-- A definição do perfil Usuário abrange funcionários fora de TI independentemente do cargo, mas isso não amplia automaticamente o público inicial de 25 pessoas do setor técnico.
+- Somente JPEG e PDF são aceitos; PDF protegido por senha não é aceito.
+- Limite de 10 MB por arquivo e até 5 arquivos por mensagem.
+- Limites por usuário e capacidade total são definidos pelo TI; não há limite específico por conversa.
+- O envio é bloqueado quando um limite é excedido, com informação do motivo ao usuário.
+- Todo arquivo passa por análise antimalware antes de ser disponibilizado.
+- Indisponibilidade ou resultado inconclusivo do scanner mantém o anexo bloqueado; mensagens de texto continuam funcionando.
+- TI pode liberar qualquer arquivo a qualquer momento; Usuários não podem contornar a análise.
+- Links temporários duram no máximo 5 minutos, mas devem ser revogados imediatamente quando o acesso do participante é removido.
+- TI pode baixar anexos durante investigações, com registro em auditoria.
 
-## 1.7 Dependências
+### Monitoramento e alertas
 
-- Identificação do patrocinador/representante da FORD e dos responsáveis de TI.
-- Definição da infraestrutura de hospedagem, operação, backup e recuperação.
-- Definição de política de segurança, retenção, auditoria e acesso administrativo às conversas.
-- Definição de critérios de detecção de conteúdo suspeito e tratamento de alertas.
-- Validação das regras de tratamento de dados e monitoramento pelas áreas competentes da FORD.
-- Definição dos dispositivos, sistemas operacionais e navegadores homologados.
+- Mensagens suspeitas, incluindo palavrões definidos em lista mantida pelo TI, são detectadas automaticamente por regras.
+- Não há análise contextual nem uso de IA de terceiros.
+- Conteúdo de mensagens e anexos não pode ser enviado a serviços externos.
+- Os alertas aparecem em fila administrativa no console do TI.
+- A equipe de TI analisa os alertas; o encerramento não exige justificativa.
+- Prazos por severidade: alta, imediatamente e em até 1 hora; média, até 1 dia útil; baixa, até 3 dias úteis.
+- O questionário não definiu bloqueio automático de mensagens como consequência da detecção; a função confirmada é alertar o TI.
 
-## 1.8 Riscos relevantes
+### Auditoria, criptografia e dados
 
-| ID | Risco | Consequência possível | Tratamento recomendado / validação |
-|---|---|---|---|
-| RSK-01 | “Segurança máxima” não possui definição mensurável. | Expectativas impossíveis de testar ou garantir. | Aprovar modelo de ameaças, controles, critérios de aceite e testes de segurança. |
-| RSK-02 | Aplicação própria pode ser confundida com imunidade a ordens legais. | Expectativa de confidencialidade ou notificação que a solução não pode garantir. | Revisão jurídica e contratual; explicitar limites de infraestrutura e solicitações legais. |
-| RSK-03 | TI pode consultar todas as conversas sem política de acesso definida. | Acesso excessivo, uso indevido e risco de exposição interna. | Aprovar finalidade, autorização, registro de acesso, revisão e política de transparência. |
-| RSK-04 | Detecção de palavrões/conteúdo suspeito pode gerar falsos positivos. | Alertas excessivos ou tratamento inadequado de mensagens. | Definir vocabulário, contexto, níveis de severidade, revisão humana e fluxo de resposta. |
-| RSK-05 | Envio de senha inicial por canal não definido. | Comprometimento de credenciais. | Aprovar canal seguro, senha temporária, expiração e troca no primeiro acesso. |
-| RSK-06 | Bloqueio por tipo de dispositivo pode ser contornado por identificação superficial do navegador. | Usuário pode acessar ambiente incompatível com o perfil. | Definir política de detecção e controles de autorização no servidor; testar evasões. |
-| RSK-07 | Limite/tamanho de anexos e retenção não definidos. | Custos, indisponibilidade ou armazenamento excessivo. | Definir limites, quotas, retenção, backup e descarte. |
-| RSK-08 | Capacidade simultânea não está definida. | Desempenho inadequado em uso concorrente. | Definir número de sessões simultâneas e testes de carga. |
+- Ações administrativas auditadas incluem login administrativo, criação e alteração de usuários, desativação e reativação de contas, criação e encerramento de grupos, inclusão e remoção de participantes, consulta de conversas, consulta de alertas, download de anexos e alteração de configurações.
+- Somente TI consulta e gerencia os registros de auditoria. Usuários não podem alterá-los ou excluí-los.
+- Registros administrativos e de auditoria não possuem exclusão automática; permanecem enquanto o sistema operar, conforme política detalhada alinhada com Desenvolvimento.
+- Mensagens, anexos, alertas, logs de auditoria e registros administrativos não possuem exclusão automática e são mantidos enquanto o sistema operar. Somente TI autoriza exclusões e decide quando preservar ou excluir dados em investigações.
+- Após exclusão autorizada, os dados também devem desaparecer dos backups ao término do ciclo de retenção das cópias. Backups possuem retenção de 12 meses; o descarte é comprovado por registro de auditoria emitido pelo TI.
+- Criptografia em trânsito e em repouso; sem E2EE. As chaves são administradas pelo servidor sob responsabilidade do TI da FORD.
+- O aviso de monitoramento é apresentado no primeiro acesso.
+- A FORD definiu o TI como canal operacional para solicitações de acesso, correção ou exclusão de dados. Solicitações legais dirigidas à FORD ou a fornecedores de infraestrutura são tratadas pela própria FORD, que espera ser informada quando isso for juridicamente permitido. O cliente informou não possuir política corporativa específica de privacidade para este programa, não prever participação do Jurídico e não considerar privacidade/LGPD prioridade do projeto. Essas respostas são registradas como posicionamento do cliente, sem significar dispensa de obrigações legais aplicáveis.
 
-## 1.9 Limites da especificação e arquitetura da Issue #88
+## 1.7 Infraestrutura, operação e restrições tecnológicas
 
-O documento de visão v0.1 não escolhe stack, banco de dados ou provedor de hospedagem. Para a execução da Issue #88, o escopo da issue determina Supabase + Vercel como arquitetura de referência. Essa determinação é uma restrição de execução desta issue, não uma decisão arquitetural detalhada do documento de visão nem autorização para presumir configuração, serviços, regiões, políticas de segurança ou implantação já aprovadas. O repositório ainda não contém aplicação Vercel/Next.js integrada na branch principal; a integração efetiva permanece pendente de implementação e validação.
+A infraestrutura deve permanecer sob controle da FORD, preferencialmente em território brasileiro. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da FORD. Bibliotecas de código e atualizações de software que não acessem dados são permitidas.
 
-Esta especificação não define algoritmo criptográfico, configuração operacional, prazo, estimativa de esforço ou solução de detecção automática. Tais decisões dependem de análise técnica e/ou aprovação específica.
+Hospedagem, banco de dados, autenticação, armazenamento de anexos, antimalware, monitoramento, segredos e operação devem respeitar essa fronteira. Os ambientes de desenvolvimento, homologação e produção devem permanecer isolados conforme alinhamento concluído com Desenvolvimento.
+
+A stack de aplicação existente no repositório não deve ser confundida com autorização para utilizar serviços gerenciados externos. A arquitetura e os documentos de decisão técnica precisam refletir a restrição de controle da FORD antes de qualquer declaração de aderência operacional.
+
+## 1.8 Operação, disponibilidade e recuperação
+
+- Até 25 conexões simultâneas de usuários finais, além dos administradores TI.
+- Disponibilidade exigida de 99% ao mês.
+- Manutenção programada fora do horário comercial, com aviso prévio aos usuários.
+- RPO de até 24 horas em desastre ou falha de infraestrutura; esse parâmetro não se aplica à reconexão normal do usuário.
+- RTO de até 24 horas.
+- Backups diários de banco de dados e anexos, com retenção de 12 meses.
+- Operação e recuperação dos ambientes sob responsabilidade do TI da FORD.
+- Incidentes devem acionar a equipe de TI da FORD e o gestor responsável.
+- Suporte em horário comercial.
+- Metas quantitativas de desempenho e demais parâmetros operacionais foram alinhados entre PO e Desenvolvimento e são considerados completos nesta especificação.
+
+## 1.9 Dispositivos, UX e identidade visual
+
+- Usuários finais: celulares Android e iOS, utilizando navegadores móveis atuais Chrome e Safari.
+- TI: computadores, utilizando navegadores atuais Chrome, Edge e Firefox.
+- Tablets não são permitidos: Usuário somente em celular e TI somente em computador.
+- Usuários que tentarem acessar por computador devem receber a mensagem “só pode ser usado em celular”.
+- TI não pode utilizar o console administrativo por celular.
+- Interface exclusivamente em português.
+- A arquitetura da informação foi consolidada pelo PO em 20/11/2026: Usuário mobile inicia em Conversas recentes, com busca contextual para iniciar conversa individual e tela de conversa para chats individuais/grupos; TI desktop inicia no Dashboard e navega por Usuários, Grupos, Consulta de conversas, Alertas, Auditoria e Configurações limitadas aos controles definidos.
+- A identidade visual utiliza provisoriamente Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. O uso do Ford Oval e de tipografia corporativa depende dos arquivos e orientações oficiais autorizados.
+- O catálogo detalhado de telas, fluxos, estados e limites por perfil está em [POLY-UX-DEC-001](ux/decisoes-produto-q018-q019.md). Q-018 está resolvida; Q-019 mantém pendente apenas os ativos oficiais de marca.
+- A FORD não definiu requisitos adicionais de acessibilidade para o produto; obrigações legais aplicáveis não são afastadas por essa decisão.
+
+## 1.10 Homologação e aceite
+
+Não haverá grupo piloto. O lançamento será único para os 25 usuários finais do setor técnico, após homologação.
+
+- Responsável pela homologação funcional: Fábio Silva Cerqueira, gestor da FORD.
+- Participantes dos testes: gestor da FORD e representantes do TI.
+- O aceite será formalizado por escrito.
+- Os critérios de homologação de segurança, restrição por dispositivo, anexos, alertas e auditoria foram alinhados com Desenvolvimento e são considerados completos.
+- Falhas de segurança, autenticação, permissão ou perda de mensagens impedem o lançamento.
+- O gestor da FORD autoriza o Go/No-Go.
+- A aceitação de riscos residuais é formalizada por escrito pelo TI, autoridade administrativa do sistema.
+- São considerados inaceitáveis, segundo a FORD, o acesso de terceiros às conversas sem conhecimento da organização e o vazamento de mensagens.
+
+## 1.11 Prazo, orçamento e contratação
+
+- Não há data limite definida para disponibilização; o prazo será combinado conforme o planejamento das sprints.
+- Não há marco corporativo condicionando o lançamento.
+- O valor de R$ 450.000,00 é referência comercial, não declarado como teto orçamentário aprovado.
+- A referência inclui implantação, mas não inclui infraestrutura, licenças, suporte, manutenção ou treinamento.
+- Custos recorrentes após a entrega ficam sob responsabilidade da FORD.
+- O valor foi declarado global, sem impostos ou despesas adicionais a considerar separadamente.
+- O gestor da FORD aprova o orçamento e alterações de escopo e prazo.
+
+## 1.12 Limites e premissas de conformidade
+
+O questionário registra que a FORD não prevê participação do Jurídico e não considera a LGPD prioridade no programa inicial. Também define monitoramento das conversas, aviso aos funcionários no primeiro acesso e tramitação de solicitações de dados pelo TI.
+
+Essas respostas descrevem o processo e o posicionamento informados pelo cliente. Não constituem declaração de inaplicabilidade de legislação, nem eliminam direitos ou obrigações impostos por normas aplicáveis. A especificação não substitui análise jurídica independente quando necessária.
+
+## 1.13 Dependências e decisões ainda não fechadas
+
+Os seguintes itens permanecem para complementação, sem reabrir os requisitos já concluídos com Desenvolvimento:
+
+- Data limite de disponibilização, caso venha a ser estabelecida.
+- Arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação/tipografia da FORD. A paleta cromática provisória já está definida em Q-019 e pode orientar o Design System.
+- Eventuais evoluções de escopo após o lançamento inicial, especialmente expansão para outros setores.
+- Detalhes de produto que não tenham sido definidos no questionário ou nos alinhamentos já concluídos devem ser tratados pelo processo normal de decisão do PO, sem reabrir as oito frentes técnicas consideradas completas.
+

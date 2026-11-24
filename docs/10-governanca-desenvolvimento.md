@@ -119,11 +119,32 @@ A suíte atualmente existente cobre a camada de autorização com Supabase simul
 - A conclusão deve registrar o que foi entregue, o que permaneceu pendente e os links de evidência.
 - Não registrar aprovação, comunicação, teste ou homologação que não tenha ocorrido.
 
-## 8. Limites e responsabilidades
+## 8. Governança de decisões arquiteturais
 
-Este procedimento formaliza o fluxo técnico do repositório. Não designa pessoas para papéis ainda não definidos, não substitui aprovações da FORD e não resolve decisões pendentes da baseline de requisitos ou dos ADRs. Quando houver conflito, prevalecem requisitos e decisões formalmente aprovados e registrados no projeto.
+As decisões arquiteturais registradas em ADRs Accepted permanecem vigentes até que uma decisão posterior seja formalmente aprovada e registrada. Uma divergência entre documentos, uma restrição de requisito, uma preocupação técnica ou uma análise de compatibilidade não altera, por si só, o status de uma ADR.
 
-## 9. Referências
+**É vedado classificar uma decisão Accepted como Deprecated, Rejected ou Superseded por inferência.** A alteração ou retirada de uma decisão exige proposta explícita, avaliação de impacto e aprovação pelas responsabilidades competentes, registrada em ADR e integrada por Pull Request.
+
+Toda proposta de alteração deve conter, no mínimo:
+
+- Identificação da ADR vigente e descrição precisa da decisão que se pretende alterar, com motivo e evidências verificáveis.
+- Requisitos, restrições, riscos e incompatibilidades concretas que fundamentam a proposta; separar fatos demonstrados de hipóteses.
+- Alternativas avaliadas, incluindo manutenção da decisão atual, mitigação/configuração e substituição, com vantagens, limitações e justificativa da opção recomendada.
+- Avaliação de impacto sobre escopo e comportamento do produto, requisitos e compromissos com a FORD, dados e migração, segurança/privacidade/acessos, integrações, operação e continuidade (disponibilidade, backup, RPO/RTO e rollback), custos/contratos, cronograma/recursos, testes/homologação e documentação/backlog.
+- Plano de transição e reversão, dependências, riscos residuais, responsáveis, evidências e critérios para validar a decisão proposta.
+- Registro explícito de quem decidiu, papéis consultados, data, aprovação e relação entre a ADR anterior e a nova decisão.
+
+A decisão requer manifestação do **Product Owner** quando afetar direção, escopo ou compromissos do produto; revisão do **Tech Lead** quanto à viabilidade e aos impactos técnicos; e participação da **TI/representação competente da FORD** quando houver impacto sobre infraestrutura, dados, segurança, privacidade ou operação institucional. O **SQA** avalia rastreabilidade, testabilidade, riscos e evidências, mas sua revisão não substitui a decisão de produto ou a aprovação institucional aplicável.
+
+Somente após as aprovações necessárias e a integração da PR a ADR anterior poderá receber status Deprecated/Superseded, com referência à decisão substituta e histórico preservado. Até lá, a decisão vigente continua sendo a referência; incompatibilidades devem ser registradas como risco, bloqueio ou questão em aberto, sem reclassificação unilateral.
+
+**Aplicação à ADR-003:** Supabase + Vercel permanece como stack adotada e obrigatória, conforme ADR-003 — Accepted, revisada em 24/11/2026. A Q-025 deve avaliar compatibilidade, configuração, modelo de uso, responsabilidades e evidências frente às restrições da FORD. Um resultado de incompatibilidade deve ser encaminhado para decisão formal com avaliação de impacto; a Q-025 não autoriza substituir ou depreciar a stack por inferência.
+
+## 9. Limites e responsabilidades
+
+Este procedimento formaliza o fluxo técnico e a governança de mudanças do repositório. Não designa pessoas para papéis ainda não definidos, não substitui aprovações da FORD e não resolve decisões pendentes da baseline de requisitos ou dos ADRs. Quando houver conflito, a divergência deve ser registrada e encaminhada às responsabilidades competentes; não se deve alterar unilateralmente o status de decisão Accepted.
+
+## 10. Referências
 
 - [Issue #77 — Epic 00](https://github.com/Aluvioz/Polychat/issues/77)
 - [Issue #88 — Baseline de requisitos](https://github.com/Aluvioz/Polychat/issues/88)

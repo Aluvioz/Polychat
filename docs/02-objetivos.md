@@ -1,23 +1,31 @@
 # 02 - Objetivos do produto
 
-Os objetivos abaixo traduzem as necessidades relatadas. São objetivos propostos para validação pelo cliente e servem de base para a rastreabilidade.
+Os objetivos abaixo consolidam as necessidades registradas no questionário atualizado da FORD e nos alinhamentos complementares do PO com Desenvolvimento. A situação indica o estado da decisão de produto; não deve ser confundida com comprovação de implementação.
 
 | ID | Objetivo | Resultado esperado | Situação |
 |---|---|---|---|
-| OBJ-001 | Disponibilizar um canal de comunicação corporativa próprio para uso interno da FORD. | O público aprovado utiliza o Polychat sem depender de um aplicativo de mensagens de terceiros para as conversas cobertas pelo escopo. | Confirmado em intenção; limites técnicos e jurídicos a validar. |
-| OBJ-002 | Permitir comunicação direta entre usuários ativos. | Um usuário consegue iniciar uma conversa e trocar mensagens com qualquer outro usuário ativo. | Confirmado. |
-| OBJ-003 | Permitir comunicação em grupos geridos pelo TI. | O TI cria grupos e adiciona participantes; membros incluídos podem enviar mensagens. | Confirmado; regras de saída, remoção de mensagens e encerramento permanecem pendentes. |
-| OBJ-004 | Centralizar no TI a administração do ambiente. | Somente o TI cria e desativa contas, cria grupos e inclui participantes. | Confirmado. |
-| OBJ-005 | Aumentar o controle de segurança e identificar mensagens suspeitas. | Mensagens passam por análise automática e ocorrências definidas geram alertas ao TI. | Intenção confirmada; critérios e ações pendentes. |
-| OBJ-006 | Restringir o ambiente de acesso conforme perfil. | Usuário utiliza celular; TI utiliza computador. | Confirmado; mecanismo técnico pendente. |
-| OBJ-007 | Entregar uma experiência simples, alinhada à identidade visual Ford. | Após autenticação, o usuário encontra suas conversas recentes em interface visual azul e branca. | Confirmado em nível conceitual; identidade oficial e telas pendentes. |
+| OBJ-001 | Disponibilizar um canal próprio de comunicação corporativa para uso interno da FORD. | Os 25 usuários finais do setor técnico utilizam o Polychat, com os dados e a operação sob controle da FORD e sem serviços de terceiros acessando, armazenando ou processando dados da organização. | Confirmado pela FORD; restrição de infraestrutura consolidada. |
+| OBJ-002 | Permitir comunicação individual entre usuários ativos. | Um usuário ativo consegue iniciar conversas, enviar mensagens de texto, consultar histórico paginado e acompanhar estados básicos de leitura. | Confirmado pela FORD. |
+| OBJ-003 | Permitir comunicação em grupos administrados pelo TI. | O TI cria, encerra, desativa e reativa grupos, administra participantes e revoga imediatamente o acesso de integrantes removidos às mensagens e anexos anteriores. | Confirmado pela FORD. |
+| OBJ-004 | Centralizar a administração do aplicativo no perfil TI. | TI administra contas, credenciais, grupos, participantes, configurações, consultas e exportações de conversas, anexos de investigação, alertas e registros de auditoria. Todos os administradores TI possuem os mesmos poderes. | Confirmado pela FORD; poderes administrativos considerados avaliados pelo projeto. |
+| OBJ-005 | Monitorar mensagens e anexos para apoiar a segurança da comunicação. | Mensagens suspeitas são identificadas por regras definidas pelo TI e geram alertas classificados por severidade; anexos são analisados antes da disponibilização, respeitando as exceções administrativas definidas pela FORD. | Confirmado pela FORD; regras e operação dos alertas alinhadas com Desenvolvimento. |
+| OBJ-006 | Restringir o ambiente de acesso conforme o perfil. | Usuários acessam somente por celular Android/iOS; TI acessa somente por computador, nos navegadores homologados. | Confirmado pela FORD; critérios de homologação alinhados. |
+| OBJ-007 | Entregar experiência simples e alinhada à identidade visual FORD. | O Usuário visualiza Conversas recentes após autenticação; o console TI oferece as áreas administrativas definidas em POLY-UX-DEC-001; a interface em português utiliza paleta Ford provisória (`#00095B`, `#00142E`, `#066FEF`, branco e neutros). O Ford Oval depende de arquivo autorizado. | Arquitetura da informação e paleta provisória definidas pelo PO em 20/11/2026; ativo oficial de logotipo pendente em Q-019. |
 
-## Relações preliminares
+## Relações com requisitos
 
-- OBJ-001 depende de RF-001, RF-003 e RNF-002.
-- OBJ-002 depende de RF-008, RF-009 e RF-010.
-- OBJ-003 depende de RF-005, RF-006 e RF-010.
-- OBJ-004 depende de RF-002, RF-003, RF-004, RF-005 e RF-006.
-- OBJ-005 depende de RF-014, RF-015 e RF-016, além de RNF-001 e RNF-004.
+- OBJ-001 depende de RF-001 a RF-006, RF-009 a RF-018, RNF-001, RNF-002 e RNF-013.
+- OBJ-002 depende de RF-007 a RF-010, RF-019, RNF-005 e RNF-007.
+- OBJ-003 depende de RF-005, RF-006 e RF-010, além de controles de autorização e revogação de acesso.
+- OBJ-004 depende de RF-002 a RF-006, RF-016, RF-020, RF-021 e RF-022.
+- OBJ-005 depende de RF-011 a RF-015 e RF-022, além de RNF-002, RNF-004 e RNF-010.
 - OBJ-006 depende de RF-017, RF-018 e RNF-005.
-- OBJ-007 depende de RF-007 e RNF-006.
+- OBJ-007 depende de RF-007, RF-015, RF-019, RF-023 e RNF-006.
+
+## Premissas de escopo associadas
+
+- O público inicial é de 25 usuários finais do setor técnico, além de aproximadamente 2 a 3 administradores TI.
+- Não há expansão prevista no escopo atual; a extensão para outros setores será avaliada após a fase inicial.
+- O lançamento será único, após homologação; não haverá grupo piloto.
+- Os objetivos não representam declaração de que as funcionalidades já estejam implementadas ou homologadas.
+- Metas de desempenho, proteção de credenciais, gestão de chaves, retenção detalhada, homologação e isolamento dos ambientes são consideradas definidas nos alinhamentos complementares com Desenvolvimento.
