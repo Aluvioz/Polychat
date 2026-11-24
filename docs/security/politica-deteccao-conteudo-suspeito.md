@@ -390,7 +390,7 @@ A FORD já definiu finalidade, acesso administrativo, auditoria e retenção. O 
 
 Os critérios originais da Issue #122 são preservados. Esta tabela especifica as evidências esperadas e não declara nenhum critério concluído. A implementação funcional ainda não começou.
 
-| Critério original | Evidência esperada | Situação na versão 0.4 |
+| Critério original | Evidência esperada | Situação na versão 0.6 |
 |---|---|---|
 | Mensagens sinalizadas com contexto mínimo; falsos positivos revisáveis | Registro com regra/versão e contexto mínimo; fluxo de revisão pelo TI e classificação de falsos positivos | Requisitos definidos; implementação e testes ainda não começaram |
 | Testes relevantes automatizados ou evidência documentada | Execução dos cenários DET-01 a DET-14 com conjunto de teste aprovado | Pendente: cenários propostos; não há evidência de execução |
