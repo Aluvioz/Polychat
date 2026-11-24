@@ -23,15 +23,36 @@ A migration `202611240001_issue_99_initial_domain_schema.sql` acrescenta:
 
 As FKs de domínio usam `ON DELETE RESTRICT` para evitar remoção em cascata do histórico. As tabelas novas têm RLS habilitada e não recebem policies nesta entrega; o acesso permanece fechado até a matriz e as políticas das Issues #100/#101.
 
+### Complementação da migration `202611240002_issue_99_integrity_and_configuration.sql`
+
+- Trigger diferido valida no commit que cada mensagem tenha texto não vazio ou ao menos um anexo.
+- Trigger serializa inserções/alterações por mensagem e impede mais de cinco anexos, conforme o modelo v0.3 e a Issue #117.
+- Cria `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`, sem tabela genérica de configurações e sem valores padrão inventados.
+- Habilita RLS e revoga acesso de `anon`/`authenticated` às tabelas de configuração; policies e exposição pertencem à Issue #101.
+
+Os nomes e campos físicos dessas três estruturas são uma proposta mínima derivada do inventário aprovado pelo PO, não uma aprovação de DDL. Permanecem sujeitos à revisão do Tech Lead. Nenhuma regra de detecção, quota ou capacidade foi semeada.
+
 ## Lacunas deliberadamente reservadas
 
 ### Issue #102 — auditoria e retenção
 
-O modelo conceitual identifica `audit_events`, mas vincula explicitamente sua estrutura técnica detalhada à Issue #102. Esta entrega não cria a tabela nem catálogo, privilégios, imutabilidade, retenção, descarte ou backup de auditoria. A Issue #102 deve implementar e testar esses itens conforme seu escopo original.
+A estrutura `audit_events`, seu catálogo, controles append-only e serviço de registro são tratados na PR separada da Issue #102, empilhada sobre esta branch para evitar duplicar migrations. Não considerar a Issue #99 concluída até que a PR #102 seja revisada e integrada na sequência correta.
 
-### Configurações persistentes
+### Username de perfis já existentes
 
-O inventário funcional está definido (lista/regras de detecção, quota individual e capacidade total), mas a forma física de persistência e os atributos das estruturas não estão especificados como DDL no documento conceitual. Não foi criada tabela genérica `configs`, nem foram inventados campos/valores. Requer detalhamento técnico no contexto da Issue #99 antes de declarar persistência concluída.
+A migration não infere username a partir de e-mail ou outro atributo. A coluna permanece nullable e a unicidade é aplicada aos valores informados. Para tornar o campo obrigatório, é necessário definir e executar uma carga de dados confiável para contas preexistentes antes de adicionar NOT NULL.
+
+### Integração das invariantes transacionais
+
+A constraint trigger diferida exige que criação de mensagem somente com anexos e respectivos metadados ocorra na mesma transação. O fluxo deve usar operação server-side transacional (por exemplo, RPC) e ser integrado pela issue responsável pelo upload; chamadas REST separadas não satisfazem essa atomicidade.
+
+### Autorização das configurações
+
+As tabelas de configuração permanecem sem policies e sem concessão de acesso aos papéis da API. A Issue #101 deve definir e testar o enforcement. A implementação das telas/serviços de configuração e da detecção permanece nas issues funcionais correspondentes.
+
+### Dependência de ambiente
+
+As migrations foram versionadas no repositório, mas não foram aplicadas a uma instância PostgreSQL/Supabase real. A Q-025 e o estado Proposed da ADR-005 devem ser considerados antes de qualquer homologação operacional.
 
 ### Username de perfis já existentes
 
@@ -47,4 +68,4 @@ A migration foi versionada no repositório, mas não foi aplicada a uma instânc
 
 ## Validação
 
-Nenhum comando de teste, lint, typecheck, Supabase CLI ou aplicação de migration foi executado nesta entrega remota. A PR deve permanecer aberta para revisão e execução de validações no ambiente de desenvolvimento.
+O Preview Vercel da PR #165 reportou `Ready`; isso comprova somente o deploy do frontend e não valida SQL, RLS ou integração Supabase. Nenhum comando de teste SQL/PostgreSQL, lint, typecheck, Supabase CLI ou aplicação de migration foi executado nesta execução remota. As migrations devem permanecer abertas para revisão técnica e validação em ambiente Supabase de desenvolvimento.
