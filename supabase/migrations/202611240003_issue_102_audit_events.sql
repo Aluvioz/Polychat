@@ -104,7 +104,8 @@ begin
     for item in
       select key, value from jsonb_each(p_value)
     loop
-      if lower(item.key) ~ '(^|_)(password|passwd|token|secret|credential|authorization|cookie|api_key|private_key|service_role|access_key|refresh_token|message_body|conversation_body|content_body)(_|$)' then
+      if lower(item.key) in ('body', 'content', 'text', 'message', 'conversation')
+         or lower(item.key) ~ '(^|_)(password|passwd|token|secret|credential|authorization|cookie|api_key|private_key|service_role|access_key|refresh_token|message_body|conversation_body|content_body)(_|$)' then
         return true;
       end if;
 
