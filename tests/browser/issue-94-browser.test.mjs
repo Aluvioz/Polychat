@@ -38,10 +38,18 @@ async function mobileLogin(page) {
   await page.locator('[data-screen="u-monitor"] [data-go="u-conversations"]').click();
   assert.equal(await page.locator('[data-screen="u-conversations"]').isVisible(), true);
 }
+async function assertTiTask(page, id, screen) {
+  const section = page.locator('[data-screen="' + screen + '"]');
+  assert.equal(await section.isVisible(), true, 'Tela não está visível: ' + screen);
+  assert.equal(await section.getAttribute('data-task'), id, 'Rastreabilidade incorreta de ' + id);
+  assert.match(await section.locator('.eyebrow').innerText(), new RegExp('^' + id + ' ·'));
+}
 async function tiLogin(page) {
   await page.locator('[data-screen="start"] [data-go="t-login"]').click();
+  await assertTiTask(page, 'T-01', 't-login');
   await page.locator('[data-screen="t-login"] [data-go="t-dashboard"]').click();
   assert.equal(await page.locator('[data-screen="t-dashboard"]').isVisible(), true);
+  assert.equal(await page.locator('[data-screen="t-dashboard"]').getAttribute('data-task'), null);
 }
 async function verifyNoErrors(ctx) {
   assert.deepEqual(ctx.scriptErrors, [], 'Erros de JavaScript na página');
@@ -138,14 +146,14 @@ test('U-06/U-07: tipos, tamanho, quantidade, PDF com senha e scanner', async () 
   } finally { await ctx.page.close(); }
 });
 
-test('T-01/T-02/T-03: dashboard, busca, confirmação e retorno do foco', async () => {
+test('T-01 acesso, T-02 contas e T-03 grupos (dashboard auxiliar): confirmação e foco', async () => {
   const ctx = await open({ width: 1280, height: 800 });
   try {
     const { page } = ctx;
     await tiLogin(page);
     await page.screenshot({ path: new URL('ti-dashboard-1280.png', shots).pathname, fullPage: true });
     await page.locator('#ti-menu [data-go="t-users"]').click();
-    assert.equal(await page.locator('[data-screen="t-users"]').isVisible(), true);
+    await assertTiTask(page, 'T-02', 't-users');
     await page.locator('#ti-user-search').fill('nada');
     assert.equal(await page.locator('#ti-users-empty').isVisible(), true);
     await page.locator('#ti-user-search').fill('');
@@ -156,6 +164,7 @@ test('T-01/T-02/T-03: dashboard, busca, confirmação e retorno do foco', async 
     assert.equal(await page.locator('#confirm-dialog').isVisible(), false);
     assert.equal(await disable.evaluate(el => document.activeElement === el), true);
     await page.locator('#ti-menu [data-go="t-groups"]').click();
+    await assertTiTask(page, 'T-03', 't-groups');
     await page.locator('[data-screen="t-groups"] [data-confirm]').click();
     assert.match(await page.locator('#dialog-description').innerText(), /revoga acesso imediato/i);
     await page.locator('#accept-dialog').click();
@@ -164,20 +173,24 @@ test('T-01/T-02/T-03: dashboard, busca, confirmação e retorno do foco', async 
   } finally { await ctx.page.close(); }
 });
 
-test('T-04/T-05/T-06: consulta sem segunda aprovação, alertas, configurações e auditoria', async () => {
+test('T-04 consulta, T-05 alertas e T-06 configurações (auditoria auxiliar)', async () => {
   const ctx = await open({ width: 1280, height: 800 });
   try {
     const { page } = ctx;
     await tiLogin(page);
     await page.locator('#ti-menu [data-go="t-consult"]').click();
+    await assertTiTask(page, 'T-04', 't-consult');
     assert.match(await page.locator('[data-screen="t-consult"]').innerText(), /sem justificativa ou segunda aprovação/);
     await page.locator('[data-action="view-chat"]').click();
     assert.match(await page.locator('#feedback').innerText(), /Consulta simulada/);
     await page.locator('#ti-menu [data-go="t-alerts"]').click();
+    await assertTiTask(page, 'T-05', 't-alerts');
     assert.match(await page.locator('[data-screen="t-alerts"]').innerText(), /até 1 dia útil/);
     await page.locator('#ti-menu [data-go="t-settings"]').click();
+    await assertTiTask(page, 'T-06', 't-settings');
     assert.match(await page.locator('[data-screen="t-settings"]').innerText(), /Termos e regras/);
     await page.locator('#ti-menu [data-go="t-audit"]').click();
+    assert.equal(await page.locator('[data-screen="t-audit"]').getAttribute('data-task'), null);
     assert.match(await page.locator('[data-screen="t-audit"]').innerText(), /Simulação, não log/);
     await verifyNoErrors(ctx);
   } finally { await ctx.page.close(); }
