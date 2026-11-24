@@ -226,7 +226,7 @@ A descrição completa está em [05 — Regras de negócio e restrições](05-re
 
 A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas.
 
-Essa regra é requisito do cliente e prevalece sobre premissas tecnológicas anteriores incompatíveis. A Issue #88 e as ADRs anteriores registram Supabase + Vercel como direção tecnológica; essa direção precisa ser reconciliada formalmente com a restrição atual. Não se deve presumir que a utilização anterior dessas plataformas continua autorizada para produção.
+Essa regra é requisito do cliente e permanece aplicável à stack adotada. A ADR-003 — Accepted (revisão de 24/11/2026) mantém Supabase + Vercel como direção tecnológica obrigatória do Polychat. A Q-025 deve avaliar a configuração e o modelo de uso dessa stack frente aos requisitos de controle, localização, acesso e processamento da FORD, registrando evidências, controles, responsabilidades e limitações. A análise não altera nem substitui a decisão arquitetural por inferência; incompatibilidade concreta não mitigável deve ser encaminhada ao PO e às responsabilidades competentes da FORD para decisão formal e avaliação de impacto.
 
 A decisão de arquitetura deve separar:
 - Tecnologia e framework de aplicação.
@@ -257,7 +257,7 @@ Snapshot documental consultado na branch main em 19/11/2026:
 - O package.json consultado não incluía SDK Supabase nas dependências.
 - O workflow CI executa testes automatizados, ESLint, TypeScript e build em atualizações da main e em Pull Requests direcionadas à main.
 
-**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Além da implementação funcional ausente, a direção antiga Supabase/Vercel precisa ser reconciliada com a restrição de infraestrutura FORD antes de ser considerada arquitetura-alvo.
+**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Supabase + Vercel permanece como stack adotada conforme ADR-003; ainda precisam ser concluídas integração, configuração, validação dos controles e evidências de compatibilidade com os requisitos da FORD na Q-025. A adoção da stack não equivale à homologação de produção.
 
 ### 5.3 Limites da evidência técnica
 
@@ -301,7 +301,7 @@ As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 �
 
 - Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
 - Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
-- Q-025 — Reconciliação da arquitetura e das ADRs anteriores com a exigência de infraestrutura sob controle da FORD, sem terceiro acessando, armazenando ou processando dados.
+- Q-025 — Avaliação da compatibilidade da configuração e do modelo de uso da stack Supabase + Vercel, adotada na ADR-003 — Accepted, com os requisitos da FORD sobre controle de hospedagem, armazenamento, processamento, localização, acesso e operação; registrar evidências, controles, responsabilidades e riscos residuais, sem substituir a stack por inferência.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
@@ -320,8 +320,8 @@ Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências
 | Anexos e antimalware | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-011 a RF-013 e RNF-010 | Limites, scanner local, liberação TI, links e metadados |
 | Monitoramento e severidades | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-014/RF-015 | Lista de regras, fila, prazos e fluxo TI |
 | Retenção e continuidade | FORD v2 e alinhamento com Desenvolvimento | Atualiza RN-021/RN-023 e RNF-009 | Backups, exclusão, expiração de cópias e evidências |
-| Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Requer revisão de arquitetura/ADRs e da antiga direção Supabase/Vercel |
-| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e reconciliação arquitetural |
+| Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Requer avaliação da configuração e do modelo de uso da stack adotada (ADR-003/Q-025), com evidências de compatibilidade |
+| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e avaliação técnica de compatibilidade/configuração da stack adotada |
 
 ## 10. Referências e documentos relacionados
 
