@@ -1,12 +1,12 @@
 # Issue #99 — registro de implementação e lacunas
 
-## Auditoria do estado inicial
+## Auditoria do estado inicial — retrato histórico (19/11/2026)
 
 - A Issue #99 solicita modelar profiles, conversations, memberships, messages, attachments, audit_events e configurações.
 - A PR #160 está aberta em Draft e contém a versão 0.3 de `docs/database/modelo-de-dados.md`. O parecer do PO valida o escopo funcional conceitual, mas não aprova DDL, schema físico, migrations ou RLS.
 - A migration existente `202611160001_profiles_roles_and_account_status.sql` cria `profiles`, integra `auth.users`, limita `role` a `user`/ `ti`, mantém `is_active` e ativa RLS.
-- Na `main`, foi identificada somente essa migration em `supabase/migrations`.
-- A ADR-005 permanece Proposed e a Q-025 continua aberta para compatibilidade operacional da stack Supabase + Vercel com as restrições FORD.
+- **Registro histórico de 19/11/2026:** naquela revisão inicial, foi identificada somente a migration de perfis. Esse retrato foi superado pela integração da PR #165 em 24/11/2026, que incorporou as duas migrations de domínio descritas abaixo.
+- **Estado atualizado em 24/11/2026:** ADR-005 — Accepted. A Q-025 foi concluída com aprovação da TI e da FORD para a compatibilidade da stack Supabase + Vercel e do modelo de utilização com os requisitos de infraestrutura.
 
 ## Implementado nesta branch
 
@@ -67,7 +67,24 @@ A consulta ao schema `public` confirmou as tabelas de domínio/configuração pr
 
 A aplicação e a inspeção do schema no Polyford comprovam a presença das migrations e estruturas no ambiente de desenvolvimento. **Não equivalem a um teste automatizado de integração SQL/PostgreSQL reproduzível no CI.** A integração server-side/RPC para criação atômica de mensagem e anexos continua pendente dos fluxos de produto correspondentes.
 
-A Q-025 e a ADR-005 Proposed continuam sendo referências pendentes para a homologação operacional da stack.
+A Q-025 foi concluída em 24/11/2026 com aprovação da TI e da FORD para a compatibilidade da configuração e do modelo de utilização Supabase + Vercel. A ADR-005 passou a Accepted. A conclusão refere-se à decisão de arquitetura e operação; não substitui a implementação e os testes de RLS, integração transacional, Storage, auditoria e continuidade que permanecem nas respectivas issues.
+
+## Consolidação da Q-025 — aprovação da compatibilidade (24/11/2026)
+
+A TI e a FORD aprovaram a utilização de Supabase + Vercel como stack do Polychat, incluindo o modelo de ambientes, fluxo de dados, banco PostgreSQL, Storage privado, gestão de segredos, responsabilidades operacionais e parâmetros de continuidade.
+
+A aprovação considera as evidências reunidas neste documento e os registros das Issues #96 e #98:
+- Polyford é o projeto Supabase oficial de desenvolvimento, na região `sa-east-1`, com PostgreSQL `17.11.0.019`; as migrations #99 foram aplicadas e o schema foi consultado.
+- As Issues #96 e #98 foram encerradas com confirmação do responsável/Tech Lead quanto às configurações operacionais, deploy hospedado, smoke tests, domínio/HTTPS e ensaio de rollback em seus respectivos escopos.
+- A PR #165 incorporou ao repositório as migrations de schema e integridade da #99. A presença dessas migrations e sua aplicação no desenvolvimento são evidências de estrutura; não substituem integração funcional ou testes de autorização.
+
+**Decisão de compatibilidade:** Supabase e Vercel ficam aprovados como provedores nomeados da stack do Polychat, nos serviços e limites definidos pelas ADRs. A restrição geral a outros terceiros permanece vigente; qualquer novo fornecedor ou subprocessador que possa acessar, armazenar ou processar dados do produto depende de aprovação específica.
+
+**Responsabilidades aprovadas:** TI responde por operação de ambientes, acessos, secrets, monitoramento, backup, recuperação e incidentes; Tech Lead responde pela arquitetura e controles técnicos; Desenvolvimento pela implementação das integrações; SQA pela verificação de testes e evidências; PO pela rastreabilidade e escopo.
+
+**Parâmetros operacionais aprovados:** ambientes separados por estágio, credenciais de escopo mínimo, secrets fora de código/cliente/logs, backups diários com retenção de 12 meses, disponibilidade mensal de 99%, RPO de até 24 horas e RTO de até 24 horas. Os detalhes dos valores secretos e das configurações administrativas permanecem nos respectivos painéis, sem reprodução na documentação.
+
+**Limite do aceite:** Q-025 concluída quanto à compatibilidade da stack e aprovação do modelo de uso. Não declara que policies RLS, fluxos de aplicação, bucket Storage, scanner, transações, backup/restore ou testes E2E já estejam implementados ou executados. Essas entregas permanecem rastreadas nas Issues #101, #102, #105, #115, #116, #117, #126 e #130 e não reabrem a decisão da Q-025.
 
 ## Validação
 
