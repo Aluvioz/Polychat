@@ -33,7 +33,7 @@ O job publicou **três PNGs** na [coleção de artefatos do Actions](https://git
 - `mobile-anexos-320.png`
 - `ti-dashboard-1280.png`
 
-GitHub registrou o artifact ID **14922618767**, tamanho **310.504 bytes**, SHA-256 do ZIP `7b13a7e5fbe7659fdb66cc4682f2567f82ae2f0b63b9b3fb3853004427a987a7`. São capturas automáticas **de exemplos inventados**, não depoimentos ou provas de sessões. A retenção configurada no workflow é de 7 dias, com vencimento atual previsto em 01/12/2026; baixar/arquivar conforme governança se for necessário manter prova além disso. **Não realizei inspeção visual independente dos pixels das capturas neste registro.**
+GitHub registrou o artifact ID **14922618767**, tamanho **310.504 bytes**, SHA-256 do ZIP `d1b24e92e17a3af74997fa297a0499d3583069f65188e9c6845a33e6f92c15e5`. São capturas automáticas **de exemplos inventados**, não depoimentos ou provas de sessões. A retenção configurada no workflow é de 7 dias, com vencimento atual previsto em 01/12/2026; baixar/arquivar conforme governança se for necessário manter prova além disso. **Não realizei inspeção visual independente dos pixels das capturas neste registro.**
 
 ## Falha de infraestrutura encontrada e corrigida
 
