@@ -67,7 +67,7 @@ Somente os itens abaixo continuam exigindo ação. Q-018 foi encerrada como deci
 |---|---|---|---|---|
 
 | Q-019 | Ativos oficiais de marca | Receber/confirmar o arquivo autorizado do Ford Oval e eventuais regras corporativas específicas de aplicação/tipografia. A paleta provisória não depende desses arquivos. | A direção cromática provisória foi definida pelo PO; resta somente a confirmação dos ativos oficiais para uso do logotipo e identidade final. | FORD / responsável pela marca |
-| Q-025 | Compatibilização da arquitetura com a infraestrutura FORD | Revisar as ADRs e decisões técnicas que ainda pressupõem serviços gerenciados Supabase/Vercel. Definir arquitetura que mantenha hospedagem e processamento de dados sob controle da FORD, sem terceiro acessando, armazenando ou processando dados. Preservar tecnologias de aplicação apenas se forem compatíveis com essa restrição. | A documentação e a Issue #88 registram Supabase + Vercel como direção anterior, enquanto a FORD v2 impõe infraestrutura sob seu controle. A exigência do cliente está definida; a solução arquitetural precisa ser reconciliada e documentada. | Tech Lead / Desenvolvimento / TI da FORD / PO |
+| Q-025 | Compatibilidade operacional da stack Supabase + Vercel com os requisitos de infraestrutura FORD | Documentar a configuração e o modelo de utilização da stack adotada (Supabase + Vercel), incluindo hospedagem/execução, localização e fluxo dos dados, acesso de terceiros, armazenamento, processamento, isolamento dos ambientes, segredos, backup e responsabilidades. Identificar controles e evidências necessários para atender aos requisitos da FORD; não depreciar nem substituir a stack por inferência. Se houver incompatibilidade concreta não mitigável, encaminhar o conflito ao PO e aos responsáveis da FORD para decisão formal. | A stack permanece Accepted na ADR-003. A Q-025 continua aberta para demonstrar, com análise técnica e evidências, como a configuração adotada atende aos requisitos da FORD; a adoção da stack não equivale a homologação de produção. | Tech Lead / Desenvolvimento / TI da FORD / PO |
 
 ## 8.4 Decisões consolidadas que não devem ser reabertas como pendência
 
@@ -86,15 +86,15 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 ## 8.5 Decisões arquiteturais e limites
 
 - A restrição da FORD de não permitir que terceiros acessem, armazenem ou processem seus dados é uma decisão de cliente confirmada.
-- A existência de Next.js, Vercel, Supabase, migrations ou ADRs no repositório não constitui, por si só, aprovação dessas plataformas para produção sob a restrição atual.
-- A direção Supabase/Vercel anterior deve ser revisada e formalmente reconciliada; não deve prevalecer automaticamente sobre a decisão mais recente da FORD.
-- A tecnologia definitiva deve ser registrada em ADR revisada, mantendo a distinção entre requisito de negócio, decisão arquitetural, implementação e homologação.
+- A ADR-003 mantém Supabase + Vercel como stack tecnológica adotada; não classificar essas tecnologias como Deprecated, obsoletas ou substituídas sem decisão formal posterior.
+- A existência de código, migrations, credenciais de exemplo, previews ou workflows não comprova, por si só, integração funcional, compatibilidade com os requisitos da FORD ou homologação para produção.
+- A Q-025 deve registrar a análise técnica da configuração adotada, os controles necessários, os limites identificados e as evidências correspondentes; eventual incompatibilidade não mitigável deve ser submetida a decisão formal, sem substituição unilateral.
 - A aprovação de uma decisão técnica não deve ser confundida com evidência de implantação ou teste.
 
 ## 8.6 Histórico e rastreabilidade
 
 - Q-001 a Q-024 são identificadores históricos preservados das versões anteriores.
-- Q-025 foi criado para registrar a reconciliação técnica necessária após a restrição de infraestrutura informada na FORD v2.
+- Q-025 foi criado para registrar a avaliação de compatibilidade operacional da stack Supabase + Vercel, adotada na ADR-003, com os requisitos de infraestrutura informados pela FORD v2.
 - Questões resolvidas permanecem documentadas para preservar a origem e a decisão.
 - Q-018 foi concluída pelo PO em 20/11/2026; a arquitetura da informação está registrada em `docs/ux/decisoes-produto-q018-q019.md`.
 - Q-019 possui paleta provisória definida pelo PO em 20/11/2026; a obtenção do arquivo oficial do logotipo continua como pendência específica.
