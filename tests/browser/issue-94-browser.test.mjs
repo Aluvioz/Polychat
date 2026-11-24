@@ -4,10 +4,11 @@
 import test, { before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 
 const appUrl = new URL('../../public/prototipos/issue-94/index.html', import.meta.url).href;
 const shots = new URL('../../artifacts/ux94/', import.meta.url);
+const axeSource = readFileSync(new URL('../../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
 let browser;
 
 before(async () => {
@@ -201,4 +202,35 @@ test('teclado, foco de tela e ausência de overflow horizontal mobile 320/390', 
       await verifyNoErrors(ctx);
     } finally { await ctx.page.close(); }
   }
+});
+
+test('axe-core: WCAG 2.1 A/AA sem violações nas telas representativas', async () => {
+  const ctx = await open({ width: 390, height: 844 });
+  try {
+    const { page } = ctx;
+    await page.addScriptTag({ content: axeSource });
+    async function audit(name) {
+      const results = await page.evaluate(async () => window.axe.run(document, {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] }
+      }));
+      const issues = results.violations.map(v => ({
+        id: v.id, impact: v.impact, description: v.description,
+        targets: v.nodes.map(n => n.target.join(' ')).slice(0, 8)
+      }));
+      assert.deepEqual(issues, [], 'axe WCAG em ' + name + ': ' + JSON.stringify(issues));
+    }
+    await audit('início');
+    await mobileLogin(page);
+    await audit('conversas');
+    await page.locator('[data-screen="u-conversations"] [data-chat="individual"]').click();
+    await audit('chat');
+    await page.locator('[data-screen="u-chat"] [data-go="u-attach"]').click();
+    await audit('anexos');
+    await page.locator('[data-go="start"]').first().click();
+    await tiLogin(page);
+    await audit('TI dashboard');
+    await page.locator('#ti-menu [data-go="t-users"]').click();
+    await audit('TI usuários');
+    await verifyNoErrors(ctx);
+  } finally { await ctx.page.close(); }
 });
