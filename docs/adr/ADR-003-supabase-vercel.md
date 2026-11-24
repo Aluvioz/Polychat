@@ -1,75 +1,80 @@
-# ADR-003 — Direção tecnológica histórica: Supabase + Vercel
+# ADR-003 — Direção tecnológica: Supabase + Vercel
 
-- **Status:** Deprecated
+- **Status:** Accepted
 - **Data da decisão original:** 17/11/2026
-- **Data da revisão:** 19/11/2026
+- **Data da revisão:** 24/11/2026
 - **Issue de origem:** #89 · **Referência original:** #88
-- **Substituição de requisito:** POLY-REQ-001 v0.4 / FORD v2
-- **Escopo:** registro histórico da direção tecnológica anteriormente aceita; não constitui arquitetura-alvo vigente.
+- **Baseline de referência:** POLY-REQ-001 v0.5
+- **Escopo:** registrar Supabase + Vercel como stack tecnológica vigente e obrigatória para o desenvolvimento do Polychat. Esta decisão orienta as issues, PRs e documentos técnicos; não substitui a definição dos detalhes de implantação, segurança e operação.
 
 ## Contexto
 
-A versão anterior desta ADR registrou Supabase + Vercel como direção de execução do MVP, com base na Issue #88. A decisão havia sido marcada como Accepted para aquela direção e não representava homologação de produção.
+A direção tecnológica Supabase + Vercel foi originalmente registrada como aceita em 17/11/2026, com base na Issue #88. Em 19/11/2026, uma revisão documental passou a tratar essa direção como Deprecated após interpretar as restrições da FORD v2 sobre controle de hospedagem, armazenamento e processamento como incompatíveis com a stack.
 
-Em 19/11/2026, a FORD v2 consolidou uma restrição incompatível com essa direção: hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização.
+Essa interpretação foi posteriormente identificada como divergente das orientações vigentes do projeto. A Issue #100, atualizada em 20/11/2026, determina expressamente que Supabase + Vercel deve ser preservada como referência de implementação e que a Q-025 deve avaliar a compatibilidade com as restrições da FORD, sem descartar ou substituir a stack por inferência. A Issue #102 também mantém a stack oficial Supabase/Vercel como referência de integração.
 
-A baseline POLY-REQ-001 v0.4 determina que as respostas e decisões atuais da FORD prevalecem sobre premissas tecnológicas anteriores incompatíveis. Portanto, o aceite histórico de Supabase + Vercel não pode ser utilizado como autorização para produção nem como decisão vigente de arquitetura.
+Em 24/11/2026, o Product Owner confirmou novamente que Supabase + Vercel é a direção tecnológica correta do Polychat. Esta revisão corrige a classificação anterior e restabelece o aceite da stack.
 
 ## Problema
 
-Registrar a retirada formal da direção anterior sem apagar seu histórico, sem confundir a presença de artefatos no repositório com aprovação do cliente e sem antecipar uma nova escolha de fornecedor ou plataforma antes da revisão de arquitetura.
+Manter uma direção tecnológica única e coerente entre ADRs, baseline, issues, PRs e planejamento de implementação, sem transformar uma análise de compatibilidade ainda pendente em uma decisão implícita de substituição da stack.
 
 ## Decisão
 
-**Retirar Supabase + Vercel como arquitetura-alvo do Polychat.** O status Accepted anterior fica depreciado a partir da revisão da FORD v2.
+**Supabase + Vercel permanece como a stack tecnológica adotada e obrigatória do Polychat. O status desta ADR é Accepted.**
 
-Consequências diretas:
+- **Vercel:** permanece como plataforma de hospedagem, deployment e execução da aplicação, conforme a configuração técnica aprovada para o projeto.
+- **Supabase:** permanece como plataforma de backend do projeto, incluindo os serviços adotados para autenticação, banco de dados, armazenamento e demais capacidades efetivamente previstas nas ADRs e no desenho técnico.
+- **Frontend:** permanece alinhado à direção registrada na ADR-002 e deve ser integrado à stack Supabase + Vercel.
+- **Implementação:** issues, PRs e documentos técnicos devem preservar Supabase + Vercel como referência. Não classificar esses serviços como Deprecated, obsoletos ou substituídos sem uma decisão formal posterior do Product Owner e a correspondente revisão arquitetural.
 
-- **Vercel:** não deve ser considerada destino de hospedagem ou execução do Polychat com dados da FORD.
-- **Supabase Auth:** não deve ser adotado como provedor de identidade/sessões para dados e identidades da FORD.
-- **Supabase Database:** não deve ser utilizado como banco hospedado para dados da FORD.
-- **Supabase Storage:** não deve armazenar anexos ou outros dados da FORD.
-- **Supabase Realtime e serviços associados:** não devem processar conteúdo, metadados ou eventos da organização.
+A Q-025 continua responsável por documentar a análise técnica de compatibilidade entre a stack adotada e as restrições da FORD relativas a hospedagem, armazenamento, processamento, localização dos dados, acessos e responsabilidades operacionais. Essa análise deve avaliar a configuração e o modelo de utilização da stack, identificar controles necessários e registrar eventuais limitações com evidências.
 
-A restrição não impede o uso do framework Next.js ou de bibliotecas de software que não acessem dados da FORD. A stack de frontend permanece conforme ADR-002, mas deverá ser executada em ambiente sob controle da FORD.
+**A Q-025 não constitui autorização para retirar ou substituir Supabase + Vercel por inferência.** Caso a análise técnica identifique uma incompatibilidade concreta que não possa ser mitigada, o conflito deverá ser apresentado ao Product Owner e aos responsáveis da FORD para decisão explícita antes de qualquer mudança de stack.
 
-A arquitetura operacional substituta ainda não está selecionada nesta ADR. A proposta é manter os componentes de aplicação, identidade, persistência, arquivos, antimalware, auditoria, monitoramento, backups e operação dentro da infraestrutura controlada pela FORD, conforme avaliação e decisão a registrar na ADR-001 e nas ADRs específicas. A reconciliação técnica permanece identificada pela Q-025.
+O aceite desta ADR define a direção tecnológica do projeto. Isoladamente, não comprova que ambientes, integrações, controles de segurança, contratos, requisitos de governança ou operação estejam implementados ou homologados para produção.
 
 ## Justificativa
 
-A decisão atual da FORD é requisito de produto e infraestrutura, não preferência técnica. Manter provedores externos que possam acessar, armazenar ou processar dados contrariaria diretamente essa restrição. O histórico da Issue #88 não se sobrepõe ao questionário atualizado.
+- A Issue #100 determina a preservação de Supabase + Vercel como referência de implementação.
+- A Issue #102 também utiliza Supabase/Vercel como stack oficial para orientar a implementação de auditoria e retenção.
+- A confirmação do Product Owner restabelece a direção tecnológica do projeto e elimina a classificação contraditória introduzida na revisão de 19/11.
+- As restrições da FORD devem ser tratadas por análise técnica rastreável, definição de configuração e controles aplicáveis, e não pela substituição automática da stack.
 
 ## Consequências
 
 **Positivas:**
-- Alinha a direção de arquitetura ao requisito vigente da FORD.
-- Evita presumir autorização de uso de SaaS externo para dados corporativos.
-- Preserva Next.js como framework sem obrigar permanência do backend anterior.
-- Torna explícita a necessidade de selecionar e homologar infraestrutura compatível.
 
-**Negativas e impactos:**
-- A integração Supabase anteriormente prevista não pode ser tratada como caminho de implementação.
-- As migrations, o middleware, as variáveis de ambiente e as ADRs que dependem de Supabase precisam ser reavaliados.
-- A hospedagem e operação deixam de ser presumidas como responsabilidade da Vercel; será necessário validar capacidade e responsabilidades operacionais na infraestrutura FORD.
-- A tecnologia substituta e seu plano de migração ainda não foram definidos.
+- Restabelece uma direção tecnológica única para Desenvolvimento, Tech Lead, SQA e PO.
+- Evita que documentos e issues apresentem Supabase + Vercel como tecnologias descartadas.
+- Preserva o planejamento e os artefatos técnicos que utilizam essa stack como referência.
+- Mantém a Q-025 como atividade de compatibilização e registro de riscos, sem reabrir unilateralmente a decisão de produto.
 
-## Evidências e limites atuais
+**Responsabilidades e pontos de atenção:**
 
-- `README.md` anteriormente descrevia Vercel como destino de deploy e Supabase como backend planejado; foi atualizado para refletir a restrição FORD v2.
-- `.env.example` contém placeholders históricos de Supabase, não credenciais reais nem prova de integração.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` é uma migration versionada vinculada ao modelo anterior; sua existência não comprova aplicação hospedada ou autorização de uso futuro.
-- `src/auth/authorization.mjs` depende de cliente Supabase fornecido externamente e não configura, por si só, uma solução de identidade definitiva.
-- A baseline v0.4 estabelece a infraestrutura sob controle FORD como requisito confirmado.
+- O Tech Lead deve documentar na Q-025 a arquitetura de implantação e os controles necessários para atender aos requisitos da FORD.
+- Desenvolvimento deve manter as integrações e referências técnicas alinhadas às ADRs vigentes.
+- SQA deve verificar consistência entre a implementação, a baseline e esta ADR, sem considerar a existência de migrations, configurações ou previews como evidência suficiente de integração real.
+- A adoção da stack não declara concluídos testes, controles de autorização/RLS, auditoria, retenção, backups, segurança ou homologação.
 
-## Orientação de transição
+## Evidências e limites
 
-1. Não criar novas integrações ou ambientes produtivos Supabase/Vercel para o Polychat.
-2. Não inserir credenciais desses serviços nem dados reais da FORD em tais plataformas.
-3. Preservar os artefatos versionados como histórico até que uma revisão técnica determine sua adaptação, substituição ou remoção.
-4. Revisar as ADRs de autenticação, dados, autorização, realtime, storage e ambientes para remover dependências incompatíveis.
-5. Registrar a arquitetura operacional substituta após a validação de TI e Tech Lead, mantendo a rastreabilidade com Q-025.
+- A Issue #100 registra Supabase + Vercel como stack adotada e determina que a Q-025 avalie compatibilidade sem descartar os serviços por inferência.
+- A Issue #102 exige integração real na stack oficial Supabase/Vercel para auditoria e retenção.
+- A presença de migrations, arquivos de configuração, variáveis de ambiente, previews ou workflows no repositório não comprova, isoladamente, integração funcional nem autorização de produção.
+- A Q-025 permanece aberta para detalhamento e evidências da configuração arquitetural compatível com os requisitos da FORD.
+
+## Orientação de continuidade
+
+1. Preservar Supabase + Vercel nas issues, PRs, ADRs e documentos do Polychat como stack vigente.
+2. Remover ou corrigir referências que classifiquem a ADR-003, Supabase ou Vercel como Deprecated, descartados ou substituídos sem decisão formal posterior.
+3. Atualizar a Q-025 com a análise técnica de compatibilidade, controles, responsabilidades e evidências necessárias, sem alterar a stack por inferência.
+4. Revisar as ADRs dependentes para garantir coerência com esta decisão e com a baseline POLY-REQ-001 v0.5.
+5. Não declarar integração, segurança ou prontidão de produção concluídas sem implementação, testes e evidências verificáveis.
 
 ## Histórico da decisão
 
-- **17/11/2026:** direção Supabase + Vercel registrada como Accepted com base na Issue #88, sem equivaler a homologação de produção.
-- **19/11/2026:** direção depreciada após a FORD v2 estabelecer que nenhum terceiro pode acessar, armazenar ou processar dados da organização.
+- **17/11/2026:** Supabase + Vercel registrados como direção tecnológica Accepted, com base na Issue #88.
+- **19/11/2026:** revisão da FORD v2 levou à classificação temporária da ADR como Deprecated, sob interpretação de incompatibilidade com as restrições de infraestrutura.
+- **20/11/2026:** a Issue #100 registrou que Supabase + Vercel deveria ser preservada como stack do projeto e que a Q-025 deveria avaliar compatibilidade sem substituição por inferência.
+- **24/11/2026:** o Product Owner confirmou Supabase + Vercel como stack correta e obrigatória; esta ADR foi revisada para restabelecer o status Accepted e corrigir a interpretação anterior.
