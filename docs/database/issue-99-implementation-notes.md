@@ -78,4 +78,11 @@ No commit documental `f46b7f64e5105c8ba7bd97e4c31fa2e9a20057c4`, os dois workflo
 
 O status do Preview Vercel também retornou `success`. Esses resultados validam os checks de aplicação/build configurados, mas não substituem testes automatizados de integração SQL, RLS ou dos fluxos transacionais no Supabase.
 
+No head então atual da PR, `ee031af1fd00c9f515a3669ba9337a89f914eca3`, os dois workflows CI também concluíram com sucesso:
+
+- CI run [#359](https://github.com/Aluvioz/Polychat/actions/runs/45495416188) — `success`.
+- CI run [#289](https://github.com/Aluvioz/Polychat/actions/runs/45495416126) — `success`.
+
+O Preview Vercel associado a esse head também retornou `success`.
+
 A revisão do Tech Lead `luizme7` está registrada como **APPROVED** para a baseline inicial do schema, incluindo as três estruturas específicas de configuração, com as ressalvas descritas nesta nota. A confirmação formal final do SQA permanece pendente.
