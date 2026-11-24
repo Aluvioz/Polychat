@@ -52,10 +52,30 @@ As tabelas de configuração permanecem sem policies e sem concessão de acesso 
 
 ### Ambiente e validação SQL
 
-As migrations foram versionadas, mas não foram aplicadas nem testadas em PostgreSQL/Supabase real. O projeto Supabase Polyford retornou status INACTIVE nesta execução. Não foi reativado. A Q-025 e a ADR-005 Proposed precisam ser consideradas antes da homologação operacional.
+As duas migrations desta PR foram aplicadas no projeto Supabase de desenvolvimento **Polyford** (`oixifpdfvrenlhvycszy`), localizado em `sa-east-1`. Na verificação mais recente, o projeto estava em estado `ACTIVE_HEALTHY`, com PostgreSQL `17.11.0.019`.
+
+O histórico remoto de migrations contém os seguintes registros correspondentes às migrations de domínio desta PR:
+
+- `20261124191114` — `issue_99_initial_domain_schema`
+- `20261124191131` — `issue_99_integrity_and_configuration`
+
+O histórico também contém a migration de baseline de perfis (`20261124191059`, `profiles_roles_and_account_status`) e, posteriormente, a migration de auditoria da Issue #102 aplicada no contexto da PR #166 (`20261124210245`, `issue_102_audit_events`).
+
+**Observação de rastreabilidade:** as versões registradas pelo histórico remoto são os identificadores gerados no ambiente e não repetem literalmente os prefixos dos arquivos SQL versionados no Git. Essa diferença de identificadores deve ser considerada ao reconciliar o histórico de migrations; não significa que as migrations de domínio estejam ausentes do ambiente.
+
+A consulta ao schema `public` confirmou as tabelas de domínio/configuração previstas pelas migrations desta PR: `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts`, `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`. A tabela `profiles` já existia na baseline. A RLS está habilitada nas tabelas criadas pela modelagem; as policies de domínio e configuração continuam atribuídas à Issue #101.
+
+A aplicação e a inspeção do schema no Polyford comprovam a presença das migrations e estruturas no ambiente de desenvolvimento. **Não equivalem a um teste automatizado de integração SQL/PostgreSQL reproduzível no CI.** A integração server-side/RPC para criação atômica de mensagem e anexos continua pendente dos fluxos de produto correspondentes.
+
+A Q-025 e a ADR-005 Proposed continuam sendo referências pendentes para a homologação operacional da stack.
 
 ## Validação
 
-O CI da PR #165 executou com sucesso os jobs de build e de lint/typecheck/testes/build no commit `9c0711dcb5e091f751f1070230d9f09db558947b`. O Preview Vercel reportado é validação de build/deploy da aplicação, não de SQL, RLS ou integração Supabase.
+No head da PR `2550112050d9da95fe8c1bfa34ed045f62dda1ca`, os dois workflows CI associados concluíram com sucesso:
 
-Os testes automatizados executados pelo CI cobrem os testes existentes em Node. Não há teste de integração SQL/PostgreSQL nesta branch; constraints e triggers ainda exigem validação em banco de desenvolvimento.
+- CI run [#270](https://github.com/Aluvioz/Polychat/actions/runs/45407652543) — `success`.
+- CI run [#340](https://github.com/Aluvioz/Polychat/actions/runs/45407652398) — `success`.
+
+O status do Preview Vercel também retornou `success`. Esses resultados validam os checks de aplicação/build configurados, mas não substituem testes automatizados de integração SQL, RLS ou dos fluxos transacionais no Supabase.
+
+A revisão do Tech Lead `luizme7` está registrada como **APPROVED** para a baseline inicial do schema, com as ressalvas descritas nesta nota. A revisão SQA mais recente de `Dante-Davi` solicita a sincronização destas evidências documentais e da descrição da PR; a confirmação formal final do SQA permanece pendente.
