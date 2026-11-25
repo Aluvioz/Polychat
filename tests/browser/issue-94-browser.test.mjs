@@ -31,12 +31,20 @@ async function open(viewport = { width: 390, height: 844 }) {
   assert.equal(await page.locator('[data-screen="start"]').isVisible(), true);
   return { page, unexpectedNetwork, scriptErrors };
 }
+async function assertMobileTask(page, id, screen) {
+  const section = page.locator('[data-screen="' + screen + '"]');
+  assert.equal(await section.isVisible(), true, 'Tela não está visível: ' + screen);
+  assert.equal(await section.getAttribute('data-task'), id, 'Rastreabilidade divergente para ' + id);
+  assert.match(await section.locator('.eyebrow').first().innerText(), new RegExp('^' + id + ' ·'));
+}
 async function mobileLogin(page) {
   await page.locator('[data-screen="start"] [data-go="u-login"]').click();
+  await assertMobileTask(page, 'U-01', 'u-login');
   await page.locator('[data-screen="u-login"] [data-go="u-monitor"]').click();
   assert.equal(await page.locator('[data-screen="u-monitor"]').isVisible(), true);
+  assert.equal(await page.locator('[data-screen="u-monitor"]').getAttribute('data-task'), null);
   await page.locator('[data-screen="u-monitor"] [data-go="u-conversations"]').click();
-  assert.equal(await page.locator('[data-screen="u-conversations"]').isVisible(), true);
+  await assertMobileTask(page, 'U-02', 'u-conversations');
 }
 async function assertTiTask(page, id, screen) {
   const section = page.locator('[data-screen="' + screen + '"]');
@@ -61,11 +69,14 @@ test('U-01/U-02: login fictício, erro genérico, aviso e conversas recentes', a
   try {
     const { page } = ctx;
     await page.locator('[data-screen="start"] [data-go="u-login"]').click();
+    await assertMobileTask(page, 'U-01', 'u-login');
     await page.locator('[data-action="bad-login"]').click();
     assert.match(await page.locator('#feedback').innerText(), /Não foi possível entrar/);
     await page.locator('[data-screen="u-login"] [data-go="u-monitor"]').click();
+    assert.equal(await page.locator('[data-screen="u-monitor"]').getAttribute('data-task'), null);
     assert.match(await page.locator('[data-screen="u-monitor"]').innerText(), /aviso de monitoramento/i);
     await page.locator('[data-screen="u-monitor"] [data-go="u-conversations"]').click();
+    await assertMobileTask(page, 'U-02', 'u-conversations');
     assert.match(await page.locator('[data-screen="u-conversations"]').innerText(), /2 mensagens não lidas|Conversas recentes/i);
     await page.screenshot({ path: new URL('mobile-conversas-390.png', shots).pathname, fullPage: true });
     await verifyNoErrors(ctx);
@@ -78,6 +89,7 @@ test('U-03/U-04: busca, ausência de resultados, contatos corretos e grupo isola
     const { page } = ctx;
     await mobileLogin(page);
     await page.locator('[data-screen="u-conversations"] [data-go="u-contacts"]').click();
+    await assertMobileTask(page, 'U-03', 'u-contacts');
     await page.locator('#contact-search').fill('inexistente');
     assert.equal(await page.locator('#contacts-empty').isVisible(), true);
     await page.locator('#contact-search').fill('Rafael');
@@ -91,6 +103,7 @@ test('U-03/U-04: busca, ausência de resultados, contatos corretos e grupo isola
     assert.match(await page.locator('#chat-messages').innerText(), /Atualização de plantão/);
     assert.doesNotMatch(await page.locator('#chat-messages').innerText(), /verificar os arquivos/);
     await page.locator('#group-info-link').click();
+    await assertMobileTask(page, 'U-04', 'u-group');
     assert.match(await page.locator('[data-screen="u-group"]').innerText(), /Somente a TI/);
     await verifyNoErrors(ctx);
   } finally { await ctx.page.close(); }
@@ -104,6 +117,7 @@ test('U-05/U-08: envio sem servidor, offline, falha e recuperação simulada', a
     await page.locator('[data-action="offline"]').click();
     assert.match(await page.locator('#feedback').innerText(), /Sem conexão/);
     await page.locator('[data-screen="u-conversations"] [data-chat="individual"]').click();
+    await assertMobileTask(page, 'U-05', 'u-chat');
     assert.equal(await page.locator('#offline-indicator').isVisible(), true);
     await page.locator('[data-action="fail-message"]').click();
     await page.locator('[data-action="retry-message"]').click();
@@ -117,6 +131,9 @@ test('U-05/U-08: envio sem servidor, offline, falha e recuperação simulada', a
     await page.locator('#message-form [type="submit"]').click();
     assert.match(await page.locator('#chat-messages').innerText(), /Mensagem inteiramente fictícia/);
     assert.match(await page.locator('#feedback').innerText(), /apenas simulado/);
+    await page.locator('[data-screen="u-chat"] [data-go="u-conversations"]').click();
+    await page.locator('[data-screen="u-conversations"] [data-go="u-session"]').click();
+    await assertMobileTask(page, 'U-08', 'u-session');
     await verifyNoErrors(ctx);
   } finally { await ctx.page.close(); }
 });
@@ -128,6 +145,8 @@ test('U-06/U-07: tipos, tamanho, quantidade, PDF com senha e scanner', async () 
     await mobileLogin(page);
     await page.locator('[data-screen="u-conversations"] [data-chat="individual"]').click();
     await page.locator('[data-screen="u-chat"] [data-go="u-attach"]').click();
+    await assertMobileTask(page, 'U-06', 'u-attach');
+    assert.match(await page.locator('[data-task="U-07"]').innerText(), /U-07 · ERROS E RECUPERAÇÃO DE ANEXOS/);
     for (const [action, expected] of [
       ['attach-invalid', /apenas PDF e JPEG/],
       ['attach-over-limit', /excede 10 MB/],
