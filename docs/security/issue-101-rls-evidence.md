@@ -35,7 +35,7 @@ Cenários cobertos:
 - TI consulta conversas encerradas, encerra alerta e cria grupo;
 - criação de conversa direta usa UUID gerado pelo cliente e criação dos dois memberships em transação subsequente.
 
-O fluxo de criação direta também foi executado isoladamente com UUID fornecido pelo cliente; a conversa ficou visível após a criação dos memberships. O teste separado está em `supabase/tests/issue_101_direct_conversation_creation.sql`.
+O fluxo de criação direta também foi executado isoladamente com UUID fornecido pelo cliente; o teste retornou `direct_conversation_visible_after_membership=true`. O teste separado está em `supabase/tests/issue_101_direct_conversation_creation.sql`.
 
 ## Migrations aplicadas no Supabase
 
