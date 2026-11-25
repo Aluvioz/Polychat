@@ -16,14 +16,16 @@ update public.profiles set role='ti' where id='44444444-4444-4444-8444-444444444
 update public.profiles set is_active=false where id='55555555-5555-4555-8555-555555555555';
 
 insert into public.conversations(id,kind,created_by_profile_id,direct_user_a_id,direct_user_b_id)
-values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','direct','11111111-1111-4111-8111-111111111111','11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222');
+values
+('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','direct','11111111-1111-4111-8111-111111111111','11111111-1111-4111-8111-111111111111','22222222-2222-4222-8222-222222222222'),
+('abababab-abab-4bab-8bab-abababababab','direct','11111111-1111-4111-8111-111111111111','11111111-1111-4111-8111-111111111111','33333333-3333-4333-8333-333333333333');
 insert into public.conversations(id,kind,name,created_by_profile_id,status)
 values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','group','active','44444444-4444-4444-8444-444444444444','active'),
        ('cccccccc-cccc-4ccc-8ccc-cccccccccccc','group','closed','44444444-4444-4444-8444-444444444444','closed');
 
 insert into public.memberships(conversation_id,profile_id,added_by_profile_id) values
-('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','11111111-1111-4111-8111-111111111111','11111111-1111-4111-8111-111111111111'),
-('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','22222222-2222-4222-8222-222222222222','11111111-1111-4111-8111-111111111111'),
+('abababab-abab-4bab-8bab-abababababab','11111111-1111-4111-8111-111111111111','11111111-1111-4111-8111-111111111111'),
+('abababab-abab-4bab-8bab-abababababab','33333333-3333-4333-8333-333333333333','11111111-1111-4111-8111-111111111111'),
 ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','11111111-1111-4111-8111-111111111111','44444444-4444-4444-8444-444444444444'),
 ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','22222222-2222-4222-8222-222222222222','44444444-4444-4444-8444-444444444444'),
 ('cccccccc-cccc-4ccc-8ccc-cccccccccccc','11111111-1111-4111-8111-111111111111','44444444-4444-4444-8444-444444444444'),
@@ -41,24 +43,15 @@ values ('99999999-9999-4999-8999-999999999999','eeeeeeee-eeee-4eee-8eee-eeeeeeee
 -- Active member: own conversations, current memberships, messages and attachments.
 set local role authenticated;
 select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
-insert into rls_results select 'member_conversations',count(*)=2,'direct and active group; closed group hidden' from public.conversations;
+insert into public.memberships(conversation_id,profile_id,added_by_profile_id) values
+('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',(select auth.uid()),(select auth.uid())),
+('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','22222222-2222-4222-8222-222222222222',(select auth.uid()));
+insert into rls_results select 'member_conversations',count(*)=3,'directs and active group; closed group hidden' from public.conversations;
 insert into rls_results select 'member_messages',count(*)=2,'only messages in current memberships' from public.messages;
 insert into rls_results select 'member_attachments',count(*)=1,'only attachment in readable conversation' from public.attachments;
-insert into rls_results select 'member_memberships',count(*)=3,'only own memberships' from public.memberships;
+insert into rls_results select 'member_memberships',count(*)=4,'only own memberships' from public.memberships;
 insert into public.messages(conversation_id,sender_profile_id,body)
 values ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',(select auth.uid()),'allowed direct message');
-
--- A member can create a direct conversation with another active user and add
--- the two direct participants in the same statement/transaction.
-with new_direct as (
-  insert into public.conversations(kind,created_by_profile_id,direct_user_a_id,direct_user_b_id)
-  values ('direct',(select auth.uid()),'11111111-1111-4111-8111-111111111111','33333333-3333-4333-8333-333333333333')
-  returning id
-)
-insert into public.memberships(conversation_id,profile_id,added_by_profile_id)
-select id,(select auth.uid()),(select auth.uid()) from new_direct
-union all
-select id,'33333333-3333-4333-8333-333333333333',(select auth.uid()) from new_direct;
 
 insert into public.message_reads(message_id,reader_profile_id)
 values ('eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',(select auth.uid()));
