@@ -31,7 +31,10 @@ export default function Home() {
           </span>
           <span>polychat</span>
         </Link>
-        <span className="topbar-context">AMBIENTE CORPORATIVO</span>
+        <div className="topbar-actions">
+          <span className="topbar-context">AMBIENTE CORPORATIVO</span>
+          <Link className="topbar-login" href="/login">Entrar</Link>
+        </div>
       </header>
 
       <section className="hero" aria-labelledby="hero-title">
