@@ -9,7 +9,7 @@
 
 | ID | Fluxo / tarefa | Observação do código antes do ajuste | Risco UX (hipótese) | Prioridade interna | Correção implementada | Estado |
 |---|---|---|---|---|---|---|
-| H94-01 | U-05/U-07, falha de envio | O fluxo simulava falha, mas não oferecia caminho explícito de nova tentativa | Participante poderia não localizar recuperação | Média | Acrescentado botão Tentar novamente, com retorno separado quando offline | Corrigido na fonte; reteste humano pendente |
+| H94-01 | U-05 (mensagem)/U-08 (offline), falha de envio | O fluxo simulava falha, mas não oferecia caminho explícito de nova tentativa | Participante poderia não localizar recuperação | Média | Acrescentado botão Tentar novamente, com retorno separado quando offline | Corrigido na fonte; reteste humano pendente |
 | H94-02 | U-03/T-02, busca | O filtro local ocultava resultados sem mensagem quando nenhum exemplo correspondia | Estado vazio poderia ser confundido com defeito | Média | Adicionado estado textual Nenhum resultado para contatos e contas fictícias | Corrigido na fonte; reteste humano pendente |
 | H94-03 | U-08, offline | O aviso de indisponibilidade era temporário e desaparecia ao trocar de tela | Risco de tentar enviar sem saber que está offline | Média | Indicador textual de sem conexão mostrado na conversa enquanto o estado simulado estiver ativo | Corrigido na fonte; reteste humano pendente |
 | H94-04 | U-06/U-07, falha de upload | Havia apenas o exemplo de falha, sem nova tentativa local acessível | Falha e recuperação poderiam parecer indistintas | Média | Ação demonstrativa de tentar novamente após falha, sem upload real | Corrigido na fonte; reteste humano pendente |
