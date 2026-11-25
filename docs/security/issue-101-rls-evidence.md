@@ -42,6 +42,7 @@ O fluxo de criação direta também foi executado isoladamente com UUID fornecid
 - `20261125231700_issue_101_domain_rls`
 - `20261125232036_issue_101_profile_privilege_hardening`
 - `20261125232106_issue_101_direct_conversation_ids`
+- `20261125234105_issue_101_hide_ti_check_definer`
 
 Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta branch.
 
@@ -51,7 +52,7 @@ Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta b
 - Eventos de ações privilegiadas permanecem sob responsabilidade da Issue #124; esta Issue não cria uma segunda trilha para essas mesmas ações.
 - Eventos de auditoria genérica e retenção permanecem na Issue #102.
 - A validação de operações de escrita de anexos depende da implementação de Storage e dos fluxos da Issue #117.
-- O Security Advisor ainda pode apontar a tabela `privileged_action_audit` sem policy; ela não recebe grants ao cliente e deve continuar server-only. A função `public.is_active_ti()` permanece executável por `authenticated` porque é usada nas policies existentes; não foi movida para não alterar policies pertencentes a outras issues.
+- O Security Advisor não aponta mais função SECURITY DEFINER exposta em `public`: a verificação de TI foi movida para `private.is_active_ti()` e `public.is_active_ti()` virou wrapper SECURITY INVOKER usado pelas policies. Permanece um aviso informativo para `privileged_action_audit` sem policy; a tabela não recebe grants ao cliente e permanece server-only, sob responsabilidade da #124.
 
 ## Sincronização de migrations
 
