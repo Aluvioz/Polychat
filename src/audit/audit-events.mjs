@@ -103,7 +103,7 @@ export async function recordAuditEvent({
     throw new TypeError("An authenticated access token is required.");
   }
   const baseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const anonKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!baseUrl || !anonKey) {
     throw new Error("Audit service is not configured.");
   }
