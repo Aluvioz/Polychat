@@ -6,7 +6,7 @@ const actor = "11111111-1111-4111-8111-111111111111";
 const resource = "22222222-2222-4222-8222-222222222222";
 const env = {
   NEXT_PUBLIC_SUPABASE_URL: "https://polychat-test.supabase.co/",
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-test-key",
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "anon-test-key",
 };
 const event = {
   actorProfileId: actor,
@@ -79,7 +79,7 @@ test("posts with anon key and caller JWT, returning the inserted event id", asyn
   });
   assert.equal(id, resource);
   assert.equal(request.url, "https://polychat-test.supabase.co/rest/v1/audit_events");
-  assert.equal(request.init.headers.apikey, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  assert.equal(request.init.headers.apikey, env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
   assert.equal(request.init.headers.Authorization, "Bearer user-access-token");
   assert.equal(request.init.cache, "no-store");
   assert.equal(request.init.body.includes("service_role"), false);
