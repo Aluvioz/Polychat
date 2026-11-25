@@ -217,9 +217,29 @@ drop trigger if exists security_alerts_audit_closure on public.security_alerts;
 create trigger security_alerts_audit_closure after update on public.security_alerts
 for each row execute function public.audit_security_alert_closure();
 
--- Configuration changes are recorded by explicit authenticated application
--- callsites when the admin settings handlers are implemented; no unverified
--- trigger is installed on the current configuration tables.
+create or replace function public.audit_configuration_change()
+returns trigger language plpgsql set search_path=''
+as $
+declare v_id uuid; v_operation text;
+begin
+ if tg_op='DELETE' then v_id:=old.id; v_operation:='delete';
+ elsif tg_table_name='attachment_user_quotas' then v_id:=new.profile_id; v_operation:=lower(tg_op);
+ else v_id:=coalesce(new.id,old.id); v_operation:=lower(tg_op);
+ end if;
+ insert into public.audit_events(actor_profile_id,event_type,resource_type,resource_id,outcome,metadata)
+ values ((select auth.uid()),'configuration_changed','configuration',v_id,'success',
+  jsonb_build_object('entity',tg_table_name,'operation',v_operation));
+ if tg_op='DELETE' then return old; end if;
+ return new;
+end;
+$;
+drop trigger if exists detection_rules_audit_changes on public.detection_rules;
+create trigger detection_rules_audit_changes after insert or update or delete on public.detection_rules
+for each row execute function public.audit_configuration_change();
+drop trigger if exists attachment_user_quotas_audit_changes on public.attachment_user_quotas;
+create trigger attachment_user_quotas_audit_changes after insert or update on public.attachment_user_quotas
+for each row execute function public.audit_configuration_change();
+
 
 create or replace function public.audit_retention_hold_change()
 returns trigger language plpgsql set search_path=''
