@@ -47,7 +47,7 @@ async function findProfileByUsername(username, cfg, fetchImpl) {
 async function findAuthEmail(userId, cfg, fetchImpl) {
   const response = await fetchImpl(
     `${cfg.baseUrl}/auth/v1/admin/users/${encodeURIComponent(userId)}`,
-    { headers: headers(cfg.serviceKey), cache: "no-store" },
+    { headers: headers(cfg.secretKey), cache: "no-store" },
   );
   if (!response.ok) throw new Error("Auth identity lookup failed.");
   const result = await readJson(response);
@@ -62,7 +62,7 @@ async function getProfileById(userId, cfg, fetchImpl) {
   url.searchParams.set("id", `eq.${userId}`);
   url.searchParams.set("limit", "1");
   const response = await fetchImpl(url, {
-    headers: headers(cfg.serviceKey),
+    headers: headers(cfg.secretKey),
     cache: "no-store",
   });
   if (!response.ok) throw new Error("Profile lookup failed.");
@@ -184,7 +184,7 @@ async function refreshSession(refreshToken, cfg, fetchImpl) {
     `${cfg.baseUrl}/auth/v1/token?grant_type=refresh_token`,
     {
       method: "POST",
-      headers: { apikey: cfg.anonKey, "Content-Type": "application/json" },
+      headers: { apikey: cfg.publishableKey, "Content-Type": "application/json" },
       body: JSON.stringify({ refresh_token: refreshToken }),
       cache: "no-store",
     },
@@ -260,7 +260,7 @@ export async function logoutSession({
   if (accessToken) {
     const response = await fetchImpl(`${cfg.baseUrl}/auth/v1/logout`, {
       method: "POST",
-      headers: headers(cfg.anonKey, accessToken),
+      headers: headers(cfg.publishableKey, accessToken),
       cache: "no-store",
     });
     if (response.ok || !refreshToken) return;
