@@ -86,3 +86,88 @@ No head então atual da PR, `ee031af1fd00c9f515a3669ba9337a89f914eca3`, os dois 
 O Preview Vercel associado a esse head também retornou `success`.
 
 A revisão do Tech Lead `luizme7` está registrada como **APPROVED** para a baseline inicial do schema, incluindo as três estruturas específicas de configuração, com as ressalvas descritas nesta nota. A confirmação formal final do SQA permanece pendente.
+
+
+## Auditoria complementar — 25/11/2026
+
+Esta seção registra uma nova consulta ao GitHub e ao projeto Supabase Polyford. Ela complementa as evidências anteriores sem alterar a Issue #99 ou seus critérios originais.
+
+### Estado atual consultado
+
+- Issue #99: **OPEN**, com título, corpo, critérios de aceite, assignees e labels preservados.
+- `main` consultada no commit `f2618bc670282070f87a8f1dd645253c8de9990e`.
+- PR #165: **MERGED** no commit `f2618bc670282070f87a8f1dd645253c8de9990e`; aprovação do Tech Lead registrada. O histórico de revisão SQA da PR exigiu atualização documental, mas a aprovação formal final SQA não foi encontrada nas revisões consultadas.
+- PR #160: **OPEN / DRAFT**; contém o modelo conceitual v0.3, sem aprovação técnica final registrada. Não foi alterada.
+- PR #166: **OPEN / DRAFT**; migration e writer de auditoria estão no branch da PR, não na `main`. O histórico da PR registra parecer SQA **NÃO APROVADO** e revisão do Tech Lead sem APPROVE final. Não foi alterada.
+- PR #167: **OPEN / DRAFT**; atualização documental anterior da #99. Não foi encerrada nem modificada nesta execução, pois ainda aguarda validação e não foi comprovadamente substituída por PR integrada.
+
+### Migrations: correspondência e limites de comprovação
+
+O histórico remoto atual do Polyford contém:
+
+| Arquivo/prefixo Git | Versão remota | Nome remoto | Resultado da comparação |
+|---|---:|---|---|
+| `202611160001_profiles_roles_and_account_status.sql` | `20261124191059` | `profiles_roles_and_account_status` | Nome compatível; estrutura atual de `profiles` contém a baseline e a coluna `username` acrescentada pela migration #99. Não há hash/SQL original no histórico remoto para comprovar igualdade byte a byte. |
+| `202611240001_issue_99_initial_domain_schema.sql` | `20261124191114` | `issue_99_initial_domain_schema` | Nome compatível; tabelas, colunas, PKs, FKs, constraints, índices e RLS observados correspondem semanticamente à migration versionada. Igualdade byte a byte não é comprovável pelo histórico remoto disponível. |
+| `202611240002_issue_99_integrity_and_configuration.sql` | `20261124191131` | `issue_99_integrity_and_configuration` | Nome compatível; tabelas de configuração, triggers e constraints de integridade observados correspondem semanticamente à migration versionada. Igualdade byte a byte não é comprovável pelo histórico remoto disponível. |
+| `202611240003_issue_102_audit_events.sql` | `20261124210245` | `issue_102_audit_events` | Nome compatível; a migration existe no branch da PR #166 e a estrutura de auditoria está no Polyford. O arquivo não existe na `main`; sua integração Git permanece pendente. Igualdade byte a byte não é comprovável pelo histórico remoto disponível. |
+
+**Conclusão de reconciliação:** os quatro pares têm correspondência de nome e o schema atual confirma a presença semântica das alterações descritas para #99 e #102. O Supabase não expõe, pelo histórico consultado, o conteúdo/hash de cada migration aplicada. Portanto, não declaro equivalência criptográfica/byte a byte nem reconciliação do identificador temporal. Nenhum `db push`, reset, repair ou reaplicação foi executado.
+
+### Schema, integridade, índices e RLS observados
+
+A consulta ao projeto `oixifpdfvrenlhvycszy` confirmou as 11 tabelas revisadas: `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts`, `detection_rules`, `attachment_user_quotas`, `attachment_storage_capacity` e `audit_events`. Todas estavam vazias na consulta; não foram criados registros de teste persistentes.
+
+Foram inspecionadas PKs, FKs, CHECK constraints, índices, triggers, RLS e policies. As invariantes observadas incluem:
+- Par canônico e único para conversas individuais;
+- Um único período vigente de membership por perfil/conversa;
+- Consistência dos metadados de edição/exclusão;
+- Mensagem com texto não vazio ou ao menos um anexo, validada por constraint trigger diferida;
+- Até cinco anexos por mensagem, com serialização por advisory transaction lock;
+- MIME limitado a PDF/JPEG e tamanho entre 1 byte e 10 MiB;
+- Estruturas específicas para regras de detecção, quota individual e capacidade total, sem tabela genérica de configuração.
+
+O Security Advisor identificou RLS habilitada sem policies em nove tabelas de domínio/configuração. Isso mantém essas tabelas sem acesso por policy e corresponde ao limite de autorização atribuído às Issues #100/#101; não foram criadas policies nesta execução. As duas policies de `audit_events` e a policy de leitura de `profiles` foram observadas separadamente.
+
+O Security Advisor também apontou três funções `SECURITY DEFINER` da baseline de perfis executáveis por `anon` e `authenticated` (`create_default_profile`, `is_active_ti` e `prevent_client_profile_privilege_changes`). Essas funções pertencem à migration de perfis/#105 e não foram modificadas dentro da #99; o achado fica registrado para tratamento no escopo responsável.
+
+### Índices de FKs: correção preparada nesta branch
+
+O Performance Advisor apontou seis FKs sem índice de cobertura:
+- `conversations.direct_user_b_id`;
+- `memberships.added_by_profile_id`;
+- `memberships.ended_by_profile_id`;
+- `messages.edited_by_profile_id`;
+- `messages.deleted_by_profile_id`;
+- `security_alerts.reviewed_by_profile_id`.
+
+Foi acrescentada nesta branch a migration aditiva `202611250001_issue_99_fk_covering_indexes.sql`, criando somente os seis índices correspondentes. A DDL foi executada em transação no Polyford e revertida com `ROLLBACK`: sintaxe/execução confirmadas, sem alteração persistente do schema e sem nova entrada no histórico remoto. A migration ainda **não foi aplicada** ao banco; sua aplicação depende da revisão/integração Git e da reconciliação operacional do histórico.
+
+Os avisos de índices existentes não utilizados foram mantidos como observação, não como motivo para removê-los: as tabelas consultadas estavam vazias e não há carga representativa para justificar remoção.
+
+### Testes e CI consultados
+
+- Um bloco SQL de asserções de catálogo foi executado no Polyford e passou: presença das 11 tabelas, RLS nas tabelas revisadas, triggers de integridade de mensagens/anexos e CHECK constraints de MIME/tamanho.
+- A DDL dos seis índices foi executada em transação e revertida com sucesso.
+- Não foi executado teste comportamental positivo/negativo com perfis reais: `auth.users` e `profiles` estavam sem registros, portanto não existe identidade de teste válida para percorrer as relações sem criar dados/identidades artificiais.
+- A árvore `tests/` na `main` contém testes de autorização e acessibilidade; não foi encontrado teste SQL de integração específico da modelagem #99. O teste SQL da auditoria está na PR #166, fora da `main`.
+- No commit atual da `main`, o workflow CI #369 e os checks `build` e `Lint, typecheck and build` concluíram com `success`; o status Vercel consultado também estava `success`. Esses checks não executam validação de migrations, integridade SQL, RLS ou fluxos transacionais do banco.
+
+### Limites entre Issues
+
+- **#100/#101:** matriz de autorização e implementação/teste de policies de domínio/configuração; não foram inventadas policies.
+- **#102:** catálogo, persistência e controles de auditoria estão na PR #166, ainda não integrada à `main`; não foram duplicados aqui.
+- **#117:** Storage privado, ciclo de anexos e backup de anexos; nenhuma bucket ou policy foi criada nesta execução.
+- **#124:** integração de eventos aos fluxos de negócio e atomicidade mutação + auditoria; não foram adicionados call sites nem duplicada responsabilidade.
+- A integração server-side/RPC para criar mensagem e anexos na mesma transação continua pendente dos fluxos de aplicação correspondentes.
+
+### Pendências e decisão de fechamento
+
+1. Revisar e integrar a migration aditiva de índices desta branch; somente depois, planejar sua aplicação no ambiente conforme a reconciliação aprovada do histórico.
+2. Comprovar a sequência e a equivalência exata das migrations remotas por procedimento operacional autorizado; o histórico remoto disponível não fornece conteúdo/hash para comparação.
+3. Implementar e testar as policies sob #100/#101.
+4. Integrar a gravação transacional de mensagem/anexos nos fluxos da aplicação.
+5. Aguardar a integração e validação formal da PR #166/#102, sem antecipar sua responsabilidade.
+6. Obter revisão formal do SQA e concluir a revisão por PR conforme os critérios originais.
+
+**Conclusão:** a modelagem base da #99 está presente na `main` e no Polyford, e os checks de aplicação/build atuais passaram. Ainda assim, a Issue #99 não atende integralmente aos critérios originais de fechamento: falta teste automatizado/reproduzível de integração SQL e regressão dos fluxos, a migration aditiva de índices ainda aguarda revisão/aplicação, a integração transacional de mensagens/anexos permanece pendente e a revisão SQA final não foi comprovada. A Issue #99 deve permanecer aberta.
