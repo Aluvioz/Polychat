@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.10 — 24/11/2026  
+**Versão:** 0.11 — 24/11/2026  
 **Status:** modelo preliminar; plano consolidado proposto pelo PO, pendente de validação das prioridades, responsabilidades funcionais, marcos e evidências pelo Tech Lead, TI e SQA  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
@@ -534,14 +534,14 @@ Q-018 e Q-025 estão concluídas; Q-001 a Q-017 e Q-020 a Q-024 foram respondida
 
 ## 16. Critérios de aceite da Issue #125
 
-Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha a evidência esperada e não declara conclusão.
+Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha a evidência esperada e distingue validações documentais já registradas de aprovação integral, implementação e comprovação de controles.
 
 | Critério original | Evidência necessária | Estado nesta versão |
 |---|---|---|
-| Threat model e mitigação priorizada; riscos residuais aceitos formalmente | Modelo revisado por Tech Lead, TI (segurança operacional) e SQA; plano com responsáveis; riscos residuais formalmente aceitos pela autoridade competente | **Parcial:** modelo preliminar produzido; revisão, plano validado e aceitação formal pendentes |
-| Testes relevantes automatizados ou evidência documentada | Testes SEC-01..SEC-20 e verificação DOC-01 aplicáveis, executados ou com evidência justificada e vinculados a commit e ambiente | **Pendente:** casos e verificações especificados; esta versão não os executa |
-| Revisão por PR concluída | PR revisada/aprovada por Tech Lead e SQA, com participação da TI como responsável operacional por segurança e checks concluídos | **Pendente** |
-| Sem regressão nos fluxos relacionados | CI e testes de regressão dos fluxos efetivamente implementados | **Pendente:** dependerá da implementação e da Issue #129 |
+| Threat model e mitigação priorizada; riscos residuais aceitos formalmente | Modelo revisado por Tech Lead, TI (segurança operacional) e SQA; plano com classificação, responsáveis, marcos/prazos e evidências validados; riscos residuais formalmente dispostos pela autoridade competente | **Parcial:** modelo preliminar revisado pelo Tech Lead; validação operacional geral da TI registrada; SQA confirmou atendimento dos quatro apontamentos documentais. A validação final da matriz 18.2, a confirmação de responsáveis/marcos/prazos e a disposição formal dos riscos residuais permanecem pendentes. |
+| Testes relevantes automatizados ou evidência documentada | Testes SEC-01..SEC-20 e verificação DOC-01 aplicáveis, executados ou com evidência justificada e vinculados a commit e ambiente | **Pendente:** casos e verificações estão especificados; sua execução e as evidências reproduzíveis ainda dependem da implementação correspondente e de ambiente autorizado. |
+| Revisão por PR concluída | Revisões independentes da versão vigente por Tech Lead e SQA, participação operacional de TI no escopo aplicável, aprovação formal e checks correspondentes ao commit final | **Pendente:** há pareceres favoráveis às correções documentais de versões anteriores e validação operacional de TI registrada, mas não há aprovação formal `APPROVED` da PR #154; a versão 0.11 ainda não foi reavaliada. |
+| Sem regressão nos fluxos relacionados | CI e testes de regressão dos fluxos efetivamente implementados, com resultados vinculados ao commit e ambiente | **Pendente:** checks de CI não substituem testes de regressão funcional; a comprovação depende dos fluxos implementados e dos testes aplicáveis, incluindo a Issue #129. |
 
 ### 16.1 Condições para considerar o threat model revisado
 
@@ -553,7 +553,7 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 - [x] **Políticas #117 e #122:** as entregas documentais foram reconciliadas com a FORD v2 e a baseline v0.5. A política de anexos foi integrada pela PR #150; a política de detecção foi integrada pela PR #151, com conformidade documental SQA e aprovação documental do Tech Lead registradas. Implementação funcional, ativação e testes dessas políticas continuam em seus respectivos escopos.
 - [x] **Estrutura da matriz 18.2:** os riscos PRD-001 a PRD-010 possuem tratamento proposto, funções-alvo, marcos, dependências e evidências esperadas. Essa completude documental não significa validação técnica ou operacional dos campos.
 - [ ] **Validação final da matriz 18.2:** Tech Lead, TI e SQA confirmam individualmente classificação técnica, responsáveis funcionais, marcos, evidências e prazos/estimativas para PRD-001 a PRD-010.
-- [ ] **Revisão independente da versão atual:** Tech Lead e SQA reavaliam a versão 0.10 e registram suas decisões formais sobre a entrega documental; os pareceres anteriores foram emitidos sobre versões anteriores e não constituem aprovação automática desta atualização.
+- [ ] **Revisão independente da versão atual:** Tech Lead e SQA reavaliam a versão 0.11 e registram suas decisões formais sobre a entrega documental; os pareceres anteriores foram emitidos sobre versões anteriores e não constituem aprovação automática desta atualização.
 - [ ] **Operacionalização dos controles:** implementação e comprovação dos controles de acesso, ciclo de vida, auditoria, monitoramento, anexos, continuidade, suporte e resposta a incidentes nas issues correspondentes.
 - [ ] **Riscos residuais:** classificação e disposição de cada risco residual documentadas; eventual aceitação formal deve ser registrada pela autoridade competente, sem aceite presumido pelo PO.
 - [ ] **Testes e evidências:** testes SEC-01 a SEC-20 aplicáveis, verificação DOC-01 e regressão executados e registrados com evidências reproduzíveis, vinculadas a versão e ambiente.
@@ -695,3 +695,4 @@ Um risco só deve ser marcado como tratado após implementação no escopo aplic
 | 0.8 | 24/11/2026 | Reconcilia a fotografia técnica com as migrations de schema/integridade da Issue #99 e a evidência documental de aplicação em desenvolvimento; corrige THR-005, THR-012, THR-020 e THR-024, distinguindo RLS habilitada de policies de domínio implementadas; não declara integração funcional ou homologação. |
 | 0.9 | 24/11/2026 | Registra a aprovação da compatibilidade do modelo de utilização Supabase + Vercel pela TI e pela FORD na Q-025; atualiza as referências a ADR-005, ADR-008 e ADR-009, mantendo separadas a aprovação arquitetural e a implementação/teste dos controles. |
 | 0.10 | 24/11/2026 | Harmoniza a checklist 16.1 com os pareceres registrados do Tech Lead, SQA e TI, as aprovações documentais das PRs #150/#151 e o estado atual da matriz 18.2; mantém pendentes a validação final da matriz, a revisão independente desta versão, a implementação e os testes. |
+| 0.11 | 24/11/2026 | Harmoniza a seção 16 com a checklist 16.1, refletindo as validações preliminares e operacionais já registradas, sem antecipar aprovação formal da PR, validação final da matriz 18.2, execução de testes ou aceitação de riscos residuais. |
