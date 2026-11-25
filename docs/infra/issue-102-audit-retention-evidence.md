@@ -189,3 +189,17 @@ Esta PR não altera ADRs, baseline, issues, ambientes, secrets, variáveis, pol�
 - O script SQL de integração foi executado dentro de transação com `ROLLBACK`; não deixou registros de auditoria nem alterações de dados.
 - Nenhum backup/restore foi simulado como evidência.
 - A PR permanece Draft/Open para revisão do SQA e Tech Lead.
+## 8.1 Revalidação independente em 25/11/2026
+
+A migration e o script de integração foram revalidados no projeto Supabase Polyford em 25/11/2026, sem reaplicar DDL ou alterar dados persistentes.
+
+- O projeto respondeu como ativo e saudável; PostgreSQL 17.11.0.019.
+- tests/sql/issue-102-audit-events.integration.sql foi executado novamente contra Polyford. A execução terminou sem erro e o script encerrou com ROLLBACK; o resultado vazio é esperado porque o arquivo contém assertions em blocos DO, sem consulta final de linhas.
+- Consulta de estado retornou: 0 linhas em auth.users, 0 em public.profiles e 0 em public.audit_events; 3 triggers não internos, 2 policies, 6 constraints CHECK e 3 funções relacionadas à trilha.
+- A ACL observada continua concedendo SELECT/INSERT em audit_events somente a authenticated; anon não possui SELECT/INSERT, e authenticated não possui UPDATE/DELETE/TRUNCATE. As policies SELECT/INSERT exigem TI ativo e, na inserção, correspondência entre ator e auth.uid().
+- Como não há identidade nem perfil no projeto, a execução não comprova inserção positiva de um evento por TI real. Nenhuma conta foi criada e nenhum evento de teste foi persistido.
+- O histórico remoto continua registrando 20261124210245 para issue_102_audit_events, enquanto o arquivo versionado usa 202611240003. A divergência não foi alterada nem declarada resolvida.
+
+No head a0ec9b8ebef20a21d601ade257128ab78b21b53a, os quatro workflows de CI associados à PR #166 retornaram completed/success; o status Vercel também retornou success. Esses checks não substituem a validação positiva com identidade TI nem comprovam retenção, backup, restore, RPO/RTO ou atomicidade dos fluxos de negócio.
+
+A execução atual confirma os testes negativos e a estrutura já descritos; não altera a classificação de implementação parcial nem remove as pendências dos critérios de aceite.
