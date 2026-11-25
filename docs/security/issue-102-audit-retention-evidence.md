@@ -39,6 +39,7 @@ A migration inicial criou triggers para `detection_rules` e `attachment_user_quo
 - `20261125232700_issue_102_preserve_held_resource_audit_events`
 - `20261125233102_issue_102_discard_audit_event_invoker`
 - `20261125233210_issue_102_serialize_retention_discard`
+- `20261125233320_issue_102_lock_event_and_resource_holds`
 
 Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta branch. A migration inicial cria `audit_events` com `CREATE TABLE IF NOT EXISTS`, para que a estrutura seja reproduzível a partir da branch principal, sem depender da PR #166.
 
@@ -46,7 +47,7 @@ Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta b
 
 O arquivo `supabase/tests/issue_102_audit_retention.integration.sql` foi executado no ambiente de desenvolvimento. Resultado: `issue_102_audit_and_hold_tests_passed`. A transação foi revertida.
 
-O teste adicional `supabase/tests/issue_102_discard_retention.integration.sql` também foi executado e retornou `issue_102_discard_hold_and_audit_tests_passed`, validando bloqueio por hold, liberação e descarte auditado, com rollback.
+O teste adicional `supabase/tests/issue_102_discard_retention.integration.sql` também foi executado e retornou `issue_102_discard_hold_and_audit_tests_passed`, validando bloqueio por hold do recurso subjacente e por hold específico do evento, liberação e descarte auditado, com rollback.
 
 Cenários comprovados:
 - usuário comum não lê `audit_events` nem `retention_holds`;
