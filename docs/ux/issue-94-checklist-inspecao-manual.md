@@ -11,12 +11,12 @@
 |---|---|---|---|
 | M94-01 | Abrir index.html, sem erro no console; escolher Usuário mobile | PENDENTE | — |
 | M94-02 | U-01: erro de login genérico, sem revelar conta; entrar ficticiamente | PENDENTE | — |
-| M94-03 | U-02: aviso de monitoramento e lista de conversas recentes com não lidas | PENDENTE | — |
-| M94-04 | U-03: buscar Rafael, verificar nome certo na conversa; buscar inexistente, verificar estado vazio | PENDENTE | — |
-| M94-05 | U-04: alternar grupo/individual sem reaproveitar mensagens de outro contexto | PENDENTE | — |
+| M94-03 | U-02: localizar conversa recente e não lidas; aviso de monitoramento é etapa auxiliar, sem código de tarefa | PENDENTE | — |
+| M94-04 | U-03: iniciar conversa individual pela busca contextual; Rafael correto e busca sem resultado | PENDENTE | — |
+| M94-05 | U-04: localizar grupo, consultar participantes e distinguir histórico do grupo do individual | PENDENTE | — |
 | M94-06 | U-05: enviar mensagem fictícia; status avisa que não houve envio real | PENDENTE | — |
-| M94-07 | U-06/U-07: mensagens distintas para arquivo não permitido, acima de 10 MB, mais de 5, PDF com senha, scanner indisponível e bloqueio | PENDENTE | — |
-| M94-08 | U-08: offline, falha e tentativa; offline impede confirmação; volta a online não envia nada real | PENDENTE | — |
+| M94-07 | U-06: selecionar PDF/JPEG; U-07: entender erros de arquivo, tamanho, quantidade, PDF com senha, scanner indisponível e recuperação | PENDENTE | — |
+| M94-08 | U-08: sessão expirada ou offline; reconhecer estado e próximo passo, sem confirmação de entrega real | PENDENTE | — |
 | M94-09 | T-01: login demonstrativo; dashboard TI é tela auxiliar, não outra tarefa | PENDENTE | — |
 | M94-10 | T-02: busca de conta e vazio; desativação Cancelar/Confirmar e foco restaurado | PENDENTE | — |
 | M94-11 | T-03: grupo, confirmação de remoção e texto sobre revogação imediata | PENDENTE | — |
