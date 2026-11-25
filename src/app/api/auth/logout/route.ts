@@ -6,8 +6,9 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const accessToken = request.cookies.get(AUTH_COOKIE_NAMES.access)?.value;
+  const refreshToken = request.cookies.get(AUTH_COOKIE_NAMES.refresh)?.value;
   try {
-    await logoutSession({ accessToken });
+    await logoutSession({ accessToken, refreshToken });
   } catch {
     // Always clear the browser session, even if the provider is unavailable.
   }
