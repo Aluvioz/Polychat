@@ -15,7 +15,7 @@ Esta entrega foi reconstruída a partir do schema observado no Supabase e dos re
 - Impede metadata com chaves de conteúdo de mensagem/conversa, senha, token, segredo, cookie ou credencial.
 - Mantém eventos append-only: UPDATE/DELETE/TRUNCATE diretos são rejeitados.
 - Registra em trigger a edição/exclusão lógica administrativa de mensagens e o fechamento de alertas, na mesma transação da mutação.
-- O módulo `src/audit/audit-events.mjs` oferece escrita explícita para eventos que dependem de callsites de aplicação, usando JWT do usuário e chave anon; nunca aceita service-role.
+- O módulo `src/audit/audit-events.mjs` oferece escrita explícita para eventos que dependem de callsites de aplicação, usando JWT do usuário e chave publishable; nunca aceita service-role.
 
 ### Preservação de investigações e descarte autorizado
 
@@ -26,7 +26,7 @@ Esta entrega foi reconstruída a partir do schema observado no Supabase e dos re
 - A função `public.discard_audit_event(uuid)` é SECURITY INVOKER, permite somente a TI ativa solicitar descarte de um evento, grava `retention_discarded` e bloqueia descarte quando o evento ou o recurso subjacente possui hold ativo. A política RLS de DELETE exige os marcadores transacionais que a função define; DELETE direto não satisfaz a policy.
 - Eventos de controle de retenção não podem ser descartados.
 
-A função de descarte foi implantada, mas **não foi invocada nesta validação**, pois executa exclusão física de um registro de auditoria. A validação confirmou por catálogo que ela é SECURITY INVOKER, que somente `authenticated` pode executá-la e que `anon` não pode; a chamada destrutiva não foi executada. Nenhum evento real foi apagado.
+A função de descarte foi exercitada com identidade TI sintética e dados temporários dentro de uma transação revertida. O teste confirmou que o descarte é bloqueado enquanto existe hold ativo, que após a liberação do hold o evento é removido e que `retention_discarded` permanece registrado. A primeira execução revelou falta de permissão para `LOCK TABLE`; isso foi corrigido substituindo o bloqueio de tabela por advisory lock transacional compartilhado entre a alteração dos holds e o descarte. O teste final passou e terminou com `ROLLBACK`; nenhum evento real foi apagado.
 
 ### Ajuste após teste
 
@@ -38,12 +38,15 @@ A migration inicial criou triggers para `detection_rules` e `attachment_user_quo
 - `20261125232535_issue_102_remove_unverified_config_triggers`
 - `20261125232700_issue_102_preserve_held_resource_audit_events`
 - `20261125233102_issue_102_discard_audit_event_invoker`
+- `20261125233210_issue_102_serialize_retention_discard`
 
 Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta branch. A migration inicial cria `audit_events` com `CREATE TABLE IF NOT EXISTS`, para que a estrutura seja reproduzível a partir da branch principal, sem depender da PR #166.
 
 ## Testes executados
 
 O arquivo `supabase/tests/issue_102_audit_retention.integration.sql` foi executado no ambiente de desenvolvimento. Resultado: `issue_102_audit_and_hold_tests_passed`. A transação foi revertida.
+
+O teste adicional `supabase/tests/issue_102_discard_retention.integration.sql` também foi executado e retornou `issue_102_discard_hold_and_audit_tests_passed`, validando bloqueio por hold, liberação e descarte auditado, com rollback.
 
 Cenários comprovados:
 - usuário comum não lê `audit_events` nem `retention_holds`;
@@ -69,4 +72,4 @@ Não foram criados usuários, holds ou eventos persistentes pelos testes.
 
 ## Estado
 
-A trilha transacional de mensagens/alertas, o registro de holds e o writer explícito foram implementados e testados. A retenção completa, os callsites de leitura/anexos/configuração e a evidência de backup/restore ainda não estão concluídos. A Issue #102 permanece aberta, sem declaração de aprovação ou fechamento, aguardando CI, SQA e Tech Lead.
+A trilha transacional de mensagens/alertas, o registro de holds, o descarte autorizado de eventos de auditoria e o writer explícito foram implementados e testados. Os callsites de leitura/anexos/configuração e a evidência de backup/restore ainda não estão concluídos. A Issue #102 permanece aberta, sem declaração de aprovação ou fechamento, aguardando CI, SQA e Tech Lead.
