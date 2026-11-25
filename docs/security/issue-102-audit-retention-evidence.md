@@ -40,6 +40,7 @@ A migration inicial criou triggers para `detection_rules` e `attachment_user_quo
 - `20261125233102_issue_102_discard_audit_event_invoker`
 - `20261125233344_issue_102_serialize_retention_discard`
 - `20261125233603_issue_102_lock_event_and_resource_holds`
+- `20261125233806_issue_102_audit_index_and_policy_tuning`
 
 Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta branch. A migration inicial cria `audit_events` com `CREATE TABLE IF NOT EXISTS`, para que a estrutura seja reproduzível a partir da branch principal, sem depender da PR #166.
 
