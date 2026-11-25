@@ -244,15 +244,31 @@ export async function validateSession({
   }
 }
 
-export async function logoutSession({ accessToken, env = process.env, fetchImpl = fetch }) {
-  if (!accessToken) return;
+export async function logoutSession({
+  accessToken,
+  refreshToken,
+  env = process.env,
+  fetchImpl = fetch,
+}) {
+  if (!accessToken && !refreshToken) return;
   let cfg;
   try {
     cfg = config(env);
   } catch {
     return;
   }
-  await revokeSession(accessToken, cfg, fetchImpl);
+  if (accessToken) {
+    const response = await fetchImpl(`${cfg.baseUrl}/auth/v1/logout`, {
+      method: "POST",
+      headers: headers(cfg.anonKey, accessToken),
+      cache: "no-store",
+    });
+    if (response.ok || !refreshToken) return;
+  }
+  if (refreshToken) {
+    const tokens = await refreshSession(refreshToken, cfg, fetchImpl);
+    if (tokens?.access_token) await revokeSession(tokens.access_token, cfg, fetchImpl);
+  }
 }
 
 export const AUTH_COOKIE_NAMES = Object.freeze({
