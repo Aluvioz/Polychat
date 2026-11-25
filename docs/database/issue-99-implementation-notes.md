@@ -149,9 +149,12 @@ Os avisos de índices existentes não utilizados foram mantidos como observaçã
 
 - Um bloco SQL de asserções de catálogo foi executado no Polyford e passou: presença das 11 tabelas, RLS nas tabelas revisadas, triggers de integridade de mensagens/anexos e CHECK constraints de MIME/tamanho.
 - A DDL dos seis índices foi executada em transação e revertida com sucesso.
-- Não foi executado teste comportamental positivo/negativo com perfis reais: `auth.users` e `profiles` estavam sem registros, portanto não existe identidade de teste válida para percorrer as relações sem criar dados/identidades artificiais.
-- A árvore `tests/` na `main` contém testes de autorização e acessibilidade; não foi encontrado teste SQL de integração específico da modelagem #99. O teste SQL da auditoria está na PR #166, fora da `main`.
-- No commit atual da `main`, o workflow CI #369 e os checks `build` e `Lint, typecheck and build` concluíram com `success`; o status Vercel consultado também estava `success`. Esses checks não executam validação de migrations, integridade SQL, RLS ou fluxos transacionais do banco.
+- Foi executado um teste SQL comportamental no Polyford em uma única transação revertida (ROLLBACK), usando duas identidades temporárias em auth.users. O trigger criou os perfis correspondentes e todos os dados de teste foram revertidos; a consulta posterior confirmou zero usuários e zero registros de teste remanescentes.
+- O teste transacional passou para: par canônico/único de conversa direta; rejeição de par direto inválido; unicidade do período vigente de membership e reinclusão em novo período; consistência dos metadados de edição/exclusão; mensagem somente com anexo válido na mesma transação; rejeição de mensagem vazia sem anexo; MIME e limite de 10 MiB; limite de cinco anexos; consistência de revisão de alertas; constraints das três estruturas de configuração.
+- A migration aditiva dos seis índices foi executada no mesmo teste e os seis índices foram encontrados durante a transação. O ROLLBACK removeu todos: consulta posterior confirmou zero índices de teste persistidos.
+- Autorização observada no banco: anon e authenticated retornaram zero mensagens nas tabelas com RLS e sem policies de domínio; um INSERT como authenticated foi rejeitado pelo PostgreSQL com SQLSTATE 42501 (violação de RLS). Não foram criadas policies nem alteradas permissões.
+- Os testes automatizados existentes da aplicação foram executados pelo CI do commit da PR 942c5465e90236ea6ca668a913f0cf9a6dfda787: workflow #332, job Lint, typecheck and build, incluindo testes automatizados, ESLint, TypeScript, build Next.js e smoke test, concluiu com success; workflow #402, job build, também concluiu com success. O Preview Vercel da PR ficou Ready.
+- A árvore tests/ não contém teste SQL de integração específico da modelagem #99; a validação SQL acima foi executada diretamente no Polyford e revertida integralmente.
 
 ### Limites entre Issues
 
