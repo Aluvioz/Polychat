@@ -219,7 +219,7 @@ for each row execute function public.audit_security_alert_closure();
 
 create or replace function public.audit_configuration_change()
 returns trigger language plpgsql set search_path=''
-as $
+as $$
 declare v_id uuid; v_operation text;
 begin
  if tg_op='DELETE' then v_id:=old.id; v_operation:='delete';
@@ -232,7 +232,7 @@ begin
  if tg_op='DELETE' then return old; end if;
  return new;
 end;
-$;
+$$;
 drop trigger if exists detection_rules_audit_changes on public.detection_rules;
 create trigger detection_rules_audit_changes after insert or update or delete on public.detection_rules
 for each row execute function public.audit_configuration_change();
