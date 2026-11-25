@@ -9,8 +9,8 @@ import {
 
 const env = {
   NEXT_PUBLIC_SUPABASE_URL: "https://polychat-test.supabase.co",
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-test-key",
-  SUPABASE_SERVICE_ROLE_KEY: "server-only-test-key",
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "anon-test-key",
+  SUPABASE_SECRET_KEY: "server-only-test-key",
 };
 const profile = {
   id: "11111111-1111-4111-8111-111111111111",
@@ -62,8 +62,9 @@ test("login por username resolve identidade, autentica senha e retorna apenas da
   assert.equal(result.refreshToken, tokens.refresh_token);
   assert.equal(result.expiresIn, 3600);
   assert.equal(JSON.stringify(result).includes("private@example.invalid"), false);
-  assert.equal(calls[0].init.headers.Authorization, `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`);
-  assert.equal(calls[2].init.headers.apikey, env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  assert.equal(calls[0].init.headers.apikey, env.SUPABASE_SECRET_KEY);
+  assert.equal(calls[0].init.headers.Authorization, undefined);
+  assert.equal(calls[2].init.headers.apikey, env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
   assert.deepEqual(AUTH_COOKIE_NAMES, {
     access: "polychat_access_token",
     refresh: "polychat_refresh_token",
