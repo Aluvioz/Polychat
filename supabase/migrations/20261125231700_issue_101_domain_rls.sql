@@ -192,10 +192,6 @@ grant select on table public.attachment_storage_capacity to authenticated;
 grant insert (capacity_bytes) on table public.attachment_storage_capacity to authenticated;
 grant update (capacity_bytes, updated_at) on table public.attachment_storage_capacity to authenticated;
 
--- Generic audit events stay TI-only and append-only under Issue #102.
-revoke all on table public.audit_events from public, anon;
-grant select, insert on table public.audit_events to authenticated;
-
 drop policy if exists conversations_select_authorized on public.conversations;
 create policy conversations_select_authorized on public.conversations
 for select to authenticated using (private.can_read_conversation(id));
