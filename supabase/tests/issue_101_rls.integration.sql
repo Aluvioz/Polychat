@@ -117,7 +117,7 @@ values ('group','TI group',(select auth.uid()));
 insert into rls_results values ('ti_creates_group',true,'TI group insert accepted');
 reset role;
 
-do $
+do $assert$
 declare total_tests integer; failed_tests integer;
 begin
   select count(*),count(*) filter (where not passed)
@@ -126,7 +126,8 @@ begin
   if total_tests<>16 or failed_tests<>0 then
     raise exception 'Issue #101 RLS tests failed: % total, % failed',total_tests,failed_tests;
   end if;
-end $;
+end;
+$assert$;
 
 select * from rls_results order by test_name;
 rollback;
