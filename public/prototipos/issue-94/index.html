@@ -40,7 +40,7 @@
       <p class="footnote">Paleta provisória Q-019; não é identidade oficial aprovada. Nenhuma imagem do Ford Oval é usada.</p>
     </section>
 
-    <section class="screen" data-screen="u-login" aria-labelledby="u-login-title" hidden>
+    <section class="screen" data-screen="u-login" data-task="U-01" aria-labelledby="u-login-title" hidden>
       <div class="phone"><div class="phone-top"><strong>Polychat</strong><span>Usuário · Demonstração</span></div>
         <div class="phone-content">
           <p class="eyebrow">U-01 · ACESSO</p><h1 id="u-login-title">Entrar</h1>
@@ -57,7 +57,7 @@
     <section class="screen" data-screen="u-monitor" aria-labelledby="u-monitor-title" hidden>
       <div class="phone"><div class="phone-top"><strong>Polychat</strong><span>Primeiro acesso</span></div>
         <div class="phone-content">
-          <p class="eyebrow">U-02 · AVISO</p><h1 id="u-monitor-title">Aviso de monitoramento</h1>
+          <p class="eyebrow">ETAPA AUXILIAR · AVISO DE MONITORAMENTO</p><h1 id="u-monitor-title">Aviso de monitoramento</h1>
           <div class="callout">As comunicações corporativas podem estar sujeitas a monitoramento e consulta pela TI conforme as regras institucionais aplicáveis.</div>
           <p>Este é um aviso de apresentação, não uma etapa adicional de consentimento.</p>
           <button class="btn primary wide" type="button" data-go="u-conversations">Continuar para conversas</button>
@@ -65,10 +65,10 @@
       </div>
     </section>
 
-    <section class="screen" data-screen="u-conversations" aria-labelledby="u-conversations-title" hidden>
+    <section class="screen" data-screen="u-conversations" data-task="U-02" aria-labelledby="u-conversations-title" hidden>
       <div class="phone"><div class="phone-top"><strong>Polychat</strong><span>Conversas recentes</span></div>
         <div class="phone-content">
-          <p class="eyebrow">U-03 · ÁREA PRINCIPAL</p><h1 id="u-conversations-title">Conversas recentes</h1>
+          <p class="eyebrow">U-02 · LOCALIZAR CONVERSA RECENTE</p><h1 id="u-conversations-title">Conversas recentes</h1>
           <p class="subtitle">Conversas e grupos aos quais você tem acesso.</p>
           <button class="btn primary wide" type="button" data-go="u-contacts">Iniciar conversa individual</button>
           <ul class="conversation-list">
@@ -83,10 +83,10 @@
       </div>
     </section>
 
-    <section class="screen" data-screen="u-contacts" aria-labelledby="u-contacts-title" hidden>
+    <section class="screen" data-screen="u-contacts" data-task="U-03" aria-labelledby="u-contacts-title" hidden>
       <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-conversations">← Conversas</button><span>Novo contato</span></div>
         <div class="phone-content">
-          <p class="eyebrow">U-04 · SELEÇÃO CONTEXTUAL</p><h1 id="u-contacts-title">Selecionar usuário ativo</h1>
+          <p class="eyebrow">U-03 · INICIAR CONVERSA INDIVIDUAL</p><h1 id="u-contacts-title">Selecionar usuário ativo</h1>
           <label for="contact-search">Pesquisar</label><input id="contact-search" type="search" placeholder="Nome de usuário" autocomplete="off">
           <ul class="conversation-list" id="contacts-list"><li><button class="list-button" type="button" data-chat="individual" data-user="Marina (exemplo)" data-go="u-chat">Marina (exemplo) · Ativa</button></li><li><button class="list-button" type="button" data-chat="individual" data-user="Rafael (exemplo)" data-go="u-chat">Rafael (exemplo) · Ativo</button></li></ul>
           <p id="contacts-empty" class="callout" hidden>Nenhum usuário fictício corresponde à busca.</p><p class="detail">Contatos exclusivamente fictícios. A busca apenas filtra o conteúdo deste protótipo.</p>
@@ -94,10 +94,10 @@
       </div>
     </section>
 
-    <section class="screen" data-screen="u-chat" aria-labelledby="u-chat-title" hidden>
+    <section class="screen" data-screen="u-chat" data-task="U-05" aria-labelledby="u-chat-title" hidden>
       <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-conversations">← Conversas</button><span>Conversa</span></div>
         <div class="phone-content">
-          <p class="eyebrow">U-05 · MENSAGENS</p><h1 id="u-chat-title">Marina (exemplo)</h1><p id="chat-kind" class="subtitle">Conversa individual · dados fictícios</p>
+          <p class="eyebrow">U-05 · MENSAGEM E FEEDBACK</p><h1 id="u-chat-title">Marina (exemplo)</h1><p id="chat-kind" class="subtitle">Conversa individual · dados fictícios</p>
           <button id="group-info-link" class="btn text" type="button" data-go="u-group" hidden>Ver participantes do grupo</button>
           <div id="offline-indicator" class="callout" hidden>Sem conexão (simulação). Novos envios não podem ser confirmados.</div><div class="chat-messages" id="chat-messages" aria-label="Histórico fictício"><p class="bubble incoming">Vamos revisar o documento?</p><p class="bubble outgoing">Claro, pode mandar. <small>Lido às 09:41</small></p></div>
           <form id="message-form"><label for="message-text">Escrever mensagem fictícia</label><textarea id="message-text" rows="2" maxlength="280" placeholder="Escreva uma mensagem de teste…"></textarea><div class="inline-actions"><button class="btn primary" type="submit">Simular envio</button><button class="btn secondary" type="button" data-go="u-attach">Anexo</button></div></form>
@@ -107,18 +107,18 @@
       </div>
     </section>
 
-    <section class="screen" data-screen="u-group" aria-labelledby="u-group-title" hidden>
+    <section class="screen" data-screen="u-group" data-task="U-04" aria-labelledby="u-group-title" hidden>
       <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-chat">← Conversa</button><span>Grupo</span></div>
-        <div class="phone-content"><p class="eyebrow">U-07 · CONSULTA</p><h1 id="u-group-title">Equipe técnica (exemplo)</h1><p>Participantes fictícios: Marina, Rafael e você.</p><div class="callout">Somente a TI pode criar, encerrar e administrar participantes de grupos. Ao remover alguém, o acesso às mensagens e anexos anteriores deve ser revogado no sistema real.</div><button class="btn primary" type="button" data-go="u-chat">Voltar à conversa</button></div>
+        <div class="phone-content"><p class="eyebrow">U-04 · CONSULTAR GRUPO</p><h1 id="u-group-title">Equipe técnica (exemplo)</h1><p>Participantes fictícios: Marina, Rafael e você.</p><div class="callout">Somente a TI pode criar, encerrar e administrar participantes de grupos. Ao remover alguém, o acesso às mensagens e anexos anteriores deve ser revogado no sistema real.</div><button class="btn primary" type="button" data-go="u-chat">Voltar à conversa</button></div>
       </div>
     </section>
 
-    <section class="screen" data-screen="u-attach" aria-labelledby="u-attach-title" hidden>
+    <section class="screen" data-screen="u-attach" data-task="U-06" aria-labelledby="u-attach-title" hidden>
       <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-chat">← Conversa</button><span>Anexos</span></div>
         <div class="phone-content">
-          <p class="eyebrow">U-06 · SELETOR DE ANEXO</p><h1 id="u-attach-title">Selecionar anexo</h1>
+          <p class="eyebrow">U-06 · ANEXAR PDF OU JPEG</p><h1 id="u-attach-title">Selecionar anexo</h1>
           <p>Simule um dos estados sem escolher nem carregar um arquivo de verdade.</p>
-          <div class="stack"><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: documento.pdf (permitido)</button><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: foto.jpg da galeria (permitida)</button><button class="btn secondary wide" type="button" data-action="attach-invalid">Exemplo: vídeo.mp4 (não permitido)</button><button class="btn secondary wide" type="button" data-action="attach-over-limit">Exemplo: PDF de 12 MB (acima de 10 MB)</button><button class="btn secondary wide" type="button" data-action="attach-too-many">Exemplo: 6 arquivos na mensagem (acima de 5)</button><button class="btn secondary wide" type="button" data-action="attach-protected">Exemplo: PDF protegido por senha</button><button class="btn secondary wide" type="button" data-action="attach-error">Exemplo: falha de upload</button><button class="btn secondary wide" type="button" data-action="attach-retry">Tentar novamente após falha</button><button class="btn secondary wide" type="button" data-action="attach-blocked">Exemplo: arquivo bloqueado pela verificação</button><button class="btn secondary wide" type="button" data-action="attach-scanner-offline">Exemplo: scanner antimalware indisponível</button></div>
+          <div class="stack"><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: documento.pdf (permitido)</button><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: foto.jpg da galeria (permitida)</button><p class="eyebrow" data-task="U-07">U-07 · ERROS E RECUPERAÇÃO DE ANEXOS</p><button class="btn secondary wide" type="button" data-action="attach-invalid">Exemplo: vídeo.mp4 (não permitido)</button><button class="btn secondary wide" type="button" data-action="attach-over-limit">Exemplo: PDF de 12 MB (acima de 10 MB)</button><button class="btn secondary wide" type="button" data-action="attach-too-many">Exemplo: 6 arquivos na mensagem (acima de 5)</button><button class="btn secondary wide" type="button" data-action="attach-protected">Exemplo: PDF protegido por senha</button><button class="btn secondary wide" type="button" data-action="attach-error">Exemplo: falha de upload</button><button class="btn secondary wide" type="button" data-action="attach-retry">Tentar novamente após falha</button><button class="btn secondary wide" type="button" data-action="attach-blocked">Exemplo: arquivo bloqueado pela verificação</button><button class="btn secondary wide" type="button" data-action="attach-scanner-offline">Exemplo: scanner antimalware indisponível</button></div>
           <p class="detail">Regras do produto: PDF/JPEG; até 10 MB por arquivo e 5 arquivos por mensagem. PDFs com senha não são aceitos. JPEG deve ter metadados EXIF/GPS removidos pelo sistema real. Sem câmera, áudio ou vídeo. Scanner indisponível mantém anexos bloqueados, mas mensagens de texto continuam. Em produção, proteção e autorização são requisitos do servidor.</p>
         </div>
       </div>
@@ -127,8 +127,8 @@
     <section class="screen" data-screen="u-empty" aria-labelledby="u-empty-title" hidden>
       <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-conversations">← Conversas</button></div><div class="phone-content"><p class="eyebrow">ESTADO · VAZIO</p><h1 id="u-empty-title">Ainda não há conversas</h1><p>Quando você iniciar uma conversa individual ou for incluído em um grupo, ela aparecerá aqui.</p><button class="btn primary" type="button" data-go="u-contacts">Iniciar conversa</button></div></div>
     </section>
-    <section class="screen" data-screen="u-session" aria-labelledby="u-session-title" hidden>
-      <div class="phone"><div class="phone-top"><strong>Polychat</strong></div><div class="phone-content"><p class="eyebrow">ESTADO · SESSÃO</p><h1 id="u-session-title">Sessão expirada</h1><p>Por segurança, é necessário entrar novamente.</p><button class="btn primary" type="button" data-go="u-login">Ir para o login demonstrativo</button></div></div>
+    <section class="screen" data-screen="u-session" data-task="U-08" aria-labelledby="u-session-title" hidden>
+      <div class="phone"><div class="phone-top"><strong>Polychat</strong></div><div class="phone-content"><p class="eyebrow">U-08 · SESSÃO EXPIRADA OU DESCONECTADA</p><h1 id="u-session-title">Sessão expirada</h1><p>Por segurança, é necessário entrar novamente.</p><button class="btn primary" type="button" data-go="u-login">Ir para o login demonstrativo</button></div></div>
     </section>
 
     <section class="screen" data-screen="t-login" data-task="T-01" aria-labelledby="t-login-title" hidden>
