@@ -11,7 +11,7 @@ values (auth.uid(),'conversation_viewed','conversation','88888888-8888-4888-8888
 create temp table discard_test_ids as
 select id from public.audit_events where metadata->>'source'='discard-test';
 insert into public.retention_holds(resource_type,resource_id,placed_by_profile_id)
-select 'audit_event',id,auth.uid() from discard_test_ids;
+values ('conversation','88888888-8888-4888-8888-888888888888',auth.uid());
 do $$
 declare v_id uuid;
 begin
@@ -22,7 +22,19 @@ begin
  exception when insufficient_privilege then null;
  end;
  if not exists(select 1 from public.audit_events where id=v_id) then
-  raise exception 'held audit event was deleted';
+  raise exception 'event linked to held resource was deleted';
+ end if;
+ update public.retention_holds set released_by_profile_id=auth.uid(),released_at=now()
+ where resource_type='conversation' and resource_id='88888888-8888-4888-8888-888888888888' and released_at is null;
+ insert into public.retention_holds(resource_type,resource_id,placed_by_profile_id)
+ values ('audit_event',v_id,auth.uid());
+ begin
+  perform public.discard_audit_event(v_id);
+  raise exception 'discard unexpectedly succeeded while event hold active';
+ exception when insufficient_privilege then null;
+ end;
+ if not exists(select 1 from public.audit_events where id=v_id) then
+  raise exception 'event-specific held audit event was deleted';
  end if;
  update public.retention_holds set released_by_profile_id=auth.uid(),released_at=now()
  where resource_type='audit_event' and resource_id=v_id and released_at is null;
