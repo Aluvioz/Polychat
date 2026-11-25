@@ -48,6 +48,13 @@ do $$ begin
     raise exception 'audit event unexpectedly updated';
   exception when insufficient_privilege then null;
   end;
+  begin
+    delete from public.audit_events where event_type='conversation_viewed';
+  exception when insufficient_privilege then null;
+  end;
+  if not exists(select 1 from public.audit_events where event_type='conversation_viewed') then
+    raise exception 'direct audit-event deletion unexpectedly succeeded';
+  end if;
 end $$;
 
 -- Investigation holds are TI-only, unique while active, and their placement
