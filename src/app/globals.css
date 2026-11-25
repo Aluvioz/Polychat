@@ -488,3 +488,25 @@ h2 {
   .login-card { padding: 28px 22px; }
   .login-card h1 { font-size: 29px; }
 }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.topbar-login {
+  padding: 9px 16px;
+  border: 1px solid var(--ford-blue);
+  border-radius: 8px;
+  color: var(--ford-blue);
+  font-size: 12px;
+  font-weight: 700;
+}
+.topbar-login:hover {
+  background: var(--ford-blue);
+  color: white;
+}
+@media (max-width: 760px) {
+  .topbar-actions { gap: 10px; }
+  .topbar-login { padding: 8px 12px; }
+}
