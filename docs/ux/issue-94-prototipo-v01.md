@@ -28,13 +28,13 @@ Paleta provisória Q-019 (azuis Ford e neutros), **sem Ford Oval** ou fontes pro
 | Tarefa | Telas/fluxo exploratório | Critério de observação |
 |---|---|---|
 | U-01: iniciar acesso | start → u-login | Entrada e rótulos |
-| U-02: localizar conversa | u-login → u-monitor → u-conversations | Aviso, lista, não lidas |
-| U-03: iniciar 1:1 | u-conversations → u-contacts → u-chat | Busca contextual, sem aba Contatos |
-| U-04: localizar grupo | u-conversations → u-chat (grupo) → u-group | Contexto e participantes |
+| U-02: localizar conversa recente | u-conversations (após u-monitor auxiliar) | Lista, não lidas e reconhecimento da conversa |
+| U-03: iniciar conversa individual | u-conversations → u-contacts → u-chat compartilhado | Busca contextual, sem aba Contatos |
+| U-04: localizar grupo | u-conversations → u-chat (grupo) → u-group | Identificação de grupo, consulta e participantes |
 | U-05: envio/feedback | u-chat | Entendimento de sucesso/falha **simulados** |
 | U-06: anexo | u-chat → u-attach | PDF/JPEG, até 10 MB, até 5 anexos |
-| U-07: erros | u-attach e u-chat | Inválido, falha, bloqueio distintos |
-| U-08: indisponibilidade | u-conversations, offline e u-session | Recuperação e limites |
+| U-07: anexo inválido ou falha | bloco de estados de erro com `data-task=U-07` em u-attach | Diferenciar inválido, falha, bloqueio e recuperação |
+| U-08: sessão expirada ou desconexão | u-session e ação offline em u-conversations/u-chat | Recuperação e limites sem prometer entrega |
 | T-01: acessar console TI | start → t-login → t-dashboard (apoio) | Acesso e localização da área de trabalho |
 | T-02: localizar conta | t-users | Buscar conta e distinguir consulta/alteração simuladas |
 | T-03: criar grupo e incluir participantes | t-groups | Identificar fluxo e participantes; exemplos de gestão simulada |
@@ -113,3 +113,21 @@ O [plano v0.3 aprovado na PR #152](https://github.com/Aluvioz/Polychat/pull/152)
 | T-06 | `t-settings` | T-06 · Configurações | Verificação de configurações |
 
 Os testes estáticos e Playwright verificam correspondência entre **rótulo, tela e tarefa**, sem afirmar conclusão da pesquisa. A [proposta de decisão metodológica](./issue-94-decisao-metodologica-proposta.md) foi preparada para assinatura/manifestação de PO/SQA; até essa manifestação, **não usar o protótipo clicável como instrumento autorizado de sessão**.
+
+
+## 10. Rastreabilidade canônica mobile após revisão SQA da PR #164
+
+A tarefa oficial prevalece sobre a posição da tela no fluxo. **O aviso inicial de monitoramento (`u-monitor`) e o estado vazio (`u-empty`) são telas auxiliares**, sem códigos U-01 a U-08 próprios. A conversa `u-chat` é uma tela reutilizada pelas tarefas U-03/U-04, mas seu marcador principal U-05 indica o teste de envio e feedback — não renumera essas tarefas.
+
+| Código do plano v0.3 | Tela/estado canônico | Rótulo no HTML | Observação |
+|---|---|---|---|
+| U-01 | `u-login` | U-01 · Acesso | O aviso `u-monitor` é etapa auxiliar |
+| U-02 | `u-conversations` | U-02 · Localizar conversa recente | Encontrar conversa existente |
+| U-03 | `u-contacts` | U-03 · Iniciar conversa individual | Abre `u-chat` compartilhado |
+| U-04 | `u-group` | U-04 · Consultar grupo | Acesso via `u-chat` em modo grupo |
+| U-05 | `u-chat` | U-05 · Mensagem e feedback | Simula envio, sem servidor |
+| U-06 | `u-attach` | U-06 · Anexar PDF ou JPEG | Seletor fictício |
+| U-07 | Seção de erros dentro de `u-attach` | U-07 · Erros e recuperação de anexos | Marcador único no bloco de erros, sem criar tela nova |
+| U-08 | `u-session` + simulação offline em `u-conversations`/`u-chat` | U-08 · Sessão expirada ou desconectada | Estado de sessão e perda de conexão |
+
+Os testes estáticos verificam oito marcadores canônicos sem duplicação; os testes Chromium confirmam a navegação e a correspondência real dos códigos. **Esses resultados são automatizados, não observações de usuários representativos da FORD.** A proposta de uso complementar do clicável continua pendente de parecer PO/SQA.
