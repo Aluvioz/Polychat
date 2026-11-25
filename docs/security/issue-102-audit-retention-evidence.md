@@ -23,10 +23,10 @@ Esta entrega foi reconstruída a partir do schema observado no Supabase e dos re
 - Somente TI ativo pode consultar, criar ou liberar holds; não há privilégio de DELETE.
 - Um índice único parcial impede dois holds ativos para o mesmo recurso.
 - Colocação e liberação do hold geram eventos auditáveis próprios.
-- A função `public.discard_audit_event(uuid)` permite somente a TI ativa solicitar descarte de um evento, grava `retention_discarded` e bloqueia descarte quando o evento ou o recurso subjacente possui hold ativo.
+- A função `public.discard_audit_event(uuid)` é SECURITY INVOKER, permite somente a TI ativa solicitar descarte de um evento, grava `retention_discarded` e bloqueia descarte quando o evento ou o recurso subjacente possui hold ativo. A política RLS de DELETE exige os marcadores transacionais que a função define; DELETE direto não satisfaz a policy.
 - Eventos de controle de retenção não podem ser descartados.
 
-A função de descarte foi implantada, mas **não foi invocada nesta validação**, pois executa exclusão física de um registro de auditoria. Nenhum evento real foi apagado.
+A função de descarte foi implantada, mas **não foi invocada nesta validação**, pois executa exclusão física de um registro de auditoria. A validação confirmou por catálogo que ela é SECURITY INVOKER, que somente `authenticated` pode executá-la e que `anon` não pode; a chamada destrutiva não foi executada. Nenhum evento real foi apagado.
 
 ### Ajuste após teste
 
@@ -37,6 +37,7 @@ A migration inicial criou triggers para `detection_rules` e `attachment_user_quo
 - `20261125232432_issue_102_audit_retention_controls`
 - `20261125232535_issue_102_remove_unverified_config_triggers`
 - `20261125232700_issue_102_preserve_held_resource_audit_events`
+- `20261125233102_issue_102_discard_audit_event_invoker`
 
 Os arquivos correspondentes estão versionados em `supabase/migrations/` nesta branch. A migration inicial cria `audit_events` com `CREATE TABLE IF NOT EXISTS`, para que a estrutura seja reproduzível a partir da branch principal, sem depender da PR #166.
 
