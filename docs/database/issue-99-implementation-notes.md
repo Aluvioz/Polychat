@@ -1,88 +1,145 @@
-# Issue #99 — registro de implementação e lacunas
+# Issue #99 — evidências de implementação e estado verificado
 
-## Auditoria do estado inicial
+## Escopo original preservado
 
-- A Issue #99 solicita modelar profiles, conversations, memberships, messages, attachments, audit_events e configurações.
-- A PR #160 está aberta em Draft e contém a versão 0.3 de `docs/database/modelo-de-dados.md`. O parecer do PO valida o escopo funcional conceitual, mas não aprova DDL, schema físico, migrations ou RLS.
-- A migration existente `202611160001_profiles_roles_and_account_status.sql` cria `profiles`, integra `auth.users`, limita `role` a `user`/ `ti`, mantém `is_active` e ativa RLS.
-- Na `main`, foi identificada somente essa migration em `supabase/migrations`.
-- A ADR-005 permanece Proposed e a Q-025 continua aberta para compatibilidade operacional da stack Supabase + Vercel com as restrições FORD.
+A Issue #99 solicita modelar `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `audit_events` e configurações.
 
-## Implementado nesta branch
+Seu escopo original permanece:
+- Implementar conforme arquitetura Supabase + Vercel e requisitos aprovados.
+- Validar autorização server-side e comportamento de erro.
+- Atualizar documentação e evidências pertinentes.
 
-### Migration `202611240001_issue_99_initial_domain_schema.sql`
+Os critérios de aceite originais permanecem inalterados:
+- Migrations versionadas; constraints, índices e relações revisados.
+- Testes relevantes automatizados ou evidência documentada.
+- Revisão por PR concluída.
+- Sem regressão nos fluxos relacionados.
 
-- Acrescenta `profiles.username` nullable com índice único parcial, sem inferir usernames para contas existentes.
-- Cria `conversations`, com tipos `direct`/ `group`, estados documentados e par canônico para unicidade de conversa individual.
-- Cria `memberships`, preservando períodos e impedindo dois períodos vigentes por perfil/conversa.
-- Cria `messages`, com autoria, ordenação temporal e metadados de edição/exclusão administrativa.
-- Cria `attachments`, com referência privada, nome original, MIME PDF/JPEG, limite de 10 MiB e metadados de análise.
-- Cria `message_reads` por mensagem/leitor/instante.
-- Cria `security_alerts` com regra, severidade e estado/revisão.
-- Define FKs restritivas para preservar histórico e índices para as relações/consultas modeladas.
-- Habilita RLS nas tabelas novas sem policies de domínio; enforcement pertence à #101.
+Este arquivo registra evidências e limites. Não altera nem substitui os requerimentos de fechamento, não declara a Issue #99 concluída e não transfere responsabilidades de outras issues.
 
-### Migration `202611240002_issue_99_integrity_and_configuration.sql`
+## 1. Modelagem e migrations versionadas na main
 
-- Trigger diferido valida no commit que cada mensagem tenha texto não vazio ou ao menos um anexo.
-- Trigger serializa inserções/alterações por mensagem e impede mais de cinco anexos, conforme o modelo v0.3 e a Issue #117.
-- Cria `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`, cobrindo somente o inventário aprovado pelo PO.
-- Não cria tabela genérica `configs`, não semeia regras/quota/capacidade e não inventa valores padrão.
-- Habilita RLS e revoga acesso de `anon`/`authenticated` às tabelas de configuração; policies e exposição pertencem à #101.
+A implementação do schema físico inicial foi integrada pela [PR #165](https://github.com/Aluvioz/Polychat/pull/165), merge commit `f2618bc670282070f87a8f1dd645253c8de9990e`.
 
-As estruturas específicas `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity` foram revisadas e aprovadas pelo Tech Lead `luizme7` como parte da baseline inicial do schema, conforme registrado nos comentários da PR. A aprovação não substitui a implementação de autorização/exposição, que permanece no escopo da Issue #101.
+A PR #165 recebeu:
+- Aprovação técnica do Tech Lead `luizme7`, incluindo as estruturas específicas de configuração.
+- Aprovação SQA de `Dante-Davi`, registrada na discussão da PR em 24/11/2026.
+- Registro de CI #270 e #340 como aprovados no parecer técnico da PR.
 
-## Pendências e limites restantes
+Migrations de domínio integradas:
+- `supabase/migrations/202611240001_issue_99_initial_domain_schema.sql`
+  - Acrescenta `profiles.username` como nullable, com índice único parcial.
+  - Cria `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts`.
+  - Define chaves estrangeiras, constraints e índices.
+  - Habilita RLS nas tabelas novas, sem criar policies de domínio da #101.
+- `supabase/migrations/202611240002_issue_99_integrity_and_configuration.sql`
+  - Inclui invariantes transacionais para impedir mensagem sem texto e sem anexo.
+  - Impõe o limite de cinco anexos por mensagem.
+  - Cria `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`, conforme o inventário aprovado.
+  - Não cria tabela genérica de configurações nem inventa valores iniciais.
 
-### Issue #102 — auditoria e retenção
+A aprovação da PR #165 cobre o conteúdo nela revisado. Não equivale à conclusão das integrações funcionais, das policies de autorização da #101 ou da auditoria operacional da #102.
 
-A estrutura `audit_events`, seu catálogo, controles append-only e writer são tratados na PR separada #166, aberta contra `main`. Recomenda-se integrar a PR #166 após a PR #165 para preservar a sequência das migrations. A Issue #99 não deve ser considerada concluída apenas pela existência das migrations de domínio.
+## 2. Modelo conceitual e aprovação de produto
 
-### Username de perfis existentes
+O parecer complementar do PO de 20/11/2026 ratificou o escopo conceitual para a baseline POLY-REQ-001 v0.5, incluindo as entidades centrais, `security_alerts`, `message_reads` e o inventário delimitado de configurações.
 
-A coluna permanece nullable. Para torná-la obrigatória, é necessária estratégia confiável de preenchimento para contas preexistentes antes de adicionar NOT NULL.
+A atualização do documento `docs/database/modelo-de-dados.md` está proposta na [PR #160](https://github.com/Aluvioz/Polychat/pull/160), que permanece aberta e em Draft na última consulta. A PR informa tratar exclusivamente da atualização documental para a baseline v0.5. A versão atualizada ainda depende de revisão e integração; esta nota não altera a PR #160 nem substitui sua revisão.
 
-### Integração das invariantes transacionais
+A aprovação funcional do PO não deve ser confundida com aprovação técnica do DER físico, DDL, migrations, constraints, índices, triggers ou RLS. A revisão técnica e SQA do schema físico foi registrada separadamente na PR #165.
 
-A constraint trigger diferida exige que a criação de mensagem somente com anexos e os respectivos metadados ocorra na mesma transação. O fluxo precisa usar operação server-side transacional (por exemplo, RPC); chamadas REST separadas não satisfazem essa atomicidade. A integração funcional ainda depende dos fluxos de mensagens/anexos.
+## 3. Verificação direta do Supabase de desenvolvimento Polyford
 
-### Autorização e integração das configurações
+Consulta realizada ao projeto Supabase:
+- Projeto: `Polyford`.
+- Project ref: `oixifpdfvrenlhvycszy`.
+- Região: `sa-east-1`.
+- Estado consultado: `ACTIVE_HEALTHY`.
+- PostgreSQL: `17.11.0.019` (engine PostgreSQL 17).
 
-As tabelas de configuração permanecem sem policies e sem concessão de acesso aos papéis da API. A Issue #101 deve definir e testar o enforcement. Serviços/telas de configuração e consumo das regras permanecem nas issues funcionais correspondentes.
+### 3.1 Histórico remoto de migrations
 
-### Ambiente e validação SQL
+A consulta ao histórico remoto retornou:
 
-As duas migrations desta PR foram aplicadas no projeto Supabase de desenvolvimento **Polyford** (`oixifpdfvrenlhvycszy`), localizado em `sa-east-1`. Na verificação mais recente, o projeto estava em estado `ACTIVE_HEALTHY`, com PostgreSQL `17.11.0.019`.
+| Versão remota | Nome |
+|---|---|
+| `20261124191059` | `profiles_roles_and_account_status` |
+| `20261124191114` | `issue_99_initial_domain_schema` |
+| `20261124191131` | `issue_99_integrity_and_configuration` |
+| `20261124210245` | `issue_102_audit_events` |
 
-O histórico remoto de migrations contém os seguintes registros correspondentes às migrations de domínio desta PR:
+As duas migrations de domínio da #99 estão presentes no histórico remoto e versionadas na `main` por meio da PR #165.
 
-- `20261124191114` — `issue_99_initial_domain_schema`
-- `20261124191131` — `issue_99_integrity_and_configuration`
+**Divergência de identificadores ainda não reconciliada:** os identificadores remotos não correspondem literalmente aos prefixos dos arquivos SQL no Git:
+- Profiles: arquivo `202611160001`; remoto `20261124191059`.
+- Schema inicial #99: arquivo `202611240001`; remoto `20261124191114`.
+- Integridade/configuração #99: arquivo `202611240002`; remoto `20261124191131`.
+- Auditoria #102: arquivo `202611240003`; remoto `20261124210245`.
 
-O histórico também contém a migration de baseline de perfis (`20261124191059`, `profiles_roles_and_account_status`) e, posteriormente, a migration de auditoria da Issue #102 aplicada no contexto da PR #166 (`20261124210245`, `issue_102_audit_events`).
+A diferença foi registrada, não corrigida. Não se deve reaplicar migrations já executadas nem alterar o histórico remoto sem procedimento explícito e revisão própria.
 
-**Observação de rastreabilidade:** as versões registradas pelo histórico remoto são os identificadores gerados no ambiente e não repetem literalmente os prefixos dos arquivos SQL versionados no Git. Essa diferença de identificadores deve ser considerada ao reconciliar o histórico de migrations; não significa que as migrations de domínio estejam ausentes do ambiente.
+### 3.2 Tabelas, colunas, relações e RLS observadas
 
-A consulta ao schema `public` confirmou as tabelas de domínio/configuração previstas pelas migrations desta PR: `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts`, `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`. A tabela `profiles` já existia na baseline. A RLS está habilitada nas tabelas criadas pela modelagem; as policies de domínio e configuração continuam atribuídas à Issue #101.
+A consulta de leitura ao schema `public` retornou as seguintes tabelas:
 
-A aplicação e a inspeção do schema no Polyford comprovam a presença das migrations e estruturas no ambiente de desenvolvimento. **Não equivalem a um teste automatizado de integração SQL/PostgreSQL reproduzível no CI.** A integração server-side/RPC para criação atômica de mensagem e anexos continua pendente dos fluxos de produto correspondentes.
+| Tabela | Evidência observada |
+|---|---|
+| `profiles` | PK `id`, FK para `auth.users`, `role` limitado a `user`/`ti`, `is_active`, `username` nullable. |
+| `conversations` | PK `id`, tipo `direct`/`group`, estado `active`/`disabled`/`closed`, referências aos perfis criador e participantes diretos. |
+| `memberships` | PK `id`, FKs para conversa e perfis, datas de início/fim de participação. |
+| `messages` | PK `id`, FKs para conversa, autor e responsáveis por edição/exclusão administrativa; corpo pode ser nulo conforme a regra de mensagem com anexos. |
+| `attachments` | PK `id`, FK para mensagem, MIME limitado a PDF/JPEG, tamanho positivo até 10 MiB e metadados de análise. |
+| `message_reads` | PK composta `(message_id, reader_profile_id)`, FK para mensagem e perfil leitor. |
+| `security_alerts` | PK `id`, FK para mensagem e revisor, severidade `low`/`medium`/`high`, estado `open`/`closed`. |
+| `detection_rules` | PK `id`, valor de regra não vazio. |
+| `attachment_user_quotas` | PK/FK `profile_id`, quota positiva. |
+| `attachment_storage_capacity` | PK `singleton_id`, capacidade positiva e singleton limitado a 1. |
+| `audit_events` | PK `id`, FK do ator para `profiles`, catálogo fechado de eventos/recursos e metadados JSONB. |
 
-A Q-025 e a ADR-005 Proposed continuam sendo referências pendentes para a homologação operacional da stack.
+A listagem detalhada confirmou RLS habilitada nas onze tabelas acima, além das chaves primárias e relações/FKs indicadas. A consulta retornou zero linhas em cada tabela no momento da verificação; isso descreve o estado observado, não é teste de fluxo de negócio.
 
-## Validação
+As policies de domínio e configuração permanecem no escopo da Issue #101. A presença de RLS habilitada não significa que as policies de autorização da aplicação estejam concluídas.
 
-No commit documental `f46b7f64e5105c8ba7bd97e4c31fa2e9a20057c4`, os dois workflows CI associados concluíram com sucesso:
+### 3.3 Situação específica de audit_events
 
-- CI run [#286](https://github.com/Aluvioz/Polychat/actions/runs/45489032173) — `success`.
-- CI run [#356](https://github.com/Aluvioz/Polychat/actions/runs/45489032376) — `success`.
+A tabela `public.audit_events` e a migration remota `issue_102_audit_events` já aparecem no Polyford. Entretanto, a implementação correspondente está na [PR #166](https://github.com/Aluvioz/Polychat/pull/166), que permanece aberta e em Draft na última consulta, vinculada à Issue #102.
 
-O status do Preview Vercel também retornou `success`. Esses resultados validam os checks de aplicação/build configurados, mas não substituem testes automatizados de integração SQL, RLS ou dos fluxos transacionais no Supabase.
+A PR #166 ainda não foi integrada à `main`. Portanto, a presença da tabela no banco de desenvolvimento não deve ser apresentada como prova de que a migration de auditoria já está integrada e versionada na branch principal. Essa diferença precisa ser resolvida na sequência de integração da #102, sem duplicar a migration ou misturar o escopo das issues.
 
-No head então atual da PR, `ee031af1fd00c9f515a3669ba9337a89f914eca3`, os dois workflows CI também concluíram com sucesso:
+## 4. Testes, CI e limites das evidências
 
-- CI run [#359](https://github.com/Aluvioz/Polychat/actions/runs/45495416188) — `success`.
-- CI run [#289](https://github.com/Aluvioz/Polychat/actions/runs/45495416126) — `success`.
+### Evidências disponíveis para a #99
+- Aplicação das duas migrations de domínio no Supabase Polyford registrada na PR #165.
+- Consulta direta ao histórico remoto confirmou os dois registros de migration de domínio.
+- Consulta direta ao schema `public` confirmou as tabelas, colunas, PKs, FKs e RLS listadas nesta nota.
+- A revisão SQA da PR #165 aprovou o schema físico, constraints, FKs, índices, invariantes de mensagem/anexos, estruturas de configuração e evidências de aplicação.
+- O parecer técnico da PR #165 registrou CI #270 e #340 como aprovados.
 
-O Preview Vercel associado a esse head também retornou `success`.
+### Limites que permanecem explícitos
+- A verificação direta do schema é evidência de presença/estrutura no ambiente de desenvolvimento; não é, por si só, teste automatizado reproduzível no CI.
+- Não se declara nesta nota que a autorização de domínio/configuração está concluída: policies e enforcement pertencem à #101.
+- A gravação de mensagem composta somente por anexos depende de mensagem e anexos serem persistidos na mesma transação/RPC. A migration contém a invariância diferida, mas a integração funcional do fluxo ainda depende das issues de produto correspondentes.
+- `profiles.username` permanece nullable; não foi inventado preenchimento para contas existentes.
+- A presença de `audit_events` no Supabase não conclui a integração da migration na `main`, nem a implementação funcional de auditoria da #102.
+- A ADR-005 permanece Proposed e a Q-025 permanece aberta para avaliação da compatibilidade operacional da stack com as restrições FORD.
 
-A revisão do Tech Lead `luizme7` está registrada como **APPROVED** para a baseline inicial do schema, incluindo as três estruturas específicas de configuração, com as ressalvas descritas nesta nota. A confirmação formal final do SQA permanece pendente.
+## 5. Relação com outras issues — sem transferência de escopo
+
+- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A RLS habilitada na modelagem não substitui essa entrega.
+- **#102:** auditoria, retenção e descarte; a migration de `audit_events` está na PR #166 ainda aberta em Draft.
+- **#105:** fluxos de perfis/contas e operações associadas.
+- **#111:** requisitos de leitura/não lidas refletidos por `message_reads`.
+- **#117:** armazenamento privado e fluxos de anexos.
+- **#124:** integração dos eventos aos fluxos de negócio, coordenada com a auditoria.
+
+Esta separação descreve dependências e limites já registrados no projeto; não altera o escopo ou os critérios de aceite da Issue #99.
+
+## 6. Estado documental desta revisão
+
+Esta atualização corrige o registro anterior que ainda descrevia a PR #165 como não integrada e a aprovação SQA como pendente. O estado correto consultado é: PR #165 merged, Tech Lead aprovado e SQA aprovado.
+
+A PR #160 e a PR #166 continuam separadas, abertas e em Draft na última consulta. A divergência de identificadores do histórico remoto também continua pendente.
+
+**Conclusão desta nota:** há evidência documentada de migrations de domínio integradas e aplicadas, schema presente no Supabase de desenvolvimento e revisão técnica/SQA aprovada para a PR #165. Isso atualiza a rastreabilidade da Issue #99, mas não declara todos os critérios originais satisfeitos nem autoriza seu fechamento.
+
+Nenhuma descrição, critério, estado, assignee ou label da Issue #99 foi alterado.
