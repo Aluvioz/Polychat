@@ -96,7 +96,7 @@ Esta seção registra uma nova consulta ao GitHub e ao projeto Supabase Polyford
 
 - Issue #99: **OPEN**, com título, corpo, critérios de aceite, assignees e labels preservados.
 - `main` consultada no commit `f2618bc670282070f87a8f1dd645253c8de9990e`.
-- PR #165: **MERGED** no commit `f2618bc670282070f87a8f1dd645253c8de9990e`; aprovação do Tech Lead registrada. O histórico de revisão SQA da PR exigiu atualização documental, mas a aprovação formal final SQA não foi encontrada nas revisões consultadas.
+- PR #165: **MERGED** no commit `f2618bc670282070f87a8f1dd645253c8de9990e`; aprovação do Tech Lead registrada e comentário posterior de Dante-Davi declara a PR **APROVADA sob a perspectiva do SQA**, limitada ao conteúdo e às responsabilidades daquela PR. As ressalvas funcionais e de integração continuam registradas.
 - PR #160: **OPEN / DRAFT**; contém o modelo conceitual v0.3, sem aprovação técnica final registrada. Não foi alterada.
 - PR #166: **OPEN / DRAFT**; migration e writer de auditoria estão no branch da PR, não na `main`. O histórico da PR registra parecer SQA **NÃO APROVADO** e revisão do Tech Lead sem APPROVE final. Não foi alterada.
 - PR #167: **OPEN / DRAFT**; atualização documental anterior da #99. Não foi encerrada nem modificada nesta execução, pois ainda aguarda validação e não foi comprovadamente substituída por PR integrada.
