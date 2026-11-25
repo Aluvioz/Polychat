@@ -110,3 +110,32 @@ test('rastreabilidade canônica TI T-01..T-06 acompanha o plano v0.3 da PR #152'
     assert.ok(!taskElements.some(item => item.screen === auxiliary), 'Apoio não pode criar tarefa T-07/T-08');
   }
 });
+
+
+test('rastreabilidade canônica mobile U-01..U-08 segue tarefas do plano #152', () => {
+  const canonical = [
+    ['U-01', 'u-login', 'ACESSO'],
+    ['U-02', 'u-conversations', 'LOCALIZAR CONVERSA RECENTE'],
+    ['U-03', 'u-contacts', 'INICIAR CONVERSA INDIVIDUAL'],
+    ['U-04', 'u-group', 'CONSULTAR GRUPO'],
+    ['U-05', 'u-chat', 'MENSAGEM E FEEDBACK'],
+    ['U-06', 'u-attach', 'ANEXAR PDF OU JPEG'],
+    ['U-08', 'u-session', 'SESSÃO EXPIRADA OU DESCONECTADA']
+  ];
+  const screensWithTask = [...html.matchAll(/<section\b[^>]*\bdata-screen="([^"]+)"[^>]*\bdata-task="(U-\d{2})"[^>]*>([\s\S]*?)(?=<\/section>)/g)]
+    .map(([, screen, task, body]) => ({ screen, task, body }));
+  assert.equal(screensWithTask.length, canonical.length, 'Sete telas canônicas: U-07 é um estado de erro dentro de U-06');
+  for (const [task, screen, label] of canonical) {
+    const match = screensWithTask.find(item => item.task === task);
+    assert.ok(match, 'Tarefa mobile não encontrada: ' + task);
+    assert.equal(match.screen, screen, 'Mapeamento de tela divergente: ' + task);
+    assert.ok(match.body.includes(task + ' · ' + label), 'Rótulo visível divergente: ' + task);
+  }
+  for (const auxiliary of ['u-monitor', 'u-empty']) {
+    assert.ok(!screensWithTask.some(item => item.screen === auxiliary), 'Auxiliar não pode consumir código U-01..08');
+  }
+  const u07 = html.match(/<p\b[^>]*\bdata-task="U-07"[^>]*>([^<]+)<\/p>/g) || [];
+  assert.equal(u07.length, 1, 'U-07 deve identificar uma única seção de erros no seletor de anexos');
+  assert.match(u07[0], /U-07 · ERROS E RECUPERAÇÃO DE ANEXOS/);
+  assert.equal((html.match(/data-task="U-\d{2}"/g) || []).length, 8, 'Exatamente 8 marcadores de tarefa mobile');
+});
