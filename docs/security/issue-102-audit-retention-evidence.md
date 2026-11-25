@@ -54,7 +54,7 @@ Cenários comprovados:
 - usuário comum não lê `audit_events` nem `retention_holds`;
 - TI registra evento permitido;
 - metadata com chave sensível é rejeitada;
-- UPDATE direto em evento de auditoria é rejeitado;
+- UPDATE direto e DELETE direto em evento de auditoria são bloqueados;
 - TI cria e libera hold;
 - hold colocado e liberado geram eventos;
 - edição administrativa de mensagem gera `message_admin_edited`;
