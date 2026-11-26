@@ -1,10 +1,16 @@
 # ADR-009 — Ambientes, configuração, deploy e rollback
 
-- **Status:** Accepted
-- **Data de revisão:** 24/11/2026
+- **Status:** Accepted — escopo delimitado
+- **Data de revisão:** 26/11/2026
 - **Issue de origem:** #89
-- **Issues operacionais relacionadas:** #96 e #98
+- **Issues operacionais relacionadas:** #96, #98 e #130
 - **Baseline:** POLY-REQ-001 v0.5
+
+## Escopo do aceite
+
+Esta ADR está **Accepted — escopo delimitado** para a compatibilidade e o modelo de utilização Supabase + Vercel aprovados na Q-025, bem como para as decisões e responsabilidades de ambientes, configuração, deploy e rollback aqui registradas. O status não significa homologação integral do produto, execução comprovada de backup/restore, continuidade operacional concluída ou autorização de lançamento.
+
+A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para os provedores nomeados e o modelo de utilização, inclusive Storage, dentro dos limites e responsabilidades registrados. A Q-025 não substitui os critérios de execução e evidência operacional da Issue #130.
 
 ## Contexto
 
