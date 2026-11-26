@@ -50,7 +50,7 @@ test("nega TI em celular e preserva a sessão renovada", async () => {
       : null },
   };
   const result = await authorizeTIConsoleRequest(mobileRequest, {
-    validate: async () => userSession,
+    validate: async () => ({ ...userSession, user: { ...userSession.user, role: "ti" } }),
   });
   assert.equal(result.authorized, false);
   assert.equal(result.status, 403);
