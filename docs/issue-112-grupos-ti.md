@@ -75,8 +75,8 @@ A aprovação da PR #175 não equivale à aprovação da PR #178. O status de im
 
 ## Validação contínua após integração com `main`
 
-Na execução de CI do commit anterior, o workflow de testes identificou um erro de resolução ESM ao importar `next/server` diretamente no Node.js. O import foi ajustado para `next/server.js` no commit `90b721a`; a nova execução de CI deve confirmar a correção.
+Na execução anterior, o CI identificou um erro de resolução ESM ao importar `next/server` diretamente no Node.js. O import foi ajustado para `next/server.js` no commit `90b721a`. No commit `6418b97`, a execução completa de CI (testes automatizados, ESLint, TypeScript, build Next.js e smoke test) concluiu com sucesso.
 
-O workflow separado de instalação limpa do Supabase falhou antes de inicializar o Supabase local: a etapa de preparação tenta obter arquivos de outra branch (`feat/issue-115-private-attachment-storage`) e interrompeu antes de aplicar migrations ou executar testes. Portanto, essa falha não é evidência de erro na migration da Issue #112 e também não valida seu SQL.
+O workflow de instalação limpa foi corrigido para preparar o ambiente somente com as migrations presentes no checkout da PR, sem contagem fixa de arquivos nem dependência de outra branch. A execução confirmou a aplicação das 19 migrations em um Supabase local vazio. O teste SQL de integração encontrou um delimitador inválido na função temporária que simula falha de auditoria; o delimitador foi corrigido no commit `6418b97`, e a nova execução do workflow está em andamento.
 
-A validação SQL/RLS específica da Issue #112 continua pendente de execução em ambiente Supabase de homologação. A revisão estática do SQL não substitui essa execução.
+A execução do roteiro em projeto Supabase de homologação continua pendente. A validação automatizada local cobre a instalação limpa e as asserções SQL incluídas no workflow, mas não substitui a validação no ambiente de homologação nem a revisão técnica das RPCs privilegiadas. A revisão da PR #178 foi solicitada ao Tech Lead `luizme7`.
