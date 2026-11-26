@@ -1,6 +1,6 @@
 # ADR-006 — Autorização server-side e RLS
 
-- **Status:** Accepted
+- **Status:** Accepted — escopo delimitado
 - **Escopo do aceite:** contrato de perfis/sessões integrado pelas PRs #174 e #175 e policies RLS de domínio entregues pela PR #172 e testadas no Supabase de desenvolvimento. Não representa homologação de produção, autenticação positiva com usuário real nem integração ponta a ponta de todos os recursos/handlers do chat.
 - **Data:** 17/11/2026
 - **Issue:** #89 · **Implementação relacionada:** #105
@@ -11,7 +11,7 @@ A baseline prevê dois perfis: Usuário e TI. Os endpoints de autenticação/ses
 
 ## Relação com a ADR-003
 
-Esta decisão Accepted mantém o contrato de perfis e registra a extensão de RLS de domínio entregue pela #101 (PR #172). Os testes de integração SQL foram executados em Polyford, com 16/16 cenários aprovados e teste separado de criação de conversa direta. O resultado comprova o escopo testado no ambiente de desenvolvimento; não equivale à homologação de produção nem à integração de todos os handlers do App Router. A ADR-003 continua sendo a decisão vigente da stack Supabase + Vercel.
+Este aceite, de escopo delimitado, mantém o contrato de perfis e registra a extensão de RLS de domínio entregue pela #101 (PR #172). Os testes de integração SQL foram executados em Polyford, com 16/16 cenários aprovados e teste separado de criação de conversa direta. O resultado comprova o escopo testado no ambiente de desenvolvimento; não equivale à homologação de produção nem à integração de todos os handlers do App Router. A ADR-003 continua sendo a decisão vigente da stack Supabase + Vercel.
 
 ## Problema
 
