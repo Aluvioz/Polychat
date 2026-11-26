@@ -12,6 +12,13 @@ values ('abababab-abab-4bab-8bab-abababababab','direct',auth.uid(),'11111111-111
 insert into public.memberships(conversation_id,profile_id,added_by_profile_id) values
 ('abababab-abab-4bab-8bab-abababababab',auth.uid(),auth.uid()),
 ('abababab-abab-4bab-8bab-abababababab','33333333-3333-4333-8333-333333333333',auth.uid());
-select count(*) = 1 as direct_conversation_visible_after_membership
-from public.conversations where id='abababab-abab-4bab-8bab-abababababab';
+do $assert$
+begin
+  if (select count(*) from public.conversations
+      where id='abababab-abab-4bab-8bab-abababababab') <> 1 then
+    raise exception 'Direct conversation is not visible after membership';
+  end if;
+end;
+$assert$;
+select true as direct_conversation_visible_after_membership;
 rollback;

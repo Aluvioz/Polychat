@@ -1,0 +1,72 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> polychat@0.1.0 test
+> node --test tests/*.test.mjs
+
+✔ validates event/resource pairing and creates database payload (2.18164ms)
+✔ rejects unknown event type or mismatched resource (0.489565ms)
+✔ rejects missing resource identifiers except admin_login (0.31083ms)
+✔ rejects sensitive metadata keys recursively (0.538668ms)
+✔ requires a caller access token and does not use service role (0.406672ms)
+✔ posts with anon key and caller JWT, returning the inserted event id (3.296901ms)
+✔ does not expose provider response details on failure (0.444058ms)
+✔ permite usuário autenticado e ativo (1.424379ms)
+✔ nega requisição sem token (0.277982ms)
+✔ nega sessão inválida (0.207677ms)
+✔ bloqueia conta inativa (0.250761ms)
+✔ falha na consulta não concede acesso (0.241498ms)
+✔ nega role desconhecida (0.213266ms)
+✔ TI pode acessar rota administrativa (0.279644ms)
+✔ User não acessa rota restrita a TI (0.170242ms)
+✔ perfil ausente não recebe autorização (0.22967ms)
+✔ exceção do provedor de autenticação falha fechada sem expor detalhes (0.434313ms)
+✔ requireRole sem autenticação retorna 401 (0.177173ms)
+✔ 127-A01: invalid input fails before contacting the provider (1.510737ms)
+✔ 127-A02: ambiguous username or role outside the allowlist is denied (2.711144ms)
+✔ 127-A03: missing identity email is denied without password exchange (0.831601ms)
+✔ 127-A04: token for a different identity cannot establish a session (0.778953ms)
+✔ 127-A05: provider lookup outage is sanitized and fails closed (0.387344ms)
+✔ 127-A06: expired access and rejected refresh result in no session (0.810801ms)
+✔ 127-A07: session uses current database role, not auth metadata (0.948575ms)
+✔ 127-A08: missing session tokens do not access the provider (0.161199ms)
+✔ 127-A09: session profile lookup outage cannot grant access (2.634641ms)
+✔ 127-A10: successful logout does not unnecessarily exchange refresh token (0.26975ms)
+✔ HTML tem idioma, viewport e main identificável (0.910157ms)
+✔ todos os campos demonstrativos estão associados aos rótulos (0.274086ms)
+✔ mensagens de erro/status e foco visível têm representação textual (0.187007ms)
+✔ demo de confirmação não simula uma ação de segurança funcional (0.219235ms)
+✔ tamanhos responsivos e modo de contraste forçado estão especificados (0.130714ms)
+✔ galeria independente inclui CSS, e página pública tem CSS correspondente (0.173106ms)
+✔ pares textuais demonstrativos possuem contraste WCAG AA normal (0.306584ms)
+✔ bordas essenciais, foco e erro cumprem contraste nao textual minimo 3:1 (0.318671ms)
+✔ logo Ford standalone usa limite responsivo e CSS sincronizado (0.207177ms)
+✔ tokens e estilos de cada galeria permanecem sincronizados (0.239926ms)
+✔ contraste textual das variantes presentes, inclusive hover, atende 4,5:1 (1.508344ms)
+✔ contraste não textual de controles essenciais, foco e estados, mínimo 3:1 (0.315037ms)
+✔ controle desativado é exceção de contraste e não deve criar falso FAIL (0.188109ms)
+✔ catálogo contém os eventos privilegiados previstos na Issue #124 (2.185085ms)
+✔ remove recursivamente campos de credenciais dos metadados (0.427183ms)
+✔ rejeita metadados que não sejam objeto (0.467062ms)
+✔ não registra ação sem ator TI ativo (0.593639ms)
+✔ permite registrar falha de login administrativo sem identidade validada (0.481763ms)
+✔ propaga falha do banco sem expor mensagem interna (0.690593ms)
+✔ consulta de auditoria exige TI ativo (0.601321ms)
+✔ pesquisa aplica filtros e paginação no servidor (0.691253ms)
+✔ limita paginação a 100 registros (1.14815ms)
+✔ login por username resolve identidade, autentica senha e retorna apenas dados de perfil (6.770315ms)
+✔ username inexistente retorna erro genérico sem consultar identidade ou senha (0.995714ms)
+✔ conta inativa não inicia autenticação e não revela seu estado (0.480262ms)
+✔ senha inválida retorna a mesma resposta genérica (1.482815ms)
+✔ login não retorna sessão se o perfil for desativado durante a autenticação (1.490216ms)
+✔ sessão expirada renova tokens e revalida perfil ativo (0.767015ms)
+✔ sessão de conta desativada é recusada e revogada (0.612506ms)
+✔ logout usa refresh token quando o access token já expirou (0.399181ms)
+✔ sem credenciais de configuração, sessão falha fechada (0.225073ms)
+ℹ tests 59
+ℹ suites 0
+ℹ pass 59
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 149.087742
