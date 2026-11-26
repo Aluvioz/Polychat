@@ -15,8 +15,6 @@ A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. A Q-025 f
 
 A implementação já possui a fundação privada do Supabase Storage e um endpoint server-side parcial de upload, entregues pelas PRs #181 e #185. Essas entregas não equivalem ao fluxo completo de anexos: download autorizado, links temporários e revogação, validação estrutural profunda, scanner antimalware, quotas, tratamento de PDF protegido por senha, remoção EXIF/GPS e backup/restauração permanecem pendentes nas issues correspondentes.
 
-
-
 ## Problema
 
 Armazenar, analisar e entregar anexos em armazenamento privado, sem exposição pública nem acesso fora das permissões da conversa, utilizando os provedores nomeados e aprovados na Q-025 e sem encaminhar arquivos ou metadados a outros serviços externos.
@@ -121,7 +119,7 @@ A fotografia abaixo reflete as entregas integradas à main pelas PRs #181 e #185
 - As verificações SQL no Polyford confirmaram a configuração do bucket, mas não houve upload/download real de arquivo no ambiente consultado; a verificação posterior registrou zero objetos em storage.objects.
 - A existência do bucket, da rota e dos testes unitários não comprova integração ponta a ponta com o fluxo de criação de mensagem, análise antimalware, leitura/download ou experiência completa do usuário.
 - A Issue #115 permanece aberta; as PRs #181 e #185 entregam, respectivamente, a fundação privada e uma camada inicial de upload, sem declarar encerrados todos os critérios da issue.
-- O provisionamento atual e o endpoint aplicam 10 MiB (10.485.760 bytes), enquanto a regra funcional está expressa como 10 MB nos requisitos. A equivalência entre MB decimal e MiB binário precisa ser conferida e harmonizada para que o limite efetivo não exceda o aprovado; esta ADR não altera unilateralmente o requisito de produto.
+- O provisionamento atual e o endpoint aplicam 10 MiB (10.485.760 bytes), enquanto a regra funcional está expressa como 10 MB. Se o requisito usar MB decimal (10.000.000 bytes), a configuração atual permite 485.760 bytes adicionais. PO, Desenvolvimento e SQA devem confirmar a unidade pretendida e harmonizar o limite efetivo antes do aceite; esta ADR não altera unilateralmente o requisito de produto.
 
 As evidências de implementação estão registradas em docs/storage/issue-115-private-storage-evidence.md, docs/storage/issue-115-upload-implementation.md e docs/infra/polyford-integration-validation-2026-11-26.md.
 
