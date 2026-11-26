@@ -21,7 +21,7 @@
 
 A matriz separa três elementos que não podem ser confundidos:
 
-1. **Identidade autenticada:** identidade validada no servidor pelo Supabase Auth, conforme a stack definida para o projeto. Identificadores, credenciais e estado de conta enviados pelo cliente não são fontes confiáveis de autorização.
+1. **Identidade autenticada:** identidade cuja sessão é validada no servidor pelo mecanismo de autenticação previsto na stack Supabase + Vercel. O Supabase Auth permanece como referência tecnológica do projeto, mas sua utilização na infraestrutura da FORD depende da avaliação de compatibilidade registrada na Q-025 e não é considerada homologada por esta matriz. Identificadores, credenciais e estado de conta enviados pelo cliente não são fontes confiáveis de autorização.
 2. **Perfil (role):** um dos dois perfis de aplicação: `user` (Usuário) ou `ti` (TI). Todos os administradores TI têm poderes administrativos equivalentes; não há administrador principal ou segunda aprovação.
 3. **Participação (membership):** vínculo efetivo da pessoa com uma conversa ou grupo. A role, por si só, não torna um Usuário participante. A exceção é o acesso administrativo expressamente concedido ao TI para consulta de qualquer conversa, com auditoria.
 
@@ -35,7 +35,7 @@ A matriz separa três elementos que não podem ser confundidos:
 | Q-001 a Q-024 | Histórico de decisões; questões resolvidas permanecem registradas e não devem ser reabertas como pendências |
 | Q-025 | Avaliar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados; não descartar a stack por inferência |
 | POLY-UX-DEC-001 | Catálogo de telas e configurações administrativas restritas, associado à decisão Q-018 |
-| ADR-006 | Referência técnica para autenticação de perfis e RLS com Supabase; detalhes de integração e implantação permanecem sujeitos à revisão técnica |
+| ADR-006 | Referência técnica existente para autenticação de perfis e RLS no contexto Supabase. Não constitui homologação de Supabase Auth ou RLS para a infraestrutura da FORD. A compatibilidade de utilização permanece sujeita à avaliação registrada na Q-025 |
 | Issue #99 | Modelagem do schema necessário às relações de conversas, memberships, mensagens, anexos e auditoria |
 | Issue #101 | Implementação de enforcement server-side, políticas de acesso/RLS de domínio e testes de isolamento |
 | Issue #102 | Implementação dos eventos de auditoria, proteção, acesso e retenção |
@@ -73,7 +73,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 | Conta | Criar, alterar ou desativar outra conta TI | TI | Todos os TIs têm poderes iguais; não há administrador principal nem segunda aprovação | Permitido | Operação autenticada e auditada; não criar hierarquia | RF-002, RF-003; Q-002; RN-003 |
 | Conta | Desativar/reativar conta e revogar sessões | TI | Desativação encerra sessões e revoga acessos imediatamente; histórico é preservado | Permitido | Enforcement no servidor e preservação de dados históricos | RF-004; CA-004.1 a CA-004.6 |
 | Conta | Autocadastrar-se ou convidar pessoa externa | Usuário | Não existe auto cadastro, convite ou público externo no escopo inicial | Negado | Bloqueio no fluxo de criação e no servidor | RF-003; RN-004; RN-009 |
-| Conta / perfil | Alterar role ou estado por payload ou escrita direta do cliente | Usuário ou TI | Cliente não é fonte confiável de role/status | Negado | Proteção server-side e no banco; não confiar em campos enviados pelo cliente | RF-002; Supabase Auth/RLS e ADR-006 |
+| Conta / perfil | Alterar role ou estado por payload ou escrita direta do cliente | Usuário ou TI | Cliente não é fonte confiável de role/status | Negado | Proteção server-side e no banco; não confiar em campos enviados pelo cliente | RF-002; ADR-006; referência de autenticação/autorização da stack sujeita à avaliação de compatibilidade da Q-025 |
 | Sessão | Prosseguir sem identidade válida, com sessão expirada ou conta inativa | Qualquer identidade | Identidade deve ser validada no servidor e conta deve estar ativa | Negado | Autenticação/estado centralizados; comportamento fail-closed | RF-001, RF-004; RN-005 |
 | Conversa individual | Iniciar conversa com outro Usuário ativo | Usuário ativo | Não há distinção por cargo corporativo entre usuários comuns | Permitido | Validar situação ativa do remetente/destinatário e persistir vínculo | RF-009; RN-006 |
 | Conversa individual | Abrir/ler histórico | Usuário participante | Só pode acessar conversas das quais participa | Permitido | Verificar membership no servidor e na camada de dados; schema em #99 e enforcement em #101 | RF-008; CA-008.1 a CA-008.5 |
@@ -93,7 +93,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 | Mensagem | Editar ou excluir mensagem | TI | TI pode alterar ou excluir mensagens a qualquer momento; operações são auditadas | Permitido | Ação administrativa autenticada; trilha de auditoria em #102 | RF-020; CA-020.3 a CA-020.5; RN-014 |
 | Mensagem / leitura | Registrar leitura, exibir horário e total de não lidas | Usuário; Sistema | O sistema registra leitura e exibe estado/quantidade conforme RF-019 | Permitido | Detalhamento de granularidade e persistência no schema #99 e implementação técnica; não alterar regra observável do RF-019 | RF-019; CA-019.1 a CA-019.4 |
 | Anexo | Enviar/anexar PDF ou JPEG | Usuário em conversa autorizada | Até 10 MB por arquivo, até cinco por mensagem; quotas individuais e capacidade total definidas pelo TI; PDF protegido por senha é recusado | Permitido, sujeito a validação | Validar conteúdo real, limites, quota e scanner dentro da infraestrutura da FORD | RF-011, RF-012; RN-008; Q-011 |
-| Anexo | Ler/baixar anexo | Participante autorizado | A autorização depende da participação vigente e da conversa; cada download exige autorização vigente | Permitido | Supabase Storage em bucket privado, com autorização verificada no servidor e sem URL pública permanente; validar compatibilidade com Q-014/Q-025 | RF-011; CA-011.9 e CA-011.12 |
+| Anexo | Ler/baixar anexo | Participante autorizado | A autorização depende da participação vigente e da conversa; cada download exige autorização vigente | Permitido | Armazenamento privado de anexos, com autorização verificada no servidor e sem URL pública permanente. Supabase Storage permanece como referência tecnológica prevista, mas sua utilização na infraestrutura da FORD depende da avaliação de compatibilidade da Q-025. Manter também a validação de Q-014 | RF-011; CA-011.9 e CA-011.12 |
 | Anexo | Baixar anexo para investigação | TI | TI pode baixar anexos durante investigação; a ação gera auditoria | Permitido | Fluxo administrativo autenticado e auditado | RF-011; CA-011.11; RN-003 |
 | Anexo | Liberar arquivo bloqueado pelo scanner | TI | TI pode excepcionalmente liberar qualquer arquivo; ação autenticada e auditada | Permitido, como exceção administrativa | Implementar controle restrito e evento de auditoria; Usuário não pode contornar o scanner | RF-011, RF-012; Q-011; baseline v0.5 |
 | Anexo | Disponibilizar arquivo sem resultado antimalware favorável ou com scanner indisponível/inconclusivo | Sistema | Falha, indisponibilidade ou resultado inconclusivo mantém o anexo bloqueado; texto continua funcionando | Negado para disponibilização automática | Fail-closed dentro da infraestrutura da FORD | RF-011; CA-011.6 a CA-011.8; RN-008 |
@@ -112,7 +112,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 
 ## 4. Regras transversais de autorização e segurança
 
-1. **Identidade validada no servidor:** toda operação protegida deve derivar a identidade da sessão validada pelo Supabase Auth; nunca confiar em identidade, role ou status enviados pelo cliente.
+1. **Identidade validada no servidor:** toda operação protegida deve derivar a identidade da sessão validada pelo mecanismo de autenticação previsto para a stack do projeto. O Supabase Auth permanece como referência técnica, sujeito à avaliação de compatibilidade da Q-025 antes de ser considerado homologado para a infraestrutura da FORD. Nunca confiar em identidade, role ou status enviados pelo cliente.
 2. **Role não substitui membership:** o perfil `ti` autoriza as operações administrativas expressas; o perfil `user` não concede acesso a conversa sem participação.
 3. **Acesso TI é exceção explícita:** TI consulta/exporta qualquer conversa sem justificativa prévia; toda consulta/exportação deve gerar auditoria.
 4. **Membership deve estar vigente:** operações de Usuário dependem de participação autorizada e de conta ativa. A remoção revoga imediatamente acesso ao histórico e anexos do grupo.
