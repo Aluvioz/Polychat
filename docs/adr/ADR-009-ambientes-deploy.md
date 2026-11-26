@@ -90,7 +90,7 @@ Isolamento e promoção controlada reduzem o risco de contaminação entre está
 **Negativas e cuidados:**
 - A FORD/equipe precisa operar a infraestrutura, pipeline de deploy, segredos, backups e recuperação.
 - A configuração e eventual adequação da stack adotada exigem planejamento, validação técnica e evidências por ambiente.
-- Evidências históricas de deploy e rollback precisam ser preservadas, mas a solução substituta também deverá ser testada.
+- Evidências históricas de deploy e rollback precisam ser preservadas; a configuração e o modelo de utilização da stack Supabase + Vercel adotada também devem ser verificados e evidenciados conforme a Q-025.
 
 ## Riscos
 
@@ -104,7 +104,7 @@ Mistura de dados entre ambientes; vazamento de segredos; pipeline externo com ac
 - [Issue #98 — aceite e encerramento](https://github.com/Aluvioz/Polychat/issues/98#issuecomment-7013655363): confirmação de deployment hospedado, smoke/rollback, produção, domínio/HTTPS e fluxos relacionados.
 - Runbook de smoke test e rollback da Issue #98: procedimento e registro do ensaio, com os limites de detalhamento documental.
 - Workflow de CI: testes, ESLint, TypeScript e build no GitHub Actions.
-- Baseline POLY-REQ-001 v0.4: isolamento, disponibilidade, RPO/RTO, backup, manutenção e suporte.
+- Baseline POLY-REQ-001 v0.5: isolamento, disponibilidade, RPO/RTO, backup, manutenção e suporte.
 
 As confirmações do Tech Lead são evidência de aceite operacional para as issues, não auditoria administrativa independente das configurações nem prova de conformidade da arquitetura externa com a FORD v2.
 
@@ -113,7 +113,7 @@ As confirmações do Tech Lead são evidência de aceite operacional para as iss
 - Documentar e validar a configuração de ambientes e do pipeline de deploy na stack Supabase + Vercel adotada, demonstrando compatibilidade com os requisitos da FORD na Q-025.
 - Definir como Preview, homologação e produção serão isolados na infraestrutura-alvo.
 - Documentar a gestão de segredos e o acesso mínimo por ambiente, sem expor valores.
-- Revalidar smoke test, deploy e rollback na arquitetura substituta.
+- Revalidar smoke test, deploy e rollback na configuração e no modelo de utilização propostos para a stack Supabase + Vercel adotada, observando o resultado e as evidências da avaliação Q-025.
 - Registrar evidências e aprovadores de TI/Tech Lead e atualizar esta ADR após a decisão.
 
 Os requisitos de isolamento, proteção de credenciais, gestão de chaves, metas de disponibilidade, backup, RPO/RTO e operação já alinhados com Desenvolvimento são premissas consolidadas; não devem ser reabertos como pendências de produto.
