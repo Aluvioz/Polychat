@@ -6,7 +6,7 @@ Ambiente: desenvolvimento
 
 ## Estado remoto observado
 
-O histórico remoto contém 17 migrations antes da migration privada de anexos da #115. As versões e nomes foram consultados diretamente em `supabase_migrations.schema_migrations` por meio da listagem de migrations do projeto.
+O histórico remoto contém 18 migrations após a aplicação da migration privada de anexos da #115. Esta PR reconcilia as 17 versões anteriores; a versão `20261126131156_issue_115_private_attachment_bucket` está versionada separadamente na PR #181. A correspondência integral local/remota será obtida quando ambas as PRs forem integradas. As versões e nomes foram consultados diretamente no histórico remoto do projeto.
 
 ## Alterações locais desta PR
 
@@ -15,6 +15,8 @@ O histórico remoto contém 17 migrations antes da migration privada de anexos d
 - Adiciona `20261124210245_issue_102_audit_events.sql` como arquivo de ledger sem DDL. Essa versão foi aplicada no remoto por uma branch da PR #166, não merged. O conteúdo original não está na `main`; não foi reconstruído. A migration canônica `20261125232432_issue_102_audit_retention_controls.sql` cria `audit_events` com `CREATE TABLE IF NOT EXISTS` e é responsável por reproduzir a tabela em instalação limpa.
 
 ## Segurança e limites
+
+- Esta branch contém 17 arquivos para 17 versões históricas anteriores à migration de Storage. A única versão remota ainda ausente nesta branch é `20261126131156`, coberta pela PR #181; não se trata de uma versão sem arquivo no conjunto combinado das duas PRs.
 
 - Nenhum registro do histórico remoto foi removido, reparado ou reescrito.
 - Nenhuma migration histórica foi reaplicada.
