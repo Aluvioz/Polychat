@@ -10,7 +10,7 @@ import { isRoleAllowed, normalizeAllowedRoles } from "./authorization.mjs";
  */
 export async function authorizeNextRequest(
   request,
-  { allowedRoles = ["user", "ti"], validate = validateSession } = {},
+  { allowedRoles = ["user", "ti"], validate = validateSession, preserveSessionOnForbidden = false } = {},
 ) {
   const roles = normalizeAllowedRoles(allowedRoles);
   if (typeof validate !== "function") {
@@ -28,7 +28,11 @@ export async function authorizeNextRequest(
     }
 
     if (!isRoleAllowed(session.user?.role, roles)) {
-      return { authorized: false, status: 403, session: null };
+      return {
+        authorized: false,
+        status: 403,
+        session: preserveSessionOnForbidden ? session : null,
+      };
     }
 
     return { authorized: true, status: 200, session };
