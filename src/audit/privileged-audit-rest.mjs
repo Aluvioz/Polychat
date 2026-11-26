@@ -159,8 +159,16 @@ export async function searchPrivilegedAuditEventsRest({
   for (const [key, column] of exactFilters) {
     if (filters[key]) url.searchParams.set(column, `eq.${filters[key]}`);
   }
-  if (filters.from) url.searchParams.set("occurred_at", `gte.${filters.from}`);
-  if (filters.to) url.searchParams.set("occurred_at", `lte.${filters.to}`);
+  if (filters.from && filters.to) {
+    url.searchParams.set(
+      "and",
+      `(occurred_at.gte.${filters.from},occurred_at.lte.${filters.to})`,
+    );
+  } else if (filters.from) {
+    url.searchParams.set("occurred_at", `gte.${filters.from}`);
+  } else if (filters.to) {
+    url.searchParams.set("occurred_at", `lte.${filters.to}`);
+  }
 
   let response;
   try {
