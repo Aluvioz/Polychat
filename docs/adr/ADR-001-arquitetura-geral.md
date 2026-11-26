@@ -1,7 +1,7 @@
 # ADR-001 — Arquitetura lógica geral
 
 - **Status:** Proposed
-- **Data de revisão:** 24/11/2026
+- **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
 - **Responsáveis pela decisão:** Tech Lead e TI; PO valida aderência ao escopo
