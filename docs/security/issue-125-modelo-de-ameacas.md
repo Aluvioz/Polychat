@@ -4,7 +4,7 @@
 **Issue:** [#125 — Executar threat modeling e hardening de segurança](https://github.com/Aluvioz/Polychat/issues/125)  
 **Épica:** #86 — Segurança, monitoramento e auditoria  
 **Identificador:** POLY-SEC-001  
-**Versão:** 0.12 — 24/11/2026  
+**Versão:** 0.13 — 25/11/2026  
 **Status:** modelo preliminar; plano consolidado proposto pelo PO, pendente de validação das prioridades, responsabilidades funcionais, marcos e evidências pelo Tech Lead, TI e SQA  
 **Classificação:** documento interno de trabalho — não contém segredos nem dados reais de usuários
 
@@ -546,19 +546,21 @@ Os critérios originais da Issue #125 são preservados. A tabela abaixo detalha 
 
 ### 16.1 Condições para considerar o threat model revisado
 
-- [x] **Revisão preliminar do Tech Lead:** arquitetura, fotografia técnica, ativos, fluxos, fronteiras de confiança, cenários STRIDE e mitigações foram avaliados como coerentes para o modelo preliminar. O parecer de 24/11 foi favorável às correções documentais, mas não constituiu `APPROVE` final da PR nem validação final da matriz 18.2.
+- [x] **Revisão técnica preliminar do Tech Lead (24/11):** arquitetura, fotografia técnica, ativos, fluxos, fronteiras de confiança, cenários STRIDE e mitigações foram considerados coerentes para o modelo preliminar na revisão da versão 0.6. O parecer foi favorável às correções documentais, mas não constituiu aprovação formal da PR nem validação final da matriz 18.2.
+- [x] **Aprovação formal do Tech Lead para a PR (25/11):** o GitHub registra `APPROVED` para a PR #154. O parecer cita expressamente o documento POLY-SEC-001 v0.11 e condiciona merge e fechamento à revisão final do SQA sobre a matriz 18.2, a rastreabilidade das evidências e a cobertura/qualidade dos marcos M0–M3. Essa aprovação não autoriza merge nem comprova testes ou controles implementados. Como as versões 0.12 e 0.13 foram registradas depois desse parecer, não se presume que suas harmonizações documentais tenham sido objeto de revisão específica do Tech Lead.
 - [x] **Validação operacional do modelo pela TI:** a validação do modelo de ameaças foi registrada como concluída em 24/11, conforme confirmação do PO. Seu escopo é a adequação operacional do modelo; não comprova implementação, execução de testes, homologação de produção ou evidências de operação dos controles.
 - [x] **Compatibilidade da stack:** Q-025 concluída em 24/11/2026, com aprovação da compatibilidade do modelo de utilização Supabase + Vercel pela TI e pela FORD. Essa aprovação não substitui evidências de implementação, integração ou homologação.
 - [x] **Alinhamento das referências #99 e #100:** o modelo de dados foi reconciliado com as migrations da #99 e com a evidência de aplicação em desenvolvimento; a matriz de autorização #100 foi alinhada às regras de produto. As policies RLS de domínio e os testes de isolamento permanecem na #101.
 - [x] **Decisões de produto:** as questões Q-002, Q-005, Q-006, Q-009, Q-010, Q-013, Q-014 e Q-015 foram respondidas/alinhadas e estão registradas na baseline v0.5.
 - [x] **Políticas #117 e #122:** as entregas documentais foram reconciliadas com a FORD v2 e a baseline v0.5. A política de anexos foi integrada pela PR #150; a política de detecção foi integrada pela PR #151, com conformidade documental SQA e aprovação documental do Tech Lead registradas. Implementação funcional, ativação e testes dessas políticas continuam em seus respectivos escopos.
 - [x] **Estrutura da matriz 18.2:** os riscos PRD-001 a PRD-010 possuem tratamento proposto, funções-alvo, marcos, dependências e evidências esperadas. Essa completude documental não significa validação técnica ou operacional dos campos.
-- [ ] **Validação final da matriz 18.2:** Tech Lead, TI e SQA confirmam individualmente classificação técnica, responsáveis funcionais, marcos, evidências e prazos/estimativas para PRD-001 a PRD-010.
-- [ ] **Revisão independente da versão atual:** Tech Lead e SQA reavaliam a versão 0.11 e registram suas decisões formais sobre a entrega documental; os pareceres anteriores foram emitidos sobre versões anteriores e não constituem aprovação automática desta atualização.
+- [ ] **Validação final da matriz 18.2:** Tech Lead, TI e SQA confirmam individualmente a classificação técnica, os responsáveis funcionais, os marcos, as evidências e os prazos/estimativas para PRD-001 a PRD-010.
+- [ ] **Confirmação pontual do Tech Lead sobre a versão vigente:** confirmar que as harmonizações documentais das versões 0.12 e 0.13, registradas após o parecer que citou a v0.11, preservam o escopo técnico aprovado. Esta confirmação não reabre a revisão geral da arquitetura nem as decisões já aceitas.
+- [ ] **Revisão final do SQA sobre a versão vigente (0.13):** revisar a versão atual do POLY-SEC-001, especialmente a matriz 18.2, a rastreabilidade de cada risco para ameaça/mitigação/issue/verificação/evidência e a cobertura/qualidade dos marcos M0–M3. O parecer favorável anterior confirmou o atendimento dos quatro apontamentos documentais na versão 0.6, mas não representa aprovação final da versão 0.13 nem da matriz.
 - [ ] **Operacionalização dos controles:** implementação e comprovação dos controles de acesso, ciclo de vida, auditoria, monitoramento, anexos, continuidade, suporte e resposta a incidentes nas issues correspondentes.
 - [ ] **Riscos residuais:** classificação e disposição de cada risco residual documentadas; eventual aceitação formal deve ser registrada pela autoridade competente, sem aceite presumido pelo PO.
 - [ ] **Testes e evidências:** testes SEC-01 a SEC-20 aplicáveis, verificação DOC-01 e regressão executados e registrados com evidências reproduzíveis, vinculadas a versão e ambiente.
-- [ ] **Revisão e integração da PR:** aprovação formal independente e checks aplicáveis concluídos sobre o commit final desta versão.
+- [ ] **Revisão e integração da PR:** pareceres formais aplicáveis e checks concluídos sobre o commit final, branch sincronizada com `main` e condição de merge confirmada.
 ## 17. Plano de evolução do documento
 
 | Versão | Quando atualizar | Conteúdo esperado |
@@ -698,3 +700,4 @@ Um risco só deve ser marcado como tratado após implementação no escopo aplic
 | 0.10 | 24/11/2026 | Harmoniza a checklist 16.1 com os pareceres registrados do Tech Lead, SQA e TI, as aprovações documentais das PRs #150/#151 e o estado atual da matriz 18.2; mantém pendentes a validação final da matriz, a revisão independente desta versão, a implementação e os testes. |
 | 0.11 | 24/11/2026 | Harmoniza a seção 16 com a checklist 16.1, refletindo as validações preliminares e operacionais já registradas, sem antecipar aprovação formal da PR, validação final da matriz 18.2, execução de testes ou aceitação de riscos residuais. |
 | 0.12 | 24/11/2026 | Harmoniza os limites da avaliação com a aprovação concluída da Q-025; atualiza o status e a rastreabilidade documental da PR #151 integrada; distingue as políticas aprovadas das implementações e evidências ainda pendentes em THR-015/THR-016; corrige a referência à Q-025 no PRD-009. Não declara controles implementados, testes executados ou homologação. |
+| 0.13 | 25/11/2026 | Harmoniza a checklist 16.1 com o histórico real das revisões: registra o APPROVED do Tech Lead de 25/11 com referência expressa à v0.11 e sua condição de revisão final SQA; distingue esse parecer das revisões pendentes da versão vigente; explicita a necessidade de confirmação pontual do escopo técnico após as atualizações 0.12/0.13. Não altera ameaças, controles, matriz 18.2 ou decisões de produto. |
