@@ -9,7 +9,7 @@
 - **Limites da aprovação:** não equivale a aprovação técnica de arquitetura/implementação, aceite de Segurança/Privacidade, homologação institucional da FORD ou aprovação independente do SQA.
 - **Data desta revisão:** 20/11/2026.
 
-> Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. A stack tecnológica adotada pelo projeto é Supabase + Vercel. A compatibilidade dessa stack com as restrições de infraestrutura e tratamento de dados registradas pela FORD deve ser tratada explicitamente na Q-025, sem classificar Supabase/Vercel como arquitetura descartada.
+> Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. Supabase + Vercel permanece como stack tecnológica adotada e obrigatória do Polychat, conforme ADR-003 — Accepted. A Q-025 avalia a configuração e o modelo de utilização dessa stack frente às restrições de infraestrutura, hospedagem, armazenamento, processamento, localização, acesso e operação da FORD, sem alterar a decisão arquitetural por inferência nem declarar homologação de produção.
 
 ## 1. Como interpretar a matriz
 
@@ -33,7 +33,7 @@ A matriz separa três elementos que não podem ser confundidos:
 | RF-001 a RF-023 | Requisitos funcionais e critérios CA-xxx.n, inclusive membership, consulta TI, anexos, alertas, auditoria, dispositivos e edição/exclusão administrativa |
 | RN-001 a RN-025 | Regras de negócio vigentes, incluindo poderes equivalentes do TI, gestão de grupos, monitoramento, retenção e soberania dos dados |
 | Q-001 a Q-024 | Histórico de decisões; questões resolvidas permanecem registradas e não devem ser reabertas como pendências |
-| Q-025 | Avaliar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados; não descartar a stack por inferência |
+| Q-025 | Avaliar a configuração e o modelo de utilização da stack Supabase + Vercel, adotada e obrigatória conforme ADR-003 — Accepted, diante das restrições da FORD sobre hospedagem, armazenamento, processamento, localização, acesso e operação. Registrar arquitetura, controles, responsabilidades, evidências, limitações e riscos residuais. A avaliação não autoriza substituir a stack por inferência; incompatibilidade concreta não mitigável exige encaminhamento formal ao PO e às responsabilidades competentes da FORD, com avaliação de impacto |
 | POLY-UX-DEC-001 | Catálogo de telas e configurações administrativas restritas, associado à decisão Q-018 |
 | ADR-006 | Referência técnica existente para autenticação de perfis e RLS no contexto Supabase. Não constitui homologação de Supabase Auth ou RLS para a infraestrutura da FORD. A compatibilidade de utilização permanece sujeita à avaliação registrada na Q-025 |
 | Issue #99 | Modelagem do schema necessário às relações de conversas, memberships, mensagens, anexos e auditoria |
@@ -121,7 +121,7 @@ As regras abaixo estão resolvidas na baseline v0.5 e nas respostas da FORD v2. 
 7. **IDs e links não são autorização:** conhecer identificadores ou possuir link anteriormente emitido não substitui a verificação de autorização vigente.
 8. **Frontend não é enforcement:** ocultar telas ou botões não substitui autorização no servidor e na camada de persistência/armazenamento.
 9. **Auditoria:** consultas, exportações e demais ações administrativas especificadas devem gerar eventos protegidos, sem registrar credenciais, tokens ou segredos.
-10. **Restrições de dados da FORD:** a baseline registra exigências de controle de hospedagem e vedação a terceiros no acesso, armazenamento ou processamento. Essas exigências precisam ser conciliadas na Q-025 com a stack Supabase + Vercel definida para o projeto. Até essa compatibilização, não declarar conformidade institucional nem substituir a stack por outra sem decisão expressa.
+10. **Restrições de dados da FORD:** a baseline exige controle de hospedagem, armazenamento e processamento, sem terceiros acessando ou tratando dados da organização. A Q-025 deve avaliar a configuração e o modelo de utilização da stack Supabase + Vercel, conforme ADR-003 — Accepted, e registrar evidências de compatibilidade, controles, responsabilidades e riscos residuais. Até que haja evidência suficiente e homologação pelas responsabilidades competentes, não declarar conformidade institucional ou prontidão de produção; a avaliação não autoriza substituir a stack por inferência.
 11. **Sem bypass genérico:** operações privilegiadas devem ser explícitas, autenticadas e auditadas. Esta matriz não autoriza chave privilegiada no cliente nem bypass irrestrito de controles.
 
 ## 5. Evidências e limites do estado técnico observado
@@ -181,7 +181,7 @@ Os resultados abaixo já estão definidos pelas regras de produto. “Implementa
 | Enforcement e RLS de domínio (#101) | Implementar autorização server-side e políticas de persistência/armazenamento; provar isolamento positivo e negativo | Tech Lead / Dev; validação SQA | Execução posterior à matriz/schema; não é aceite documental da #100 |
 | Auditoria e retenção (#102) | Implementar catálogo de eventos, acesso restrito, proteção e ciclo de retenção | Dev; validação SQA; parâmetros institucionais conforme baseline | A matriz identifica operações auditáveis; #102 implementa |
 | Integração de perfis/contas (#105) | Completar fluxo real de autenticação, provisionamento, desativação e revogação de sessões | Responsáveis da #105; Tech Lead / Dev | A matriz define a regra funcional, sem presumir a integração |
-| Compatibilização arquitetural (Q-025) | Avaliar a compatibilidade da stack obrigatória Supabase + Vercel com as restrições registradas pela FORD, preservando a stack como direção do projeto | Tech Lead / Desenvolvimento / TI da FORD | Impede que uma exigência seja descartada por inferência e registra o conflito a resolver |
+| Compatibilização arquitetural (Q-025) | Avaliar a configuração e o modelo de utilização da stack Supabase + Vercel conforme ADR-003 — Accepted; registrar fronteiras de dados, controles, localização, acessos, responsabilidades, evidências, limitações e riscos residuais frente aos requisitos da FORD | Tech Lead / Desenvolvimento / TI da FORD; PO para aderência ao produto, avaliação de impacto e encaminhamentos formais | Demonstra compatibilidade sem presumir homologação nem permitir substituição da stack por inferência |
 | Revisão independente da matriz | Verificar rastreabilidade, cobertura de cenários e consistência com RF-001 a RF-023 | SQA | Critério pendente para conclusão formal da #100 |
 
 ## 8. Decisões fora do escopo de aprovação desta matriz
