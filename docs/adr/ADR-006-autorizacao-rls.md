@@ -9,6 +9,10 @@
 
 A baseline prevê dois perfis: Usuário e TI. A camada de autorização versionada valida a identidade pelo Supabase Auth, carrega papel e estado da tabela `profiles`, bloqueia papéis desconhecidos e contas inativas e falha fechada quando não consegue validar. A migration habilita RLS em `profiles` e impede escrita direta de clientes sobre dados privilegiados.
 
+## Relação com a ADR-003
+
+Esta decisão Accepted cobre somente o módulo e a migration de perfis descritos nesta ADR. Ela não amplia o aceite para RLS de domínio nem comprova integração/homologação de produção. O escopo limitado não nega nem substitui a decisão da ADR-003, que mantém Supabase + Vercel como stack adotada e obrigatória.
+
 ## Problema
 
 Impedir que o cliente escolha seu próprio papel, contorne permissões alterando a interface ou leia/altere dados de perfil de outras contas sem autorização.
