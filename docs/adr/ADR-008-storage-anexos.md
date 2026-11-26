@@ -11,24 +11,24 @@ A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por 
 
 A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
 
-A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória, e Supabase Storage é o componente de armazenamento previsto nessa plataforma. Esta ADR detalha a proposta de armazenamento privado, os controles de acesso e a integração com anexos. A Q-025 registra a avaliação da configuração e das condições operacionais da stack; não reabre a escolha do Supabase Storage nem declara sua integração ou homologação concluída.
+A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. No contexto da plataforma Supabase adotada, o Supabase Storage é considerado na proposta específica de armazenamento desta ADR. Como a ADR-008 permanece Proposed, a definição técnica específica, a configuração, os controles e a integração ainda dependem de revisão; a Q-025 registra a avaliação das condições operacionais e das evidências aplicáveis. Isso não reabre a adoção da stack pela ADR-003 nem declara integração do Storage ou homologação de produção.
 
 O repositório não comprova implementação de armazenamento privado, fluxo completo de upload/download ou integração antimalware. A política funcional do produto, entretanto, está consolidada na baseline e nos alinhamentos com Desenvolvimento.
 
 ## Problema
 
-Armazenar, analisar e entregar anexos por meio do Supabase Storage previsto na stack adotada, sem expor objetos publicamente e sem permitir acesso fora das permissões da conversa; a integração antimalware deve seguir os requisitos funcionais e as responsabilidades estabelecidas.
+Definir a proposta de armazenamento, análise e entrega de anexos por meio do Supabase Storage no contexto da plataforma Supabase adotada, sem expor objetos publicamente e sem permitir acesso fora das permissões da conversa; a integração antimalware deve seguir os requisitos funcionais e as responsabilidades estabelecidas.
 
 ## Alternativas consideradas
 
-1. **Supabase Storage com objetos privados:** componente de armazenamento previsto na plataforma Supabase adotada. É a direção considerada nesta proposta, com configuração de buckets privados, autorização server-side, segregação de ambientes e integração com o fluxo de anexos.
+1. **Supabase Storage com objetos privados:** solução considerada nesta proposta específica de armazenamento no contexto da plataforma Supabase adotada. Sua definição técnica, configuração de buckets privados, autorização server-side, segregação de ambientes e integração com o fluxo de anexos dependem da revisão desta ADR, atualmente Proposed.
 2. **Armazenamento autogerenciado em infraestrutura corporativa:** não é a direção selecionada nesta stack. Só deve ser considerado mediante necessidade demonstrada, avaliação de impacto e decisão formal de mudança arquitetural.
 3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
 4. **Outro serviço de armazenamento fora da stack adotada:** não selecionado. Sua inclusão dependeria de justificativa, avaliação e decisão formal; não decorre de uma proibição genérica aos serviços gerenciados.
 
 ## Decisão proposta
 
-Utilizar **Supabase Storage como componente previsto para o armazenamento privado de anexos** na stack adotada pela ADR-003. A solução deve manter objetos privados, autorização server-side por conversa e participante, revogação de acesso e integração com o fluxo antimalware definido na baseline. Esta ADR permanece Proposed: buckets, políticas, links, backups, integração do scanner, controles e evidências devem ser detalhados e revisados por Tech Lead e TI; a Q-025 registra as condições operacionais da configuração. Esta proposta não declara integração concluída nem homologação de produção.
+Propor a utilização do **Supabase Storage como solução de armazenamento privado de anexos** no contexto da plataforma Supabase que integra a stack adotada pela ADR-003. A solução proposta deve manter objetos privados, autorização server-side por conversa e participante, revogação de acesso e integração com o fluxo antimalware definido na baseline. Esta ADR permanece Proposed: a definição técnica específica, buckets, políticas, links, backups, integração do scanner, controles e evidências devem ser detalhados e revisados por Tech Lead e TI; a Q-025 registra as condições operacionais da configuração. A proposta não declara aceite técnico específico do Storage, integração concluída nem homologação de produção.
 
 ### Regras funcionais consolidadas
 
@@ -57,18 +57,18 @@ Utilizar **Supabase Storage como componente previsto para o armazenamento privad
 
 ### Fronteira de processamento
 
-O armazenamento de objetos é previsto no Supabase Storage, com configuração privada e controles de acesso apropriados. O scanner antimalware deve executar na infraestrutura da FORD, conforme requisito funcional consolidado. A integração deve limitar o tráfego aos componentes necessários para o fluxo autorizado; não encaminhar arquivos, conteúdo ou metadados a serviços adicionais de varredura, conversão, extração ou análise que não tenham sido avaliados e aprovados.
+Esta ADR considera, como proposta, o armazenamento de objetos no Supabase Storage, com configuração privada e controles de acesso apropriados. O scanner antimalware deve executar na infraestrutura da FORD, conforme requisito funcional consolidado. A integração deve limitar o tráfego aos componentes necessários para o fluxo autorizado; não encaminhar arquivos, conteúdo ou metadados a serviços adicionais de varredura, conversão, extração ou análise que não tenham sido avaliados e aprovados.
 
 Bibliotecas e atualizações sem acesso a dados da FORD podem ser utilizadas conforme as regras técnicas e de segurança aplicáveis.
 
 ## Justificativa
 
-O Supabase Storage, configurado para manter objetos privados, permite integrar os anexos ao restante da stack adotada e aplicar autorização por requisição, preservando o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware na infraestrutura da FORD e o comportamento fail-closed mantêm as regras funcionais sem interromper a comunicação textual.
+A proposta de utilizar o Supabase Storage com objetos privados busca integrar os anexos ao restante da stack adotada e permitir autorização por requisição, preservando o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware na infraestrutura da FORD e o comportamento fail-closed mantêm as regras funcionais sem interromper a comunicação textual; a configuração e os controles específicos ainda dependem da revisão desta ADR e da avaliação operacional da Q-025.
 
 ## Consequências
 
 **Positivas:**
-- Utilização do componente Supabase Storage previsto na stack adotada, com configuração privada e controles de acesso sujeitos à revisão técnica e à avaliação operacional da Q-025.
+- Proposta de utilização do Supabase Storage no contexto da plataforma adotada, com configuração privada e controles de acesso ainda sujeitos à revisão técnica desta ADR e à avaliação operacional da Q-025.
 - Controle de acesso por conversa e revogação após remoção de participante.
 - Integração do scanner antimalware executado na infraestrutura da FORD, sem encaminhamento do conteúdo a serviços adicionais não aprovados.
 - Regras de limite, retenção e operação coerentes com a baseline v0.5.
