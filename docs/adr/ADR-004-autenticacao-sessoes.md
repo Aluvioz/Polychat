@@ -1,7 +1,7 @@
 # ADR-004 — Autenticação e sessões
 
 - **Status:** Proposed
-- **Data de revisão:** 24/11/2026
+- **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
 
@@ -11,24 +11,24 @@ A FORD definiu autenticação por nome de usuário e senha, com contas criadas e
 
 A FORD não exige troca obrigatória de senha no primeiro acesso, expiração periódica ou MFA. A recuperação de senha é realizada exclusivamente pelo TI. As regras de proteção de credenciais e de gestão de chaves foram alinhadas com Desenvolvimento e estão consolidadas nos requisitos não funcionais.
 
-A FORD v2 mantém requisitos sobre controle de acesso, armazenamento e processamento de dados. A ADR-003, entretanto, estabelece Supabase + Vercel como stack adotada e obrigatória. O uso e a configuração de Supabase Auth, os fluxos de identidade/sessão e os controles necessários devem ser avaliados na Q-025. A restrição da FORD não deve ser interpretada isoladamente como retirada ou proibição automática de Supabase Auth nem como alteração do status da ADR-003.
+A FORD v2 mantém requisitos sobre controle de acesso, proteção, armazenamento e processamento de dados. A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória, e Supabase Auth é o componente de autenticação previsto nessa plataforma. Esta ADR detalha o contrato de autenticação e sessão; a configuração, os controles e as evidências operacionais são acompanhados na Q-025. Essa avaliação não reabre a escolha da stack nem declara a integração homologada.
 
 O repositório contém o módulo `src/auth/authorization.mjs`, que valida tokens por meio de `supabase.auth.getUser(token)`, e uma migration que associa `profiles` a `auth.users`. Esses artefatos são scaffold alinhado à plataforma Supabase adotada, mas não comprovam autenticação integrada, aplicação da migration ou homologação de produção.
 
 ## Problema
 
-Definir o contrato funcional e as fronteiras de segurança de autenticação e sessão de acordo com o provisionamento centralizado pelo TI e com a infraestrutura sob controle da FORD, sem implementar primitivas criptográficas próprias ou adotar um provedor externo incompatível.
+Definir o contrato funcional e as fronteiras de segurança de autenticação e sessão de acordo com o provisionamento centralizado pelo TI, utilizando o Supabase Auth previsto na stack adotada, sem implementar primitivas criptográficas próprias nem introduzir provedores adicionais sem decisão arquitetural.
 
 ## Alternativas consideradas
 
-1. **Mecanismo de identidade operado sob controle da FORD:** alternativa compatível com a restrição de infraestrutura; tecnologia específica a validar na arquitetura.
-2. **Provedor externo de identidade/SaaS:** não adotado para credenciais, identidades ou sessões da FORD quando implicar acesso, armazenamento ou processamento por terceiro.
+1. **Supabase Auth na stack adotada:** componente previsto para autenticação e gestão de identidade/sessões, com configuração e integração detalhadas nesta ADR. É a direção considerada para o Polychat conforme ADR-003.
+2. **Serviço de identidade autogerenciado ou provedor diferente:** não é a direção adotada. Sua inclusão dependeria de necessidade demonstrada, avaliação de impacto e decisão formal de arquitetura; não decorre de uma proibição genérica a serviços gerenciados.
 3. **Autenticação artesanal implementada pela aplicação:** não recomendada; a aplicação não deve criar suas próprias primitivas criptográficas ou mecanismos de hash/token sem componente consolidado e revisão técnica.
 4. **SSO corporativo:** não presumido como requisito ou integração aprovada nesta baseline.
 
 ## Decisão proposta
 
-Adotar autenticação por nome de usuário e senha, com configuração do mecanismo de identidade e sessão na stack Supabase + Vercel estabelecida pela ADR-003. O desenho detalhado, os limites de acesso e a compatibilidade com os requisitos da FORD devem ser documentados e validados na Q-025, com revisão de TI e Tech Lead. Esta ADR permanece Proposed e não autoriza substituir a stack.
+Adotar o **Supabase Auth como componente previsto para autenticação e gestão de identidade/sessões** na stack Supabase + Vercel estabelecida pela ADR-003. Esta ADR permanece Proposed: a configuração do serviço, sua integração com o módulo de autorização, os fluxos de provisionamento e revogação e os controles necessários devem ser detalhados e revisados por TI e Tech Lead. A Q-025 registra as evidências e condições operacionais da configuração, sem reabrir a escolha da stack ou declarar homologação de produção.
 
 O contrato funcional obrigatório é:
 
@@ -46,18 +46,18 @@ O contrato funcional obrigatório é:
 
 A implementação deve aplicar os requisitos de proteção de credenciais, sessões e gestão de chaves já consolidados em RNF-002 e RNF-003. Esta ADR não cria parâmetros adicionais de senha, MFA, expiração ou timeout que não tenham sido definidos na baseline.
 
-Nenhum componente de autenticação pode enviar credenciais, identificadores, tokens ou dados de sessão a serviço externo que acesse ou processe dados da FORD.
+Credenciais, identificadores, tokens e dados de sessão devem ser tratados somente nos fluxos previstos para a integração com Supabase Auth e nos componentes server-side autorizados. Não os encaminhar a serviços, integrações ou provedores adicionais fora da stack adotada sem avaliação e decisão formal; nunca os registrar em logs, tickets, documentação ou código versionado.
 
 ## Justificativa
 
-O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. Manter identidade e sessões sob controle da organização respeita a restrição atual de infraestrutura e permite aplicar o ciclo de vida de contas e a autorização server-side sem dependência de um provedor externo incompatível.
+O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. O uso do Supabase Auth, integrado à autorização server-side e aos controles de perfil/estado, fornece o componente de identidade previsto na stack adotada. A configuração deve preservar o ciclo de vida das contas e a proteção das sessões definidas na baseline.
 
 ## Consequências
 
 **Positivas:**
 - Provisionamento e recuperação centralizados no TI.
 - Ausência de autoinscrição e de alteração de privilégios pelo cliente.
-- Compatibilidade com a exigência de infraestrutura sob controle da FORD.
+- Uso do componente de autenticação previsto na stack adotada, sujeito à configuração e aos controles definidos nesta ADR.
 - Revogação imediata de sessões quando uma conta é desativada.
 
 **Negativas e cuidados:**
@@ -78,7 +78,7 @@ Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevid
 
 ## Pendências para Accepted
 
-- Detalhar, com TI e Tech Lead, a configuração do mecanismo de identidade/sessão na stack adotada e registrar a análise de compatibilidade na Q-025.
+- Detalhar, com TI e Tech Lead, a configuração do Supabase Auth e sua integração com identidade, sessões, perfis e autorização; registrar na Q-025 as evidências e condições operacionais correspondentes.
 - Integrar, completar e testar Supabase Auth, o módulo de autorização e o modelo de perfil, com controles adequados à baseline e evidências no ambiente validado.
 - Implementar provisionamento administrativo, login, logout, recuperação pelo TI e revogação imediata.
 - Validar testes de integração e segurança no ambiente homologado.
