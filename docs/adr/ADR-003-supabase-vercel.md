@@ -25,12 +25,12 @@ Manter uma direção tecnológica única e coerente entre ADRs, baseline, issues
 
 Esta decisão somente poderá ser retirada, substituída ou reclassificada por decisão posterior formalmente aprovada, acompanhada de justificativa, evidências, alternativas e avaliação de impacto, conforme a seção [Governança de decisões arquiteturais](../10-governanca-desenvolvimento.md#8-governanca-de-decisoes-arquiteturais). A Q-025 não substitui esse processo.
 
-- **Vercel:** permanece como plataforma de hospedagem, deployment e execução da aplicação, conforme a configuração técnica aprovada para o projeto.
-- **Supabase:** permanece como plataforma de backend do projeto, incluindo os serviços adotados para autenticação, banco de dados, armazenamento e demais capacidades efetivamente previstas nas ADRs e no desenho técnico.
+- **Vercel:** é a plataforma selecionada para hospedagem, deployment e execução da aplicação. A configuração dos ambientes, o isolamento, os controles e as evidências operacionais seguem a ADR-009 — Proposed e a avaliação da Q-025; esta decisão não declara homologação de produção.
+- **Supabase:** é a plataforma de backend adotada na stack. Os componentes e serviços previstos — incluindo autenticação, banco de dados, autorização/RLS, realtime e armazenamento — devem ser detalhados nas ADRs específicas, respeitando o status e o escopo de cada decisão (ADR-004, ADR-005, ADR-006, ADR-007 e ADR-008). A adoção da plataforma não altera o status dessas ADRs nem declara integração funcional ou homologação operacional.
 - **Frontend:** permanece alinhado à direção registrada na ADR-002 e deve ser integrado à stack Supabase + Vercel.
 - **Implementação:** issues, PRs e documentos técnicos devem preservar Supabase + Vercel como referência. Não classificar esses serviços como Deprecated, obsoletos ou substituídos sem uma decisão formal posterior do Product Owner e a correspondente revisão arquitetural.
 
-A Q-025 continua responsável por documentar a análise técnica de compatibilidade entre a stack adotada e as restrições da FORD relativas a hospedagem, armazenamento, processamento, localização dos dados, acessos e responsabilidades operacionais. Essa análise deve avaliar a configuração e o modelo de utilização da stack, identificar controles necessários e registrar eventuais limitações com evidências.
+A Q-025 continua responsável por documentar a avaliação da configuração e do modelo de utilização da stack adotada frente aos requisitos da FORD, incluindo hospedagem, armazenamento, processamento, localização, acesso e responsabilidades operacionais. Deve identificar controles, evidências, limitações e riscos residuais. A Q-025 não reabre a decisão de adotar Supabase + Vercel; tampouco, isoladamente, declara concluídas a integração ou a homologação operacional dos componentes específicos.
 
 **A Q-025 não constitui autorização para retirar ou substituir Supabase + Vercel por inferência.** Caso a análise técnica identifique uma incompatibilidade concreta que não possa ser mitigada, o conflito deverá ser apresentado ao Product Owner e aos responsáveis da FORD para decisão explícita antes de qualquer mudança de stack.
 

@@ -11,24 +11,24 @@ A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite funcional de 
 
 A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar excepcionalmente um arquivo somente por ação autenticada e auditada, preservando o resultado original do scanner; também pode baixar anexos durante investigações com registro de auditoria. Usuários não podem contornar a análise.
 
-A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. A restrição da FORD v2 sobre acesso, armazenamento e processamento de dados cria uma questão de compatibilidade que deve ser avaliada na Q-025, inclusive para a configuração do Supabase Storage. Esta ADR não pode, por inferência, declarar o serviço retirado nem alterar o status da ADR-003. Se a avaliação identificar incompatibilidade concreta não mitigável, deverá ser apresentada com evidências e impacto para decisão formal.
+A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. No contexto da plataforma Supabase adotada, o Supabase Storage é considerado na proposta específica de armazenamento desta ADR. Como a ADR-008 permanece Proposed, a definição técnica específica, a configuração, os controles e a integração ainda dependem de revisão; a Q-025 registra a avaliação das condições operacionais e das evidências aplicáveis. Isso não reabre a adoção da stack pela ADR-003 nem declara integração do Storage ou homologação de produção.
 
 A implementação possui uma fundação parcial já integrada: a PR #181 provisionou o bucket privado `attachments` no Polyford e a PR #185 integrou o endpoint inicial server-side de upload. Essas entregas não comprovam o ciclo completo de upload/download, a integração antimalware ou a homologação ponta a ponta.
 
 ## Problema
 
-Armazenar, analisar e entregar anexos sem expor objetos publicamente, sem permitir acesso fora das permissões da conversa e sem transferir arquivos ou metadados a provedores externos.
+Definir a proposta de armazenamento, análise e entrega de anexos por meio do Supabase Storage no contexto da plataforma Supabase adotada, sem expor objetos publicamente e sem permitir acesso fora das permissões da conversa; a integração antimalware deve seguir os requisitos funcionais e as responsabilidades estabelecidas.
 
 ## Alternativas consideradas
 
-1. **Armazenamento de objetos privado sob controle da FORD:** opção preferencial a avaliar, com segregação de ambientes e integração com a aplicação server-side.
-2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
+1. **Supabase Storage com objetos privados:** solução considerada nesta proposta específica de armazenamento no contexto da plataforma Supabase adotada. Sua definição técnica, configuração de buckets privados, autorização server-side, segregação de ambientes e integração com o fluxo de anexos dependem da revisão desta ADR, atualmente Proposed.
+2. **Armazenamento autogerenciado em infraestrutura corporativa:** não é a direção selecionada nesta stack. Só deve ser considerado mediante necessidade demonstrada, avaliação de impacto e decisão formal de mudança arquitetural.
 3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
-4. **Storage gerenciado na plataforma adotada, incluindo Supabase Storage:** deve ser avaliado quanto à configuração, acessos, processamento, armazenamento, localização e responsabilidades. As restrições da FORD permanecem obrigatórias; eventual incompatibilidade precisa ser demonstrada e encaminhada ao processo formal de mudança, sem reclassificação automática da ADR-003.
+4. **Outro serviço de armazenamento fora da stack adotada:** não selecionado. Sua inclusão dependeria de justificativa, avaliação e decisão formal; não decorre de uma proibição genérica aos serviços gerenciados.
 
 ## Decisão proposta
 
-Manter os anexos em **armazenamento privado e protegido, compatível com a stack Supabase + Vercel adotada**. Supabase Storage é candidato a detalhamento técnico, mas sua configuração, controles, acessos, antimalware, backups e compatibilidade com os requisitos da FORD devem ser demonstrados na Q-025 e revisados por Tech Lead e TI. Esta proposta não declara integração/homologação nem autoriza substituir a stack.
+Propor a utilização do **Supabase Storage como solução de armazenamento privado de anexos** no contexto da plataforma Supabase que integra a stack adotada pela ADR-003. A solução proposta deve manter objetos privados, autorização server-side por conversa e participante, revogação de acesso e integração com o fluxo antimalware definido na baseline. Esta ADR permanece Proposed: a definição técnica específica, buckets, políticas, links, backups, integração do scanner, controles e evidências devem ser detalhados e revisados por Tech Lead e TI; a Q-025 registra as condições operacionais da configuração. A proposta não declara aceite técnico específico do Storage, integração concluída nem homologação de produção.
 
 ### Regras funcionais consolidadas
 
@@ -57,44 +57,41 @@ Manter os anexos em **armazenamento privado e protegido, compatível com a stack
 
 ### Fronteira de processamento
 
-O storage, o scanner antimalware, o processamento de metadados, a emissão/revogação de links, os backups e os logs relacionados devem permanecer sob controle da FORD. Não enviar arquivos, conteúdo, metadados ou identificadores a serviços externos para varredura, conversão, extração, análise ou armazenamento.
+Esta ADR considera, como proposta, o armazenamento de objetos no Supabase Storage, com configuração privada e controles de acesso apropriados. O scanner antimalware deve executar na infraestrutura da FORD, conforme requisito funcional consolidado. A integração deve limitar o tráfego aos componentes necessários para o fluxo autorizado; não encaminhar arquivos, conteúdo ou metadados a serviços adicionais de varredura, conversão, extração ou análise que não tenham sido avaliados e aprovados.
 
 Bibliotecas e atualizações sem acesso a dados da FORD podem ser utilizadas conforme as regras técnicas e de segurança aplicáveis.
 
 ## Justificativa
 
-Armazenamento privado e autorização por requisição preservam o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware interna e a indisponibilidade segura do anexo atendem às regras da FORD sem interromper a comunicação textual. A execução sob controle da organização é obrigatória diante da proibição de terceiros processarem ou armazenarem dados.
+A proposta de utilizar o Supabase Storage com objetos privados busca integrar os anexos ao restante da stack adotada e permitir autorização por requisição, preservando o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware na infraestrutura da FORD e o comportamento fail-closed mantêm as regras funcionais sem interromper a comunicação textual; a configuração e os controles específicos ainda dependem da revisão desta ADR e da avaliação operacional da Q-025.
 
 ## Consequências
 
 **Positivas:**
-- Conformidade da direção de arquitetura com a fronteira de infraestrutura definida pela FORD.
+- Proposta de utilização do Supabase Storage no contexto da plataforma adotada, com configuração privada e controles de acesso ainda sujeitos à revisão técnica desta ADR e à avaliação operacional da Q-025.
 - Controle de acesso por conversa e revogação após remoção de participante.
-- Análise antimalware sem exposição a serviços externos.
+- Integração do scanner antimalware executado na infraestrutura da FORD, sem encaminhamento do conteúdo a serviços adicionais não aprovados.
 - Regras de limite, retenção e operação coerentes com a baseline POLY-REQ-001 v0.5 e a retificação de unidade de 26/11/2026.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisa operar e monitorar storage, scanner, capacidade, disponibilidade e backups.
+- A equipe precisa configurar e monitorar políticas de acesso, capacidade, disponibilidade, backup e integração entre Supabase Storage e o scanner antimalware operado na infraestrutura da FORD, respeitando as responsabilidades do serviço gerenciado.
 - A implementação demanda fluxo de quarentena, liberação administrativa, autorização por download e revogação efetiva.
 - Testes devem cobrir falhas do scanner, acesso indevido, remoção de participante, restauração e descarte.
 
 ## Riscos
 
-Objeto público por configuração incorreta; URL vazada; link não revogado após remoção; bypass por usuário; liberação administrativa sem auditoria; malware não detectado; scanner indisponível; arquivo corrompido ou incompatível; metadados GPS preservados; backups contendo dados já excluídos até o fim do ciclo; integração externa que acesse dados da FORD.
+Objeto público por configuração incorreta; URL vazada; link não revogado após remoção; bypass por usuário; liberação administrativa sem auditoria; malware não detectado; scanner indisponível; arquivo corrompido ou incompatível; metadados GPS preservados; backups contendo dados já excluídos até o fim do ciclo; integração adicional não aprovada com acesso a dados ou anexos da FORD.
 
 ## Evidências e estado atual
 
-- **Decisão funcional:** POLY-DATA-001 v0.5, seção 11.2, retifica o limite para 10 MiB (10.485.760 bytes) por arquivo e mantém até cinco anexos por mensagem. Quotas individuais e capacidade total são administradas pelo TI; não existe quota por conversa.
-- **Storage privado — PR #181 / Issue #115:** bucket `attachments` provisionado no Polyford como privado, allowlist PDF/JPEG, limite de 10.485.760 bytes e sem policies de acesso direto em `storage.objects`. A entrega foi revisada por SQA e Tech Lead no escopo de provisionamento.
-- **Upload inicial — PR #185:** endpoint server-side `POST /api/attachments/upload` integrado. Valida sessão, autoria da mensagem, extensão/MIME/assinatura inicial e grava metadados com JWT de usuário; o segredo privilegiado permanece no servidor. A entrega não constitui parser estrutural completo nem análise antimalware.
-- **Estado ponta a ponta:** a coleta documentada na PR #182 encontrou o bucket sem objetos; não há evidência de upload real ponta a ponta homologado. A existência do bucket e do endpoint não conclui a jornada do anexo.
-- **Pendências funcionais/técnicas:** download autorizado, links temporários de até cinco minutos e revogação efetiva; scanner interno FORD e quarentena; comportamento fail-closed, liberação excepcional autenticada/auditada e preservação do resultado; rejeição de PDF protegido por senha; remoção de EXIF/GPS; quotas/capacidade; descarte físico e auditoria dos call-sites; backup e restauração dos objetos.
-- **Backup/recuperação:** a evidência da PR #182 não demonstrou backup diário automatizado, off-site, retenção de 365 dias nem restauração de banco/objetos; RPO/RTO de até 24 horas permanecem não demonstrados.
-- **Arquitetura:** ADR-003 Accepted mantém Supabase + Vercel como stack adotada. ADR-008 permanece **Proposed**; Q-025 continua aberta para evidenciar a compatibilidade da configuração e da fronteira de processamento com as restrições da FORD.
+- A baseline POLY-REQ-001 v0.5 e os documentos 01, 03, 04 e 05 registram tipos, limites, fluxo antimalware, comportamento em falha, quotas, links, retenção e poderes do TI.
+- A migration e o middleware Supabase existentes não comprovam implementação de armazenamento de anexos nem integração funcional com Supabase Storage.
+- Não foram identificados bucket privado, handlers completos de upload/download ou integração antimalware funcional na main.
+- A política de anexos documenta regras e cenários; sua presença não comprova implementação nem testes de ponta a ponta.
 
 ## Pendências para Accepted
 
-- Definir e validar a configuração de armazenamento privado na stack adotada, incluindo a avaliação de Supabase Storage frente aos requisitos da FORD (Q-025).
+- Detalhar e validar a configuração privada do Supabase Storage na stack adotada, incluindo buckets, políticas de acesso, links temporários, segregação de ambientes, backup e integração com autorização server-side; registrar evidências operacionais pertinentes na Q-025.
 - Definir a integração do scanner interno, quarentena, liberação administrativa e monitoramento operacional.
 - Implementar e testar autorização em upload e em cada download, revogação imediata e links temporários de até 5 minutos.
 - Evidenciar remoção de EXIF/GPS e rejeição de PDF protegido por senha.
