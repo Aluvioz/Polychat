@@ -21,10 +21,10 @@ Armazenar, analisar e entregar anexos em armazenamento privado, sem exposição 
 
 ## Alternativas consideradas
 
-1. **Armazenamento de objetos privado sob controle da FORD:** opção preferencial a avaliar, com segregação de ambientes e integração com a aplicação server-side.
-2. **Armazenamento de arquivos em infraestrutura corporativa controlada pela FORD:** alternativa a validar conforme capacidade, disponibilidade, backup e operação.
-3. **Armazenamento em banco relacional:** não é a opção preferencial para bytes de arquivos; o banco deve manter metadados e vínculos necessários.
-4. **Supabase Storage:** capacidade de armazenamento aprovada pela TI e pela FORD como parte da stack nomeada na ADR-003, sob configuração privada, segregação de ambientes, controle de acesso e operação definidos nesta ADR e na Q-025.
+1. **Supabase Storage — alternativa selecionada:** capacidade de armazenamento de objetos integrante da stack nomeada Supabase + Vercel e expressamente aprovada pela TI e pela FORD na Q-025. O uso fica limitado ao armazenamento privado de anexos, com os controles de acesso, processamento, auditoria e operação definidos nesta ADR.
+2. **Armazenamento próprio em infraestrutura corporativa da FORD — não selecionado:** exigiria adotar uma arquitetura de armazenamento diferente da stack aprovada para o Polychat, além de especificar e comprovar sua integração, capacidade, disponibilidade, segregação de ambientes, backup, restauração e operação. Não é a solução arquitetural aprovada para esta entrega; eventual adoção dependeria de mudança arquitetural formal.
+3. **Armazenamento dos arquivos binários no banco relacional — não selecionado:** não é adequado como repositório principal dos bytes dos anexos. O banco permanece responsável pelos metadados e vínculos necessários à autorização, rastreabilidade e associação com mensagens e conversas.
+4. **Outro serviço externo de armazenamento ou análise — não selecionado:** nenhum provedor adicional está autorizado pela Q-025. A adoção de outro serviço exigiria aprovação específica da TI/FORD e revisão formal da arquitetura. Em particular, esta ADR não autoriza encaminhar arquivos a scanner antimalware SaaS ou a qualquer serviço externo de processamento.
 
 ## Decisão
 
@@ -74,7 +74,11 @@ Bibliotecas e atualizações sem acesso a dados da FORD podem ser utilizadas con
 
 ## Justificativa
 
-Armazenamento privado e autorização por requisição preservam o vínculo entre arquivo, mensagem, conversa e participantes. A análise antimalware interna e a indisponibilidade segura do anexo atendem às regras da FORD sem interromper a comunicação textual. A execução sob controle da organização é obrigatória diante da proibição de terceiros processarem ou armazenarem dados.
+A escolha do Supabase Storage não parte da premissa de que terceiros estejam genericamente proibidos de armazenar dados. A Q-025, concluída em 24/11/2026, registra a aprovação expressa da TI e da FORD para o uso do Supabase — inclusive Supabase Storage — como provedor nomeado da stack Supabase + Vercel do Polychat. A decisão desta ADR aplica essa aprovação ao armazenamento privado de anexos e evita introduzir um provedor adicional não aprovado.
+
+A aprovação é delimitada ao serviço e ao modelo de uso autorizados: não representa autorização ampla para outros fornecedores, serviços de processamento ou soluções externas de análise. O Supabase Storage fornece a capacidade de armazenamento de objetos; a aplicação deve manter o bucket privado e realizar as operações por handlers server-side autenticados e autorizados, sem expor a chave privilegiada ao navegador. A entrega de arquivos deve respeitar a autorização vigente dos participantes, a validade máxima de 5 minutos dos links temporários e a revogação de acesso após remoção de participante.
+
+O processamento antimalware permanece dentro da infraestrutura da FORD, sob responsabilidade operacional da TI, sem encaminhamento dos arquivos a serviços externos. A FORD/TI também deve governar e comprovar os controles de autorização, auditoria, retenção, backup, restauração e homologação exigidos nesta ADR, de acordo com o modelo aprovado para o Supabase Storage. A existência da aprovação arquitetural não comprova que esses controles e fluxos já estejam integralmente implementados; as evidências e pendências permanecem nas issues correspondentes.
 
 ## Consequências
 
