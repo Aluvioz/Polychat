@@ -1,7 +1,7 @@
 # ADR-006 — Autorização server-side e RLS
 
 - **Status:** Accepted
-- **Escopo do aceite:** contrato de perfis/sessões integrado pelas PRs #174 e #185 e policies RLS de domínio entregues pela PR #172 e testadas no Supabase de desenvolvimento. Não representa homologação de produção, autenticação positiva com usuário real nem integração ponta a ponta de todos os recursos/handlers do chat.
+- **Escopo do aceite:** contrato de perfis/sessões integrado pelas PRs #174 e #175 e policies RLS de domínio entregues pela PR #172 e testadas no Supabase de desenvolvimento. Não representa homologação de produção, autenticação positiva com usuário real nem integração ponta a ponta de todos os recursos/handlers do chat.
 - **Data:** 17/11/2026
 - **Issue:** #89 · **Implementação relacionada:** #105
 
@@ -60,7 +60,7 @@ A rota de sessão do Next.js utiliza `authorizeNextRequest`, mas os handlers de 
 - `supabase/tests/issue_101_rls.integration.sql`: 16/16 cenários aprovados em Polyford, com rollback de identidades/dados sintéticos.
 - `supabase/tests/issue_101_direct_conversation_creation.sql`: `direct_conversation_visible_after_membership=true`, com transação revertida.
 - Testes unitários de sessão usam Supabase simulado; não houve login positivo com perfil real no ambiente consultado.
-- Workflows CI associados às PRs #172 e #174 concluíram com sucesso.
+- Workflows CI associados às PRs #172, #174 e #175 concluíram com sucesso.
 
 ## Próxima extensão
 
