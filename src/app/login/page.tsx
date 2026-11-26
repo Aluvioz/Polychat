@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -9,7 +9,15 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("motivo") === "sessao-expirada") {
+      setNotice("Sua sessão expirou. Entre novamente para continuar.");
+    }
+  }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,7 +35,7 @@ export default function LoginPage() {
         setError(result?.error ?? "Não foi possível iniciar a sessão.");
         return;
       }
-      router.replace("/");
+      router.replace(result?.user?.role === "ti" ? "/ti" : "/");
       router.refresh();
     } catch {
       setError("Não foi possível iniciar a sessão.");
@@ -48,6 +56,7 @@ export default function LoginPage() {
         <p className="login-description">
           Utilize o nome de usuário e a senha fornecidos pela equipe de TI.
         </p>
+        {notice ? <p className="login-notice" role="status">{notice}</p> : null}
         <form className="login-form" onSubmit={submit}>
           <label htmlFor="username">Nome de usuário</label>
           <input
