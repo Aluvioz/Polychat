@@ -80,3 +80,15 @@ Não foi configurado destino externo porque não há fornecedor/localização ap
 - Separação entre backup de banco e backup de objetos Storage documentada.
 - RPO/RTO e restauração permanecem **não comprovados**.
 - Issue #130 permanece aberta e sem declaração de prontidão para release.
+
+
+## 7. Evidências técnicas verificáveis — complemento SQA (26/11/2026)
+
+As consultas e os resultados sanitizados que sustentam as informações desta avaliação foram registrados em [polyford-backup-readiness-evidence-2026-11-26.md](polyford-backup-readiness-evidence-2026-11-26.md). O complemento contém:
+- plano e identificação do projeto Supabase;
+- consulta SQL e resultado do bucket `attachments`, incluindo contagem de objetos e policies;
+- nomes e targets das variáveis Vercel, coletados sem descriptografar valores;
+- identificação, target, estado, branch e commit do deployment de produção;
+- escopo da verificação do workflow/CI e limite da conclusão sobre ausência de rotina de backup/restore.
+
+O documento de evidências não contém valores secretos. As consultas foram somente leitura e não modificaram Supabase ou Vercel.
