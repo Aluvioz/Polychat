@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE_NAMES, loginWithUsername } from "@/auth/supabase-session.mjs";
+import { recordPrivilegedAuditEventRest } from "@/audit/privileged-audit-rest.mjs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,7 +44,23 @@ export async function POST(request: NextRequest) {
     const session = await loginWithUsername({
       username: typeof credentials.username === "string" ? credentials.username : "",
       password: typeof credentials.password === "string" ? credentials.password : "",
+      onAdminLoginFailure: async () => recordPrivilegedAuditEventRest({
+        actor: null,
+        eventType: "admin.login.failed",
+        resourceType: "auth_session",
+        outcome: "failure",
+      }),
     });
+
+    if (session.user.role === "ti") {
+      await recordPrivilegedAuditEventRest({
+        actor: { id: session.user.id, role: "ti", isActive: true },
+        eventType: "admin.login.succeeded",
+        resourceType: "auth_session",
+        outcome: "success",
+      });
+    }
+
     const response = NextResponse.json({ user: session.user }, {
       headers: { "Cache-Control": "no-store" },
     });
