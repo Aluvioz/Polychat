@@ -1,19 +1,19 @@
 # ADR-008 — Armazenamento privado e anexos
 
 - **Status:** Proposed
-- **Data de revisão:** 24/11/2026
+- **Data de revisão:** 26/11/2026
 - **Issues relacionadas:** #89, #115, #116 e #117
 - **Baseline:** POLY-REQ-001 v0.5
 
 ## Contexto
 
-A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por arquivo e até 5 arquivos por mensagem. O TI define limites individuais e a capacidade total de armazenamento; não existe quota por conversa. PDF protegido por senha não é aceito. JPEG deve ser selecionado da galeria, sem captura pela câmera, e os metadados EXIF/GPS devem ser removidos.
+A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite funcional de **10 MiB (10.485.760 bytes) por arquivo** e até cinco arquivos por mensagem. A unidade foi explicitada pela retificação do PO em 26/11/2026, registrada na seção 11.2 de POLY-DATA-001 v0.5; a regra não deve ser reinterpretada como 10.000.000 bytes. O TI define limites individuais e a capacidade total de armazenamento; não existe quota por conversa. PDF protegido por senha não é aceito. JPEG deve ser selecionado da galeria, sem captura pela câmera, e os metadados EXIF/GPS devem ser removidos.
 
-A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
+A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar excepcionalmente um arquivo somente por ação autenticada e auditada, preservando o resultado original do scanner; também pode baixar anexos durante investigações com registro de auditoria. Usuários não podem contornar a análise.
 
 A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. A restrição da FORD v2 sobre acesso, armazenamento e processamento de dados cria uma questão de compatibilidade que deve ser avaliada na Q-025, inclusive para a configuração do Supabase Storage. Esta ADR não pode, por inferência, declarar o serviço retirado nem alterar o status da ADR-003. Se a avaliação identificar incompatibilidade concreta não mitigável, deverá ser apresentada com evidências e impacto para decisão formal.
 
-O repositório não comprova implementação de armazenamento privado, fluxo completo de upload/download ou integração antimalware. A política funcional do produto, entretanto, está consolidada na baseline e nos alinhamentos com Desenvolvimento.
+A implementação possui uma fundação parcial já integrada: a PR #181 provisionou o bucket privado `attachments` no Polyford e a PR #185 integrou o endpoint inicial server-side de upload. Essas entregas não comprovam o ciclo completo de upload/download, a integração antimalware ou a homologação ponta a ponta.
 
 ## Problema
 
@@ -33,7 +33,7 @@ Manter os anexos em **armazenamento privado e protegido, compatível com a stack
 ### Regras funcionais consolidadas
 
 - Aceitar somente PDF e JPEG.
-- Limitar cada arquivo a 10 MB e cada mensagem a, no máximo, 5 arquivos.
+- Limitar cada arquivo a **10 MiB (10.485.760 bytes)** e cada mensagem a, no máximo, cinco arquivos.
 - Aplicar quotas individuais e capacidade total configuradas pelo TI, sem limite específico por conversa.
 - Rejeitar PDF protegido por senha.
 - Permitir seleção de JPEG existente na galeria; a aplicação não oferece captura de foto pela câmera.
@@ -41,7 +41,7 @@ Manter os anexos em **armazenamento privado e protegido, compatível com a stack
 - Validar o arquivo recebido e submetê-lo ao scanner antimalware executado na infraestrutura da FORD.
 - Manter o anexo indisponível até resultado favorável da análise. Falha, indisponibilidade, timeout ou resultado inconclusivo não equivalem a arquivo seguro e mantêm o anexo bloqueado.
 - A indisponibilidade do scanner não bloqueia o envio de mensagens de texto.
-- O TI pode liberar qualquer arquivo por ação administrativa. A ação deve ser autenticada e registrada em auditoria; usuários comuns não podem executar bypass ou alterar o estado da análise.
+- O TI pode liberar excepcionalmente um arquivo bloqueado somente por ação autenticada e auditada, preservando o resultado original da análise; usuários comuns não podem executar bypass ou alterar o estado da análise.
 - O TI pode baixar anexos durante investigações, com registro de auditoria.
 - O acesso deve ser privado e condicionado à autorização vigente do usuário para a conversa e o anexo.
 - Links temporários podem ter validade máxima de 5 minutos. A remoção de participante deve revogar imediatamente seu acesso, inclusive por links previamente emitidos; o tempo máximo do link não substitui a verificação de autorização/revogação.
@@ -71,7 +71,7 @@ Armazenamento privado e autorização por requisição preservam o vínculo entr
 - Conformidade da direção de arquitetura com a fronteira de infraestrutura definida pela FORD.
 - Controle de acesso por conversa e revogação após remoção de participante.
 - Análise antimalware sem exposição a serviços externos.
-- Regras de limite, retenção e operação coerentes com a baseline v0.4.
+- Regras de limite, retenção e operação coerentes com a baseline POLY-REQ-001 v0.5 e a retificação de unidade de 26/11/2026.
 
 **Negativas e cuidados:**
 - A FORD/equipe precisa operar e monitorar storage, scanner, capacidade, disponibilidade e backups.
@@ -84,10 +84,13 @@ Objeto público por configuração incorreta; URL vazada; link não revogado ap�
 
 ## Evidências e estado atual
 
-- A baseline POLY-REQ-001 v0.5 e os documentos 01, 03, 04 e 05 registram tipos, limites, fluxo antimalware, comportamento em falha, quotas, links, retenção e poderes do TI.
-- A migration e o middleware Supabase existentes não comprovam implementação de storage nem integração funcional com Supabase Storage.
-- Não foram identificados bucket privado, handlers completos de upload/download ou integração antimalware funcional na main.
-- A política de anexos documenta regras e cenários; sua presença não comprova implementação nem testes de ponta a ponta.
+- **Decisão funcional:** POLY-DATA-001 v0.5, seção 11.2, retifica o limite para 10 MiB (10.485.760 bytes) por arquivo e mantém até cinco anexos por mensagem. Quotas individuais e capacidade total são administradas pelo TI; não existe quota por conversa.
+- **Storage privado — PR #181 / Issue #115:** bucket `attachments` provisionado no Polyford como privado, allowlist PDF/JPEG, limite de 10.485.760 bytes e sem policies de acesso direto em `storage.objects`. A entrega foi revisada por SQA e Tech Lead no escopo de provisionamento.
+- **Upload inicial — PR #185:** endpoint server-side `POST /api/attachments/upload` integrado. Valida sessão, autoria da mensagem, extensão/MIME/assinatura inicial e grava metadados com JWT de usuário; o segredo privilegiado permanece no servidor. A entrega não constitui parser estrutural completo nem análise antimalware.
+- **Estado ponta a ponta:** a coleta documentada na PR #182 encontrou o bucket sem objetos; não há evidência de upload real ponta a ponta homologado. A existência do bucket e do endpoint não conclui a jornada do anexo.
+- **Pendências funcionais/técnicas:** download autorizado, links temporários de até cinco minutos e revogação efetiva; scanner interno FORD e quarentena; comportamento fail-closed, liberação excepcional autenticada/auditada e preservação do resultado; rejeição de PDF protegido por senha; remoção de EXIF/GPS; quotas/capacidade; descarte físico e auditoria dos call-sites; backup e restauração dos objetos.
+- **Backup/recuperação:** a evidência da PR #182 não demonstrou backup diário automatizado, off-site, retenção de 365 dias nem restauração de banco/objetos; RPO/RTO de até 24 horas permanecem não demonstrados.
+- **Arquitetura:** ADR-003 Accepted mantém Supabase + Vercel como stack adotada. ADR-008 permanece **Proposed**; Q-025 continua aberta para evidenciar a compatibilidade da configuração e da fronteira de processamento com as restrições da FORD.
 
 ## Pendências para Accepted
 
