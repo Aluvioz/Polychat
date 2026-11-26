@@ -68,10 +68,10 @@ Armazenamento privado e autorização por requisição preservam o vínculo entr
 ## Consequências
 
 **Positivas:**
-- Conformidade da direção de arquitetura com a fronteira de infraestrutura definida pela FORD.
+- A direção proposta prioriza a fronteira de infraestrutura definida pela FORD; a compatibilidade da configuração e do modelo de utilização da stack adotada permanece sujeita à avaliação da Q-025.
 - Controle de acesso por conversa e revogação após remoção de participante.
 - Análise antimalware sem exposição a serviços externos.
-- Regras de limite, retenção e operação coerentes com a baseline v0.4.
+- Regras de limite, retenção e operação coerentes com a baseline v0.5.
 
 **Negativas e cuidados:**
 - A FORD/equipe precisa operar e monitorar storage, scanner, capacidade, disponibilidade e backups.
