@@ -3,6 +3,7 @@
 **Issue de origem:** #88 — Consolidar baseline de requisitos e escopo MVP  
 **Identificador:** POLY-REQ-001  
 **Versão:** 0.5 — 20/11/2026  
+**Revisão documental:** 25/11/2026 — harmonização das referências arquiteturais e do tratamento da Q-025, sem alteração da versão funcional.  
 **Fonte primária:** Questionário de Esclarecimento de Requisitos da FORD, versão atualizada (FORD v2), recebido em 19/11/2026.  
 **Fontes complementares:** alinhamentos do PO com Desenvolvimento, premissas consolidadas nos documentos 00 a 08 e decisões de negócio registradas pelo representante da FORD.  
 **Estado:** baseline de produto atualizada com arquitetura da informação por perfil e paleta visual provisória Ford; ativos oficiais de logotipo permanecem pendentes em Q-019 e compatibilização arquitetural permanece em Q-025.
@@ -309,6 +310,7 @@ Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências
 
 | Alteração | Fonte/motivo | Impacto em requisitos | Impacto em implementação/testes |
 |---|---|---|---|
+| Harmonização documental da Q-025 | ADR-003 — Accepted e consolidação documental de 25/11/2026 | Nenhuma alteração nos RFs, RNs, RNFs ou critérios de aceitação da baseline v0.5. Q-025 permanece como avaliação de compatibilidade da configuração e do modelo de utilização da stack adotada. | Alinha as referências documentais à stack Supabase + Vercel adotada e obrigatória. Registra a necessidade de avaliar evidências, controles, responsabilidades e limitações, sem declarar homologação de produção ou substituição da stack. |
 | Baseline atualizada para v0.4 | Questionário FORD v2 e alinhamentos complementares do PO em 19/11/2026 | Atualiza a fonte de verdade de produto | Demais documentos e ADRs devem ser alinhados |
 | Público inicial esclarecido | FORD v2 | 25 usuários finais mais 2 a 3 administradores TI | Provisionamento e testes devem considerar o público correto |
 | Igualdade de poderes do TI | FORD v2 e avaliação do responsável do projeto | Consolida RN-003 e RF-002 | Matriz de autorização deve refletir poderes equivalentes |

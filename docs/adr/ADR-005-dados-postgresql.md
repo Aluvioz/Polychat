@@ -11,7 +11,7 @@ O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, 
 
 A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. A FORD v2 mantém requisitos sobre controle de hospedagem, armazenamento e processamento; a compatibilidade da configuração e do modelo de uso do Supabase Database com esses requisitos deve ser avaliada na Q-025. Uma preocupação ou incompatibilidade identificada deve ser registrada e encaminhada para decisão formal, sem retirar ou depreciar a ADR-003 por inferência.
 
-PostgreSQL permanece como tecnologia relacional proposta para o banco, desde que sua instância e operação estejam na infraestrutura sob controle da FORD. A escolha do ambiente operacional e a compatibilização técnica fazem parte da Q-025.
+PostgreSQL é a tecnologia relacional prevista no contexto do Supabase Database, componente da plataforma Supabase adotada na ADR-003. Esta ADR detalha o modelo lógico/físico e a configuração do banco; a Q-025 registra as evidências e condições operacionais da configuração, sem reabrir a escolha da stack.
 
 A fotografia inicial desta ADR foi superada por entregas técnicas posteriores já integradas à `main`. A PR #165 incorporou o schema inicial de domínio; a #168 adicionou índices de cobertura; a #172 implementou policies RLS e hardening de privilégios; a #173 integrou estruturas e controles de auditoria/retenção; e a #180 reconciliou a sequência local de migrations. A PR #181 provisionou o bucket privado de anexos e a #185 acrescentou o endpoint inicial server-side de upload. Essas entregas ampliaram a implementação, mas não representam a conclusão de todos os fluxos funcionais, da operação nem da homologação pela FORD.
 
@@ -21,14 +21,14 @@ Definir a persistência de dados relacionais no contexto da stack adotada, prese
 
 ## Alternativas consideradas
 
-1. **PostgreSQL em infraestrutura sob controle da FORD:** tecnologia relacional proposta, sujeita à validação de operação, compatibilidade e homologação.
-2. **Outro banco relacional operado sob controle da FORD:** alternativa possível caso a infraestrutura e os padrões corporativos indiquem tecnologia diferente.
-3. **Banco de dados gerenciado externamente/SaaS:** não permitido para dados da FORD quando o terceiro puder acessar, armazenar ou processar essas informações.
+1. **PostgreSQL por meio do Supabase Database:** tecnologia relacional prevista no contexto da plataforma Supabase adotada pela ADR-003 e direção considerada para esta proposta. Configuração, modelo, controles e operação permanecem sujeitos ao detalhamento técnico desta ADR.
+2. **PostgreSQL autogerenciado ou outro banco relacional:** não é a direção atual. Sua adoção exigiria justificativa, avaliação de impacto e decisão formal de mudança arquitetural; não decorre automaticamente dos requisitos de infraestrutura.
+3. **Outro serviço de banco gerenciado fora da stack adotada:** não selecionado nesta decisão. Eventual inclusão dependeria de necessidade demonstrada e aprovação formal, sem constituir proibição genérica aos serviços gerenciados.
 4. **Banco documental:** não selecionado nesta proposta, pois as relações entre conversas, participantes, autoria, mensagens e auditoria exigem integridade relacional.
 
 ## Decisão proposta
 
-Manter **PostgreSQL como tecnologia de banco relacional proposta no contexto da plataforma Supabase adotada pela ADR-003**. A configuração da instância, backups, administração, monitoramento, recuperação, acessos e responsabilidades devem ser detalhados e avaliados na Q-025 frente aos requisitos da FORD. Esta ADR não autoriza trocar a stack nem declara a implantação homologada.
+Manter **PostgreSQL por meio do Supabase Database** como tecnologia de banco relacional prevista no contexto da stack adotada pela ADR-003. Esta ADR permanece Proposed até a revisão do modelo e da configuração técnica. A configuração do projeto, backups, administração, monitoramento, recuperação, acessos e responsabilidades devem ser detalhados nesta ADR e avaliados operacionalmente na Q-025. A proposta não autoriza trocar a stack nem declara a implantação homologada.
 
 O modelo lógico deve contemplar, no mínimo:
 
@@ -56,18 +56,18 @@ Não introduzir deleções em cascata ou expiração automática que contrariem 
 
 ## Justificativa
 
-O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. Um banco relacional oferece integridade referencial e transações adequadas a essas relações. A operação sob controle da FORD atende à restrição de infraestrutura, independentemente do fornecedor de software utilizado para o mecanismo de banco.
+O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. PostgreSQL, disponibilizado pelo Supabase Database no contexto da stack adotada, oferece modelo relacional, integridade referencial e transações adequadas a essas relações. A configuração e os controles de acesso, backup, recuperação e operação devem ser detalhados e evidenciados conforme esta ADR e a Q-025.
 
 ## Consequências
 
 **Positivas:**
 - Integridade referencial e transações para o domínio de comunicação.
-- Independência de um serviço externo específico de banco de dados.
+- Integração do banco relacional à plataforma Supabase adotada, mantendo o modelo de domínio e os controles documentados.
 - Possibilidade de aplicar controle de acesso no servidor e no próprio banco.
 - Rastreabilidade de operações administrativas e regras de retenção.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisará operar, monitorar, atualizar, proteger e recuperar a instância.
+- A equipe do projeto/FORD deverá administrar o modelo de dados, as permissões, as configurações disponíveis, a observabilidade e os procedimentos de backup/recuperação, respeitando a divisão de responsabilidades do serviço gerenciado Supabase.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
 - O schema inicial e as estruturas centrais de domínio já estão versionados; permanecem a validação técnica contínua, os fluxos funcionais ainda não integrados, a homologação e a comprovação operacional de backup/restore e recuperação.
 
@@ -77,6 +77,7 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Evidências atuais
 
+- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. A migration é um artefato versionado da stack Supabase adotada, mas não comprova sua aplicação no projeto gerenciado nem a homologação operacional.
 - **Schema de domínio — PR #165:** migrations versionadas e integradas para `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e estruturas de configuração. A PR recebeu aprovação do Tech Lead e parecer favorável do SQA no escopo revisado.
 - **Índices — PR #168:** migration aditiva com seis índices de cobertura de FKs integrada; verificação posterior em `pg_indexes` confirmou sua persistência no Polyford de desenvolvimento.
 - **Autorização — PR #172:** policies RLS e hardening para recursos de domínio/configuração integrados. A evidência de testes registra 16/16 cenários aprovados, com dados sintéticos revertidos ao fim das transações; consultar `docs/security/issue-101-rls-evidence.md`.
@@ -89,7 +90,7 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Pendências para Accepted
 
-- Confirmar com Tech Lead e TI a configuração do PostgreSQL/Supabase Database na stack adotada e demonstrar sua compatibilidade com os requisitos da FORD na Q-025.
+- Confirmar com Tech Lead e TI a configuração do PostgreSQL/Supabase Database na stack adotada, incluindo modelo, controles, backup, recuperação e responsabilidades; registrar as evidências operacionais correspondentes na Q-025.
 - Revisar o modelo físico, migrations, índices, políticas de autorização e estratégia de backup/restore no ambiente de homologação.
 - Registrar a decisão técnica, aprovadores e evidências de teste.
 
