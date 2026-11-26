@@ -18,46 +18,47 @@ Uma ADR Proposed não deve ser implementada como decisão final sem a aprovaçã
 
 | ADR | Tema | Status | Escopo do status |
 |---|---|---|---|
-| [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular; compatibilização dos componentes e da configuração com os requisitos da FORD ainda depende de validação técnica/Q-025 |
+| [ADR-001](ADR-001-arquitetura-geral.md) | Arquitetura lógica geral | Proposed | Arquitetura modular; a compatibilidade da stack e do modelo de operação foi aprovada na Q-025; detalhamento de componentes permanece no escopo desta ADR |
 | [ADR-002](ADR-002-frontend-nextjs.md) | Frontend | Accepted | Next.js 16 + React 19 + TypeScript; React + Vite explicitamente recusado para o Polychat |
-| [ADR-003](ADR-003-supabase-vercel.md) | Direção tecnológica Supabase + Vercel | **Accepted** | Stack adotada e obrigatória; configuração, compatibilidade e homologação operacional permanecem sujeitas à Q-025 |
-| [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Detalhamento e validação da identidade/sessões dentro da stack adotada, considerando requisitos da FORD |
-| [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | Proposed | PostgreSQL no contexto da plataforma Supabase adotada; modelo, configuração, controles e operação aguardam validação técnica |
-| [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo limitado | Aceite cobre o módulo e a migration de perfis; não cobre RLS de domínio nem comprova integração/homologação de produção |
-| [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Supabase Realtime é alternativa em avaliação dentro da stack adotada; prova de conceito, controles e compatibilidade ainda pendentes |
-| [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | Proposed | Definição de armazenamento privado, controles de acesso/antimalware e compatibilidade do Supabase Storage ainda pendentes de validação |
-| [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | Proposed | Configuração de ambientes e deploy na stack Supabase + Vercel adotada; isolamento, controles e homologação permanecem pendentes |
+| [ADR-003](ADR-003-supabase-vercel.md) | Direção tecnológica Supabase + Vercel | **Accepted** | Stack adotada e obrigatória; compatibilidade do modelo de utilização aprovada pela TI e FORD na Q-025 (24/11/2026) |
+| [ADR-004](ADR-004-autenticacao-sessoes.md) | Autenticação e sessões | Proposed | Supabase Auth é a capacidade prevista na stack adotada; detalhamento, integração, configuração e validação operacional permanecem pendentes |
+| [ADR-005](ADR-005-dados-postgresql.md) | Banco e modelo de dados | **Accepted** | PostgreSQL no Supabase aprovado na Q-025; policies RLS #101 e auditoria/retenção #102 integradas/testadas em desenvolvimento; handlers restantes, Storage e backup/restore pendentes |
+| [ADR-006](ADR-006-autorizacao-rls.md) | Autorização e RLS | Accepted — escopo de desenvolvimento | Perfis/sessões e policies RLS de domínio implementados/testados em Polyford pelas PRs #172/#174; não equivale à integração completa dos handlers ou homologação de produção |
+| [ADR-007](ADR-007-realtime-mensageria.md) | Realtime e mensageria | Proposed | Compatibilidade do Supabase Realtime com a stack aprovada na Q-025; desenho específico, prova de conceito, controles e integração continuam pendentes |
+| [ADR-008](ADR-008-storage-anexos.md) | Storage e anexos | **Accepted** | Supabase Storage aprovado como capacidade de armazenamento privado; bucket, handlers, scanner e autorização seguem como entregas de implementação |
+| [ADR-009](ADR-009-ambientes-deploy.md) | Ambientes e deploy | **Accepted** | Ambientes, segregação, deploy, secrets, rollback e responsabilidades aprovados na Q-025; execução dos testes por release permanece aplicável |
 | [ADR-010](ADR-010-seguranca-auditoria-monitoramento.md) | Segurança, auditoria e monitoramento | Proposed | Deve ser reconciliada com a FORD v2, os alinhamentos de requisitos e as obrigações legais aplicáveis |
 
 ## Decisões e restrições vigentes
 
 1. A stack de frontend adotada é Next.js 16 + React 19 + TypeScript (ADR-002). React + Vite foi explicitamente recusado para o Polychat; não deve ser introduzido nem usado como base de migração sem ADR substitutiva aprovada.
-2. A ADR-003 — Accepted define Supabase + Vercel como stack adotada e obrigatória. As exigências da FORD v2 sobre controle de hospedagem, armazenamento, processamento, localização e acesso continuam válidas e devem ser avaliadas na configuração/modelo de uso pela Q-025; uma tensão ou incompatibilidade identificada não altera automaticamente o status da ADR-003.
-3. Next.js permanece como frontend registrado na ADR-002. Os serviços Supabase e a plataforma Vercel devem ser detalhados e configurados conforme as ADRs pertinentes e a Q-025; não presumir homologação de produção nem tratar esses componentes como proibidos ou depreciados sem decisão formal.
-4. PostgreSQL é a tecnologia relacional considerada na ADR-005 no contexto da plataforma Supabase adotada. A configuração, os controles, a operação e a evidência de compatibilidade com os requisitos da FORD continuam dependentes da Q-025.
+2. A ADR-003 — Accepted define Supabase + Vercel como stack adotada e obrigatória. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para o modelo de utilização e para os provedores nomeados. Outros terceiros continuam sujeitos a aprovação específica.
+3. Next.js permanece como frontend registrado na ADR-002. A compatibilidade e o modelo de utilização de Supabase + Vercel foram aprovados na Q-025; detalhes de integração e execução por serviço permanecem nas ADRs específicas. A aprovação não equivale à homologação funcional de produção nem permite inferir a conclusão de testes.
+4. PostgreSQL é a tecnologia relacional adotada na ADR-005, no contexto da plataforma Supabase aprovada na Q-025. Policies de domínio #101 e controles de auditoria/retenção #102 estão integrados/testados em desenvolvimento; handlers restantes, Storage e continuidade seguem pendentes.
 5. A autenticação deve respeitar o provisionamento exclusivo pelo TI, os identificadores e credenciais definidos pela FORD, a recuperação pelo TI e a revogação imediata de sessões na desativação de conta (ADR-004), com configuração e validação na stack adotada.
-6. A ADR-006 permanece Accepted no escopo do módulo e da migration de perfis vinculados ao Supabase. Esse aceite não cobre os recursos de domínio do Polychat nem comprova integração/homologação de produção; não contradiz a adoção da plataforma estabelecida pela ADR-003.
+6. A ADR-006 permanece Accepted: além do contrato de perfis/sessões, policies RLS de domínio foram integradas e testadas pela #101 em Polyford. O aceite não equivale à integração uniforme de todos os handlers nem à homologação de produção; não contradiz a ADR-003.
 7. Realtime, armazenamento de anexos e ambientes seguem em definição nas ADRs 007 a 009. As alternativas e configurações devem considerar a stack adotada e os requisitos de controle da FORD; eventual substituição exige o processo formal de mudança arquitetural.
-8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.4. A ADR-010 precisa refletir essas decisões e o posicionamento informado pela FORD, sem afastar obrigações legais aplicáveis.
+8. Os requisitos funcionais de monitoramento, acesso administrativo, exportação, auditoria e retenção estão consolidados na baseline v0.5. A ADR-010 deve refletir essas decisões e o posicionamento informado pela FORD, sem afastar obrigações legais aplicáveis.
 
 ## Evidências verificadas no repositório
 
 - `package.json`, `src/app/`, `next.config.ts`: aplicação Next.js 16 / React 19 / TypeScript.
 - `src/app/page.tsx`: página inicial institucional; não comprova fluxos completos de chat.
-- `src/auth/authorization.mjs`: middleware Express-compatible com dependência de cliente Supabase e validação de token.
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`: migration de `profiles` e RLS vinculada à arquitetura anterior.
-- `tests/authorization.test.mjs`: testes unitários com Supabase simulado; não comprovam integração com provedor ou infraestrutura de produção.
-- `.env.example`: placeholders históricos de Supabase, sem credenciais reais.
-- `README.md`: atualizado para registrar a restrição de infraestrutura FORD e remover instruções de deploy Vercel/configuração Supabase como destino do produto.
+- Endpoints `src/app/api/auth/login/route.ts`, `logout/route.ts`, `session/route.ts` e `src/auth/supabase-session.mjs`: autenticação/sessões com validação de perfil ativo; testes unitários usam Supabase simulado e não comprovam login positivo com usuário real.
+- Migrations #101 integradas pela PR #172 e `supabase/tests/issue_101_rls.integration.sql`: 16/16 cenários aprovados em Polyford, além do teste de criação de conversa direta.
+- Migrations/testes #102 integrados pela PR #173: `audit_events`, holds e descarte controlado de eventos em transações revertidas.
+- Migration `202611250001_issue_124_privileged_audit.sql` e `src/audit/privileged-audit.mjs`: infraestrutura server-only integrada pela PR #170; callsites de negócio ainda pendentes.
+- `.env.example`: placeholders de configuração Supabase, sem credenciais reais; não comprovam configuração do cliente nem integração funcional.
+- `README.md` e arquivos de configuração registram a direção de uso da stack adotada; a presença dessas referências não comprova integração real, conformidade operacional nem homologação de produção.
 - `.github/workflows/ci.yml`: testes, ESLint, TypeScript e build em push para `main` e PR para `main`.
 
-A existência de código, migrations, variáveis de exemplo ou sucesso no CI não comprova integração com infraestrutura FORD, aplicação de migrations em ambiente homologado, RLS completa, realtime, storage, antimalware ou fluxos ponta a ponta.
+A existência de código, migrations, testes em Polyford ou sucesso no CI não comprova homologação de produção, integração ponta a ponta de todos os handlers, realtime, Storage, antimalware, backup/restore ou callsites completos de auditoria.
 
 ## Aprovações e responsabilidades pendentes
 
 | Tema | Responsável pela revisão/decisão | Evidência necessária |
 |---|---|---|
-| Arquitetura lógica e infraestrutura compatível com a FORD | Tech Lead + TI | Solução técnica selecionada, fronteiras e responsabilidades registradas na ADR |
+| Arquitetura e compatibilidade operacional da stack | Tech Lead + TI | Configuração Vercel/Supabase, fluxos, fronteiras, localização de dados, acessos e responsabilidades documentados na Q-025/ADRs |
 | Autenticação e sessões | Tech Lead + Dev backend + TI | Implementação e testes integrados no ambiente sob controle da FORD |
 | Banco de dados e autorização/RLS de domínio | Tech Lead + Dev backend + TI | Migrations, políticas e testes de isolamento no ambiente homologado |
 | Realtime, storage e antimalware | Tech Lead + Dev backend + TI | Prova de conceito e testes de acesso, revogação e falha segura |
@@ -72,7 +73,7 @@ Manter as questões atualizadas em `08-glossario-e-questoes-em-aberto.md`. Perma
 
 - **Q-018:** refinamento interno do mapa de telas, navegação e wireframes pelo PO/UX.
 - **Q-019:** obtenção/validação dos ativos oficiais da identidade visual FORD, caso ainda não estejam disponíveis.
-- **Q-025:** avaliação técnica da compatibilidade e configuração da stack Supabase + Vercel adotada frente às exigências de controle de infraestrutura, hospedagem, armazenamento, processamento, localização, acesso e operação da FORD; não autoriza substituição por inferência.
+- **Q-025 — concluída em 24/11/2026:** compatibilidade do modelo de utilização Supabase + Vercel aprovada pela TI e pela FORD. A aprovação cobre provedores nomeados, ambientes, dados, Storage, segredos, continuidade e responsabilidades; não substitui a implementação e os testes dos controles nas respectivas issues.
 
 Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, alertas, desempenho, credenciais, chaves, retenção, homologação e isolamento de ambientes — não são pendências. A confiança nos administradores TI e a igualdade de seus poderes também não devem ser reabertas como pendência de requisito.
 
@@ -81,7 +82,7 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 | Critério da issue | Situação documental |
 |---|---|
 | ADRs versionadas com contexto, decisão, consequências e status | Estrutura documentada; decisões específicas ainda aguardam revisões indicadas |
-| Testes relevantes automatizados ou evidência documentada | Evidência parcial: testes unitários simulados de autorização e workflow CI; faltam integrações com a arquitetura-alvo |
+| Testes relevantes automatizados ou evidência documentada | Evidência parcial: testes unitários simulados de autorização e workflow CI; faltam integrações reais com Supabase, validação operacional da configuração Vercel/Supabase e testes de domínio |
 | Revisão por PR concluída | Pendente de revisão e aprovação humana |
 | Sem regressão nos fluxos relacionados | A confirmar pelos checks da PR; as alterações desta rodada são documentais |
 
@@ -92,6 +93,6 @@ Os grupos de requisitos já alinhados com Desenvolvimento — armazenamento, ale
 - **19/11/2026** — ADR-002 e seu índice atualizados para registrar a recusa de React + Vite e alinhar a stack de frontend.
 - **19/11/2026** — a revisão documental interpretou a FORD v2 como incompatibilidade com Supabase + Vercel e alterou ADR-003 para Deprecated, sem registrar neste índice uma decisão formal de substituição e respectiva avaliação de impacto.
 - **20/11/2026** — a baseline POLY-REQ-001 v0.5 e as Issues #100/#102 reafirmaram a stack Supabase + Vercel como referência adotada; Q-025 permaneceu como avaliação de compatibilidade.
-- **24/11/2026** — ADR-003 revisada para Accepted, com orientação explícita de que Q-025 não autoriza substituição por inferência; este índice e documentos dependentes foram alinhados à decisão vigente.
+- **24/11/2026** — ADR-003 revisada para Accepted, preservando Supabase + Vercel como stack adotada; Q-025 concluída com aprovação da TI e da FORD. ADR-005, ADR-008 e ADR-009 foram aceitas nos respectivos escopos de dados, Storage e operação de ambientes.
 
 **Regra de fechamento:** a Issue #89 só deve ser fechada depois de as ADRs aplicáveis serem revisadas e aprovadas pelos responsáveis, a arquitetura compatível com a FORD ser formalizada, a PR desta revisão ser aprovada e integrada e os checks passarem. A Epic #77 só deve ser fechada depois que #89 for concluída e seu checklist for atualizado.

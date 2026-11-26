@@ -1,6 +1,6 @@
 # ADR-005 — Banco de dados e modelo de dados
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Data de revisão:** 24/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
@@ -9,11 +9,11 @@
 
 O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, participantes, mensagens, anexos, alertas e eventos de auditoria. O produto atende uma única organização (FORD); a baseline não prevê operação multi-tenant.
 
-A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. A FORD v2 mantém requisitos sobre controle de hospedagem, armazenamento e processamento; a compatibilidade da configuração e do modelo de uso do Supabase Database com esses requisitos deve ser avaliada na Q-025. Uma preocupação ou incompatibilidade identificada deve ser registrada e encaminhada para decisão formal, sem retirar ou depreciar a ADR-003 por inferência.
+A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. Em 24/11/2026, TI e FORD aprovaram na Q-025 a compatibilidade da configuração e do modelo de utilização dessa stack com os requisitos de infraestrutura. Supabase Database/PostgreSQL fica aprovado como componente de persistência no contexto da stack, sem alteração da ADR-003.
 
-PostgreSQL permanece como tecnologia relacional proposta para o banco, desde que sua instância e operação estejam na infraestrutura sob controle da FORD. A escolha do ambiente operacional e a compatibilização técnica fazem parte da Q-025.
+PostgreSQL permanece como tecnologia relacional adotada no Supabase, conforme ADR-003 e Q-025 — Concluída. A operação aprovada utiliza ambientes segregados, controle de acesso, credenciais por estágio e responsabilidades operacionais definidas nas ADRs 003 e 009.
 
-O único esquema de domínio atualmente versionado é `public.profiles`, em migration vinculada ao Supabase. Não foram encontradas migrations para conversas, participantes, mensagens, anexos, alertas ou auditoria.
+O schema versionado inclui `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts`, introduzidos pelas migrations #99. As estruturas `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity` também estão versionadas. As policies RLS de domínio foram integradas e testadas em desenvolvimento pela #101 (PR #172). A trilha `audit_events` e os controles de retenção de eventos foram integrados pela #102 (PR #173); callsites adicionais e backup/restore permanecem pendentes.
 
 ## Problema
 
@@ -21,14 +21,23 @@ Definir a persistência de dados relacionais no contexto da stack adotada, prese
 
 ## Alternativas consideradas
 
-1. **PostgreSQL em infraestrutura sob controle da FORD:** tecnologia relacional proposta, sujeita à validação de operação, compatibilidade e homologação.
+1. **PostgreSQL no Supabase:** tecnologia relacional adotada na stack Supabase + Vercel, com compatibilidade operacional aprovada na Q-025 e implementação sujeita aos critérios das issues de domínio.
 2. **Outro banco relacional operado sob controle da FORD:** alternativa possível caso a infraestrutura e os padrões corporativos indiquem tecnologia diferente.
-3. **Banco de dados gerenciado externamente/SaaS:** não permitido para dados da FORD quando o terceiro puder acessar, armazenar ou processar essas informações.
+3. **Banco de dados gerenciado por fornecedor não aprovado:** não permitido. O Supabase é a exceção expressamente aprovada pela FORD como provedor nomeado da stack do Polychat, sob os controles e limites registrados na Q-025.
 4. **Banco documental:** não selecionado nesta proposta, pois as relações entre conversas, participantes, autoria, mensagens e auditoria exigem integridade relacional.
 
-## Decisão proposta
+## Decisão
 
-Manter **PostgreSQL como tecnologia de banco relacional proposta no contexto da plataforma Supabase adotada pela ADR-003**. A configuração da instância, backups, administração, monitoramento, recuperação, acessos e responsabilidades devem ser detalhados e avaliados na Q-025 frente aos requisitos da FORD. Esta ADR não autoriza trocar a stack nem declara a implantação homologada.
+Adotar **PostgreSQL no Supabase Database como tecnologia relacional do Polychat**, dentro da stack Supabase + Vercel estabelecida pela ADR-003. A Q-025 foi concluída em 24/11/2026 com aprovação da TI e da FORD para a compatibilidade do modelo de utilização, da localização e operação por ambientes, dos acessos, da gestão de segredos e das responsabilidades. A stack não pode ser substituída por inferência.
+
+### Registro de aprovação
+
+**Aprovadores funcionais:** TI e representante da FORD.  
+**Data:** 24/11/2026.  
+**Referência:** Q-025 — Compatibilidade da stack Supabase + Vercel, concluída.  
+**Resultado:** PostgreSQL/Supabase Database aprovado para persistência de perfis e domínio do Polychat, sob a arquitetura e os controles de operação registrados nas ADRs 003 e 009.
+
+O aceite desta ADR aprova a decisão tecnológica e seu modelo operacional. Não declara que todas as tabelas, policies RLS, integrações transacionais, backups ou testes de recuperação já estejam implementados; essas entregas permanecem nas issues correspondentes.
 
 O modelo lógico deve contemplar, no mínimo:
 
@@ -67,7 +76,7 @@ O domínio é composto por relações explícitas entre contas, conversas, parti
 - Rastreabilidade de operações administrativas e regras de retenção.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisará operar, monitorar, atualizar, proteger e recuperar a instância.
+- A operação, o monitoramento, a atualização, a proteção e a recuperação da instância ficam sob responsabilidade operacional da TI, conforme o modelo aprovado.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
 - O esquema parcial vinculado ao Supabase deverá ser revisado e ampliado para cobrir o domínio, mantendo rastreabilidade e compatibilidade com a stack adotada.
 
@@ -77,14 +86,21 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Evidências atuais
 
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. A migration é um artefato versionado, não comprovação de aplicação em infraestrutura FORD.
-- Não há migrations versionadas para conversas, participantes, mensagens, anexos, alertas ou eventos de auditoria.
-- A baseline POLY-REQ-001 v0.4 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
+- `202611160001_profiles_roles_and_account_status.sql` estabelece `profiles`, papéis e estado da conta.
+- `202611240001_issue_99_initial_domain_schema.sql` cria as tabelas principais do domínio e habilita RLS sem policies de domínio.
+- `202611240002_issue_99_integrity_and_configuration.sql` implementa invariantes de mensagem/anexos e estruturas específicas de configuração.
+- As notas da Issue #99 registram a aplicação e inspeção dessas migrations no projeto Supabase Polyford de desenvolvimento, região `sa-east-1`.
+- As policies RLS de domínio foram integradas pela PR #172 e os testes de isolamento passaram em Polyford; a evidência não equivale à homologação de produção ou cobertura de todos os handlers.
+- A trilha `audit_events`, `retention_holds` e descarte controlado de eventos foram integrados pela PR #173 e testados em Polyford; retenção física de mensagens/anexos, backup/restore e callsites para todas as operações continuam pendentes.
+- A infraestrutura separada `privileged_action_audit` foi integrada pela PR #170 para a #124; handlers/callsites de negócio ainda precisam ser instrumentados.
+- A baseline POLY-REQ-001 v0.5 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
 
-## Pendências para Accepted
+## Trabalho de implementação remanescente
 
-- Confirmar com Tech Lead e TI a configuração do PostgreSQL/Supabase Database na stack adotada e demonstrar sua compatibilidade com os requisitos da FORD na Q-025.
-- Revisar o modelo físico, migrations, índices, políticas de autorização e estratégia de backup/restore no ambiente de homologação.
-- Registrar a decisão técnica, aprovadores e evidências de teste.
+- Integrar autenticação/autorização de forma uniforme aos handlers reais de conversas, grupos, mensagens e anexos.
+- Concluir os fluxos server-side/transacionais de mensagens e anexos e aplicar políticas de objetos no Storage.
+- Instrumentar callsites restantes de `audit_events` e `privileged_action_audit`, incluindo consultas/exportações e operações administrativas previstas.
+- Configurar e comprovar quotas individuais/globais, Storage privado e scanner interno.
+- Executar e registrar testes de backup/restauração, retenção física, autorização ponta a ponta e continuidade previstos nas issues de implementação e operação.
 
 Os parâmetros de armazenamento, retenção, desempenho, backup, RPO/RTO, gestão de chaves e isolamento dos ambientes já alinhados com Desenvolvimento são requisitos consolidados; não são reabertos como pendências de produto por esta ADR.
