@@ -350,17 +350,33 @@ Os controles abaixo são recomendações para avaliação técnica. A aprovaçã
 
 ### 10.4 Upload, armazenamento e download
 
-- Aceitar somente PDF/JPEG, conforme requisito funcional.
-- Validar conteúdo real, assinatura, estrutura e tamanho no servidor; não confiar somente em extensão ou MIME declarado.
-- Manter arquivos em quarentena até que as verificações obrigatórias sejam concluídas.
-- Não disponibilizar arquivos quando scanner falhar, retornar resultado inconclusivo ou não puder analisá-los, conforme política a ser aprovada.
-- Manter bucket/objetos privados; autorizar cada download.
-- Emitir URLs temporárias somente após autorização e com validade tecnicamente aprovada.
-- Definir quotas, limites, retenção, descarte, EXIF, PDFs protegidos e operação de antimalware.
+Os requisitos funcionais abaixo já foram definidos na baseline POLY-REQ-001 v0.5 e consolidados na ADR-008 Accepted. Não constituem decisões em aberto desta análise; o trabalho pendente é implementar, integrar, testar e produzir evidências de atendimento.
 
-**Dependências:** ADR-008 Accepted como direção arquitetural; #115/#116/#117 para implementação e evidências. Q-004/Q-010/Q-011 estão resolvidas.
+**Regras funcionais e controles obrigatórios**
 
-**Estado observado na v0.18:** bucket privado #181 e endpoint de upload server-side parcial #185 estão integrados. Não há upload/download real comprovado no Polyford; scanner, quarentena, download/URL assinada, quotas e backup de objetos permanecem pendentes.
+- Aceitar somente arquivos PDF e JPEG, com até 5 anexos por mensagem.
+- Respeitar o limite funcional de 10 MB por arquivo registrado na baseline. O bucket e o endpoint atualmente aplicam 10 MiB (10.485.760 bytes); a divergência entre MB e MiB permanece pendente de harmonização pelo PO com Desenvolvimento e de verificação pelo SQA, sem presumir equivalência nem alterar o requisito nesta seção.
+- Validar o conteúdo no servidor, incluindo assinatura e estrutura do arquivo; extensão e MIME declarados não são suficientes isoladamente. PDF protegido por senha deve ser recusado.
+- Permitir seleção de JPEG existente na galeria, sem captura pela câmera, e remover metadados EXIF/GPS antes da disponibilização.
+- Manter o bucket e os objetos privados. Cada operação de leitura/download deve verificar a autorização vigente do participante no servidor; não expor caminhos físicos nem URLs públicas permanentes.
+- Manter o anexo indisponível até a validação obrigatória e o resultado limpo do scanner antimalware executado dentro da infraestrutura da FORD. Falha, indisponibilidade, timeout, impossibilidade de análise ou resultado inconclusivo mantêm o arquivo bloqueado. A indisponibilidade do scanner não bloqueia o envio de mensagens de texto.
+- Permitir liberação excepcional de qualquer arquivo somente por ação administrativa autenticada do TI e registrada em auditoria. Usuários comuns não podem contornar o scanner nem alterar o estado da análise.
+- Emitir link temporário somente após autorização e com validade máxima de **5 minutos**. A remoção de um participante deve revogar imediatamente seu acesso, inclusive por links anteriormente emitidos; a expiração do link não substitui a conferência de autorização/revogação.
+- Permitir que o TI baixe anexos durante investigações, com registro de auditoria.
+- Aplicar quotas individuais e capacidade total configuradas pelo TI, sem quota por conversa.
+- Não excluir automaticamente anexos enquanto o sistema estiver em operação. Exclusões dependem de autorização do TI e devem observar investigações e preservação administrativa.
+- Manter backups diários de banco e anexos por 12 meses, com controles de acesso, restauração e evidências conforme a ADR-008 e a Issue #130.
+- Não encaminhar arquivos, conteúdo, metadados ou identificadores a scanner SaaS ou a qualquer serviço externo de processamento/análise sem aprovação específica da TI/FORD.
+
+**Estado técnico observado na v0.18**
+
+- **Storage privado — PR #181:** bucket `attachments` provisionado no Supabase Storage com `public=false`, limite de 10.485.760 bytes (10 MiB), MIME PDF/JPEG e ausência de policies de acesso direto em `storage.objects`. O teste SQL do bucket concluiu sem exceção; a verificação no Polyford registrou zero objetos.
+- **Upload parcial — PR #185:** endpoint server-side `POST /api/attachments/upload` integrado. Valida sessão pelos cookies HTTP-only, consulta a mensagem usando o JWT do usuário e permite upload somente ao remetente. Valida extensão, MIME declarado e assinatura binária PDF/JPEG, aplica 10 MiB, grava metadados sob RLS e tenta remover compensatoriamente o objeto se o registro do metadado falhar. Há testes unitários para PDF/JPEG válidos e rejeições de extensão, MIME, assinatura, arquivo vazio e tamanho excedido.
+- **Limites comprovados:** não houve upload/download real no Polyford; a existência do bucket, do endpoint e dos testes unitários não comprova jornada ponta a ponta. A rota #185 não implementa download nem emite link público/temporário; a checagem da assinatura binária não é parser estrutural completo nem análise antimalware.
+- **Pendências de implementação e evidência:** #115 — validação estrutural e integração completa do upload com mensagem/anexos, incluindo teste de arquivo real; #116 — download autorizado, links temporários de até 5 minutos, revogação e auditoria; #117 — scanner/quarentena, PDF protegido por senha, remoção EXIF/GPS, quotas e liberação excepcional do TI; #130 — backup/restore de objetos, retenção e continuidade.
+- **Divergência de limite:** a baseline registra 10 MB, enquanto bucket e endpoint aplicam 10 MiB (10.485.760 bytes). O critério não deve ser declarado atendido até a harmonização formal da unidade e a verificação do limite efetivo.
+
+**Dependências:** ADR-008 Accepted como decisão arquitetural; baseline POLY-REQ-001 v0.5 e Q-011 como origem das regras funcionais; Issues #115, #116, #117 e #130 para implementação e evidências. Q-004/Q-010/Q-011 permanecem resolvidas e não devem ser reabertas como dúvidas de produto.
 
 ### 10.5 Secrets e cadeia de suprimentos
 
