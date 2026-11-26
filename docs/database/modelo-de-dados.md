@@ -434,12 +434,12 @@ A migration aditiva da PR #168 versiona seis índices de cobertura de FKs (em `c
 
 ## 8. Segurança, identidade e acesso aos dados
 
-A autenticação do Polychat utiliza Supabase Auth; os dados relacionais utilizam PostgreSQL no Supabase e os arquivos podem utilizar Supabase Storage privado. A aplicação é hospedada/deployada na Vercel. Configuração, RLS e integração precisam ser revisadas tecnicamente e evidenciadas nos ambientes previstos.
+A autenticação do Polychat utiliza Supabase Auth; os dados relacionais utilizam PostgreSQL no Supabase e os arquivos podem utilizar armazenamento privado. A aplicação é hospedada/deployada na Vercel. A stack está definida para o projeto; sua configuração e compatibilidade com as restrições da FORD continuam sujeitas às evidências e à análise registrada na Q-025.
 
-Princípios funcionais que o modelo deve suportar:
+### 8.1 Princípios funcionais
 
-1. Identidade e conta ativa são verificadas no servidor; não confiar em `profile_id`, role, estado ou membership enviados pelo cliente.
-2. Role e membership são conceitos diferentes. `ti` permite somente operações administrativas definidas; `user` depende de membership vigente para acessar conversas.
+1. Identidade e conta ativa são verificadas no servidor; não confiar em profile_id, role, estado ou membership enviados pelo cliente.
+2. Role e membership são conceitos diferentes. ti permite somente operações administrativas definidas; user depende de membership vigente para acessar conversas.
 3. Usuário só lê conversas das quais participa; TI pode consultar qualquer conversa em função administrativa, com auditoria.
 4. Remoção encerra o período de participação e revoga imediatamente acesso a mensagens, anexos e links anteriores. A reinclusão não restaura acesso ao histórico anterior à nova entrada.
 5. Estado do grupo é considerado em todas as operações: desativado permite somente leitura aos membros vigentes; encerrado restringe a consulta a TI até eventual reativação.
@@ -448,7 +448,30 @@ Princípios funcionais que o modelo deve suportar:
 8. Falha na identificação, verificação de conta, membership ou autorização não concede acesso.
 9. Nenhum segredo, token ou chave privilegiada pode ser exposto ao cliente. A exigência da FORD de não permitir acesso/processamento por terceiros deve ser conciliada com o uso de Supabase + Vercel na Q-025; não declarar conformidade antes dessa análise.
 
-Os detalhes de configuração do Supabase Auth, PostgreSQL/RLS, Storage privado, integração server-side e deploy na Vercel permanecem decisões de implementação e evidência técnica das issues correspondentes. A stack está definida para o projeto; a Q-025 acompanha sua compatibilidade com as restrições registradas pela FORD. Esta seção não declara controles em funcionamento.
+### 8.2 Evidência técnica integrada — PR #172
+
+A PR #172 implementou e integrou à main as policies RLS e os controles de privilégios da Issue #101. O escopo abrange:
+
+- conversations: leitura por TI ou participante ativo; criação de conversa direta por um dos dois usuários ativos; criação de grupo e edição administrativa somente por TI;
+- memberships: leitura limitada ao próprio vínculo ou TI; criação de vínculos de conversa direta conforme as regras implementadas; inclusão e encerramento de memberships de grupo reservados ao TI;
+- messages: leitura por participante ativo ou TI; envio pelo próprio perfil em conversa ativa; edição e exclusão lógica reservadas ao TI;
+- attachments: leitura vinculada à autorização da mensagem/conversa; inclusão limitada ao autor da mensagem em conversa ativa; atualização de metadados de análise por TI;
+- message_reads: leitura pelo leitor, autor da mensagem ou TI; registro de leitura pelo próprio perfil;
+- security_alerts: leitura e encerramento por TI;
+- detection_rules, attachment_user_quotas e attachment_storage_capacity: acesso do cliente restrito a TI;
+- profiles: privilégio de cliente restrito a SELECT, com remoção de privilégios residuais de TRUNCATE, TRIGGER e REFERENCES.
+
+As funções auxiliares de autorização foram colocadas no schema private, com search_path vazio. A verificação de TI utiliza private.is_active_ti(); o wrapper público é SECURITY INVOKER. A migration final da PR #172 não altera audit_events, cuja responsabilidade ficou na Issue #102/PR #173, nem concede acesso direto do cliente a privileged_action_audit, mantida sob responsabilidade da #124.
+
+**Evidências e revisão:** os testes da Issue #101 registraram 16/16 cenários de RLS aprovados e um teste separado de criação de conversa direta com resultado positivo. As execuções ocorreram no Supabase de desenvolvimento Polyford e terminaram com ROLLBACK. Após a correção do apontamento do SQA sobre privilégios em audit_events, o SQA emitiu parecer favorável e o Tech Lead aprovou a PR #172; os workflows CI do head revisado foram concluídos com sucesso. A Issue #101 foi encerrada após a integração.
+
+**Limites que permanecem:**
+
+- O parecer SQA declarou expressamente que não certificou a ausência de service_role no frontend. Essa verificação continua necessária na revisão de segurança/integração pertinente; não se deve inferi-la da aprovação da PR #172.
+- RLS sobre linhas e tabelas não substitui políticas de objetos do Storage. A evidência mais recente da Issue #102 registra o provisionamento do bucket privado attachments em 26/11/2026, mas isso não comprova o fluxo completo da Issue #117: policies de objetos, upload, validação de conteúdo, scanner antimalware interno, autorização de download, revogação e descarte físico continuam pendentes de evidência.
+- A auditoria privilegiada de contas, grupos e memberships permanece na Issue #124; não deve ser duplicada por esta seção.
+- A divergência histórica entre identificadores locais e remotos de migrations anteriores não foi reconciliada pela PR #172. Não executar repair, reset ou db push por inferência.
+- A Q-025 permanece aberta para avaliar a compatibilidade da stack Supabase + Vercel com as restrições da FORD. A integração das policies no repositório e os testes no ambiente de desenvolvimento não equivalem à homologação da FORD ou à certificação de segurança em produção.
 
 ## 9. Retenção, exclusão e histórico
 
@@ -465,7 +488,37 @@ As regras funcionais de retenção e exclusão estão definidas na baseline POLY
 - Encerrar grupo restringe a consulta de Usuários e preserva o histórico para consulta administrativa do TI. A reativação pelo TI restaura o acesso somente para memberships vigentes.
 - Edição e exclusão de mensagens pelo TI são operações administrativas auditadas. O requisito não determina uma tabela de versões completas do conteúdo anterior.
 
-A implementação dos mecanismos de retenção, descarte, backups e integridade permanece no escopo da #102. O modelo não deve introduzir cascatas, exclusões ou expirações que contradigam as regras acima.
+### 9.1 Evidência técnica integrada — PR #173
+
+A PR #173 implementou e integrou à main o núcleo de auditoria genérica e controles de retenção da Issue #102:
+
+- audit_events mantém catálogo de eventos, ator, recurso, horário, resultado e metadata JSON. A escrita exige TI ativo e correspondência entre o ator e auth.uid(); a metadata é validada para rejeitar chaves relacionadas a conteúdo de mensagens/conversas e a dados sensíveis, como senhas, tokens, segredos, cookies e credenciais.
+- A trilha é append-only para operações diretas: UPDATE, DELETE e TRUNCATE comuns são rejeitados.
+- retention_holds permite que TI ativo coloque e libere holds; há proteção contra dois holds ativos para o mesmo recurso. A colocação e a liberação geram eventos de auditoria próprios.
+- O descarte controlado de um registro de audit_events ocorre por public.discard_audit_event(uuid), SECURITY INVOKER, com verificação de TI ativo, proteção por hold sobre o evento ou recurso referenciado e registro de retention_discarded. A policy de DELETE exige os marcadores transacionais definidos pela função; eventos de controle de retenção não podem ser descartados.
+- A serialização entre alteração de holds e descarte utiliza advisory locks transacionais, conforme a correção validada na entrega.
+
+Os testes de auditoria, holds e descarte foram executados no Supabase de desenvolvimento e terminaram com ROLLBACK. Os resultados registrados demonstram bloqueio por holds, liberação e descarte auditado sem apagar registros reais durante os testes. O writer explícito de aplicação utiliza JWT do usuário e chave publishable; não aceita service-role.
+
+**Eventos com geração integrada nesta entrega:** edição administrativa de mensagem (message_admin_edited), exclusão lógica administrativa de mensagem (message_admin_deleted), fechamento de alerta (alert_closed), colocação/liberação de holds (retention_hold_placed e retention_hold_released) e descarte controlado (retention_discarded).
+
+**Eventos catalogados que ainda dependem de call-sites nos fluxos de aplicação:**
+
+- conversation_viewed e conversation_exported;
+- attachment_downloaded e attachment_released;
+- configuration_changed — o evento e o writer existem, mas os handlers de configuração ainda precisam chamá-lo. Os triggers iniciais de configuração foram removidos após a validação de atribuição do ator não passar.
+
+Eventos de login, contas, grupos e memberships permanecem coordenados com a Issue #124 e sua trilha privileged_action_audit. A PR #173 não substitui nem duplica essa responsabilidade.
+
+### 9.2 Limites da implementação e da retenção operacional
+
+- O descarte autorizado implementado nesta entrega atua somente sobre registros de audit_events. Não representa exclusão física ou descarte de mensagens, anexos, alertas ou registros de privileged_action_audit; esses fluxos dependem das regras próprias e das Issues #117 e #124.
+- A evidência da Issue #102 registra o provisionamento do bucket privado attachments em 26/11/2026. Na mesma evidência, ainda não havia objetos, endpoint de upload, scanner integrado ou descarte físico validado. Portanto, o provisionamento do bucket não comprova a implementação completa do ciclo de vida de anexos; a Issue #117 permanece aberta.
+- O requisito funcional de backups diários de banco e anexos com retenção de 12 meses permanece válido, mas a PR #173 não comprovou nem configurou essa operação, a restauração ou o RPO/RTO de até 24 horas. A evidência registrada para a entrega informa que a organização Supabase estava no plano Free, sem backups automáticos diários incluídos, e que os backups do banco não abrangem objetos do Storage. É necessária uma solução de backup externo/off-site que cubra banco e objetos, retenha 365 dias e tenha testes de restauração documentados.
+- A aprovação do SQA e do Tech Lead na PR #173 é restrita ao escopo implementado. A Issue #102 foi encerrada após a integração, mas o encerramento não significa que os call-sites, Storage, descarte físico, backups ou restauração estejam concluídos.
+- A divergência histórica do registro de migrations permanece sem repair, reset ou db push. Nenhuma aprovação desta entrega autoriza essas operações por inferência.
+
+A implementação técnica dos mecanismos de retenção não altera nem reduz as regras funcionais aprovadas acima. O modelo não deve introduzir cascatas, exclusões ou expirações que contradigam essas regras.
 
 ## 10. Rastreabilidade com requisitos e issues
 
