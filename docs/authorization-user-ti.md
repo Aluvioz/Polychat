@@ -2,7 +2,7 @@
 
 ## Regras
 - Os únicos perfis válidos são `user` e `ti`.
-- Toda rota protegida deve executar `requireAuthenticatedUser` antes de `requireRole`.
+- Em rotas Next.js, use `authorizeNextRequest`; em handlers Express, execute `requireAuthenticatedUser` antes de `requireRole`.
 - A identidade é validada por `supabase.auth.getUser(token)`; não confie em IDs, roles ou flags enviados pelo navegador.
 - Perfil e estado são lidos de `public.profiles`.
 - Conta com `is_active = false`, perfil ausente/desconhecido ou falha de consulta não recebe acesso (fail closed).
