@@ -148,7 +148,7 @@ Essas evidências distinguem a estrutura e a autorização já integradas da fun
 7. Executar testes de integração no Polyford, automatizar os cenários reproduzíveis e registrar evidências, limites e resultados.
 8. Obter revisão do Tech Lead e SQA sobre desenho, políticas, revogação, rastreabilidade e suficiência dos testes; envolver TI na validação operacional aplicável.
 
-A aprovação da compatibilidade geral da stack Supabase + Vercel na ADR-003/Q-025 não substitui estas validações específicas do serviço Realtime. O status desta ADR permanece **Proposed** até que as pendências técnicas sejam resolvidas e revisadas.
+A decisão geral da stack Supabase + Vercel registrada na ADR-003 não substitui estas validações específicas do serviço Realtime. O status desta ADR permanece **Proposed** até que as pendências técnicas sejam resolvidas e revisadas.
 
 ## Referências
 
