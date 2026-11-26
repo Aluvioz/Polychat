@@ -1,0 +1,6 @@
+-- Historical migration ledger entry only.
+-- Version 20261124210245 was already applied to the Polyford development project
+-- from an unmerged implementation branch. Its original SQL is not part of main.
+-- Do not replay or reconstruct that historical DDL here.
+-- The canonical, reproducible audit_events definition is created idempotently
+-- by 20261125232432_issue_102_audit_retention_controls.sql.

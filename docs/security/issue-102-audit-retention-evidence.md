@@ -67,10 +67,10 @@ Não foram criados usuários, holds ou eventos persistentes pelos testes.
 - `conversation_viewed`, `conversation_exported`, `attachment_downloaded` e `attachment_released` exigem callsites nos fluxos de aplicação; não foram inventados handlers que não existem no projeto.
 - Alterações de configuração têm evento catalogado e writer explícito, mas não possuem callsites validados nesta entrega.
 - Eventos de conta, login administrativo, grupos e memberships continuam coordenados com a Issue #124; esta branch não duplica a tabela `privileged_action_audit` nem seus fluxos.
-- Eventos de anexos e descarte do objeto físico dependem da Issue #117; o projeto consultado ainda não possui bucket de Storage.
+- Eventos de anexos e descarte do objeto físico dependem da Issue #117. Em 26/11/2026 foi provisionado o bucket privado `attachments`, com limite de 10 MiB e MIME PDF/JPEG; ainda não há objetos, endpoint de upload, scanner integrado ou descarte físico validado.
 - O descarte controlado implementado nesta branch atua somente sobre registros de `audit_events`. Não declara descarte físico de mensagens, anexos, alertas ou registros privilegiados; esses fluxos precisam respeitar #117 e #124.
-- O requisito aprovado de backup diário por 12 meses e RPO/RTO de até 24 horas não foi comprovado nem configurado por esta entrega. A integração disponível não expõe configuração de backup, restauração ou evidência de RPO/RTO. É necessária comprovação do plano/configuração do provedor e teste de restore.
-- A divergência histórica de migrations permanece: o remoto contém versões anteriores que não correspondem aos identificadores antigos versionados no repositório. Não foi executado repair, reset ou `db push`.
+- O requisito aprovado de backup diário por 12 meses e RPO/RTO de até 24 horas não foi comprovado nem configurado por esta entrega. A organização Supabase está no plano Free, que não inclui backups automáticos diários; backups de banco também não incluem objetos do Storage. É necessária solução externa/off-site, retenção de 365 dias e teste de restore de banco e objetos.
+- A divergência histórica de identificadores foi tratada em branch própria: os nomes locais são alinhados às versões remotas, e a versão histórica da PR #166 é representada por arquivo de ledger sem DDL. Não foi executado repair, reset ou `db push`.
 
 ## Estado
 

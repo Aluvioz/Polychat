@@ -1,7 +1,7 @@
 # ADR-006 — Autorização server-side e RLS
 
 - **Status:** Accepted
-- **Escopo do aceite:** contrato de perfis/sessões e policies RLS de domínio implementados e testados no Supabase de desenvolvimento pelas PRs #172 e #174. Não representa homologação de produção nem integração ponta a ponta de todos os recursos/handlers do chat.
+- **Escopo do aceite:** contrato de perfis/sessões integrado pelas PRs #174 e #185 e policies RLS de domínio entregues pela PR #172 e testadas no Supabase de desenvolvimento. Não representa homologação de produção, autenticação positiva com usuário real nem integração ponta a ponta de todos os recursos/handlers do chat.
 - **Data:** 17/11/2026
 - **Issue:** #89 · **Implementação relacionada:** #105
 
@@ -35,6 +35,7 @@ Manter RBAC estrito com os papéis `user` e `ti`, com os seguintes controles no 
 - `requireRole` verifica o papel depois do middleware de autenticação.
 - RLS de `profiles` permite leitura do próprio perfil ou por TI ativo; escrita direta por `anon` e `authenticated` é revogada.
 - Alterações de papel/status exigem contexto confiável no servidor. Chaves privilegiadas não podem ser entregues ao browser.
+- Nas rotas Next.js, `authorizeNextRequest` reutiliza a validação de sessão e aplica a lista mínima de perfis autorizados; o middleware `requireAuthenticatedUser`/`requireRole` permanece para handlers Express.
 
 ## Justificativa
 
@@ -48,7 +49,9 @@ A verificação server-side reduz dependência da UI. RLS fornece uma segunda fr
 
 ## Limite explícito do aceite
 
-O contrato de perfis/sessões e as policies RLS de domínio foram implementados e testados no projeto Supabase de desenvolvimento Polyford. O teste não comprova homologação de produção, autenticação positiva com usuário real nem integração uniforme de todos os handlers/rotas de negócio. RLS de metadados de anexos não substitui políticas de objetos no Storage; buckets, URLs, scanner e fluxos de upload/download permanecem na #117. Auditoria genérica e retenção seguem a #102; auditoria privilegiada segue a #124.
+O contrato de perfis/sessões e as policies RLS de domínio foram implementados e testados no projeto Supabase de desenvolvimento Polyford. Os 16/16 cenários SQL da #101 e o teste separado de criação de conversa direta passaram com transações revertidas. Isso não comprova homologação de produção, autenticação positiva com usuário real nem integração uniforme de todos os handlers/rotas de negócio.
+
+A rota de sessão do Next.js utiliza `authorizeNextRequest`, mas os handlers de negócio ainda precisam integrar a autorização apropriada antes de executar operações protegidas. A RLS de metadados de anexos não substitui políticas de objetos no Storage. O bucket privado e o endpoint server-side de upload PDF/JPEG foram incorporados à `main` pelas entregas #181 e #185; isso não comprova download/URL assinada, scanner antimalware, quotas efetivas, backup dos objetos ou fluxo ponta a ponta de anexos. Esses itens permanecem nas issues de anexos #115/#116/#117 e operação #130, conforme seus escopos. Auditoria genérica e retenção seguem a #102; auditoria privilegiada segue a #124.
 
 ## Evidências e testes
 
