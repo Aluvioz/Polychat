@@ -87,11 +87,32 @@ test("rejects empty files", () => {
   assert.equal(result.status, 400);
 });
 
-test("rejects files larger than the configured 10 MiB limit", () => {
+function makePdfPayload(size) {
+  const bytes = new Uint8Array(size);
+  bytes.fill(0x20);
+  const header = new TextEncoder().encode("%PDF-1.7\\n");
+  const footer = new TextEncoder().encode("\\n%%EOF\\n");
+  bytes.set(header, 0);
+  bytes.set(footer, size - footer.length);
+  return bytes;
+}
+
+test("accepts a PDF exactly at the 10 MB decimal limit", () => {
+  assert.equal(MAX_ATTACHMENT_BYTES, 10_000_000);
   const result = validateAttachment({
-    filename: "large.pdf",
+    filename: "at-limit.pdf",
     mimeType: "application/pdf",
-    bytes: new Uint8Array(MAX_ATTACHMENT_BYTES + 1),
+    bytes: makePdfPayload(MAX_ATTACHMENT_BYTES),
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.sizeBytes, 10_000_000);
+});
+
+test("rejects a PDF one byte above the 10 MB decimal limit", () => {
+  const result = validateAttachment({
+    filename: "above-limit.pdf",
+    mimeType: "application/pdf",
+    bytes: makePdfPayload(MAX_ATTACHMENT_BYTES + 1),
   });
   assert.equal(result.ok, false);
   assert.equal(result.status, 413);
