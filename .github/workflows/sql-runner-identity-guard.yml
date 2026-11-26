@@ -1,0 +1,69 @@
+name: SQL runner identity guard
+on:
+  pull_request:
+    paths:
+      - 'scripts/test-supabase-integration.sh'
+      - 'scripts/test-supabase-runner-guard.py'
+      - '.github/workflows/sql-runner-identity-guard.yml'
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: disposable-test-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGUSER: postgres
+      PGPASSWORD: disposable-test-only
+      POLYCHAT_TEST_DB_CONFIRM: dedicated-test
+      POLYCHAT_TEST_DB_ID: 12345678-1234-1234-1234-123456789abc
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL client if needed
+        run: command -v psql || (sudo apt-get update && sudo apt-get install -y postgresql-client)
+      - name: Shell and simulated guard tests
+        run: |
+          bash -n scripts/test-supabase-integration.sh
+          python3 scripts/test-supabase-runner-guard.py
+      - name: Real PostgreSQL identity gate (disposable service only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PGDATABASE=postgres
+          psql -X -v ON_ERROR_STOP=1 -c 'CREATE DATABASE dedicated_guard_test;'
+          psql -X -v ON_ERROR_STOP=1 -c 'CREATE DATABASE unmarked_guard_test;'
+          psql -X -v ON_ERROR_STOP=1 -c "COMMENT ON DATABASE dedicated_guard_test IS 'polychat-dedicated-test:$POLYCHAT_TEST_DB_ID';"
+          scratch="$(mktemp -d)"
+          trap 'rm -rf "$scratch"' EXIT
+          mkdir -p "$scratch/scripts" "$scratch/supabase/tests"
+          cp scripts/test-supabase-integration.sh "$scratch/scripts/"
+          for file in issue_101_rls.integration.sql issue_101_direct_conversation_creation.sql issue_102_audit_retention.integration.sql issue_102_discard_retention.integration.sql; do
+            printf '%s\n' 'CREATE TABLE IF NOT EXISTS guard_fixture_probe (id int);' 'INSERT INTO guard_fixture_probe VALUES (1);' > "$scratch/supabase/tests/$file"
+          done
+          export PGDATABASE=unmarked_guard_test
+          if bash "$scratch/scripts/test-supabase-integration.sh"; then
+            echo 'FAIL: accepted unmarked database'; exit 1
+          fi
+          test "$(psql -X -Atc "SELECT to_regclass('public.guard_fixture_probe') IS NULL")" = t
+          echo 'PASS: unmarked DB rejected, no fixture'
+          export PGDATABASE=dedicated_guard_test
+          if POLYCHAT_TEST_DB_ID=00000000-0000-0000-0000-000000000001 bash "$scratch/scripts/test-supabase-integration.sh"; then
+            echo 'FAIL: accepted wrong marker'; exit 1
+          fi
+          test "$(psql -X -Atc "SELECT to_regclass('public.guard_fixture_probe') IS NULL")" = t
+          echo 'PASS: mismatched marker rejected, no fixture'
+          bash "$scratch/scripts/test-supabase-integration.sh"
+          test "$(psql -X -Atc 'SELECT count(*) FROM guard_fixture_probe')" = 4
+          echo 'PASS: matching marker allowed four probe fixtures'
