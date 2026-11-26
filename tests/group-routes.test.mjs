@@ -63,6 +63,7 @@ test("POST cria grupo e retorna 201 com cookies renovados", async () => {
   });
   assert.deepEqual(authOptions.allowedRoles, ["ti"]);
   assert.equal(authOptions.preserveSessionOnForbidden, true);
+  assert.equal(authOptions.enforceDeviceCompatibility, true);
   assertRotatedCookies(response);
 });
 

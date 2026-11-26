@@ -92,7 +92,7 @@ export function createGroupRouteHandlers({
         authorization.status === 401
           ? "Autenticação necessária."
           : authorization.status === 403
-            ? "Acesso permitido somente ao perfil TI ativo."
+            ? authorization.message ?? "Acesso permitido somente ao perfil TI ativo."
             : "Não foi possível validar a autorização.",
         authorization.status,
         authorization.session,
