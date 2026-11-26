@@ -2,7 +2,7 @@
 
 **Projeto:** Polychat — aplicação de comunicação interna da FORD  
 **Issue:** [#126 — Definir plano de testes e rastreabilidade requisito-caso](https://github.com/Aluvioz/Polychat/issues/126)  
-**Versão:** 0.5 — 24/11/2026  
+**Versão:** 0.6 — 26/11/2026  
 **Status:** proposta de QA/PO para revisão; não representa homologação nem execução de testes  
 **Responsáveis pela validação:** SQA, desenvolvimento, liderança técnica e PO, conforme o tipo de teste
 
@@ -454,4 +454,82 @@ A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcion
 - 20/11/2026 — v0.2: amplia cenários de anexos e download, corrige a classificação dos testes por dispositivo, completa rastreabilidade de dependências e formaliza autoridade para aceitação de risco residual.
 - 24/11/2026 — v0.3: alinha o plano à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; esclarece que Q-025 trata de compatibilidade/configuração da stack Supabase + Vercel, sem substituição por inferência.
 - 24/11/2026 — v0.4: acrescenta ao catálogo os casos TC-E2E-016 a TC-E2E-020 e corrige a rastreabilidade de RF-023, removendo a referência sem correspondência a TC-UX-002 e mantendo TC-E2E-020.
-- 24/11/2026 — v0.5: acrescenta a correspondência dos cinco critérios de aceite da Issue #126 com as seções e evidências documentais; explicita a distinção entre documentação, execução e aprovação, e consolida as referências à ADR-003 Accepted, ADR-005 Proposed e Q-025.
+- 24/11/2026 — v0.5: acrescenta a correspondência dos cinco critérios de aceite da Issue #126 com as seções e evidências documentais; explicita a distinção entre documentação, execução e aprovação, e consolida as referências à ADR-003 Accepted, ADR-005 Proposed e Q-025.\n- 26/11/2026 — v0.6: acrescenta snapshot de testes versionados, execuções SQL comprovadas em Polyford, estado real de E2E e validação de anexos na PR #185, mantendo separadas as evidências integradas e as ainda em revisão.
+
+
+## 18. Snapshot de implementação e execução — 26/11/2026
+
+Este snapshot atualiza a rastreabilidade do plano com evidências verificadas no repositório e nos ambientes conectados. Não altera RFs, RNFs, critérios de aceite, regras de negócio ou o escopo das issues relacionadas.
+
+### 18.1 Inventário de testes versionado na main
+
+No commit `424612a6847495cb7c487cc2e295e922c0c8f879`, a branch `main` contém 49 declarações de testes em cinco arquivos:
+
+| Arquivo | Casos encontrados | Natureza observada |
+|---|---:|---|
+| `tests/audit-events.test.mjs` | 7 | Testes unitários do writer/validação de eventos |
+| `tests/authorization.test.mjs` | 11 | Middleware isolado com Supabase simulado |
+| `tests/issue-93-a11y.test.mjs` | 13 | Verificações automatizadas dos artefatos de acessibilidade da Issue #93 |
+| `tests/privileged-audit.test.mjs` | 9 | Testes unitários de auditoria privilegiada |
+| `tests/supabase-session.test.mjs` | 9 | Testes de sessão com respostas HTTP simuladas |
+| **Total** | **49** | Inventário de código; não equivale a resultado de execução no commit main |
+
+Os 11 casos de `authorization.test.mjs` continuam sendo evidência unitária simulada. Os demais arquivos ampliam a cobertura unitária e estática, mas não devem ser apresentados como E2E nem como substitutos de integração real com PostgreSQL, Auth ou Storage.
+
+### 18.2 Evidências de integração SQL já executadas
+
+Há quatro scripts SQL versionados na `main`:
+
+- `supabase/tests/issue_101_rls.integration.sql`;
+- `supabase/tests/issue_101_direct_conversation_creation.sql`;
+- `supabase/tests/issue_102_audit_retention.integration.sql`;
+- `supabase/tests/issue_102_discard_retention.integration.sql`.
+
+As evidências documentais das Issues #101 e #102 registram execução no projeto Supabase de desenvolvimento Polyford, com identidades/dados sintéticos e transações revertidas:
+
+- #101: `issue_101_rls_persisted_policy_tests_passed`;
+- #101: `direct_conversation_visible_after_membership=true`;
+- #102: `issue_102_audit_and_hold_tests_passed`;
+- #102: `issue_102_discard_hold_and_audit_tests_passed`.
+
+Referências: [evidências da #101](../security/issue-101-rls-evidence.md) e [evidências da #102](../security/issue-102-audit-retention-evidence.md).
+
+Essas execuções comprovam cenários específicos de RLS e auditoria no banco de desenvolvimento. Não comprovam a execução integral da matriz RF/RNF deste plano nem a existência de um projeto Supabase isolado e dedicado exclusivamente a testes. A cobertura restante deve continuar marcada conforme os casos efetivamente executados.
+
+### 18.3 Situação de E2E e disponibilidade funcional
+
+Na `main` consultada, a aplicação contém a página institucional, a página de login e rotas de API de sessão/autenticação. Não foram encontrados fluxos de interface implementados para conversas, grupos, envio de mensagens, anexos ou console administrativo TI.
+
+Consequências para este plano:
+
+- Os cenários E2E correspondentes a funcionalidades ainda inexistentes permanecem bloqueados por implementação.
+- Não se deve criar testes que simulem ou finjam a existência desses fluxos.
+- A PR #184 está aberta em Draft e vinculada à preparação de login/acessibilidade da #129; enquanto não integrada, não conta como cobertura E2E incorporada à `main` nem substitui os cenários da #128.
+- A #128 somente poderá avançar para a cobertura integral solicitada quando as jornadas reais por perfil estiverem disponíveis em Preview e houver fixtures isoladas.
+
+### 18.4 Evidência adicional de validação de anexos em PR
+
+A [PR #185](https://github.com/Aluvioz/Polychat/pull/185), ainda aberta em Draft e dependente da infraestrutura da #181, adiciona dez testes unitários de assinatura PDF/JPEG.
+
+No commit `608f162e5f67eb1f30fd6369fc169fc604681de8`, o workflow CI concluiu com:
+
+- `npm test`: 59 testes aprovados, zero falhas;
+- ESLint: aprovado;
+- TypeScript: aprovado;
+- build Next.js: aprovado;
+- smoke test: aprovado.
+
+Esta evidência pertence ao head da PR #185, não à `main`. Ela não comprova upload real no Storage, scanner antimalware, download autorizado ou execução E2E.
+
+### 18.5 Pendências de validação preservadas
+
+Permanecem sem comprovação integral neste plano:
+
+- suíte E2E dos fluxos de conversas, grupos, anexos e administração TI;
+- execução da matriz completa de autorização em ambiente de teste isolado;
+- compatibilidade por todos os dispositivos/navegadores da baseline;
+- testes de desempenho/capacidade com metas aprovadas;
+- backup e restauração de banco e anexos, incluindo medição de RPO/RTO;
+- revisão independente de SQA e Tech Lead do próprio plano e das evidências correspondentes.
+
+A atualização não declara a Issue #126 concluída e não altera seus critérios originais. O plano continua distinguindo casos especificados, testes implementados, testes executados e testes aprovados.
