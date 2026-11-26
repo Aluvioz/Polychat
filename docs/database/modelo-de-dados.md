@@ -543,7 +543,7 @@ A implementação técnica dos mecanismos de retenção não altera nem reduz as
 
 | Elemento do modelo | Requisitos / regras | Issues e decisões relacionadas |
 |---|---|---|
-| profiles | RF-001 a RF-004; RN-001 a RN-005 | #99, #103, #104, #105; ADR-004; Q-005 |
+| profiles | RF-001, RF-002, RF-003, RF-004; RN-001, RN-002, RN-003, RN-004, RN-005 | #99, #103, #104, #105; ADR-004; Q-005 |
 | conversations | RF-005, RF-007 a RF-010; RN-006, RN-007, RN-010 | #99, #107, #109, #110; PR #165 (schema) e PR #172 (policies RLS); decisões de unicidade e ciclo de vida nesta versão |
 | memberships | RF-005, RF-006, RF-008, RF-010; RN-007 | #99, #100, #101, #124; PR #165 (schema), PR #172 (RLS) e instrumentação privilegiada coordenada com #124; decisões de remoção/reentrada nesta versão |
 | messages | RF-008 a RF-010, RF-019, RF-020; RN-006, RN-007, RN-014 | #99, #109, #110, #111; PR #165 (schema), PR #172 (RLS) e PR #173 (auditoria das ações administrativas de edição/exclusão lógica); ADR-007; mensagem com anexo e recibos de leitura |
