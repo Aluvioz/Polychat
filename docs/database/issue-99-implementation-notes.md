@@ -57,9 +57,9 @@ Consulta realizada ao projeto Supabase:
 - Estado consultado: `ACTIVE_HEALTHY`.
 - PostgreSQL: `17.11.0.019` (engine PostgreSQL 17).
 
-### 3.1 Histórico remoto de migrations
+### 3.1 Histórico remoto de migrations — reconciliado em 26/11/2026
 
-A consulta ao histórico remoto retornou:
+A consulta direta ao histórico remoto retornou as 17 versões abaixo, antes da migration de Storage da #115:
 
 | Versão remota | Nome |
 |---|---|
@@ -67,17 +67,26 @@ A consulta ao histórico remoto retornou:
 | `20261124191114` | `issue_99_initial_domain_schema` |
 | `20261124191131` | `issue_99_integrity_and_configuration` |
 | `20261124210245` | `issue_102_audit_events` |
+| `20261125222249` | `issue_124_privileged_audit` |
+| `20261125231700` | `issue_101_domain_rls` |
+| `20261125232036` | `issue_101_profile_privilege_hardening` |
+| `20261125232106` | `issue_101_direct_conversation_ids` |
+| `20261125232432` | `issue_102_audit_retention_controls` |
+| `20261125232535` | `issue_102_remove_unverified_config_triggers` |
+| `20261125232700` | `issue_102_preserve_held_resource_audit_events` |
+| `20261125233102` | `issue_102_discard_audit_event_invoker` |
+| `20261125233227` | `issue_99_fk_covering_indexes` |
+| `20261125233344` | `issue_102_serialize_retention_discard` |
+| `20261125233603` | `issue_102_lock_event_and_resource_holds` |
+| `20261125233806` | `issue_102_audit_index_and_policy_tuning` |
+| `20261125234105` | `issue_101_hide_ti_check_definer` |
 
-As duas migrations de domínio da #99 estão presentes no histórico remoto e versionadas na `main` por meio da PR #165.
+A branch de reconciliação alinha os cinco nomes locais que tinham prefixos diferentes aos identificadores remotos exatos, preservando integralmente o conteúdo SQL. Também remove a colisão local em que as migrations #124 e #99 usavam o mesmo prefixo `202611250001`.
 
-**Divergência de identificadores ainda não reconciliada:** os identificadores remotos não correspondem literalmente aos prefixos dos arquivos SQL no Git:
-- Profiles: arquivo `202611160001`; remoto `20261124191059`.
-- Schema inicial #99: arquivo `202611240001`; remoto `20261124191114`.
-- Integridade/configuração #99: arquivo `202611240002`; remoto `20261124191131`.
-- Auditoria #102: arquivo `202611240003`; remoto `20261124210245`.
+A versão remota `20261124210245` foi aplicada historicamente por uma branch da PR #166, que não foi merged. Seu conteúdo SQL original não está disponível na `main`. Para que o histórico local possa representar a versão remota sem reaplicar DDL, foi adicionado um arquivo de ledger sem operações SQL nessa versão. A definição canônica e reproduzível de `audit_events` está em `20261125232432_issue_102_audit_retention_controls.sql`, que usa `CREATE TABLE IF NOT EXISTS` e constrói a estrutura completa em instalação limpa.
 
-A diferença foi registrada, não corrigida. Não se deve reaplicar migrations já executadas nem alterar o histórico remoto sem procedimento explícito e revisão própria.
-
+**Não foram executados** `migration repair`, `db reset` ou `db push`. A reconciliação dos arquivos não altera o histórico remoto e não reaplica migrations já executadas. Antes de integrar, CI/SQA devem confirmar que uma instalação limpa aplica a sequência local e que `supabase migration list` não apresenta versões divergentes.
+ 
 ### 3.2 Tabelas, colunas, relações e RLS observadas
 
 A consulta de leitura ao schema `public` retornou as seguintes tabelas:
@@ -102,9 +111,7 @@ As policies de domínio e configuração permanecem no escopo da Issue #101. A p
 
 ### 3.3 Situação específica de audit_events
 
-A tabela `public.audit_events` e a migration remota `issue_102_audit_events` já aparecem no Polyford. Entretanto, a implementação correspondente está na [PR #166](https://github.com/Aluvioz/Polychat/pull/166), que permanece aberta e em Draft na última consulta, vinculada à Issue #102.
-
-A PR #166 ainda não foi integrada à `main`. Portanto, a presença da tabela no banco de desenvolvimento não deve ser apresentada como prova de que a migration de auditoria já está integrada e versionada na branch principal. Essa diferença precisa ser resolvida na sequência de integração da #102, sem duplicar a migration ou misturar o escopo das issues.
+A tabela `public.audit_events` e a versão remota histórica `20261124210245` permanecem no Polyford. A PR #166 foi encerrada sem merge; por isso, seu conteúdo SQL original não foi incorporado à `main`. A definição completa e reproduzível de `audit_events` está versionada na migration `20261125232432_issue_102_audit_retention_controls.sql`, com criação idempotente. A branch de reconciliação adiciona um arquivo de ledger sem DDL para representar a versão histórica remota, sem duplicar a criação da tabela.
 
 ## 4. Testes, CI e limites das evidências
 
@@ -120,13 +127,13 @@ A PR #166 ainda não foi integrada à `main`. Portanto, a presença da tabela no
 - Não se declara nesta nota que a autorização de domínio/configuração está concluída: policies e enforcement pertencem à #101.
 - A gravação de mensagem composta somente por anexos depende de mensagem e anexos serem persistidos na mesma transação/RPC. A migration contém a invariância diferida, mas a integração funcional do fluxo ainda depende das issues de produto correspondentes.
 - `profiles.username` permanece nullable; não foi inventado preenchimento para contas existentes.
-- A presença de `audit_events` no Supabase não conclui a integração da migration na `main`, nem a implementação funcional de auditoria da #102.
+- A estrutura de `audit_events` está reproduzível a partir da migration integrada de retenção; isso não conclui os callsites funcionais de auditoria que permanecem no escopo da #102.
 - A ADR-005 permanece Proposed e a Q-025 permanece aberta para avaliação da compatibilidade operacional da stack com as restrições FORD.
 
 ## 5. Relação com outras issues — sem transferência de escopo
 
 - **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A RLS habilitada na modelagem não substitui essa entrega.
-- **#102:** auditoria, retenção e descarte; a migration de `audit_events` está na PR #166 ainda aberta em Draft.
+- **#102:** auditoria, retenção e descarte; a definição canônica de `audit_events` está na migration integrada `20261125232432`; a versão remota histórica da PR #166 é representada por arquivo de ledger sem DDL.
 - **#105:** fluxos de perfis/contas e operações associadas.
 - **#111:** requisitos de leitura/não lidas refletidos por `message_reads`.
 - **#117:** armazenamento privado e fluxos de anexos.
@@ -138,37 +145,27 @@ Esta separação descreve dependências e limites já registrados no projeto; n�
 
 Esta atualização corrige o registro anterior que ainda descrevia a PR #165 como não integrada e a aprovação SQA como pendente. O estado correto consultado é: PR #165 merged, Tech Lead aprovado e SQA aprovado.
 
-A PR #160 e a PR #166 continuam separadas, abertas e em Draft na última consulta. A divergência de identificadores do histórico remoto também continua pendente.
+A PR #160 continua separada, aberta e em Draft na última consulta. A PR #166 foi encerrada sem merge; a migration histórica remota é reconciliada nesta branch por arquivo de ledger, enquanto a definição canônica permanece na migration integrada de #102.
 
 **Conclusão desta nota:** há evidência documentada de migrations de domínio integradas e aplicadas, schema presente no Supabase de desenvolvimento e revisão técnica/SQA aprovada para a PR #165. Isso atualiza a rastreabilidade da Issue #99, mas não declara todos os critérios originais satisfeitos nem autoriza seu fechamento.
 
 Nenhuma descrição, critério, estado, assignee ou label da Issue #99 foi alterado.
 
-## Complemento — cobertura de índices de FKs (25/11/2026)
+## Complemento — cobertura de índices de FKs e verificação persistente (26/11/2026)
 
-O Supabase Performance Advisor identificou seis chaves estrangeiras sem índice de cobertura:
-- `conversations.direct_user_b_id`;
-- `memberships.added_by_profile_id`;
-- `memberships.ended_by_profile_id`;
-- `messages.edited_by_profile_id`;
-- `messages.deleted_by_profile_id`;
-- `security_alerts.reviewed_by_profile_id`.
+A PR #168 foi integrada à `main` e adicionou a migration aditiva dos seis índices de cobertura. A verificação direta em 26/11/2026 consultou `pg_indexes` no projeto Polyford e confirmou que os seis índices estão **persistidos**:
 
-Esta PR acrescenta a migration aditiva `202611250001_issue_99_fk_covering_indexes.sql`, contendo somente os seis índices correspondentes. A migration foi executada no Polyford dentro da transação de teste e revertida com `ROLLBACK`; a execução verificou os índices durante a transação, mas não os deixou persistidos no banco. A migration ainda aguarda revisão e integração.
+| Tabela | Coluna | Índice observado |
+|---|---|---|
+| `conversations` | `direct_user_b_id` | `conversations_direct_user_b_idx` |
+| `memberships` | `added_by_profile_id` | `memberships_added_by_profile_idx` |
+| `memberships` | `ended_by_profile_id` | `memberships_ended_by_profile_idx` |
+| `messages` | `edited_by_profile_id` | `messages_edited_by_profile_idx` |
+| `messages` | `deleted_by_profile_id` | `messages_deleted_by_profile_idx` |
+| `security_alerts` | `reviewed_by_profile_id` | `security_alerts_reviewed_by_profile_idx` |
 
-### Evidências de teste e CI
+A consulta de histórico remoto confirma a versão `20261125233227 — issue_99_fk_covering_indexes`. Portanto, a afirmação anterior de que os índices não estavam persistidos descrevia o teste transacional com ROLLBACK, não o estado atual consultado. A documentação é atualizada para distinguir essas duas evidências históricas.
 
-- O teste SQL transacional reportado nesta PR cobriu as invariantes de conversa direta, membership, FKs, metadados de edição/exclusão, mensagem com anexos, constraints diferidas, limites de anexos, MIME/tamanho, message_reads, revisão de alertas e configurações. Os registros temporários e a DDL foram revertidos com `ROLLBACK`.
-- A validação de RLS reportada nesta PR observou ausência de leitura por `anon` e `authenticated` e rejeição de `INSERT` autenticado com SQLSTATE `42501`; isso não substitui a implementação das policies nas issues responsáveis.
-- Os workflows GitHub Actions associados ao commit `942c5465e90236ea6ca668a913f0cf9a6dfda787` (#332 e #402) concluíram com `success`.
-- O head documental anterior `99ab9cc100dd8f5a95e922056e39a33f065c9618` não tinha workflows associados na consulta registrada. A atualização desta seção gera novo commit e exige confirmação dos checks no head resultante.
-- O Preview Vercel registrado para o head anterior estava `Ready`; o novo commit precisa gerar/confirmar seu próprio Preview.
+O banco permanece sem linhas nas tabelas de domínio no momento da consulta. Por isso, a presença física dos índices está comprovada, mas não há carga de produção para avaliar seletividade ou ganho de desempenho. Os avisos de índice não utilizado não justificam remoção.
 
-### Limites e decisão
-
-- Os seis índices não foram aplicados persistentemente ao Supabase.
-- A divergência entre os identificadores Git e o histórico remoto de migrations continua sem reconciliação byte a byte; nenhum repair, reset ou reaplicação foi executado.
-- Os avisos de índices não utilizados não foram tratados como justificativa para remoção, pois as tabelas verificadas estavam vazias e não há carga representativa.
-- Esta alteração não implementa policies RLS, fluxos de mensagens/anexos, auditoria/retenção ou operações de outras issues.
-- A Issue #99 permanece aberta: a migration aditiva ainda requer revisão/integração e aplicação pelo procedimento autorizado, além da validação dos fluxos transacionais que dependem das issues funcionais correspondentes.
-
+A Issue #99 continua sem declaração de fechamento nesta nota. A validação de estrutura e índices não substitui a validação dos fluxos funcionais de mensagens/anexos e as responsabilidades das issues relacionadas.
