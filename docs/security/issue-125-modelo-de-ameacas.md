@@ -354,7 +354,7 @@ Os requisitos funcionais abaixo já foram definidos na baseline POLY-REQ-001 v0.
 
 **Regras funcionais e controles obrigatórios**
 
-- Aceitar somente arquivos PDF e JPEG, com até 5 anexos por mensagem.
+- Aceitar somente arquivos PDF e JPEG.
 - Aplicar o limite funcional de **10 MiB (10.485.760 bytes)** por arquivo, conforme retificação do PO em 26/11/2026 registrada no POLY-STO-001 v0.3, seção 16.2, e até cinco anexos por mensagem. A formulação histórica “10 MB” não representa limite decimal de 10.000.000 bytes. Bucket #181 e endpoint #185 já aplicam 10 MiB; permanecem pendentes os testes de fronteira e a comprovação do fluxo real.
 - Validar o conteúdo no servidor, incluindo assinatura e estrutura do arquivo; extensão e MIME declarados não são suficientes isoladamente. PDF protegido por senha deve ser recusado.
 - Permitir seleção de JPEG existente na galeria, sem captura pela câmera, e remover metadados EXIF/GPS antes da disponibilização.
