@@ -249,7 +249,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 **Regras funcionais:**
 
 - Formatos aceitos: somente PDF e JPEG.
-- Tamanho máximo funcional: 10 MB decimais, equivalentes a **10.000.000 bytes**, por arquivo; até cinco arquivos por mensagem.
+- Tamanho máximo funcional: **10 MiB (10.485.760 bytes)** por arquivo; até cinco arquivos por mensagem.
 - O TI administra limites individuais de armazenamento e capacidade total. Não existe quota específica por conversa.
 - PDF protegido por senha é recusado.
 - A validação considera o conteúdo real, não apenas a extensão ou o MIME informado pelo cliente.
@@ -261,9 +261,9 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 - TI pode baixar anexos durante investigações, com registro em auditoria.
 - Não há exclusão automática de anexos enquanto o sistema operar; exclusões seguem autorização do TI e a política de retenção.
 
-**Precisão da unidade — decisão do PO nesta revisão (26/11/2026):** para eliminar a ambiguidade da expressão aprovada “10 MB”, o limite funcional fica formalizado no sentido decimal do SI: **10 MB = 10.000.000 bytes**. `10 MiB` corresponde a **10.485.760 bytes** e não é equivalente a 10 MB. Os termos não devem ser usados como sinônimos.
+**Retificação da unidade — decisão vigente do PO (26/11/2026):** a expressão originalmente aprovada “até 10 MB por arquivo” deve ser interpretada, no contexto do Polychat, como limite de **10 MiB (10.485.760 bytes)**. A interpretação decimal de 10.000.000 bytes registrada em complemento anterior foi equivocada e fica substituída por esta retificação. `10 MB` (decimal) e `10 MiB` não são unidades equivalentes; para requisitos, implementação e testes, deve prevalecer o valor expresso em bytes: **10.485.760**.
 
-**Divergência da implementação observada:** a migration da PR #165 define `attachments.size_bytes <= 10.485.760`; a PR #181 configurou `storage.buckets.file_size_limit = 10.485.760`; e o endpoint da PR #185 utiliza `MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024`, todos equivalentes a 10 MiB (10.485.760 bytes). Portanto, banco, bucket e handler permitem atualmente até 485.760 bytes a mais que o limite funcional formalizado (aproximadamente 4,86% acima do máximo). Os testes da PR #185 rejeitam arquivos acima de 10 MiB, mas não demonstram a fronteira decimal de 10.000.000 bytes. A implementação não deve ser considerada aderente até que a constraint do banco, o limite do bucket e a constante/validação do endpoint sejam ajustados para **10.000.000 bytes**, com testes de fronteira positivos e negativos. Essa correção pertence às Issues #115/#117; esta atualização documental não altera migrations, código ou ambiente.
+**Conformidade do limite técnico confirmada em 26/11/2026:** a migration da PR #165 define `attachments.size_bytes <= 10.485.760`; a PR #181 configura `storage.buckets.file_size_limit = 10.485.760`; e o endpoint da PR #185 utiliza `MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024`. Os três componentes aplicam o limite funcional corrigido de **10 MiB (10.485.760 bytes)**. A inspeção somente de leitura no projeto Supabase Polyford também confirmou a constraint remota `public.attachments.size_bytes <= 10.485.760` e o bucket privado `attachments` com `file_size_limit = 10.485.760` e allowlist PDF/JPEG. Não há divergência de limite entre a regra funcional corrigida e a configuração verificada. Permanecem pendentes as demais etapas do ciclo de anexos, indicadas nas Issues #115/#117; esta retificação documental não modifica migrations, código ou configuração remota.
 
 ### 5.6 audit_events — eventos de auditoria
 
@@ -584,11 +584,13 @@ As decisões acima são decisões de produto quanto ao comportamento esperado. E
 
 A Q-025 continua aberta para documentar e tratar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados por terceiros. A stack não deve ser considerada obsoleta ou substituída por inferência; a análise deve registrar os impactos, riscos e encaminhamentos sem alterar as regras funcionais aprovadas.
 
-### 11.2 Precisão da unidade do limite de anexos — complemento do PO em 26/11/2026
+### 11.2 Retificação do limite de anexos — decisão corrigida do PO em 26/11/2026
 
-O parecer original de 20/11/2026 confirmou a regra de produto como “até 10 MB por arquivo”, sem especificar naquele registro a base numérica da unidade. Para eliminar a ambiguidade de implementação, o PO complementa a regra nesta revisão: **10 MB deve ser interpretado em unidade decimal, isto é, 10.000.000 bytes**. `10 MiB` corresponde a 10.485.760 bytes e não é equivalente ao limite aprovado.
+O parecer original de 20/11/2026 confirmou a regra de produto como “até 10 MB por arquivo”, sem explicitar a base numérica da unidade. O complemento de 26/11/2026 interpretou essa expressão como 10.000.000 bytes (MB decimal), mas essa interpretação foi um equívoco do PO e fica expressamente substituída por esta retificação.
 
-Esta precisão não altera formatos permitidos, quantidade de anexos por mensagem ou regras de quota; apenas explicita a unidade do limite já definido. A diferença observada na migration da PR #165, no bucket provisionado pela PR #181 e no endpoint da PR #185 permanece como desvio técnico a corrigir nas Issues #115/#117. Este complemento não aprova schema físico, migration, configuração operacional ou implementação de upload.
+A decisão funcional correta é permitir arquivos de até **10 MiB (10.485.760 bytes)**, por arquivo, mantendo o máximo de cinco anexos por mensagem. Essa interpretação corresponde ao limite já adotado na constraint de `public.attachments`, no bucket privado `attachments` e no endpoint inicial de upload da PR #185, além de ter sido confirmada por inspeção somente de leitura no projeto Supabase Polyford em 26/11/2026.
+
+Esta retificação corrige a interpretação da unidade, sem alterar formatos permitidos, quantidade de anexos por mensagem ou regras de quota, e não modifica a baseline `POLY-REQ-001 v0.5`. Ela não equivale à aprovação do schema físico, de migrations, de configuração operacional ou da conclusão do ciclo de anexos.
 
 ## 12. Parecer do Product Owner — 20/11/2026
 
