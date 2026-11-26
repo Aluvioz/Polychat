@@ -34,7 +34,19 @@ test("opção de compatibilidade bloqueia User em computador após validar a ses
   assert.equal(result.status, 403);
   assert.equal(result.reason, "DEVICE_NOT_SUPPORTED");
   assert.equal(result.message, "só pode ser usado em celular");
-  assert.equal(result.session, null);
+  assert.equal(result.session.user.role, "user");
+  assert.equal(result.session.refreshed, true);
+  assert.equal(result.session.refreshToken, "rotated-refresh");
+});
+
+test("preserva sessão renovada em negação por incompatibilidade de dispositivo", async () => {
+  const result = await authorizeNextRequest(request(userAgent.desktop), {
+    validate: validateUser,
+    enforceDeviceCompatibility: true,
+  });
+  assert.equal(result.authorized, false);
+  assert.equal(result.session.refreshed, true);
+  assert.equal(result.session.refreshToken, "rotated-refresh");
 });
 
 test("opção de compatibilidade permite User em celular", async () => {

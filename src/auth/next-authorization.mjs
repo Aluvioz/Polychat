@@ -15,6 +15,7 @@ export async function authorizeNextRequest(
     allowedRoles = ["user", "ti"],
     validate = validateSession,
     enforceDeviceCompatibility = false,
+    preserveSessionOnForbidden = false,
   } = {},
 ) {
   const roles = normalizeAllowedRoles(allowedRoles);
@@ -23,6 +24,9 @@ export async function authorizeNextRequest(
   }
   if (typeof enforceDeviceCompatibility !== "boolean") {
     throw new TypeError("A opção de compatibilidade de dispositivo deve ser booleana.");
+  }
+  if (typeof preserveSessionOnForbidden !== "boolean") {
+    throw new TypeError("A opção de preservação de sessão deve ser booleana.");
   }
 
   try {
@@ -36,7 +40,11 @@ export async function authorizeNextRequest(
     }
 
     if (!isRoleAllowed(session.user?.role, roles)) {
-      return { authorized: false, status: 403, session: null };
+      return {
+        authorized: false,
+        status: 403,
+        session: preserveSessionOnForbidden ? session : null,
+      };
     }
 
     if (enforceDeviceCompatibility) {
