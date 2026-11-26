@@ -7,7 +7,7 @@
 
 ## Contexto
 
-A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite de 10 MB por arquivo e até 5 arquivos por mensagem. O TI define limites individuais e a capacidade total de armazenamento; não existe quota por conversa. PDF protegido por senha não é aceito. JPEG deve ser selecionado da galeria, sem captura pela câmera, e os metadados EXIF/GPS devem ser removidos.
+A FORD v2 confirma anexos exclusivamente em PDF e JPEG, com limite funcional de **10 MiB (10.485.760 bytes) por arquivo** e até 5 arquivos por mensagem, conforme retificação do PO em 26/11/2026 registrada no POLY-DATA-001 v0.5, seção 11.2, e detalhada no POLY-STO-001 v0.3, seção 16.2. O TI define limites individuais e a capacidade total de armazenamento; não existe quota por conversa. PDF protegido por senha não é aceito. JPEG deve ser selecionado da galeria, sem captura pela câmera, e os metadados EXIF/GPS devem ser removidos.
 
 A análise antimalware deve ocorrer dentro da infraestrutura da FORD. Se o scanner falhar, estiver indisponível ou retornar resultado inconclusivo, o anexo permanece bloqueado; o envio de texto continua funcionando. O TI pode liberar qualquer arquivo e também baixar anexos durante investigações. Usuários não podem contornar a análise.
 
@@ -42,7 +42,7 @@ A aprovação é da direção arquitetural e do modelo operacional. Bucket, hand
 ### Regras funcionais consolidadas
 
 - Aceitar somente PDF e JPEG.
-- Limitar cada arquivo a 10 MB e cada mensagem a, no máximo, 5 arquivos.
+- Limitar cada arquivo a **10 MiB (10.485.760 bytes)** e cada mensagem a, no máximo, 5 arquivos.
 - Aplicar quotas individuais e capacidade total configuradas pelo TI, sem limite específico por conversa.
 - Rejeitar PDF protegido por senha.
 - Permitir seleção de JPEG existente na galeria; a aplicação não oferece captura de foto pela câmera.
@@ -123,7 +123,7 @@ A fotografia abaixo reflete as entregas integradas à main pelas PRs #181 e #185
 - As verificações SQL no Polyford confirmaram a configuração do bucket, mas não houve upload/download real de arquivo no ambiente consultado; a verificação posterior registrou zero objetos em storage.objects.
 - A existência do bucket, da rota e dos testes unitários não comprova integração ponta a ponta com o fluxo de criação de mensagem, análise antimalware, leitura/download ou experiência completa do usuário.
 - A Issue #115 permanece aberta; as PRs #181 e #185 entregam, respectivamente, a fundação privada e uma camada inicial de upload, sem declarar encerrados todos os critérios da issue.
-- O provisionamento atual e o endpoint aplicam 10 MiB (10.485.760 bytes), enquanto a regra funcional está expressa como 10 MB. Se o requisito usar MB decimal (10.000.000 bytes), a configuração atual permite 485.760 bytes adicionais. PO, Desenvolvimento e SQA devem confirmar a unidade pretendida e harmonizar o limite efetivo antes do aceite; esta ADR não altera unilateralmente o requisito de produto.
+- A regra funcional retificada pelo PO em 26/11/2026 estabelece **10 MiB (10.485.760 bytes)** por arquivo. O bucket da PR #181 e o endpoint da PR #185 aplicam esse mesmo limite; não há pendência de decisão sobre a unidade. Permanecem necessários testes de fronteira (10.485.760 bytes permitido e 10.485.761 bytes rejeitado) e evidência de aplicação no fluxo integrado.
 
 As evidências de implementação estão registradas em docs/storage/issue-115-private-storage-evidence.md, docs/storage/issue-115-upload-implementation.md e docs/infra/polyford-integration-validation-2026-11-26.md.
 
@@ -136,7 +136,7 @@ As entregas devem permanecer rastreadas nas issues de implementação, sem reabr
 - Completar a validação de PDF/JPEG além da checagem de extensão, MIME declarado e assinatura binária, incluindo validação estrutural compatível com os requisitos.
 - Executar testes de integração do endpoint com upload real no ambiente de desenvolvimento/homologação, verificar objeto e metadados, falhas e limpeza compensatória e produzir evidências reproduzíveis.
 - Integrar o upload ao fluxo de criação de mensagens com anexos, preservando consistência entre mensagem, metadados e objeto no Storage; os fluxos atualmente existentes não comprovam transação ponta a ponta.
-- Confirmar que o limite efetivo em bytes corresponde ao requisito de 10 MB, harmonizando a diferença documental entre MB e MiB antes do aceite.
+- Implementar e registrar testes de fronteira do limite retificado: 10.485.760 bytes permitido e 10.485.761 bytes rejeitado; comprovar o comportamento no fluxo integrado de upload.
 
 ### Issue #116 — download autorizado e links temporários
 
