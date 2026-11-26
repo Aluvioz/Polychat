@@ -7,7 +7,8 @@
 - **Referências técnicas:** [ADR-006 — Autorização e RLS](adr/ADR-006-autorizacao-rls.md), Issues #99, #101, #102 e #105.
 - **Estado do parecer do PO:** **APROVADA NO ESCOPO FUNCIONAL** para a baseline v0.5, conforme parecer registrado na Issue #100 em 20/11/2026.
 - **Limites da aprovação:** não equivale a aprovação técnica de arquitetura/implementação, aceite de Segurança/Privacidade, homologação institucional da FORD ou aprovação independente do SQA.
-- **Data desta revisão:** 20/11/2026.
+- **Data da aprovação funcional do PO:** 20/11/2026.
+- **Data da harmonização documental:** 25/11/2026.
 
 > Esta matriz registra quem pode executar cada operação e sob quais condições de produto. A aprovação funcional do PO não comprova que os controles estejam implementados. A modelagem física pertence à #99; a implementação e os testes de enforcement/RLS de domínio pertencem à #101; a implementação de auditoria e retenção pertence à #102. Supabase + Vercel permanece como stack tecnológica adotada e obrigatória do Polychat, conforme ADR-003 — Accepted. A Q-025 avalia a configuração e o modelo de utilização dessa stack frente às restrições de infraestrutura, hospedagem, armazenamento, processamento, localização, acesso e operação da FORD, sem alterar a decisão arquitetural por inferência nem declarar homologação de produção.
 
