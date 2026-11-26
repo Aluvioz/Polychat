@@ -44,7 +44,7 @@ A aprovação da PR #165 cobre o conteúdo nela revisado. Não equivale à concl
 
 O parecer complementar do PO de 20/11/2026 ratificou o escopo conceitual para a baseline POLY-REQ-001 v0.5, incluindo as entidades centrais, `security_alerts`, `message_reads` e o inventário delimitado de configurações.
 
-A atualização do documento `docs/database/modelo-de-dados.md` está proposta na [PR #160](https://github.com/Aluvioz/Polychat/pull/160), que permanece aberta e em Draft na última consulta. A PR informa tratar exclusivamente da atualização documental para a baseline v0.5. A versão atualizada ainda depende de revisão e integração; esta nota não altera a PR #160 nem substitui sua revisão.
+A atualização do documento `docs/database/modelo-de-dados.md` está proposta na [PR #160](https://github.com/Aluvioz/Polychat/pull/160), aberta e em Draft na última consulta de 26/11/2026. A PR trata exclusivamente da atualização documental para a baseline v0.5. A versão atualizada ainda depende de revisão e integração; esta nota não altera a PR #160 nem substitui sua revisão.
 
 A aprovação funcional do PO não deve ser confundida com aprovação técnica do DER físico, DDL, migrations, constraints, índices, triggers ou RLS. A revisão técnica e SQA do schema físico foi registrada separadamente na PR #165.
 
@@ -59,7 +59,7 @@ Consulta realizada ao projeto Supabase:
 
 ### 3.1 Histórico remoto de migrations — reconciliado em 26/11/2026
 
-A consulta direta ao histórico remoto retornou as 17 versões abaixo, antes da migration de Storage da #115:
+A consulta inicial abaixo registrou as 17 versões remotas existentes antes da aplicação da migration de Storage da #115. Trata-se de uma fotografia histórica, complementada pela atualização pós-merge logo após a tabela:
 
 | Versão remota | Nome |
 |---|---|
@@ -81,11 +81,11 @@ A consulta direta ao histórico remoto retornou as 17 versões abaixo, antes da 
 | `20261125233806` | `issue_102_audit_index_and_policy_tuning` |
 | `20261125234105` | `issue_101_hide_ti_check_definer` |
 
-A branch de reconciliação alinha os cinco nomes locais que tinham prefixos diferentes aos identificadores remotos exatos, preservando integralmente o conteúdo SQL. Também remove a colisão local em que as migrations #124 e #99 usavam o mesmo prefixo `202611250001`.
+A PR #180 foi integrada à `main` e alinhou os cinco nomes locais que tinham prefixos diferentes aos identificadores remotos exatos, preservando integralmente o conteúdo SQL. Também removeu a colisão local em que as migrations #124 e #99 usavam o mesmo prefixo `202611250001`.
 
 A versão remota `20261124210245` foi aplicada historicamente por uma branch da PR #166, que não foi merged. Seu conteúdo SQL original não está disponível na `main`. Para que o histórico local possa representar a versão remota sem reaplicar DDL, foi adicionado um arquivo de ledger sem operações SQL nessa versão. A definição canônica e reproduzível de `audit_events` está em `20261125232432_issue_102_audit_retention_controls.sql`, que usa `CREATE TABLE IF NOT EXISTS` e constrói a estrutura completa em instalação limpa.
 
-**Não foram executados** `migration repair`, `db reset` ou `db push`. A reconciliação dos arquivos não altera o histórico remoto e não reaplica migrations já executadas. Antes de integrar, CI/SQA devem confirmar que uma instalação limpa aplica a sequência local e que `supabase migration list` não apresenta versões divergentes.
+Nenhum `db push`, `migration repair` ou reset foi executado no Polyford remoto. A reconciliação dos arquivos não alterou o histórico remoto nem reaplicou migrations já executadas. Separadamente, a instalação limpa foi validada somente em PostgreSQL local descartável pelo workflow bem-sucedido da PR #180; a validação local não deve ser confundida com uma operação no ambiente remoto.
  
 ### 3.2 Tabelas, colunas, relações e RLS observadas
 
@@ -107,7 +107,7 @@ A consulta de leitura ao schema `public` retornou as seguintes tabelas:
 
 A listagem detalhada confirmou RLS habilitada nas onze tabelas acima, além das chaves primárias e relações/FKs indicadas. A consulta retornou zero linhas em cada tabela no momento da verificação; isso descreve o estado observado, não é teste de fluxo de negócio.
 
-As policies de domínio e configuração permanecem no escopo da Issue #101. A presença de RLS habilitada não significa que as policies de autorização da aplicação estejam concluídas.
+As policies de domínio e configuração foram integradas posteriormente pela PR #172, no escopo da Issue #101. A RLS habilitada e as policies aprovadas não significam que todos os handlers e fluxos funcionais da aplicação estejam concluídos.
 
 ### 3.3 Situação específica de audit_events
 
@@ -132,7 +132,7 @@ A tabela `public.audit_events` e a versão remota histórica `20261124210245` pe
 
 ## 5. Relação com outras issues — sem transferência de escopo
 
-- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A RLS habilitada na modelagem não substitui essa entrega.
+- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A PR #172 integrou policies RLS e hardening de privilégios; a evidência registra 16/16 cenários aprovados. Não reabrir como pendência a implementação básica de policies, mas manter a validação dos handlers e fluxos reais que dependem delas.
 - **#102:** auditoria, retenção e descarte; a definição canônica de `audit_events` está na migration integrada `20261125232432`; a versão remota histórica da PR #166 é representada por arquivo de ledger sem DDL.
 - **#105:** fluxos de perfis/contas e operações associadas.
 - **#111:** requisitos de leitura/não lidas refletidos por `message_reads`.
@@ -145,7 +145,7 @@ Esta separação descreve dependências e limites já registrados no projeto; n�
 
 Esta atualização corrige o registro anterior que ainda descrevia a PR #165 como não integrada e a aprovação SQA como pendente. O estado correto consultado é: PR #165 merged, Tech Lead aprovado e SQA aprovado.
 
-A PR #160 continua separada, aberta e em Draft na última consulta. A PR #166 foi encerrada sem merge; a migration histórica remota é reconciliada nesta branch por arquivo de ledger, enquanto a definição canônica permanece na migration integrada de #102.
+A PR #160 continua separada, aberta e em Draft na última consulta. A PR #166 foi encerrada sem merge; a versão remota histórica é representada na sequência local por arquivo de ledger sem DDL, enquanto a definição canônica permanece na migration integrada de #102. A PR #180 já foi integrada e a migration do bucket da PR #181 também está na `main`.
 
 **Conclusão desta nota:** há evidência documentada de migrations de domínio integradas e aplicadas, schema presente no Supabase de desenvolvimento e revisão técnica/SQA aprovada para a PR #165. Isso atualiza a rastreabilidade da Issue #99, mas não declara todos os critérios originais satisfeitos nem autoriza seu fechamento.
 
@@ -169,3 +169,30 @@ A consulta de histórico remoto confirma a versão `20261125233227 — issue_99_
 O banco permanece sem linhas nas tabelas de domínio no momento da consulta. Por isso, a presença física dos índices está comprovada, mas não há carga de produção para avaliar seletividade ou ganho de desempenho. Os avisos de índice não utilizado não justificam remoção.
 
 A Issue #99 continua sem declaração de fechamento nesta nota. A validação de estrutura e índices não substitui a validação dos fluxos funcionais de mensagens/anexos e as responsabilidades das issues relacionadas.
+
+
+## 7. Atualização pós-merge das PRs #172, #173, #180, #181 e #185 — 26/11/2026
+
+Esta seção complementa as fotografias históricas acima; não reescreve o que foi observado nas datas originais nem altera a Issue #99.
+
+### 7.1 Sequência consolidada
+
+Após a integração das PRs #180 e #181, a `main` contém 18 arquivos de migration, correspondentes às 18 versões remotas consultadas no Polyford de desenvolvimento. A migration `20261126131156_issue_115_private_attachment_bucket.sql` completa a sequência local com a fundação de Storage privado.
+
+A instalação limpa combinada foi executada com sucesso no workflow da PR #180 — [execução #45856604234](https://github.com/Aluvioz/Polychat/actions/runs/45856604234) — em PostgreSQL local descartável: 18 migrations aplicadas e 18/18 entradas em `supabase migration list --local`. Essa execução não realizou `db push`, `migration repair` nem reset no Polyford remoto.
+
+Na PR #160, o workflow de repetição [#45899085733](https://github.com/Aluvioz/Polychat/actions/runs/45899085733) falhou no setup de `supabase/setup-cli@v1`, configurado com `version: latest`, ao resolver a release da CLI (`rate limit exceeded`). A execução parou antes de inicializar a CLI, iniciar o ambiente local ou aplicar migrations; portanto, não representa falha de migration. É necessária nova execução verde após a equipe técnica estabilizar a resolução/instalação da CLI e tornar a limpeza resiliente à ausência do workspace.
+
+### 7.2 Atualização da RLS e auditoria
+
+A PR #172 integrou as policies RLS de domínio e configuração, hardening de privilégios e funções auxiliares no schema `private`. A evidência `docs/security/issue-101-rls-evidence.md` registra os testes transacionais de isolamento aprovados (16/16), com dados sintéticos revertidos. A RLS habilitada na migration inicial da #99 não deve ser descrita como ausência de policies após a integração da #172.
+
+A PR #173 integrou a estrutura de auditoria e controles de retenção. Permanecem call-sites pendentes para eventos de consulta/exportação, anexos e alterações de configuração, bem como os limites operacionais de backup/restore documentados na PR #182.
+
+### 7.3 Atualização de Storage e ciclo de anexos
+
+A PR #181 integrou o bucket privado `attachments`, allowlist PDF/JPEG e limite de 10.485.760 bytes. A PR #185 integrou o upload inicial server-side. O documento `docs/storage/politica-anexos-e-antimalware.md` deve refletir POLY-STO-001 v0.3, que consolida as decisões de 10 MiB, até cinco arquivos por mensagem, seleção de JPEG da galeria, remoção de EXIF/GPS, recusa de PDF protegido por senha e liberação excepcional do TI autenticada/auditada.
+
+A fundação atual não conclui download, links temporários/revogação, scanner/quarentena, quotas, descarte físico, backup de objetos nem a transação única de criação da mensagem com anexos. A Issue #99 não absorve essas entregas de outras frentes.
+
+**Conclusão atualizada:** existe evidência de schema inicial, índices, RLS, auditoria/controles de retenção, histórico reconciliado, bucket privado e endpoint inicial de upload, cada um revisado dentro de seu escopo. Isso não declara a Issue #99 integralmente concluída, não autoriza seu fechamento e não transfere para ela o ciclo completo de anexos, as políticas operacionais de backup/restore ou a homologação da FORD.
