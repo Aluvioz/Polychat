@@ -24,7 +24,7 @@ As questões respondidas permanecem neste documento para preservar rastreabilida
 | RPO | Ponto de recuperação: perda máxima de dados admitida em cenário de desastre ou falha de infraestrutura. No Polychat, até 24 horas; não se aplica à reconexão normal do usuário. |
 | RTO | Tempo objetivo para recuperação do serviço após interrupção. No Polychat, até 24 horas. |
 | Primary Key | Chave primária interna que identifica um registro no banco de dados; não é necessariamente o nome de usuário informado no login. |
-| Infraestrutura sob controle da FORD | Hospedagem, banco, autenticação, armazenamento, antimalware, monitoramento, segredos e operação sob administração da FORD, sem terceiro acessando, armazenando ou processando seus dados. |
+| Infraestrutura sob controle operacional aprovado pela FORD | Hospedagem, banco, autenticação, armazenamento, antimalware, monitoramento, segredos e operação sujeitos aos requisitos, controles e responsabilidades aprovados pela FORD. No Polychat, Supabase e Vercel são provedores nomeados e expressamente autorizados pela Q-025, concluída em 24/11/2026, para os serviços e o modelo de utilização registrados na arquitetura. Essa aprovação específica não autoriza outros fornecedores, subprocessadores ou serviços externos a acessar, armazenar ou processar dados da FORD sem aprovação própria. A expressão indica governança e controle operacional aprovados, não propriedade ou operação física direta de todos os recursos pela FORD. |
 | Scrum | Framework ágil informado como contexto de trabalho da equipe. |
 | UML | Linguagem de modelagem utilizada para representar aspectos estruturais e comportamentais do sistema. |
 
