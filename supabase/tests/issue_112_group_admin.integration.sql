@@ -265,15 +265,14 @@ reset role;
 create or replace function pg_temp.reject_group_updated_audit()
 returns trigger
 language plpgsql
-as $
+as $$
 begin
   if new.event_type = 'group.updated' then
     raise exception 'synthetic update audit failure';
   end if;
   return new;
 end;
-$;
-
+$$;
 create trigger issue112_force_update_audit_failure
 before insert on public.privileged_action_audit
 for each row execute function pg_temp.reject_group_updated_audit();
