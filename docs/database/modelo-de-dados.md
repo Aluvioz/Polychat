@@ -90,7 +90,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.1 profiles — perfis e estado das contas
 
-**Necessidade funcional:** confirmada. A migration existente é um artefato legado/parcial, não a arquitetura-alvo aprovada.
+**Necessidade funcional:** confirmada. A migration `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` integra o scaffold inicial da solução com Supabase Auth. Ela não deve ser classificada como artefato legado ou descartável por inferência; sua evolução física deve ser avaliada tecnicamente, preservando os requisitos funcionais e o histórico do domínio.
 
 **Finalidade:** representar a conta funcional do Polychat, seu identificador de acesso e seu perfil/estado, associada à identidade autenticada pelo Supabase Auth.
 
