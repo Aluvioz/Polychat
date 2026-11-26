@@ -1,7 +1,7 @@
 # ADR-008 — Armazenamento privado e anexos
 
 - **Status:** Accepted
-- **Data de revisão:** 24/11/2026
+- **Data de revisão:** 26/11/2026
 - **Issues relacionadas:** #89, #115, #116 e #117
 - **Baseline:** POLY-REQ-001 v0.5
 
