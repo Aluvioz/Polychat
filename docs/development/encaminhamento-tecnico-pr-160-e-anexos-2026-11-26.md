@@ -22,7 +22,7 @@ A falha ocorreu antes da inicialização da CLI, da criação do ambiente Postgr
 
 **Solicitação ao Desenvolvimento:**
 
-1. Ajustar o setup da Supabase CLI para não depender da resolução dinâmica de `latest` sujeita ao limite de requisições. Preferir uma versão fixa, conhecida e compatível, após validar a versão a ser padronizada no projeto.
+1. Corrigir a resolução de `latest` usando o input documentado `github-token: ${{ github.token }}` em `supabase/setup-cli@v1`, ou fixar uma versão conhecida e compatível da CLI. A primeira opção é diretamente suportada pela action v1 e endereça a limitação de chamadas não autenticadas observada no log.
 2. Tornar a limpeza segura quando o workspace descartável não tiver sido criado; a etapa não deve falhar apenas porque a preparação anterior foi interrompida.
 3. Reexecutar o workflow no head atualizado da PR #160.
 4. Registrar evidência de que as 18 migrations são aplicadas em PostgreSQL local descartável e que `supabase migration list --local` retorna **18/18**.
