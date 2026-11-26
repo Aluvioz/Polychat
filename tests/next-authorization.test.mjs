@@ -58,6 +58,18 @@ test("nega usuário em rota exclusiva de TI", async () => {
   assert.equal(result.status, 403);
 });
 
+test("preserva a sessão renovada quando a role é negada, se solicitado", async () => {
+  const result = await authorizeNextRequest(requestCookies("access", "refresh"), {
+    allowedRoles: ["ti"],
+    preserveSessionOnForbidden: true,
+    validate: async () => activeUserSession,
+  });
+  assert.equal(result.authorized, false);
+  assert.equal(result.status, 403);
+  assert.equal(result.session, activeUserSession);
+  assert.equal(result.session.refreshToken, "new-refresh");
+});
+
 test("permite TI em rota exclusiva de TI", async () => {
   const result = await authorizeNextRequest(requestCookies("access"), {
     allowedRoles: ["ti"],
