@@ -78,8 +78,15 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 ## Evidências atuais
 
 - `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. A migration é um artefato versionado da stack Supabase adotada, mas não comprova sua aplicação no projeto gerenciado nem a homologação operacional.
-- Não há migrations versionadas para conversas, participantes, mensagens, anexos, alertas ou eventos de auditoria.
-- A baseline POLY-REQ-001 v0.5 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
+- **Schema de domínio — PR #165:** migrations versionadas e integradas para `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e estruturas de configuração. A PR recebeu aprovação do Tech Lead e parecer favorável do SQA no escopo revisado.
+- **Índices — PR #168:** migration aditiva com seis índices de cobertura de FKs integrada; verificação posterior em `pg_indexes` confirmou sua persistência no Polyford de desenvolvimento.
+- **Autorização — PR #172:** policies RLS e hardening para recursos de domínio/configuração integrados. A evidência de testes registra 16/16 cenários aprovados, com dados sintéticos revertidos ao fim das transações; consultar `docs/security/issue-101-rls-evidence.md`.
+- **Auditoria e retenção — PR #173:** estrutura `audit_events`, controles de retenção e writer explícito integrados, com testes transacionais registrados. A integração de todos os call-sites de negócio e os fluxos de auditoria de outras entregas permanecem delimitados às respectivas responsabilidades.
+- **Histórico de migrations — PR #180 e PR #181:** a sequência local passou a conter 18 arquivos SQL, incluindo a migration do bucket privado. A instalação limpa combinada executada no workflow da PR #180 aplicou 18 migrations em PostgreSQL local descartável e confirmou 18/18 entradas em `supabase migration list --local`. Essa evidência não equivale a alteração do histórico remoto.
+- **Storage/upload — PRs #181 e #185:** o bucket privado `attachments` foi provisionado no Polyford com allowlist PDF/JPEG e limite de 10.485.760 bytes; a PR #185 integrou o endpoint inicial server-side de upload. Download, URLs temporárias, scanner/quarentena, quotas, descarte físico, backup de objetos e fluxo ponta a ponta continuam incompletos.
+- **Histórico remoto:** a consulta registrada após a PR #181 identificou 18 versões remotas. Não foram executados `db push`, `migration repair` ou reset no Polyford remoto.
+- **PR #160:** a atualização do modelo conceitual para POLY-REQ-001 v0.5 segue em PR separada, aberta e em Draft na última consulta. Seu workflow de instalação limpa falhou ao tentar resolver `latest` na `supabase/setup-cli@v1`, com `rate limit exceeded`; o erro ocorreu antes de inicializar a CLI e antes de aplicar migrations. A execução não demonstra falha do SQL. A repetição bem-sucedida ainda deve ser obtida.
+- **Arquitetura:** a ADR-003 Accepted mantém Supabase + Vercel como stack adotada. ADR-005 permanece **Proposed** e Q-025 continua aberta para avaliação da compatibilidade operacional com as restrições da FORD.
 
 ## Pendências para Accepted
 
