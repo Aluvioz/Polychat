@@ -67,7 +67,7 @@ Somente os itens abaixo continuam exigindo ação. Q-018 foi encerrada como deci
 |---|---|---|---|---|
 
 | Q-019 | Ativos oficiais de marca | Receber/confirmar o arquivo autorizado do Ford Oval e eventuais regras corporativas específicas de aplicação/tipografia. A paleta provisória não depende desses arquivos. | A direção cromática provisória foi definida pelo PO; resta somente a confirmação dos ativos oficiais para uso do logotipo e identidade final. | FORD / responsável pela marca |
-| Q-025 | Compatibilização da arquitetura com a infraestrutura FORD | Revisar as ADRs e decisões técnicas que ainda pressupõem serviços gerenciados Supabase/Vercel. Definir arquitetura que mantenha hospedagem e processamento de dados sob controle da FORD, sem terceiro acessando, armazenando ou processando dados. Preservar tecnologias de aplicação apenas se forem compatíveis com essa restrição. | A documentação e a Issue #88 registram Supabase + Vercel como direção anterior, enquanto a FORD v2 impõe infraestrutura sob seu controle. A exigência do cliente está definida; a solução arquitetural precisa ser reconciliada e documentada. | Tech Lead / Desenvolvimento / TI da FORD / PO |
+| Q-025 | Compatibilidade da stack adotada com os requisitos de infraestrutura FORD | Avaliar a configuração e o modelo de uso da stack Supabase + Vercel, adotada e obrigatória conforme ADR-003 — Accepted, frente aos requisitos da FORD sobre controle de hospedagem, armazenamento, processamento, localização, acessos e operação. Documentar arquitetura/configuração, controles, responsabilidades, evidências, limitações e riscos residuais. A Q-025 não autoriza retirar ou substituir a stack por inferência. Se houver incompatibilidade concreta não mitigável, registrá-la e encaminhá-la ao PO e às responsabilidades competentes da FORD para decisão formal acompanhada de avaliação de impacto. | A ADR-003 mantém Supabase + Vercel como direção tecnológica vigente. As restrições da FORD v2 permanecem requisitos; sua compatibilidade com a configuração e o modelo de uso da stack ainda precisa ser demonstrada. Uma tensão ou achado técnico não altera sozinho o status da ADR-003. | Tech Lead / Desenvolvimento / TI da FORD; PO para decisão de produto |
 
 ## 8.4 Decisões consolidadas que não devem ser reabertas como pendência
 
@@ -85,11 +85,13 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 
 ## 8.5 Decisões arquiteturais e limites
 
-- A restrição da FORD de não permitir que terceiros acessem, armazenem ou processem seus dados é uma decisão de cliente confirmada.
-- A existência de Next.js, Vercel, Supabase, migrations ou ADRs no repositório não constitui, por si só, aprovação dessas plataformas para produção sob a restrição atual.
-- A direção Supabase/Vercel anterior deve ser revisada e formalmente reconciliada; não deve prevalecer automaticamente sobre a decisão mais recente da FORD.
-- A tecnologia definitiva deve ser registrada em ADR revisada, mantendo a distinção entre requisito de negócio, decisão arquitetural, implementação e homologação.
-- A aprovação de uma decisão técnica não deve ser confundida com evidência de implantação ou teste.
+- A restrição da FORD de manter hospedagem, armazenamento e processamento sob seu controle, preferencialmente no Brasil, sem terceiros acessando, armazenando ou processando seus dados, permanece como requisito confirmado.
+- A ADR-003 — Accepted mantém Supabase + Vercel como stack tecnológica adotada e obrigatória do Polychat. A restrição da FORD não altera nem substitui essa decisão por inferência.
+- A adoção da stack define a direção tecnológica do projeto, mas não comprova integração funcional, compatibilidade operacional ou homologação para produção.
+- A Q-025 deve avaliar a configuração e o modelo de utilização dos componentes e serviços previstos nas ADRs aplicáveis — incluindo hospedagem/deploy, banco, autenticação, armazenamento e realtime — diante dos requisitos da FORD. A avaliação deve registrar fronteiras de dados, localização, acessos, controles, responsabilidades operacionais, evidências, limitações e riscos residuais.
+- Tech Lead e Desenvolvimento devem conduzir a análise técnica; a TI da FORD deve avaliar os requisitos de infraestrutura, acesso e operação. O PO acompanha a aderência ao produto, avalia impactos de escopo e encaminha conflitos que exijam decisão formal.
+- Uma incompatibilidade concreta não mitigável deve ser documentada com evidências e avaliação de impacto e encaminhada ao PO e às responsabilidades competentes da FORD. Nenhum serviço ou stack será substituído por inferência; eventual alteração seguirá o processo formal de governança arquitetural.
+- Aprovação de ADR, existência de código, migration, configuração, preview ou sucesso de CI não substitui evidência de implantação, teste integrado ou homologação.
 
 ## 8.6 Histórico e rastreabilidade
 
