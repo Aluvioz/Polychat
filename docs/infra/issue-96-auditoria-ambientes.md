@@ -96,9 +96,9 @@ Nenhuma variável administrativa/service-role foi encontrada no arquivo de exemp
 
 A documentação consultada estabelece:
 
-- ADR-003: a direção Supabase + Vercel anteriormente registrada foi depreciada após a FORD v2. O ambiente descrito nesta auditoria é evidência histórica da execução anterior, não arquitetura-alvo vigente.
+- ADR-003: Supabase + Vercel permanece como stack adotada e obrigatória (Accepted, revisão de 24/11/2026). Esta auditoria registra a execução operacional original dos ambientes; não comprova, isoladamente, a compatibilidade integral da configuração com os requisitos da FORD nem a homologação atual de produção. Essa validação permanece na Q-025.
 - ADR-009: **Proposed**. Ambientes isolados e promoção controlada permanecem requisitos; a solução operacional deve ser compatibilizada com a exigência de infraestrutura sob controle da FORD.
-- ADR-006: o aceite legado cobre somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios nem aprova o Supabase como provedor-alvo.
+- ADR-006: o aceite cobre somente o contrato de autorização de perfis e a migration existente; não autoriza extrapolação para outros domínios nem comprova integração/homologação de produção. O uso da plataforma Supabase como parte da stack adotada é estabelecido pela ADR-003.
 
 O aceite da Issue #96 atesta a conclusão de seu escopo operacional original. A FORD v2 prevalece para a arquitetura-alvo e impede presumir autorização de serviços externos para dados reais da organização.
 
@@ -210,9 +210,9 @@ A tabela e as limitações das seções anteriores são o retrato da auditoria o
 
 ### 12.2 Efeito da FORD v2 sobre a arquitetura anterior
 
-A FORD v2 estabelece que hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum terceiro pode acessar, armazenar ou processar dados da organização. A direção Supabase + Vercel foi, por isso, depreciada na ADR-003.
+A FORD v2 estabelece requisitos de controle sobre hospedagem, armazenamento e processamento de dados, localização e acesso. A ADR-003 — Accepted mantém Supabase + Vercel como stack adotada e obrigatória. A compatibilidade da configuração e do modelo de uso com esses requisitos deve ser avaliada na Q-025; a restrição da FORD não reclassifica, por si só, a ADR-003.
 
-O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser entendido como **registro histórico de configuração e validação operacional do escopo original**. O encerramento da issue não cria exceção à restrição mais recente, não aprova por si só o uso desses serviços com dados reais da FORD e não substitui a decisão de arquitetura pendente da Q-025.
+O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser entendido como **registro da configuração e validação operacional do escopo original**. O encerramento da issue comprova o aceite daquele escopo, mas não substitui a avaliação técnica de compatibilidade/configuração e as evidências atuais exigidas na Q-025 nem equivale à homologação integral de produção.
 
 ### 12.3 Limites de evidência
 
@@ -223,4 +223,4 @@ O ambiente Supabase/Vercel cuja configuração foi objeto da Issue #96 deve ser 
 
 ### 12.4 Encaminhamento
 
-Manter a Issue #96 fechada e seu aceite preservado. Tratar a substituição/adequação da arquitetura de ambientes como parte da Q-025 e do fluxo técnico subsequente, sem reabrir a issue histórica apenas para refletir a mudança de requisito.
+Manter a Issue #96 fechada e seu aceite preservado. Tratar a validação e eventual adequação da configuração dos ambientes Supabase/Vercel como parte da Q-025, preservando a stack adotada pela ADR-003. Qualquer proposta de substituição deverá seguir o processo formal de mudança arquitetural e avaliação de impacto, sem reabrir a issue histórica apenas para atualizar a documentação.

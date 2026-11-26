@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Polychat UI Kit — Issue #93 — proposta</title>
+  <link rel="stylesheet" href="./issue-93-design-tokens.css">
+</head>
+<body>
+<a class="pc-skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+<header class="pc-header">
+  <div class="pc-header-inner">
+    <div class="pc-brand-lockup"><a href="https://commons.wikimedia.org/wiki/File:Ford_logo.svg" target="_blank" rel="noopener noreferrer" aria-label="Abrir a fonte do logotipo Ford na Wikimedia Commons"><img class="pc-ford-mark" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Ford_logo.svg/960px-Ford_logo.svg.png" alt="Ford Oval — referência visual de marca" loading="lazy" decoding="async"></a><span>Polychat UI Kit</span></div>
+    <span class="pc-meta">ISSUE #93 · PROPOSTA DE INTERFACE · SEM ENDOSSO FORD</span>
+  </div>
+</header>
+<main class="pc-shell" id="conteudo" tabindex="-1">
+  <h1 class="pc-heading">Design System Polychat <span class="pc-badge pc-badge-pending">v0.1 · em revisão</span></h1>
+  <p class="pc-lead">Biblioteca demonstrativa de componentes para duas experiências: Usuário em web mobile e TI em desktop. Exemplos são fictícios, estáticos e não executam operações reais.</p>
+  <section class="pc-section" aria-labelledby="colors">
+    <h2 id="colors">01. Cores e superfícies</h2>
+    <p class="pc-subtitle">Paleta Ford provisória definida em Q-019. O Ford Oval abaixo é uma referência visual obtida na Wikimedia Commons, utilizada como referência visual da proposta — não representa ativo oficial fornecido ou aprovado pela Ford. <a href="https://commons.wikimedia.org/wiki/File:Ford_logo.svg" target="_blank" rel="noopener noreferrer">Fonte do logotipo</a>.</p>
+    <div class="pc-swatches">
+      <div class="pc-swatch"><div class="pc-color" style="background:#00095B"></div><span><strong>Ford Blue</strong><br>#00095B</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#00142E"></div><span><strong>Ford Twilight</strong><br>#00142E</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#066FEF"></div><span><strong>Ford Skyview</strong><br>#066FEF</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#FFFFFF;border:1px solid #CBD5E1"></div><span><strong>Branco</strong><br>#FFFFFF</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#F0F0F0"></div><span><strong>Cinza claro</strong><br>#F0F0F0</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#0F0F0F"></div><span><strong>Preto suave</strong><br>#0F0F0F</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#475569"></div><span><strong>Secundário</strong><br>#475569</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#027a48"></div><span><strong>Sucesso</strong><br>#027A48</span></div>
+      <div class="pc-swatch"><div class="pc-color" style="background:#b42318"></div><span><strong>Erro</strong><br>#B42318</span></div>
+    </div>
+  </section>
+  <section class="pc-section" aria-labelledby="typography">
+    <h2 id="typography">02. Tipografia e espaçamento</h2>
+    <div class="pc-card">
+      <h3 style="font-size:2.5rem;line-height:1.15">Título principal — 40 px</h3>
+      <h3 style="font-size:1.75rem">Título de seção — 28 px</h3>
+      <p style="font-size:1rem">Texto base — 16 px, entrelinha 1,5. Uso recomendado nas mensagens, formulários e navegação.</p>
+      <p style="font-size:.875rem">Texto auxiliar — 14 px. Para pistas, data, instruções e legendas, nunca informação crítica apenas pela cor.</p>
+      <p><strong>Escala:</strong> 4 · 8 · 12 · 16 · 24 · 32 · 48 px. <strong>Fonte:</strong> Arial/Helvetica como substituto provisório.</p>
+    </div>
+  </section>
+  <section class="pc-section" aria-labelledby="controls">
+    <h2 id="controls">03. Botões e estados</h2>
+    <div class="pc-card">
+      <div class="pc-stack">
+        <button type="button" class="pc-button pc-button-primary">Ação principal</button>
+        <button type="button" class="pc-button pc-button-secondary">Ação secundária</button>
+        <button type="button" class="pc-button pc-button-danger">Desativar conta (TI)</button>
+        <button type="button" class="pc-button pc-button-primary" disabled>Indisponível</button>
+      </div>
+      <p>Altura mínima de 44 px; foco visível ao usar Tab. Botões de exemplo sem ações reais; servem exclusivamente à avaliação visual e do foco.</p>
+    </div>
+  </section>
+  <section class="pc-section" aria-labelledby="fields">
+    <h2 id="fields">04. Formulários e validação</h2>
+    <div class="pc-grid">
+      <div class="pc-card">
+        <h3>Identificador de usuário</h3>
+        <div class="pc-field"><label for="identifier">Usuário</label><input id="identifier" type="text" autocomplete="username" placeholder="Identificador fornecido pela TI"><span class="pc-help">Não há cadastro público no Polychat.</span></div>
+      </div>
+      <div class="pc-card">
+        <h3>Senha</h3>
+        <div class="pc-field"><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password"><span class="pc-help">A recuperação é administrada pela TI; fluxo exato ainda depende de aprovação.</span></div>
+      </div>
+      <div class="pc-card">
+        <h3>Exemplo de erro</h3>
+        <div class="pc-field"><label for="filetype">Anexo</label><input id="filetype" type="text" value="arquivo.mov" aria-invalid="true" aria-describedby="fileerror"><span id="fileerror" class="pc-error-text" role="alert">Formato não permitido. Selecione PDF ou JPEG.</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="pc-section" aria-labelledby="feedback">
+    <h2 id="feedback">05. Feedback e estados</h2>
+    <div class="pc-grid">
+      <div class="pc-alert pc-alert-success" role="status"><strong>Sucesso</strong><br>Mensagem enviada com sucesso.</div>
+      <div class="pc-alert pc-alert-error" role="alert"><strong>Erro</strong><br>Não foi possível concluir. Tente novamente.</div>
+      <div class="pc-alert pc-alert-warning" role="status"><strong>Atenção</strong><br>Sessão expirada. Faça login novamente.</div>
+    </div>
+    <div class="pc-grid" style="margin-top:16px">
+      <div class="pc-empty"><strong>Nenhuma conversa ainda</strong><p>Seu histórico aparecerá aqui quando houver mensagens.</p></div>
+      <div class="pc-empty"><strong>Carregando conversas…</strong><p>Aguarde enquanto recuperamos os dados.</p></div>
+      <div class="pc-empty"><strong>Sem conexão</strong><p>Verifique sua rede e tente novamente.</p></div>
+    </div>
+  </section>
+  <section class="pc-section" aria-labelledby="patterns">
+    <h2 id="patterns">06. Padrões mobile e desktop</h2>
+    <div class="pc-grid">
+      <div class="pc-card">
+        <h3>Usuário · web mobile</h3>
+        <div class="pc-list" aria-label="Conversas recentes fictícias">
+          <div class="pc-list-item"><span><strong>Equipe Técnica</strong><small>Grupo administrado pela TI</small></span><span class="pc-badge">Grupo</span></div>
+          <div class="pc-list-item"><span><strong>Contato de exemplo</strong><small>Última mensagem recebida</small></span><span class="pc-badge pc-badge-success">Lida</span></div>
+        </div>
+        <p>Usuários comuns não recebem controles para criar grupos ou convidar participantes.</p>
+      </div>
+      <div class="pc-card">
+        <h3>TI · console desktop</h3>
+        <div class="pc-list" aria-label="Administração ilustrativa">
+          <div class="pc-list-item"><span><strong>Contas</strong><small>Criar e desativar</small></span><span class="pc-badge">TI</span></div>
+          <div class="pc-list-item"><span><strong>Grupos</strong><small>Criar e incluir usuários</small></span><span class="pc-badge">TI</span></div>
+          <div class="pc-list-item"><span><strong>Alertas</strong><small>Revisão humana conforme política</small></span><span class="pc-badge pc-badge-pending">Revisar</span></div>
+        </div>
+        <p>Autorizações administrativas sempre devem ser conferidas no servidor, não apenas na interface.</p>
+      </div>
+      <div class="pc-card">
+        <h3>Confirmação crítica · TI</h3>
+        <div class="pc-modal-demo" role="group" aria-label="Exemplo estático de confirmação — não funcional">
+          <strong>Desativar conta?</strong>
+          <p>Esta operação impedirá o próximo acesso da conta. Confirme antes de prosseguir.</p>
+          <div class="pc-stack"><span class="pc-button pc-button-secondary" aria-hidden="true">Cancelar</span><span class="pc-button pc-button-danger" aria-hidden="true">Confirmar</span></div><p><small>Prévia visual, sem ações reais. Em produção, este diálogo exige controle de foco e comportamento de teclado.</small></p>
+        </div>
+        <p>Em um diálogo real, usar foco inicial adequado, Esc para sair quando permitido e devolução do foco ao acionador.</p>
+      </div>
+    </div>
+  </section>
+  <footer class="pc-footer">Issue #93 · Modelo visual estático · o Ford Oval é referência ilustrativa com fonte identificada; não implica vínculo, patrocínio ou endosso da Ford · sem autenticação ou testes com usuários.</footer>
+</main>
+</body>
+</html>
