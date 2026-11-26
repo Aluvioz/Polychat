@@ -51,7 +51,9 @@ Esta seção registra entregas técnicas efetivamente integradas e os limites do
 | **PR #172 — autorização e RLS da #101** | Policies RLS para conversas, memberships, mensagens, anexos, leituras, alertas e tabelas de configuração; restrições de grants por tabela/coluna e funções auxiliares no schema `private`. | Mesclada em 26/11/2026. Evidências registram 16/16 cenários de RLS aprovados e teste separado de criação de conversa direta, ambos com `ROLLBACK`; SQA emitiu parecer favorável após correções, Tech Lead aprovou e os workflows CI passaram. | O SQA não certificou a ausência de `service_role` no frontend. Storage/buckets e políticas de objetos permanecem na #117. A divergência histórica entre identificadores Git e o histórico remoto de migrations anteriores não foi reconciliada por essa PR. |
 | **PR #173 — auditoria e retenção da #102** | Estrutura `audit_events`, catálogo de eventos, controles TI-only, proteção de metadata, comportamento append-only para alterações diretas, `retention_holds`, descarte controlado e auditoria transacional de edição/exclusão lógica administrativa de mensagens e fechamento de alertas. Inclui writer explícito autenticado com JWT de usuário e chave publishable. | Mesclada em 26/11/2026. Testes SQL de auditoria/holds e descarte, executados com `ROLLBACK`, e testes unitários do writer foram registrados; SQA emitiu parecer favorável após correção do dollar quoting, Tech Lead aprovou e os workflows CI passaram. | Ainda faltam call-sites para visualização/exportação de conversas, download/liberação de anexos e alterações de configuração. Backup diário por 12 meses, restauração e evidência de RPO/RTO de até 24h não foram comprovados/configurados. Storage e descarte físico de anexos permanecem na #117; auditoria privilegiada de contas/grupos/memberships permanece na #124. |
 
-**Evidência adicional de Storage — PR #181 / Issue #115:** a PR #181 foi integrada em 26/11/2026 e provisionou o bucket privado `attachments`, com MIME PDF/JPEG e `file_size_limit = 10.485.760` bytes (10 MiB). A entrega não implementou upload/download funcional, scanner, quotas ou backup. O limite do bucket coincide com o limite físico registrado na migration de `attachments`, mas ambos permanecem acima do limite funcional de 10 MB decimais definido na seção 5.5; a divergência precisa ser corrigida por migration aditiva e teste integrado nas Issues #115/#117.\n\n**Situação consolidada:** o schema de domínio inicial, as policies RLS, o núcleo de auditoria/retention controls e a fundação privada do Storage possuem entregas integradas na `main`, cada qual com revisão restrita ao seu escopo. A Issue #101 e a Issue #102 foram encerradas após suas respectivas integrações, mas isso não elimina as ressalvas e dependências acima. As Issues #115 e #117 permanecem abertas para completar a implementação dos anexos. A Issue #99 permanece aberta; não se declara a conclusão integral do modelo, de todos os fluxos funcionais, da retenção operacional, do Storage ou da homologação da FORD.
+**Evidência adicional de Storage — PR #181 / Issue #115:** a PR #181 foi integrada em 26/11/2026 e provisionou o bucket privado `attachments`, com MIME PDF/JPEG e `file_size_limit = 10.485.760` bytes (10 MiB). A entrega não implementou upload/download funcional, scanner, quotas ou backup. O limite do bucket coincide com o limite físico registrado na migration de `attachments`, mas ambos permanecem acima do limite funcional de 10 MB decimais definido na seção 5.5; a divergência precisa ser corrigida por migration aditiva e teste integrado nas Issues #115/#117.
+
+**Situação consolidada:** o schema de domínio inicial, as policies RLS, o núcleo de auditoria/retention controls e a fundação privada do Storage possuem entregas integradas na `main`, cada qual com revisão restrita ao seu escopo. A Issue #101 e a Issue #102 foram encerradas após suas respectivas integrações, mas isso não elimina as ressalvas e dependências acima. As Issues #115 e #117 permanecem abertas para completar a implementação dos anexos. A Issue #99 permanece aberta; não se declara a conclusão integral do modelo, de todos os fluxos funcionais, da retenção operacional, do Storage ou da homologação da FORD.
 
 A divergência histórica de migrations anteriores continua sem procedimento de `repair`, `reset` ou reaplicação. Nenhuma das aprovações citadas autoriza essas operações por inferência.
 
@@ -238,7 +240,11 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 - Download exige autorização vigente sobre a conversa/mensagem. Links temporários possuem validade máxima de cinco minutos.
 - A remoção de participante revoga imediatamente links já emitidos e o acesso a anexos anteriores.
 - TI pode baixar anexos durante investigações, com registro em auditoria.
-- Não há exclusão automática de anexos enquanto o sistema operar; exclusões seguem autorização do TI e a política de retenção.\n\n**Precisão da unidade — decisão do PO nesta revisão (26/11/2026):** para eliminar a ambiguidade da expressão aprovada “10 MB”, o limite funcional fica formalizado no sentido decimal do SI: **10 MB = 10.000.000 bytes**. `10 MiB` corresponde a **10.485.760 bytes** e não é equivalente a 10 MB. Os termos não devem ser usados como sinônimos.\n\n**Divergência da implementação observada:** a migration da PR #165 define `attachments.size_bytes <= 10.485.760`, e a PR #181 configurou `storage.buckets.file_size_limit = 10.485.760` (10 MiB). Portanto, banco e bucket permitem atualmente até 485.760 bytes a mais que o limite funcional formalizado (aproximadamente 4,86% acima do máximo). A configuração física não deve ser considerada aderente ao limite até que as restrições do banco e do Storage sejam ajustadas para **10.000.000 bytes** por migration aditiva, com testes de fronteira. Essa correção pertence às Issues #115/#117; esta atualização documental não altera migrations, schema ou ambiente.
+- Não há exclusão automática de anexos enquanto o sistema operar; exclusões seguem autorização do TI e a política de retenção.
+
+**Precisão da unidade — decisão do PO nesta revisão (26/11/2026):** para eliminar a ambiguidade da expressão aprovada “10 MB”, o limite funcional fica formalizado no sentido decimal do SI: **10 MB = 10.000.000 bytes**. `10 MiB` corresponde a **10.485.760 bytes** e não é equivalente a 10 MB. Os termos não devem ser usados como sinônimos.
+
+**Divergência da implementação observada:** a migration da PR #165 define `attachments.size_bytes <= 10.485.760`, e a PR #181 configurou `storage.buckets.file_size_limit = 10.485.760` (10 MiB). Portanto, banco e bucket permitem atualmente até 485.760 bytes a mais que o limite funcional formalizado (aproximadamente 4,86% acima do máximo). A configuração física não deve ser considerada aderente ao limite até que as restrições do banco e do Storage sejam ajustadas para **10.000.000 bytes** por migration aditiva, com testes de fronteira. Essa correção pertence às Issues #115/#117; esta atualização documental não altera migrations, schema ou ambiente.
 
 ### 5.6 audit_events — eventos de auditoria
 
@@ -525,14 +531,15 @@ A implementação técnica dos mecanismos de retenção não altera nem reduz as
 | Elemento do modelo | Requisitos / regras | Issues e decisões relacionadas |
 |---|---|---|
 | profiles | RF-001 a RF-004; RN-001 a RN-005 | #99, #103, #104, #105; ADR-004; Q-005 |
-| conversations | RF-005, RF-007 a RF-010; RN-006, RN-007, RN-010 | #99, #107, #109, #110; decisões de unicidade e ciclo de vida nesta versão |
-| memberships | RF-005, RF-006, RF-008, RF-010; RN-007 | #99, #100, #101; decisões de remoção/reentrada nesta versão |
-| messages | RF-008 a RF-010, RF-019, RF-020; RN-006, RN-007, RN-014 | #99, #109, #110, #111; ADR-007; mensagem com anexo e recibos de leitura |
+| conversations | RF-005, RF-007 a RF-010; RN-006, RN-007, RN-010 | #99, #107, #109, #110; PR #165 (schema) e PR #172 (policies RLS); decisões de unicidade e ciclo de vida nesta versão |
+| memberships | RF-005, RF-006, RF-008, RF-010; RN-007 | #99, #100, #101, #124; PR #165 (schema), PR #172 (RLS) e instrumentação privilegiada coordenada com #124; decisões de remoção/reentrada nesta versão |
+| messages | RF-008 a RF-010, RF-019, RF-020; RN-006, RN-007, RN-014 | #99, #109, #110, #111; PR #165 (schema), PR #172 (RLS) e PR #173 (auditoria das ações administrativas de edição/exclusão lógica); ADR-007; mensagem com anexo e recibos de leitura |
 | message_reads | RF-007, RF-019 | #99, #111, #112, #113; recibo por mensagem e leitor definido nesta versão |
-| attachments | RF-011 a RF-013; RN-008, RN-011; RNF-010 | #99, #114, #115, #116, #117; Q-004/Q-011 respondidas; ADR-008 |
-| audit_events | RF-016, RF-020, RF-021, RF-022; RN-014, RN-021; RNF-004 e RNF-011 | #99, #102, #121, #124; Q-009/Q-010 respondidas; ADR-010 |
+| attachments | RF-011 a RF-013; RN-008, RN-011; RNF-010 | #99, #114, #115, #116, #117; PR #165 (metadados e limite físico), PR #172 (RLS dos metadados) e PR #181 (bucket privado de 10 MiB); divergência de tamanho e ciclo funcional pendentes em #115/#117; Q-004/Q-011 respondidas; ADR-008 |
+| audit_events | RF-016, RF-020, RF-021, RF-022; RN-014, RN-021; RNF-004 e RNF-011 | #99, #102, #121, #124; PR #173 (trilha genérica e controles de retenção); auditoria privilegiada e call-sites de contas/grupos/memberships permanecem coordenados com #124; Q-009/Q-010 respondidas; ADR-010 |
 | security_alerts | RF-014, RF-015; RN-012, RN-013 | #99, #122, #123; Q-007/Q-008 respondidas; ADR-010 |
-| Configurações TI | RF-014/RF-015; RN-003; Q-018 | #99; lista/regras de detecção e quotas de anexos inventariadas nesta versão |
+| Configurações TI | RF-014/RF-015; RN-003; Q-018 | #99, #101, #102, #122; PR #165 (estruturas específicas), PR #172 (RLS) e PR #173 (writer de auditoria; call-sites de configuração ainda pendentes) |
+| Autorização e RLS de domínio | Regras de acesso por perfil, participação vigente e estado da conversa | #100, #101; PR #172; ADR-006 |
 
 ## 11. Decisões de produto consolidadas nesta versão
 
@@ -554,6 +561,12 @@ As decisões acima são decisões de produto quanto ao comportamento esperado. E
 
 A Q-025 continua aberta para documentar e tratar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados por terceiros. A stack não deve ser considerada obsoleta ou substituída por inferência; a análise deve registrar os impactos, riscos e encaminhamentos sem alterar as regras funcionais aprovadas.
 
+### 11.2 Precisão da unidade do limite de anexos — complemento do PO em 26/11/2026
+
+O parecer original de 20/11/2026 confirmou a regra de produto como “até 10 MB por arquivo”, sem especificar naquele registro a base numérica da unidade. Para eliminar a ambiguidade de implementação, o PO complementa a regra nesta revisão: **10 MB deve ser interpretado em unidade decimal, isto é, 10.000.000 bytes**. `10 MiB` corresponde a 10.485.760 bytes e não é equivalente ao limite aprovado.
+
+Esta precisão não altera formatos permitidos, quantidade de anexos por mensagem ou regras de quota; apenas explicita a unidade do limite já definido. A diferença observada na migration da PR #165 e no bucket provisionado pela PR #181 permanece como desvio técnico a corrigir nas Issues #115/#117. Este complemento não aprova schema físico, migration, configuração operacional ou implementação de upload.
+
 ## 12. Parecer do Product Owner — 20/11/2026
 
 **Resultado: escopo funcional conceitual validado e atualizado para a baseline POLY-REQ-001 v0.5.**
@@ -569,7 +582,7 @@ O PO ratifica como núcleo do modelo as entidades `profiles`, `conversations`, `
 5. **Ciclo de vida dos grupos:** grupos desativados ficam em modo somente leitura para participantes vigentes; grupos encerrados ficam disponíveis apenas ao TI até eventual reativação.
 6. **Mensagens:** pode haver texto, anexo(s) ou ambos, mas não mensagem vazia; TI pode editar/excluir e as ações são auditadas; usuários comuns não editam/excluem.
 7. **Leitura:** confirmação por mensagem e participante, com horário; em grupos, o autor pode ver quais participantes leram suas próprias mensagens e quando. Contagem de não lidas segue RF-007/RF-019.
-8. **Anexos:** PDF/JPEG, até 10 MB decimais (10.000.000 bytes) por arquivo, até cinco arquivos por mensagem, quotas individuais e capacidade total administradas pelo TI, sem quota por conversa; antimalware interno à FORD, bloqueio em falha/inconclusão e liberação excepcional autenticada/auditada pelo TI.
+8. **Anexos:** PDF/JPEG, até 10 MB por arquivo, até cinco arquivos por mensagem, quotas individuais e capacidade total administradas pelo TI, sem quota por conversa; antimalware interno à FORD, bloqueio em falha/inconclusão e liberação excepcional autenticada/auditada pelo TI.
 9. **Alertas:** detecção determinística por lista/regras mantidas pelo TI, severidades e prazos definidos; sem bloqueio ou punição automática.
 10. **Auditoria e retenção:** consultas/exportações/ações administrativas auditadas; sem justificativa obrigatória para consulta/exportação/encerramento de alerta; retenção e backups conforme RN-021.
 11. **Configurações:** inventário restrito à lista/regras de detecção e às quotas individuais/capacidade total de anexos; sem tabela genérica aprovada por inferência.
@@ -599,6 +612,7 @@ A stack tecnológica adotada pelo projeto é Supabase + Vercel. A ADR-005 contin
 - [x] PO decide o comportamento de reinclusão de participante removido.
 - [x] PO decide os efeitos funcionais de grupo desativado e encerrado.
 - [x] PO atualiza o parecer funcional para a baseline POLY-REQ-001 v0.5.
+- [x] PO esclarece em 26/11/2026 a unidade decimal da regra de 10 MB (10.000.000 bytes) e registra o desvio técnico observado nas restrições de banco e Storage, mantendo sua correção nas Issues #115/#117.
 
 Esta seção registra exclusivamente as decisões de produto concluídas. Não constitui encaminhamento, solicitação ou registro de revisão técnica/SQA e não marca como concluída nenhuma entrega de schema físico ou migration.
 
@@ -612,7 +626,7 @@ A estrutura física já integrada e os incrementos técnicos ainda pendentes dev
 - histórico de períodos de membership e revogação/reentrada sem recuperação do histórico anterior;
 - estado de grupos ativo, desativado e encerrado;
 - validação de que a mensagem possui texto ou pelo menos um anexo;
-- limites de anexos e quotas definidas pelo TI;
+- limite funcional de anexos de 10 MB decimais (10.000.000 bytes), quantidade máxima de cinco por mensagem e quotas definidas pelo TI; as restrições físicas atuais de 10 MiB ainda precisam ser ajustadas nas Issues #115/#117;
 - confirmação de leitura por mensagem/participante;
 - catálogo e rastreabilidade dos eventos administrativos;
 - ocorrência de alertas com regras, severidade e revisão;
@@ -628,15 +642,33 @@ Para aspectos ainda não definidos ou que dependam de evolução, qualquer escol
 |---|---|---|---|
 | 0.1 | 18/11/2026 | Primeira proposta do modelo lógico, dicionário preliminar, relacionamentos, rastreabilidade e registro das decisões pendentes. | Proposta inicial |
 | 0.2 | 19/11/2026 | Valida o escopo funcional das entidades centrais, inclui `security_alerts` e delimita configurações persistentes como dependentes de inventário. | Escopo conceitual validado pelo PO |
-| 0.3 | 20/11/2026 | Atualiza a baseline para v0.5; alinha o modelo conceitual à stack Supabase + Vercel definida para o projeto; atualiza decisões de grupos, memberships, mensagens, anexos, auditoria, alertas e configurações; define unicidade de conversas individuais, mensagens só com anexo e leitura por mensagem/participante. | Escopo funcional conceitual validado pelo PO; schema físico e migrations não aprovados |\n| 0.4 | 26/11/2026 | Registra evidências das PRs #165, #168, #172, #173 e #181, detalha RLS/auditoria/retenção e formaliza o limite de anexos como 10 MB decimais (10.000.000 bytes), identificando a divergência dos limites físicos atuais de 10 MiB. | Escopo funcional conceitual validado pelo PO; desvio técnico de tamanho permanece pendente em #115/#117 |
+| 0.3 | 20/11/2026 | Atualiza a baseline para v0.5; alinha o modelo conceitual à stack Supabase + Vercel definida para o projeto; atualiza decisões de grupos, memberships, mensagens, anexos, auditoria, alertas e configurações; define unicidade de conversas individuais, mensagens só com anexo e leitura por mensagem/participante. | Escopo funcional conceitual validado pelo PO; schema físico e migrations não aprovados |
+| 0.4 | 26/11/2026 | Atualiza a rastreabilidade das PRs #165, #168, #172, #173 e #181; registra evidências de RLS, auditoria, retenção e bucket privado; acrescenta complemento do PO sobre 10 MB decimais (10.000.000 bytes), sem alterar a data nem o conteúdo essencial do parecer original de 20/11; identifica o desvio físico de 10 MiB. | Escopo funcional conceitual validado pelo PO; ajuste físico de tamanho e fluxos de anexos permanecem pendentes em #115/#117 |
 
 ## 16. Referências internas
+
+### Issues relacionadas
 
 - Issue #99 — Modelar schema PostgreSQL e migrations iniciais.
 - Issue #100 — Definir matriz de autorização e políticas RLS.
 - Issue #101 — Implementar RLS e testes de isolamento.
 - Issue #102 — Definir estratégia de auditoria e retenção de dados.
+- Issue #115 — Implementar upload privado de PDF/JPEG.
+- Issue #117 — Implementar limites de anexos e proteção antimalware.
 - Issue #122 — Implementar detecção de conteúdo suspeito e palavrões.
+- Issue #124 — Implementar trilha de auditoria de ações privilegiadas.
+
+### Pull requests utilizadas como evidência de implementação
+
+- PR #165 — schema inicial de domínio da Issue #99.
+- PR #168 — cobertura de índices de chaves estrangeiras.
+- PR #172 — autorização e isolamento RLS da Issue #101.
+- PR #173 — trilha de auditoria genérica e controles de retenção da Issue #102.
+- PR #181 — provisionamento do bucket privado `attachments` da Issue #115; limite provisionado de 10 MiB, ainda divergente do limite funcional decimal registrado neste documento.
+- PR #160 — atualização documental do modelo lógico e das decisões de produto da Issue #99; permanece aberta e em Draft enquanto aguarda as revisões correspondentes.
+
+### ADRs, baseline e decisões
+
 - ADR-005 — Banco de dados e modelo de dados.
 - ADR-006 — Autorização server-side e RLS.
 - ADR-008 — Storage e anexos.
