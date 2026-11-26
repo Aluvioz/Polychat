@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AUTH_COOKIE_NAMES, loginWithUsername } from "@/auth/supabase-session.mjs";
+import { AUTH_COOKIE_NAMES, loginWithUsername, logoutSession } from "@/auth/supabase-session.mjs";
 import { recordPrivilegedAuditEventRest } from "@/audit/privileged-audit-rest.mjs";
 
 export const runtime = "nodejs";
@@ -40,8 +40,9 @@ export async function POST(request: NextRequest) {
   const credentials = body && typeof body === "object"
     ? body as { username?: unknown; password?: unknown }
     : {};
+  let session: Awaited<ReturnType<typeof loginWithUsername>> | undefined;
   try {
-    const session = await loginWithUsername({
+    session = await loginWithUsername({
       username: typeof credentials.username === "string" ? credentials.username : "",
       password: typeof credentials.password === "string" ? credentials.password : "",
       onAdminLoginFailure: async () => recordPrivilegedAuditEventRest({
@@ -67,6 +68,16 @@ export async function POST(request: NextRequest) {
     setSessionCookies(response, session);
     return response;
   } catch (error) {
+    if (session?.user.role === "ti") {
+      try {
+        await logoutSession({
+          accessToken: session.accessToken,
+          refreshToken: session.refreshToken,
+        });
+      } catch {
+        // Do not expose provider details when the audit write fails.
+      }
+    }
     const status = error && typeof error === "object" && "status" in error
       ? Number((error as { status: number }).status)
       : 503;
