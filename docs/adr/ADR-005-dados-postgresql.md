@@ -9,7 +9,7 @@
 
 O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, participantes, mensagens, anexos, recibos de leitura, alertas, configurações e eventos de auditoria. O produto atende uma única organização (FORD); a baseline não prevê operação multi-tenant.
 
-A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. PostgreSQL por meio do Supabase Database é a tecnologia relacional utilizada no projeto. A FORD v2 mantém requisitos sobre controle de hospedagem, armazenamento, processamento e acesso; a compatibilidade da configuração e do modelo de uso do Supabase Database com esses requisitos precisa ser avaliada na Q-025. Uma preocupação ou incompatibilidade identificada deve ser registrada e encaminhada para decisão formal, sem retirar ou depreciar a ADR-003 por inferência.
+A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. PostgreSQL por meio do Supabase Database é a tecnologia relacional utilizada no projeto. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados, inclusive Storage, dentro dos limites e responsabilidades registrados. Essa aprovação não comprova integração completa do banco, backup/restore ou homologação de produção. Qualquer evidência posterior de uso fora do modelo aprovado deve ser encaminhada para decisão formal, sem retirar ou depreciar a ADR-003 por inferência.
 
 O ambiente de desenvolvimento Polyford foi consultado com estado `ACTIVE_HEALTHY`, PostgreSQL `17.11.0.019` e região `sa-east-1`. Essa evidência se refere ao projeto de desenvolvimento e não comprova, por si só, arquitetura homologada de produção, controle operacional pela FORD ou compatibilidade integral com a FORD v2.
 
@@ -21,7 +21,7 @@ Definir a persistência relacional no contexto da stack adotada, preservando int
 
 ## Alternativas consideradas
 
-1. **PostgreSQL por meio do Supabase Database:** tecnologia relacional adotada para o projeto, sujeita à validação de configuração, acesso, operação, compatibilidade e continuidade na Q-025.
+1. **PostgreSQL por meio do Supabase Database:** tecnologia relacional adotada para o projeto no modelo de utilização Supabase aprovado pela TI/FORD na Q-025; a configuração operacional, os acessos, a integração e a continuidade permanecem sujeitos a validação e evidências próprias.
 2. **Outro banco relacional:** não faz parte da direção vigente; qualquer substituição exige processo formal de mudança arquitetural e decisão explícita, não bastando uma preocupação isolada de compatibilidade.
 3. **Banco documental:** não selecionado, pois as relações entre contas, conversas, participantes, autoria, mensagens, anexos e auditoria exigem integridade relacional.
 4. **Persistência multi-tenant:** não prevista na baseline atual; não acrescentar particionamento lógico ou isolamento por organização sem novo requisito aprovado.
@@ -30,7 +30,7 @@ Definir a persistência relacional no contexto da stack adotada, preservando int
 
 Manter **PostgreSQL por meio do Supabase Database** como tecnologia relacional no contexto da plataforma Supabase adotada pela ADR-003. O modelo de domínio, as migrations, os índices, as políticas de acesso, os controles de retenção e as estratégias de backup/recuperação devem permanecer versionados e rastreáveis.
 
-A configuração da instância, a administração, os acessos, o monitoramento, o backup, a restauração e as responsabilidades devem ser avaliados na Q-025 frente aos requisitos da FORD. Esta ADR permanece **Proposed**; não declara homologação de produção nem autoriza mudança da stack.
+A configuração da instância, a administração, os acessos, o monitoramento e as responsabilidades devem permanecer dentro do modelo de utilização aprovado na Q-025. Backup, restauração, continuidade e operação precisam de evidências próprias conforme a Issue #130. Esta ADR permanece **Proposed**; não declara homologação de produção nem autoriza mudança da stack.
 
 ### Modelo de domínio implementado e versionado
 
@@ -91,7 +91,7 @@ A separação entre tabelas de domínio, políticas RLS e trilhas de auditoria m
 - Migrations versionadas e histórico reconciliado, com instalação limpa reproduzível.
 
 **Negativas e cuidados:**
-- A FORD/equipe precisa governar projetos, identidades, papéis, permissões, políticas, migrations e dados; a operação da infraestrutura gerenciada segue o serviço contratado e deve ser compatibilizada na Q-025.
+- A FORD/equipe precisa governar projetos, identidades, papéis, permissões, políticas, migrations e dados; a operação da infraestrutura gerenciada deve permanecer dentro do modelo aprovado na Q-025 e das responsabilidades registradas.
 - Migrations, índices, RLS, grants, backup/restore e recuperação precisam ser validados no ambiente homologado.
 - O fluxo transacional de criação de mensagem com anexos precisa ser integrado pela aplicação; a constraint de banco não cria, sozinha, o handler/RPC de produto.
 - A existência de duas trilhas de auditoria exige manter limites e call sites sem duplicar eventos nem omitir operações.
@@ -110,13 +110,13 @@ Modelo de domínio incompleto; migrations locais divergentes do histórico remot
 - **PR #170 / Issue #124:** `privileged_action_audit`, catálogo, writer e pesquisa server-side foram integrados. Testes unitários e verificações remotas documentadas comprovaram a restrição de acesso ao cliente; a cobertura dos handlers reais e a validação de ator TI ativo em gravação real ainda não foram concluídas.
 - **PR #180 — reconciliação de migrations:** os identificadores locais foram alinhados às versões observadas no histórico remoto, a colisão de prefixos foi removida e a versão histórica de `audit_events` foi representada por ledger sem DDL. A instalação limpa em PostgreSQL local descartável aplicou 18 migrations e confirmou 18/18 entradas locais no banco de teste. Não foram executados `migration repair`, `db reset` ou `db push` no projeto remoto; a PR declara que não alterou schema ou dados remotos.
 - **Limites da instalação limpa:** o resultado 18/18 demonstra reprodutibilidade da sequência local no banco descartável. Não substitui a verificação do ambiente remoto, testes de integração completos, homologação ou validação de recuperação.
-- **Q-025 e continuidade:** a compatibilidade da configuração/modelo de uso da stack com a FORD permanece em avaliação; backup diário, retenção de 12 meses, restauração e evidência de RPO/RTO não estão comprovados como capacidade operacional concluída.
+- **Compatibilidade e continuidade:** a Q-025 aprovou, em 24/11/2026, a compatibilidade e o modelo de utilização dos provedores nomeados dentro dos limites e responsabilidades registrados. Separadamente, backup diário, retenção de 12 meses, restauração e evidência de RPO/RTO não estão comprovados como capacidade operacional concluída e permanecem acompanhados pela Issue #130.
 
 As evidências acima comprovam componentes e testes em seus ambientes e escopos descritos. Não comprovam homologação de produção, cobertura integral do MVP ou compatibilidade operacional completa com a FORD.
 
 ## Pendências para Accepted
 
-- Concluir a avaliação da configuração e do modelo de uso do Supabase Database frente aos requisitos de infraestrutura, localização, acesso e processamento da FORD na Q-025, registrando evidências, responsabilidades, limitações e riscos residuais.
+- Confirmar com Tech Lead e TI que a configuração do Supabase Database, os acessos, a governança e a operação permanecem dentro do modelo e das responsabilidades aprovados na Q-025, sem reabrir a avaliação de compatibilidade concluída.
 - Validar com Tech Lead e TI a topologia dos ambientes, permissões administrativas, gestão de credenciais, políticas e operação do banco.
 - Manter a rastreabilidade entre modelo conceitual, schema físico, migrations, constraints, índices e documentação de implementação da Issue #99.
 - Integrar e testar a persistência transacional dos fluxos de mensagem/anexos e os call sites de auditoria que dependem de handlers ainda pendentes.
