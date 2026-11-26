@@ -19,7 +19,7 @@ function clearSession(response: NextResponse) {
 
 export async function GET(request: NextRequest) {
   const authorization = await authorizeNextRequest(request);
-  if (!authorization.authorized) {
+  if (!authorization.authorized || !authorization.session) {
     const response = NextResponse.json({
       error: authorization.status === 401
         ? "Sessão inválida ou expirada."
