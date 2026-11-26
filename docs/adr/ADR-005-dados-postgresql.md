@@ -1,6 +1,6 @@
 # ADR-005 — Banco de dados e modelo de dados
 
-- **Status:** Accepted
+- **Status:** Proposed
 - **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
@@ -9,9 +9,9 @@
 
 O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, participantes, mensagens, anexos, alertas e eventos de auditoria. O produto atende uma única organização (FORD); a baseline não prevê operação multi-tenant.
 
-A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. Em 24/11/2026, TI e FORD aprovaram na Q-025 a compatibilidade da configuração e do modelo de utilização dessa stack com os requisitos de infraestrutura. Supabase Database/PostgreSQL fica aprovado como componente de persistência no contexto da stack, sem alteração da ADR-003.
+A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados, incluindo Supabase Database/PostgreSQL, dentro dos limites e responsabilidades registrados. Essa aprovação confirma o provedor e o modelo de uso autorizado; não equivale à aprovação desta ADR, nem demonstra integração completa, operação de produção, backup/restauração ou continuidade.
 
-PostgreSQL permanece como tecnologia relacional adotada no Supabase, conforme ADR-003 e Q-025 — Concluída. A operação aprovada utiliza ambientes segregados, controle de acesso, credenciais por estágio e responsabilidades operacionais definidas nas ADRs 003 e 009.
+PostgreSQL é o mecanismo relacional utilizado no Supabase Database dentro da stack aprovada. A definição arquitetural específica de banco, incluindo modelagem, schema, migrations, operação, monitoramento e recuperação, permanece documentada como proposta nesta ADR, sem reabrir a Q-025 ou a ADR-003.
 
 O schema versionado inclui `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts`, introduzidos pelas migrations #99. As estruturas `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity` também estão versionadas. As policies RLS de domínio foram integradas e testadas em desenvolvimento pela #101 (PR #172). A trilha `audit_events` e os controles de retenção de eventos foram integrados pela #102 (PR #173); callsites adicionais e backup/restore permanecem pendentes.
 
@@ -21,23 +21,23 @@ Definir a persistência de dados relacionais no contexto da stack adotada, prese
 
 ## Alternativas consideradas
 
-1. **PostgreSQL no Supabase:** tecnologia relacional adotada na stack Supabase + Vercel, com compatibilidade operacional aprovada na Q-025 e implementação sujeita aos critérios das issues de domínio.
-2. **Outro banco relacional operado sob controle da FORD:** alternativa possível caso a infraestrutura e os padrões corporativos indiquem tecnologia diferente.
+1. **PostgreSQL no Supabase Database — proposta em avaliação:** caminho relacional coerente com a stack adotada pela ADR-003 e com a aprovação do provedor/modelo de uso na Q-025; o detalhamento técnico específico permanece sujeito à revisão desta ADR.
+2. **Outro banco relacional:** não faz parte da direção vigente; eventual substituição exige processo formal de mudança arquitetural e decisão explícita, não bastando uma preocupação isolada de compatibilidade.
 3. **Banco de dados gerenciado por fornecedor não aprovado:** não permitido. O Supabase é a exceção expressamente aprovada pela FORD como provedor nomeado da stack do Polychat, sob os controles e limites registrados na Q-025.
 4. **Banco documental:** não selecionado nesta proposta, pois as relações entre conversas, participantes, autoria, mensagens e auditoria exigem integridade relacional.
 
-## Decisão
+## Proposta de decisão
 
-Adotar **PostgreSQL no Supabase Database como tecnologia relacional do Polychat**, dentro da stack Supabase + Vercel estabelecida pela ADR-003. A Q-025 foi concluída em 24/11/2026 com aprovação da TI e da FORD para a compatibilidade do modelo de utilização, da localização e operação por ambientes, dos acessos, da gestão de segredos e das responsabilidades. A stack não pode ser substituída por inferência.
+Propor **PostgreSQL no Supabase Database como tecnologia relacional do Polychat**, dentro da stack Supabase + Vercel definida pela ADR-003. A proposta é compatível com a aprovação da TI/FORD registrada na Q-025 para o modelo de uso dos provedores nomeados. A ADR-005 permanece **Proposed**, aguardando revisão e aceite técnico de sua definição específica, configuração, responsabilidades operacionais e evidências de continuidade. A Q-025 permanece concluída e a stack não pode ser substituída por inferência.
 
-### Registro de aprovação
+### Registro da aprovação formal da Q-025 — não equivale ao aceite desta ADR
 
-**Aprovadores funcionais:** TI e representante da FORD.  
+**Aprovadores da Q-025:** TI e representante da FORD.  
 **Data:** 24/11/2026.  
 **Referência:** Q-025 — Compatibilidade da stack Supabase + Vercel, concluída.  
-**Resultado:** PostgreSQL/Supabase Database aprovado para persistência de perfis e domínio do Polychat, sob a arquitetura e os controles de operação registrados nas ADRs 003 e 009.
+**Resultado:** compatibilidade e modelo de utilização dos provedores nomeados Supabase + Vercel, incluindo Supabase Database/PostgreSQL, aprovados dentro dos limites e responsabilidades registrados.
 
-O aceite desta ADR aprova a decisão tecnológica e seu modelo operacional. Não declara que todas as tabelas, policies RLS, integrações transacionais, backups ou testes de recuperação já estejam implementados; essas entregas permanecem nas issues correspondentes.
+Essa decisão formal autoriza o uso dos provedores nomeados no modelo aprovado; não converte a ADR-005 em Accepted nem declara schema completo, backup/restauração ou continuidade comprovados. A proposta desta ADR permanece sujeita à revisão técnica e aprovação específicas.
 
 O modelo lógico deve contemplar, no mínimo:
 
