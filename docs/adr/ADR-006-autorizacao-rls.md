@@ -19,7 +19,7 @@ O aceite é limitado aos mecanismos, tabelas e fluxos descritos nesta ADR. Não 
 
 A baseline prevê dois perfis: Usuário e TI. O servidor deve validar a identidade autenticada, consultar papel e estado em fonte confiável e negar acesso quando a conta estiver ausente, inativa ou possuir papel inválido. A autorização não pode depender de elementos fornecidos pelo cliente, como body, query, filtros, identificadores ou metadados.
 
-A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. As policies RLS são aplicadas no PostgreSQL/Supabase Database; a autenticação e a validação de sessão utilizam Supabase Auth. A avaliação do modelo de uso e da configuração da stack frente às restrições da FORD continua sujeita à Q-025 e não altera o status da ADR-003 por inferência.
+A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. As policies RLS são aplicadas no PostgreSQL/Supabase Database; a autenticação e a validação de sessão utilizam Supabase Auth. A Q-025 foi concluída em 24/11/2026, com aprovação da TI/FORD para o modelo de utilização e compatibilidade dos provedores nomeados, dentro dos limites e responsabilidades registrados. Essa aprovação não substitui a verificação dos privilégios, credenciais e políticas efetivamente aplicados em cada componente.
 
 ## Problema
 
@@ -136,6 +136,6 @@ Os testes SQL e as revisões citadas comprovam os cenários e os commits revisad
 - Manter testes RLS no CI e repetir no ambiente homologado, incluindo usuário não participante, perfil inativo, conversa encerrada e remoção de membership.
 - Validar separadamente autorização de objeto Storage, download e revogação conforme #116/#117.
 - Validar separadamente autorização de canal, cache e revogação de assinatura ativa conforme ADR-007.
-- Concluir a avaliação da configuração e do modelo de uso Supabase + Vercel na Q-025 com TI e Tech Lead.
+- Conferir, com TI e Tech Lead, que a configuração, os privilégios e o uso de credenciais Supabase + Vercel permanecem dentro dos limites e responsabilidades aprovados na Q-025, sem reabrir a avaliação de compatibilidade concluída.
 
 O status Accepted permanece restrito ao escopo explicitado nesta ADR. Qualquer mudança nos papéis, matriz de autorização, mecanismo de segurança ou extensão de privilégio exige revisão própria e aprovação formal, sem reabrir decisões de produto já consolidadas.
