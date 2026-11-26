@@ -6,7 +6,7 @@
 
 ## Contexto
 
-O MVP prevê conversas individuais e em grupo. A entrega de mensagens deve preservar histórico e respeitar participantes autorizados. A direção de backend é Supabase, mas não há serviço de mensageria, tabela de mensagens, canal Realtime ou fluxo de chat implementado na `main`.
+O MVP prevê conversas individuais e em grupo. A entrega de mensagens deve preservar histórico e respeitar participantes autorizados. A stack Supabase + Vercel está adotada pela ADR-003; Supabase Realtime é uma alternativa de serviço dentro dessa direção, mas não há serviço de mensageria, tabela de mensagens, canal Realtime ou fluxo de chat implementado na `main`. A decisão específica permanece Proposed e deve considerar a Q-025, sem alterar a stack por inferência.
 
 ## Problema
 
@@ -20,7 +20,7 @@ Definir como notificar participantes sobre mensagens novas sem tratar um evento 
 
 ## Decisão proposta
 
-Adotar Supabase Realtime como transporte preferencial da stack oficial, condicionado a prova de conceito técnica, validação de políticas/canais e autorização por conversa. O banco deve permanecer como fonte de verdade:
+Avaliar Supabase Realtime como transporte de notificação, condicionado a prova de conceito e aprovação técnica. O banco deve permanecer como fonte de verdade:
 
 1. Validar identidade, participação e permissão de envio no servidor/banco.
 2. Persistir a mensagem com identificador e timestamp gerados no servidor.
@@ -51,4 +51,4 @@ Não há tabelas de conversa/mensagem, canais realtime, subscriptions ou testes 
 
 ## Pendências para Accepted
 
-Prova de conceito, revisão de políticas de canal, modelo de sequência/idempotência, comportamento de reconexão e testes de isolamento. As regras funcionais de grupos e status de mensagens foram consolidadas nas Q-003 e Q-024; não são pendências de produto. Revisão técnica por Tech Lead, Dev backend, TI e SQA.
+Prova de conceito, escolha formal do transporte, políticas de canal, modelo de sequência/idempotência, comportamento de reconexão e testes de isolamento. Revisão por Tech Lead, Dev backend, TI e SQA. Resolver regras de grupo e status de mensagem aplicáveis (Q-003 e Q-024).
