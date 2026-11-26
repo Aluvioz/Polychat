@@ -4,13 +4,15 @@
 - **Data de revisão:** 25/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
-- **Dependências:** ADR-003; ADR-005; ADR-006; Issues #99, #100, #101, #109, #110, #113 e #114
+- **Dependências:** ADR-003; ADR-005; ADR-006; Q-025; Issues #99, #100, #101, #109, #110, #113 e #114
 
 ## Contexto
 
 O MVP contempla conversas individuais e em grupo. Mensagens confirmadas pelo servidor devem ser persistidas, disponibilizadas somente a participantes autorizados e recuperadas após reconexão normal, sem perda. A confirmação de leitura e o indicador de mensagens não lidas também integram o escopo funcional aprovado.
 
 A ADR-003 mantém Supabase + Vercel como stack adotada. Esta ADR trata exclusivamente do desenho de mensageria e notificação dentro dessa stack; não reabre nem substitui a decisão tecnológica.
+
+A Q-025 trata da compatibilidade da stack Supabase + Vercel com os requisitos de infraestrutura da FORD. Essa decisão de stack delimita o contexto desta ADR, mas não aprova automaticamente o Supabase Realtime nem sua modalidade de transporte (Postgres Changes ou Broadcast), não comprova sua configuração e não dispensa a prova de conceito, a validação das políticas, a revogação imediata e os testes descritos aqui. A decisão de stack da Q-025 e a decisão específica de mensageria desta ADR têm objetos distintos.
 
 ### Estado atual do modelo de dados — Issue #99 / PR #165
 
@@ -156,6 +158,7 @@ A decisão geral da stack Supabase + Vercel registrada na ADR-003 não substitui
 - [Requisitos funcionais — RF-009, RF-010 e RF-019](../03-requisitos-funcionais.md)
 - [Regras de negócio — RN-007 e RN-014](../05-regras-de-negocio-e-restricoes.md)
 - [Glossário e questões — Q-003 e Q-024](../08-glossario-e-questoes-em-aberto.md)
+- [Glossário e questões — Q-025 (compatibilidade da stack)](../08-glossario-e-questoes-em-aberto.md#q-025-compatibilidade-da-stack-adotada-com-os-requisitos-de-infraestrutura-ford)
 - [ADR-003 — Supabase + Vercel](ADR-003-supabase-vercel.md)
 - [ADR-006 — Autorização server-side e RLS](ADR-006-autorizacao-rls.md)
 - [Evidências da Issue #101](../security/issue-101-rls-evidence.md)
