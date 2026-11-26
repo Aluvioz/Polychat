@@ -9,8 +9,8 @@ begin
   if v_bucket.public is distinct from false then
     raise exception 'attachments bucket must be private';
   end if;
-  if v_bucket.file_size_limit is distinct from 10485760 then
-    raise exception 'attachments bucket must enforce the 10 MiB limit';
+  if v_bucket.file_size_limit is distinct from 10000000 then
+    raise exception 'attachments bucket must enforce the 10 MB decimal limit (10,000,000 bytes)';
   end if;
   if v_bucket.allowed_mime_types is distinct from array['application/pdf','image/jpeg']::text[] then
     raise exception 'attachments bucket must allow only PDF and JPEG MIME types';
