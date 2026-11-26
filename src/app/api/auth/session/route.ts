@@ -39,17 +39,17 @@ export async function GET(request: NextRequest) {
     headers: { "Cache-Control": "no-store" },
   });
   if (session.refreshed) {
-      const common = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax" as const,
-        path: "/",
-      };
-      response.cookies.set(AUTH_COOKIE_NAMES.access, session.accessToken, {
-        ...common,
-        ...(session.expiresIn ? { maxAge: session.expiresIn } : {}),
-      });
-      response.cookies.set(AUTH_COOKIE_NAMES.refresh, session.refreshToken, common);
+    const common = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      path: "/",
+    };
+    response.cookies.set(AUTH_COOKIE_NAMES.access, session.accessToken, {
+      ...common,
+      ...(session.expiresIn ? { maxAge: session.expiresIn } : {}),
+    });
+    response.cookies.set(AUTH_COOKIE_NAMES.refresh, session.refreshToken, common);
   }
   return response;
 }
