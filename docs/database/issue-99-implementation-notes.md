@@ -111,9 +111,7 @@ As policies de domínio e configuração permanecem no escopo da Issue #101. A p
 
 ### 3.3 Situação específica de audit_events
 
-A tabela `public.audit_events` e a migration remota `issue_102_audit_events` já aparecem no Polyford. Entretanto, a implementação correspondente está na [PR #166](https://github.com/Aluvioz/Polychat/pull/166), que permanece aberta e em Draft na última consulta, vinculada à Issue #102.
-
-A PR #166 ainda não foi integrada à `main`. Portanto, a presença da tabela no banco de desenvolvimento não deve ser apresentada como prova de que a migration de auditoria já está integrada e versionada na branch principal. Essa diferença precisa ser resolvida na sequência de integração da #102, sem duplicar a migration ou misturar o escopo das issues.
+A tabela `public.audit_events` e a versão remota histórica `20261124210245` permanecem no Polyford. A PR #166 foi encerrada sem merge; por isso, seu conteúdo SQL original não foi incorporado à `main`. A definição completa e reproduzível de `audit_events` está versionada na migration `20261125232432_issue_102_audit_retention_controls.sql`, com criação idempotente. A branch de reconciliação adiciona um arquivo de ledger sem DDL para representar a versão histórica remota, sem duplicar a criação da tabela.
 
 ## 4. Testes, CI e limites das evidências
 
@@ -147,7 +145,7 @@ Esta separação descreve dependências e limites já registrados no projeto; n�
 
 Esta atualização corrige o registro anterior que ainda descrevia a PR #165 como não integrada e a aprovação SQA como pendente. O estado correto consultado é: PR #165 merged, Tech Lead aprovado e SQA aprovado.
 
-A PR #160 e a PR #166 continuam separadas, abertas e em Draft na última consulta. A divergência de identificadores do histórico remoto também continua pendente.
+A PR #160 continua separada, aberta e em Draft na última consulta. A PR #166 foi encerrada sem merge; a migration histórica remota é reconciliada nesta branch por arquivo de ledger, enquanto a definição canônica permanece na migration integrada de #102.
 
 **Conclusão desta nota:** há evidência documentada de migrations de domínio integradas e aplicadas, schema presente no Supabase de desenvolvimento e revisão técnica/SQA aprovada para a PR #165. Isso atualiza a rastreabilidade da Issue #99, mas não declara todos os critérios originais satisfeitos nem autoriza seu fechamento.
 
