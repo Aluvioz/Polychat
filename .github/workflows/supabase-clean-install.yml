@@ -1,0 +1,67 @@
+name: Supabase clean migration install
+
+on:
+  push:
+    branches:
+      - fix/supabase-migration-history-reconciliation-20261126
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  clean-install:
+    name: Clean PostgreSQL install and CLI migration history
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout reconciliation PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Prepare isolated clean-install workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin feat/issue-115-private-attachment-storage
+          mkdir -p "$RUNNER_TEMP/polychat-clean/supabase/migrations"
+          cp supabase/migrations/*.sql "$RUNNER_TEMP/polychat-clean/supabase/migrations/"
+          git show origin/feat/issue-115-private-attachment-storage:supabase/migrations/20261126131156_issue_115_private_attachment_bucket.sql > "$RUNNER_TEMP/polychat-clean/supabase/migrations/20261126131156_issue_115_private_attachment_bucket.sql"
+          count=$(find "$RUNNER_TEMP/polychat-clean/supabase/migrations" -maxdepth 1 -type f -name '*.sql' | wc -l)
+          test "$count" -eq 18
+          echo "Prepared $count migration files from PR #180 plus PR #181."
+
+      - name: Initialize isolated Supabase local project
+        working-directory: ${{ runner.temp }}/polychat-clean
+        run: supabase init
+
+      - name: Start disposable local Supabase stack
+        working-directory: ${{ runner.temp }}/polychat-clean
+        run: supabase start
+
+      - name: Apply all migrations to an empty local database
+        working-directory: ${{ runner.temp }}/polychat-clean
+        run: supabase db reset --local
+
+      - name: Verify CLI migration history
+        working-directory: ${{ runner.temp }}/polychat-clean
+        run: |
+          set -euo pipefail
+          supabase migration list --local
+          expected=$(find supabase/migrations -maxdepth 1 -type f -name '*.sql' | wc -l)
+          actual=$(supabase migration list --local | grep -E '^[[:space:]]*[0-9]{14}[[:space:]]' | wc -l)
+          echo "Expected local migration files: $expected"
+          echo "CLI migration entries: $actual"
+          test "$actual" -eq "$expected"
+
+      - name: Stop disposable Supabase stack
+        if: always()
+        working-directory: ${{ runner.temp }}/polychat-clean
+        run: supabase stop --no-backup
