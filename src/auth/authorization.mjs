@@ -68,7 +68,7 @@ export function requireAuthenticatedUser({ supabase }) {
   };
 }
 
-/** Restricts a route to one or more roles after authentication middleware. */
+/** Validates and normalizes roles accepted by route-level authorization. */
 export function normalizeAllowedRoles(allowedRoles) {
   if (!Array.isArray(allowedRoles) && !(allowedRoles instanceof Set)) {
     throw new TypeError("Informe uma lista de roles válidas: user ou ti.");
@@ -81,6 +81,11 @@ export function normalizeAllowedRoles(allowedRoles) {
   return roles;
 }
 
+/** Applies the shared role decision after authentication middleware. */
+export function isRoleAllowed(role, roles) {
+  return ALLOWED_ROLES.has(role) && roles instanceof Set && roles.has(role);
+}
+
 /** Restricts a route to one or more roles after authentication middleware. */
 export function requireRole(...allowedRoles) {
   const roles = normalizeAllowedRoles(allowedRoles);
@@ -90,7 +95,7 @@ export function requireRole(...allowedRoles) {
     if (!req.authUser.isActive) {
       return send(res, 403, "Conta inativa. Contate a equipe de TI.");
     }
-    if (!roles.has(req.authUser.role)) {
+    if (!isRoleAllowed(req.authUser.role, roles)) {
       return send(res, 403, "Você não tem permissão para acessar este recurso.");
     }
     return next();
