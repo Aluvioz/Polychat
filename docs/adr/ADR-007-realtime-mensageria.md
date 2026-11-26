@@ -4,7 +4,7 @@
 - **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
-- **Dependências:** ADR-003; ADR-005; ADR-006; Q-025; Issues #99, #100, #101, #109, #110, #113 e #114
+- **Dependências:** ADR-003; ADR-005; ADR-006; Issues #99, #100, #101, #109, #110, #113 e #114
 
 ## Contexto
 
