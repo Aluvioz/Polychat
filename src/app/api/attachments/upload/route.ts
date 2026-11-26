@@ -1,10 +1,8 @@
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  AUTH_COOKIE_NAMES,
-  validateSession,
-} from "@/auth/supabase-session.mjs";
+import { AUTH_COOKIE_NAMES } from "@/auth/supabase-session.mjs";
+import { authorizeNextRequest } from "@/auth/next-authorization.mjs";
 import {
   MAX_ATTACHMENT_BYTES,
   validateAttachment,
@@ -29,6 +27,23 @@ function apiHeaders(apiKey: string, accessToken?: string) {
   };
 }
 
+function setSessionCookies(
+  response: NextResponse,
+  session: { accessToken: string; refreshToken: string; expiresIn: number | null },
+) {
+  const common = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+  };
+  response.cookies.set(AUTH_COOKIE_NAMES.access, session.accessToken, {
+    ...common,
+    ...(session.expiresIn ? { maxAge: session.expiresIn } : {}),
+  });
+  response.cookies.set(AUTH_COOKIE_NAMES.refresh, session.refreshToken, common);
+}
+
 async function removeUploadedObject(
   storageUrl: string,
   secretKey: string,
@@ -45,29 +60,41 @@ async function removeUploadedObject(
 }
 
 export async function POST(request: NextRequest) {
-  const accessToken = request.cookies.get(AUTH_COOKIE_NAMES.access)?.value;
-  const refreshToken = request.cookies.get(AUTH_COOKIE_NAMES.refresh)?.value;
-
-  let session;
-  try {
-    session = await validateSession({ accessToken, refreshToken });
-  } catch {
-    return json(503, { error: "Não foi possível validar a sessão." });
+  const authorization = await authorizeNextRequest(request, {
+    enforceDeviceCompatibility: true,
+  });
+  if (!authorization.authorized || !authorization.session) {
+    const response = json(authorization.status, {
+      error: authorization.message ?? (authorization.status === 401
+        ? "Autenticação necessária."
+        : "Não foi possível validar a sessão."),
+      ...(authorization.reason ? { code: authorization.reason } : {}),
+    });
+    if (authorization.session?.refreshed) {
+      setSessionCookies(response, authorization.session);
+    }
+    return response;
   }
-  if (!session) return json(401, { error: "Autenticação necessária." });
+
+  const session = authorization.session;
+  const respond = (status: number, body: Record<string, unknown>) => {
+    const response = json(status, body);
+    if (session.refreshed) setSessionCookies(response, session);
+    return response;
+  };
 
   const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   const secretKey = process.env.SUPABASE_SECRET_KEY;
   if (!baseUrl || !publishableKey || !secretKey) {
-    return json(503, { error: "Armazenamento indisponível." });
+    return respond(503, { error: "Armazenamento indisponível." });
   }
 
   let form: FormData;
   try {
     form = await request.formData();
   } catch {
-    return json(400, { error: "Solicitação inválida." });
+    return respond(400, { error: "Solicitação inválida." });
   }
 
   const messageId = form.get("messageId");
@@ -77,18 +104,18 @@ export async function POST(request: NextRequest) {
     !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(messageId) ||
     !(file instanceof File)
   ) {
-    return json(400, { error: "Informe uma mensagem e um arquivo válidos." });
+    return respond(400, { error: "Informe uma mensagem e um arquivo válidos." });
   }
 
   if (file.size > MAX_ATTACHMENT_BYTES) {
-    return json(413, { error: "O arquivo excede o limite de 10 MB." });
+    return respond(413, { error: "O arquivo excede o limite de 10 MB." });
   }
 
   let bytes: Uint8Array;
   try {
     bytes = new Uint8Array(await file.arrayBuffer());
   } catch {
-    return json(400, { error: "Não foi possível ler o arquivo enviado." });
+    return respond(400, { error: "Não foi possível ler o arquivo enviado." });
   }
 
   const validation = validateAttachment({
@@ -105,7 +132,7 @@ export async function POST(request: NextRequest) {
       : validationStatus === 415
         ? "Envie somente um PDF ou JPEG válido."
         : "O arquivo enviado é inválido.";
-    return json(validationStatus, { error: message });
+    return respond(validationStatus, { error: message });
   }
 
   // This read is performed with the caller's JWT. RLS hides messages the
@@ -125,7 +152,7 @@ export async function POST(request: NextRequest) {
       cache: "no-store",
     });
   } catch {
-    return json(503, { error: "Não foi possível validar a mensagem." });
+    return respond(503, { error: "Não foi possível validar a mensagem." });
   }
 
   if (!messageResponse.ok) {
@@ -136,9 +163,9 @@ export async function POST(request: NextRequest) {
 
   const messages = await messageResponse.json().catch(() => null);
   const message = Array.isArray(messages) ? messages[0] : null;
-  if (!message) return json(404, { error: "Mensagem não encontrada." });
+  if (!message) return respond(404, { error: "Mensagem não encontrada." });
   if (message.sender_profile_id !== session.user.id) {
-    return json(403, { error: "Você não pode anexar arquivos a esta mensagem." });
+    return respond(403, { error: "Você não pode anexar arquivos a esta mensagem." });
   }
 
   const objectPath = `${messageId}/${randomUUID()}.${validation.extension}`;
@@ -161,11 +188,11 @@ export async function POST(request: NextRequest) {
       cache: "no-store",
     });
   } catch {
-    return json(503, { error: "Não foi possível armazenar o anexo." });
+    return respond(503, { error: "Não foi possível armazenar o anexo." });
   }
 
   if (!uploadResponse.ok) {
-    return json(503, { error: "Não foi possível armazenar o anexo." });
+    return respond(503, { error: "Não foi possível armazenar o anexo." });
   }
 
   let attachmentResponse: Response;
@@ -188,7 +215,7 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     await removeUploadedObject(storageUrl, secretKey);
-    return json(503, { error: "Não foi possível registrar o anexo." });
+    return respond(503, { error: "Não foi possível registrar o anexo." });
   }
 
   if (!attachmentResponse.ok) {
@@ -202,10 +229,10 @@ export async function POST(request: NextRequest) {
   const attachment = Array.isArray(inserted) ? inserted[0] : null;
   if (!attachment?.id) {
     await removeUploadedObject(storageUrl, secretKey);
-    return json(503, { error: "Não foi possível confirmar o registro do anexo." });
+    return respond(503, { error: "Não foi possível confirmar o registro do anexo." });
   }
 
-  return json(201, {
+  return respond(201, {
     attachment: {
       id: attachment.id,
       messageId,

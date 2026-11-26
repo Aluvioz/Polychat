@@ -3,6 +3,7 @@ import {
   validateSession,
 } from "./supabase-session.mjs";
 import { isRoleAllowed, normalizeAllowedRoles } from "./authorization.mjs";
+import { evaluateDeviceCompatibility } from "./device-compatibility.mjs";
 
 /**
  * Next.js App Router adapter for the existing session and role rules.
@@ -10,11 +11,18 @@ import { isRoleAllowed, normalizeAllowedRoles } from "./authorization.mjs";
  */
 export async function authorizeNextRequest(
   request,
-  { allowedRoles = ["user", "ti"], validate = validateSession } = {},
+  {
+    allowedRoles = ["user", "ti"],
+    validate = validateSession,
+    enforceDeviceCompatibility = false,
+  } = {},
 ) {
   const roles = normalizeAllowedRoles(allowedRoles);
   if (typeof validate !== "function") {
     throw new TypeError("A função de validação de sessão é obrigatória.");
+  }
+  if (typeof enforceDeviceCompatibility !== "boolean") {
+    throw new TypeError("A opção de compatibilidade de dispositivo deve ser booleana.");
   }
 
   try {
@@ -29,6 +37,27 @@ export async function authorizeNextRequest(
 
     if (!isRoleAllowed(session.user?.role, roles)) {
       return { authorized: false, status: 403, session: null };
+    }
+
+    if (enforceDeviceCompatibility) {
+      const deviceCompatibility = evaluateDeviceCompatibility({
+        role: session.user.role,
+        userAgent: request.headers?.get?.("user-agent") ?? "",
+      });
+
+      if (!deviceCompatibility.compatible) {
+        return {
+          authorized: false,
+          status: 403,
+          reason: "DEVICE_NOT_SUPPORTED",
+          message: deviceCompatibility.message,
+          deviceCompatibility,
+          // Preserve the validated session for refreshed-cookie rotation on denial.
+          session,
+        };
+      }
+
+      return { authorized: true, status: 200, session, deviceCompatibility };
     }
 
     return { authorized: true, status: 200, session };
