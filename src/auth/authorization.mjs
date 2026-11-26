@@ -69,12 +69,21 @@ export function requireAuthenticatedUser({ supabase }) {
 }
 
 /** Restricts a route to one or more roles after authentication middleware. */
-export function requireRole(...allowedRoles) {
-  const roles = new Set(allowedRoles);
+export function normalizeAllowedRoles(allowedRoles) {
+  if (!Array.isArray(allowedRoles) && !(allowedRoles instanceof Set)) {
+    throw new TypeError("Informe uma lista de roles válidas: user ou ti.");
+  }
 
+  const roles = new Set(allowedRoles);
   if (roles.size === 0 || [...roles].some((role) => !ALLOWED_ROLES.has(role))) {
     throw new TypeError("Informe ao menos uma role válida: user ou ti.");
   }
+  return roles;
+}
+
+/** Restricts a route to one or more roles after authentication middleware. */
+export function requireRole(...allowedRoles) {
+  const roles = normalizeAllowedRoles(allowedRoles);
 
   return function roleAuthorization(req, res, next) {
     if (!req.authUser) return send(res, 401, "Autenticação necessária.");
