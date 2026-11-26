@@ -1,7 +1,7 @@
 # ADR-005 — Banco de dados e modelo de dados
 
 - **Status:** Accepted
-- **Data de revisão:** 24/11/2026
+- **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
 
@@ -89,10 +89,15 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 - `202611160001_profiles_roles_and_account_status.sql` estabelece `profiles`, papéis e estado da conta.
 - `202611240001_issue_99_initial_domain_schema.sql` cria as tabelas principais do domínio e habilita RLS sem policies de domínio.
 - `202611240002_issue_99_integrity_and_configuration.sql` implementa invariantes de mensagem/anexos e estruturas específicas de configuração.
+- **Schema — PR #165:** as migrations iniciais de domínio foram integradas e revisadas no escopo da entrega; as estruturas `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts` permanecem versionadas.
+- **Índices — PR #168:** migration aditiva com índices de cobertura de FKs integrada; a verificação posterior em `pg_indexes` confirmou sua persistência no Polyford de desenvolvimento.
 - As notas da Issue #99 registram a aplicação e inspeção dessas migrations no projeto Supabase Polyford de desenvolvimento, região `sa-east-1`.
 - As policies RLS de domínio foram integradas pela PR #172 e os testes de isolamento passaram em Polyford; a evidência não equivale à homologação de produção ou cobertura de todos os handlers.
 - A trilha `audit_events`, `retention_holds` e descarte controlado de eventos foram integrados pela PR #173 e testados em Polyford; retenção física de mensagens/anexos, backup/restore e callsites para todas as operações continuam pendentes.
 - A infraestrutura separada `privileged_action_audit` foi integrada pela PR #170 para a #124; handlers/callsites de negócio ainda precisam ser instrumentados.
+- **Histórico de migrations — PR #180 e PR #181:** a sequência local contém 18 migrations, incluindo a migration do bucket privado. A instalação limpa no workflow da #180 aplicou 18 migrations em PostgreSQL local descartável e confirmou 18/18 entradas em `supabase migration list --local`. Essa evidência não altera o histórico remoto nem representa aplicação de DDL no Polyford.
+- **Storage e upload — PRs #181 e #185:** a PR #181 provisionou o bucket privado `attachments` no Polyford, com allowlist PDF/JPEG e limite de 10.485.760 bytes (10 MiB); a PR #185 integrou o endpoint inicial server-side de upload, com validação de sessão/autoria, extensão/MIME/assinatura, limite de 10 MiB e metadados sob RLS. Não comprova download, links temporários, scanner/quarentena, quotas, backup de objetos ou fluxo ponta a ponta.
+- O histórico remoto consultado após a PR #181 registrou 18 versões correspondentes à sequência consolidada. Não foram executados `db push`, `migration repair` ou reset no Polyford remoto.
 - A baseline POLY-REQ-001 v0.5 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
 
 ## Trabalho de implementação remanescente
