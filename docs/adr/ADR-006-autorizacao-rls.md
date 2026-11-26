@@ -48,13 +48,16 @@ A verificação server-side reduz dependência da UI. RLS fornece uma segunda fr
 
 ## Limite explícito do aceite
 
-O aceite cobre somente o módulo de autorização e a tabela `profiles`. A migration ainda não comprova aplicação em projeto Supabase hospedado. O middleware é Express-compatible e ainda não está conectado às rotas reais da aplicação Next.js. Não há políticas RLS de conversas, participantes, mensagens, anexos ou auditoria; portanto, esta ADR não declara autorizado o acesso a esses recursos.
+O aceite cobre somente o módulo de autorização e a tabela `profiles`. A migration ainda não comprova aplicação em projeto Supabase hospedado. A sessão do Next.js App Router é integrada por `src/auth/next-authorization.mjs`, consumido por `GET /api/auth/session`. O middleware Express permanece disponível para handlers que usem Bearer. Ainda não existem handlers de recursos de negócio que consumam permissões específicas de User/TI; eles deverão usar o adaptador antes de executar operações protegidas. A existência de autorização de perfil não substitui as políticas RLS de domínio, que devem ser verificadas por recurso.
 
 ## Evidências e testes
 
-- `src/auth/authorization.mjs`
+- `src/auth/authorization.mjs` e `src/auth/next-authorization.mjs`
+- `src/auth/supabase-session.mjs` e `src/app/api/auth/session/route.ts`
 - `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`
-- `tests/authorization.test.mjs`: 11 casos unitários com Supabase simulado, incluindo token ausente/inválido, conta inativa, perfil ausente, falha de consulta, papel inválido e separação de papel TI/Usuário.
+- `tests/authorization.test.mjs`: 11 casos unitários do middleware Bearer.
+- `tests/next-authorization.test.mjs`: casos do adaptador Next.js para cookies, sessão inválida, restrição TI, perfil User e falha fechada.
+- `tests/supabase-session.test.mjs`: validação de sessão, bloqueio de conta inativa e renovação/revogação de tokens.
 - O workflow CI executa `npm test`, ESLint, TypeScript e build.
 
 ## Próxima extensão
