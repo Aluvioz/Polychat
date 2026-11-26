@@ -22,7 +22,10 @@ const tiSession = {
   user: { id: "ti-1", username: "administrador", role: "ti" },
 };
 const userSession = {
-  refreshed: false,
+  accessToken: "rotated-access",
+  refreshToken: "rotated-refresh",
+  expiresIn: 3600,
+  refreshed: true,
   user: { id: "user-1", username: "colaborador", role: "user" },
 };
 
@@ -36,7 +39,7 @@ test("permite acesso ao console para TI autenticado e ativo", async () => {
   assert.equal(result.session.user.role, "ti");
 });
 
-test("nega usuário comum mesmo que solicite a role user nas opções", async () => {
+test("nega usuário comum e preserva tokens renovados para a sessão", async () => {
   const result = await authorizeTIConsoleRequest(requestCookies("access"), {
     allowedRoles: ["user"],
     validate: async () => userSession,
@@ -44,7 +47,8 @@ test("nega usuário comum mesmo que solicite a role user nas opções", async ()
 
   assert.equal(result.authorized, false);
   assert.equal(result.status, 403);
-  assert.equal(result.session, null);
+  assert.equal(result.session, userSession);
+  assert.equal(result.session.refreshToken, "rotated-refresh");
 });
 
 test("nega sessão ausente ou expirada", async () => {
