@@ -137,3 +137,60 @@ for (const entry of cases) {
     }
   });
 }
+
+for (const zoom of [2, 4]) {
+  test(`129-reflow-${zoom * 100}: effective viewport at ${zoom * 100}%`, async () => {
+    const browser = await chromium.launch();
+    const width = 1280 / zoom;
+    const page = await browser.newPage({ viewport: { width, height: 900 / zoom }, deviceScaleFactor: zoom });
+    try {
+      await page.goto(base + "/login", { waitUntil: "networkidle" });
+      const main = page.getByRole("main");
+      await main.waitFor();
+      await page.screenshot({ path: `${output}/reflow-${zoom * 100}-login.png`, fullPage: true });
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), "horizontal overflow");
+      for (const control of [page.getByRole("heading", { name: "Entrar no Polychat" }), page.getByLabel("Nome de usuário"), page.getByLabel("Senha"), page.getByRole("button", { name: "Entrar" })]) {
+        assert.ok(await control.isVisible());
+        const rect = await control.boundingBox();
+        assert.ok(rect && rect.x >= 0 && rect.x + rect.width <= width + 1, "content horizontally clipped");
+      }
+      const submit = page.getByRole("button", { name: "Entrar" });
+      await submit.scrollIntoViewIfNeeded();
+      await submit.focus();
+      assert.ok(await submit.evaluate((element) => element === document.activeElement));
+      await page.screenshot({ path: `${output}/reflow-${zoom * 100}-submit.png` });
+      console.log(`reflow ${zoom * 100}% equivalent: ${width} CSS px, deviceScaleFactor ${zoom}; not native browser zoom`);
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+test("129-forced-colors: controls and keyboard focus in forced colors", async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, forcedColors: "active" });
+  try {
+    await page.goto(base + "/login", { waitUntil: "networkidle" });
+    assert.ok(await page.evaluate(() => matchMedia("(forced-colors: active)").matches));
+    await page.screenshot({ path: `${output}/forced-colors-login.png`, fullPage: true });
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement.id), "username");
+    const username = page.getByLabel("Nome de usuário");
+    const focus = await username.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth), outlineColor: style.outlineColor, borderColor: style.borderTopColor, background: getComputedStyle(element.closest(".login-card")).backgroundColor };
+    });
+    console.log("forced colors computed styles", JSON.stringify(focus));
+    assert.ok(focus.outlineStyle !== "none" && focus.outlineWidth >= 2);
+    assert.ok(contrast(focus.outlineColor, focus.background) >= 3, "forced colors focus contrast");
+    await page.screenshot({ path: `${output}/forced-colors-focus.png`, fullPage: true });
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement.id), "password");
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement.tagName), "BUTTON");
+    await page.screenshot({ path: `${output}/forced-colors-submit.png`, fullPage: true });
+  } finally {
+    await browser.close();
+  }
+});
