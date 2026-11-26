@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Data da decisão original:** 17/11/2026
-- **Data da revisão:** 24/11/2026
+- **Data da revisão:** 26/11/2026
 - **Issue de origem:** #89 · **Referência original:** #88
 - **Baseline de referência:** POLY-REQ-001 v0.5
 - **Escopo:** registrar Supabase + Vercel como stack tecnológica vigente e obrigatória para o desenvolvimento do Polychat. Esta decisão orienta as issues, PRs e documentos técnicos; não substitui a definição dos detalhes de implantação, segurança e operação.
