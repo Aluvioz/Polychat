@@ -110,7 +110,7 @@ A baseline do produto registra:
 
 O tamanho da população inicial não reduz a criticidade dos ativos. Mensagens, credenciais, anexos e privilégios administrativos continuam exigindo controles adequados.
 
-### 4.2 Estado observado na main (sincronização de 26/11/2026 — commit 953b04d42119002c15555ab1634e65b223ded8b3)
+### 4.2 Estado observado na main (sincronização de 26/11/2026 — commit 90eb8575c023c0031150c063c94381a215e8f1ff)
 
 A fotografia considera as integrações das PRs #170, #172, #173, #174, #175, #180, #181 e #185. As entregas ampliaram autenticação/autorização, RLS, auditoria, Storage e upload, mas não concluíram a integração ponta a ponta do produto.
 
