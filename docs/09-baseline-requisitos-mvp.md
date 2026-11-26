@@ -63,7 +63,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Confirmação de leitura, horário de leitura e quantidade de mensagens não lidas.
 - Histórico paginado, começando pelas mensagens mais recentes, sujeito à política de retenção.
 - Sincronização em tempo real e recuperação automática após desconexão normal, sem perda de mensagens confirmadas pelo servidor.
-- Anexos exclusivamente JPEG e PDF, com até 10 MB por arquivo e até 5 arquivos por mensagem.
+- Anexos exclusivamente JPEG e PDF, com até 10 MiB (10.485.760 bytes) por arquivo e até 5 arquivos por mensagem, conforme retificação funcional do PO em 26/11/2026.
 - Limites individuais de armazenamento e capacidade total definidos pelo TI; sem limite específico por conversa.
 - Seleção de JPEG existente na galeria do celular, sem captura de fotos ou gravação de áudio/vídeo pela aplicação.
 - Remoção de metadados das imagens, incluindo localização GPS.
@@ -123,7 +123,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 | D-011 | TI consulta qualquer conversa e exporta conversas a qualquer momento, sem justificativa ou autorização prévia de outra pessoa; ações são auditadas. | Confirmado | RN-014; RF-016; RF-021; RF-022 |
 | D-012 | Confirmação/horário de leitura e contador de mensagens não lidas. | Confirmado | RF-019 |
 | D-013 | Mensagens confirmadas são persistidas e recuperadas após reconexão normal; RPO de 24h aplica-se somente a desastre/falha de infraestrutura. | Confirmado | RN-023; RF-009; RF-010; RNF-009 |
-| D-014 | Anexos PDF/JPEG; 10 MB por arquivo; até 5 por mensagem; quotas individual e total administradas pelo TI. | Confirmado/alinhado | RN-008; RF-011; RF-012; RNF-010 |
+| D-014 | Anexos PDF/JPEG; 10 MiB (10.485.760 bytes) por arquivo; até 5 por mensagem; quotas individual e total administradas pelo TI. | Confirmado/alinhado; limite retificado pelo PO em 26/11/2026 | RN-008; RF-011; RF-012; RNF-010 |
 | D-015 | Scanner antimalware na infraestrutura FORD; falha/inconclusão mantém anexo bloqueado; TI pode liberar arquivo. | Confirmado | RN-008; RF-011; RF-012; RNF-010 |
 | D-016 | Sem captura de foto ou gravação; JPEG selecionado da galeria; remoção de metadados GPS. | Confirmado | RN-011; RF-013 |
 | D-017 | Detecção por regras/lista de termos do TI, incluindo palavrões; sem análise contextual ou IA de terceiros. | Confirmado/alinhado | RN-012; RF-014 |
