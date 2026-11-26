@@ -2,10 +2,10 @@
 
 **Issue de origem:** #88 — Consolidar baseline de requisitos e escopo MVP  
 **Identificador:** POLY-REQ-001  
-**Versão:** 0.5 — 20/11/2026  
+**Versão:** 0.5 — 20/11/2026 (baseline funcional; revisão documental de consistência em 26/11/2026)  
 **Fonte primária:** Questionário de Esclarecimento de Requisitos da FORD, versão atualizada (FORD v2), recebido em 19/11/2026.  
 **Fontes complementares:** alinhamentos do PO com Desenvolvimento, premissas consolidadas nos documentos 00 a 08 e decisões de negócio registradas pelo representante da FORD.  
-**Estado:** baseline de produto atualizada com arquitetura da informação por perfil e paleta visual provisória Ford; ativos oficiais de logotipo permanecem pendentes em Q-019 e compatibilização arquitetural permanece em Q-025.
+**Estado:** baseline de produto v0.5, mantida sem alteração dos requisitos funcionais. Q-018 está resolvida; Q-019 mantém pendência apenas dos ativos oficiais de marca; Q-025 foi concluída em 24/11/2026 com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, inclusive Storage, dentro dos limites e responsabilidades registrados. A implementação do produto permanece parcial e não equivale a homologação ou autorização de release.
 
 Esta versão substitui, para a especificação de produto, a baseline v0.3 baseada principalmente na visão POLYCHAT — FORD v0.1. Os identificadores existentes foram preservados; os novos requisitos funcionais foram acrescentados a partir de RF-019.
 
@@ -26,8 +26,8 @@ A classificação de um requisito como confirmado ou alinhado não significa que
 1. A FORD v2 e os alinhamentos complementares registrados pelo PO em 19/11/2026 prevalecem sobre respostas e interpretações anteriores da visão v0.1.
 2. As decisões de negócio atuais prevalecem sobre documentos anteriores que ainda indiquem políticas, permissões ou parâmetros diferentes.
 3. Os documentos 00 a 08 desta revisão detalham a baseline e devem permanecer consistentes com este documento.
-4. A Issue #88 e as ADRs elaboradas antes do alinhamento continuam sendo registros históricos/técnicos, mas não autorizam ignorar a restrição mais recente da FORD para infraestrutura e processamento de dados.
-5. Não se presume que uma tecnologia atualmente presente no código esteja aprovada para produção apenas por já ter sido utilizada ou documentada.
+4. A Issue #88 e as ADRs elaboradas antes do alinhamento permanecem como registros históricos/técnicos. A decisão vigente está registrada na ADR-003 — Accepted e na conclusão da Q-025 em 24/11/2026, que aprovou a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, inclusive Storage, dentro dos limites e responsabilidades documentados.
+5. A aprovação da Q-025 não autoriza automaticamente provedores ou serviços adicionais, nem comprova implementação funcional, execução de controles por componente, continuidade, homologação de produção ou release. Não se presume que uma tecnologia esteja homologada apenas por estar presente no código.
 
 ### 1.3 Premissas de gestão já encerradas
 
@@ -204,7 +204,7 @@ A descrição detalhada e os critérios de aceitação estão em [03 — Requisi
 | RNF-010 | Segurança de anexos e antimalware | Confirmado/alinhado |
 | RNF-011 | Monitoramento e tratamento de dados | Regras operacionais registradas; obrigações legais aplicáveis permanecem |
 | RNF-012 | Acessibilidade | Não há requisito adicional informado pela FORD; obrigações aplicáveis permanecem |
-| RNF-013 | Infraestrutura, soberania de dados e isolamento dos ambientes | Restrição FORD confirmada; arquitetura técnica a reconciliar |
+| RNF-013 | Infraestrutura, soberania de dados e isolamento dos ambientes | Restrição FORD confirmada; compatibilidade/modelo de utilização dos provedores nomeados Supabase + Vercel aprovados na Q-025 dentro dos limites registrados; segregação, controles e operação por ambiente ainda exigem evidências próprias |
 
 A descrição completa está em [04 — Requisitos não funcionais](04-requisitos-nao-funcionais.md).
 
@@ -222,88 +222,117 @@ A descrição completa está em [05 — Regras de negócio e restrições](05-re
 
 ## 5. Arquitetura e implementação observadas
 
-### 5.1 Restrição de infraestrutura atual
+### 5.1 Restrição de infraestrutura e decisão arquitetural vigente
 
-A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas.
+A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas. Essa restrição permanece como requisito do cliente e não foi revogada.
 
-Essa regra é requisito do cliente e prevalece sobre premissas tecnológicas anteriores incompatíveis. A Issue #88 e as ADRs anteriores registram Supabase + Vercel como direção tecnológica; essa direção precisa ser reconciliada formalmente com a restrição atual. Não se deve presumir que a utilização anterior dessas plataformas continua autorizada para produção.
+A decisão arquitetural vigente está registrada na **ADR-003 — Accepted**: Supabase + Vercel permanece como stack tecnológica adotada e obrigatória do Polychat. A **Q-025 foi concluída em 24/11/2026**, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados, inclusive Storage, dentro dos limites e responsabilidades registrados na decisão e na Issue #130.
 
-A decisão de arquitetura deve separar:
+A conclusão da Q-025 resolve a avaliação de compatibilidade e do modelo de utilização no escopo aprovado. Não equivale a autorização genérica para incluir outros provedores ou serviços, nem comprova que cada módulo esteja integrado, que todos os controles estejam implementados, que a continuidade esteja operacional ou que o produto esteja homologado para produção.
+
+A aplicação da decisão exige manter rastreabilidade e segregação das seguintes responsabilidades:
 - Tecnologia e framework de aplicação.
 - Hospedagem e execução do frontend/backend.
 - Banco de dados.
 - Autenticação e gestão de sessões.
-- Armazenamento de anexos.
+- Armazenamento e disponibilização de anexos.
 - Antimalware e análise de conteúdo.
 - Segredos e gestão de chaves.
 - Monitoramento, auditoria, backup e recuperação.
-- Ambientes de desenvolvimento, homologação e produção.
+- Ambientes de desenvolvimento, homologação/Preview e produção.
 
-A solução final deve manter dados e processamento dentro da fronteira de controle da FORD. A reconciliação será registrada em ADR e na issue técnica pertinente; não é resolvida apenas por esta baseline.
+Qualquer ampliação do modelo de utilização aprovado, inclusão de serviço adicional com acesso a dados ou evidência concreta de incompatibilidade deve ser submetida à governança e às responsabilidades competentes da FORD, com avaliação de impacto e decisão formal. A Q-025 não deve permanecer classificada como questão aberta nem ser reaberta por inferência.
 
 ### 5.2 Fotografia técnica do repositório
 
-Snapshot documental consultado na branch main em 19/11/2026:
+Snapshot documental consultado na branch `main` em **26/11/2026**. A fotografia registra implementação parcial por componentes; não declara que o MVP esteja funcional ponta a ponta.
 
-- O repositório contém aplicação Next.js 16 com React 19, TypeScript e App Router, além de instruções e integração de deploy historicamente orientadas à Vercel.
-- O README ainda descreve Vercel como destino de hospedagem/deploy e Supabase como backend planejado, declarando que a integração Supabase ainda não foi conectada.
-- A interface principal é uma página institucional. Não foram encontradas telas completas de login, conversas, mensagens, grupos, anexos ou console administrativo.
-- O módulo src/auth/authorization.mjs contém middleware Express-compatible que recebe um cliente Supabase server-side, valida token por supabase.auth.getUser(token), consulta profiles, aceita user e ti, bloqueia perfil ausente/desconhecido e conta inativa, e falha fechada.
-- O middleware não está conectado a handlers/rotas reais do App Router.
-- A migration supabase/migrations/202611160001_profiles_roles_and_account_status.sql cria public.profiles, habilita RLS, permite leitura do próprio perfil ou por TI ativo, revoga escrita direta de anon/authenticated, protege alterações de papel/status e cria perfil padrão user.
-- A migration versionada não comprova aplicação ou homologação em ambiente hospedado.
-- Não foram encontradas migrations/políticas RLS de domínio para conversas, participantes, mensagens, anexos ou auditoria.
-- O arquivo .env.example contém placeholders públicos para URL e anon key; não há credenciais reais versionadas.
-- O package.json consultado não incluía SDK Supabase nas dependências.
-- O workflow CI executa testes automatizados, ESLint, TypeScript e build em atualizações da main e em Pull Requests direcionadas à main.
+- **Frontend e hospedagem:** o repositório utiliza Next.js 16, React 19, TypeScript e App Router, com Vercel como plataforma oficial de hospedagem/deploy conforme ADR-002 e ADR-003. A existência da aplicação e da infraestrutura não comprova que todas as telas e jornadas do MVP estejam concluídas.
+- **Autenticação e sessão — PR #175 / Issue #105:** estão integrados o serviço de sessão Supabase Auth, login por nome de usuário, validação/renovação de sessão e logout, com rotas Next.js e cookies HTTP-only. O adaptador de autorização Next.js está integrado à rota de consulta de sessão. Os fluxos administrativos completos de criação/alteração de contas e recuperação de credenciais pelo TI permanecem pendentes.
+- **Modelo de dados — PR #165 / Issue #99:** migrations versionadas contemplam `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e tabelas de configuração, com constraints, relações e índices. A aplicação/inspeção registrada no Polyford refere-se ao ambiente de desenvolvimento, não à homologação de produção.
+- **Reconciliação de migrations — PR #180:** os identificadores locais foram alinhados ao histórico remoto. A instalação limpa de 18 migrations foi executada em PostgreSQL local descartável. Não foram executados `migration repair`, `db reset` ou `db push` no projeto remoto; esse teste demonstra reprodutibilidade local, não restauração nem homologação de produção.
+- **Autorização e RLS — PR #172 / Issue #101:** foram integradas policies de domínio para conversas, memberships, mensagens, metadados de anexos, leituras, alertas e tabelas de configuração. A evidência da PR registra 16/16 cenários SQL e um teste separado de criação de conversa direta, em transações revertidas. A cobertura RLS não substitui autorização dos objetos do Storage nem dos canais Realtime.
+- **Ressalva de credenciais privilegiadas:** a revisão do Tech Lead na PR #172 registrou que o SQA não conseguiu certificar, no escopo daquela PR, a ausência de `service_role` no frontend. Essa verificação de segurança permanece pendente e não deve ser considerada resolvida apenas pelo merge.
+- **Auditoria genérica — PR #173 / Issue #102:** foram integrados `audit_events`, controles append-only, `retention_holds`, descarte controlado e writer. Permanecem sem call sites validados eventos de visualização/exportação de conversas, download/liberação de anexos e alterações de configuração.
+- **Auditoria privilegiada — PR #170 / Issue #124:** foram integrados `privileged_action_audit`, catálogo, writer e pesquisa server-side. A Issue #124 permanece aberta porque a instrumentação dos handlers reais e a integração dos eventos ainda precisam ser concluídas.
+- **Storage e upload — PRs #181 e #185 / Issue #115:** a PR #181 provisionou o bucket `attachments` como privado, com allowlist MIME PDF/JPEG e limite técnico de 10 MiB; a verificação registrada não encontrou policies de acesso direto em `storage.objects`. A PR #185 integrou `POST /api/attachments/upload`, validação de sessão, verificação da mensagem/remetente, upload server-side, validação de extensão/MIME/assinatura binária e gravação de metadados, com remoção do objeto caso o registro falhe. Foram adicionados 10 casos unitários de validação.
+- **Limites ainda ausentes de anexos:** a implementação de upload não entrega download autorizado/URL temporária, scanner antimalware, quarentena/liberação, quotas aplicadas, rejeição de PDF protegido por senha, remoção EXIF/GPS, revogação imediata após remoção de membership ou backup/restore de objetos. As Issues #115, #116 e #117 permanecem abertas para os critérios remanescentes.
+- **Divergência de tamanho:** a regra de produto desta baseline permanece em **10 MB** por arquivo; a configuração e o endpoint registrados nas PRs #181/#185 usam **10 MiB**. A diferença deve ser resolvida por validação técnica e rastreabilidade formal antes do aceite, sem alterar o requisito por inferência.
+- **Mensageria/Realt ime:** não há evidência de canais/subscriptions Supabase Realtime, modalidade de transporte aprovada, autorização de canais ou revogação de assinaturas ativas. Schema e RLS de domínio já existem, mas não constituem implementação de Realtime. As Issues #109, #110, #113 e #114 permanecem abertas.
+- **Segurança e monitoramento:** as regras de produto de detecção, severidade e tratamento de alertas estão definidas; a implementação de detecção/fila e a integração de eventos aos handlers permanecem pendentes nas Issues #122 e #123 e na ADR-010.
+- **Ambientes e deploy:** os escopos das Issues #96 e #98 foram encerrados e seus aceites devem ser preservados nos limites originais. Esses aceites não representam homologação integral, comprovação de continuidade ou autorização de lançamento.
+- **CI:** há workflow GitHub Actions para testes, ESLint, TypeScript e build. A existência do workflow não comprova branch protection, required checks nem homologação de produção.
 
-**Conclusão técnica do snapshot:** existe fundação parcial de frontend e autorização de perfis, mas não há arquitetura funcional ponta a ponta implementada. Além da implementação funcional ausente, a direção antiga Supabase/Vercel precisa ser reconciliada com a restrição de infraestrutura FORD antes de ser considerada arquitetura-alvo.
+**Conclusão técnica do snapshot:** a stack Supabase + Vercel está adotada e seu modelo de utilização foi aprovado na Q-025 dentro dos limites registrados. O repositório contém implementação parcial integrada de sessão/autorização, schema, RLS, auditoria e Storage/upload. Realtime, integração ponta a ponta, fluxos completos de anexos, detecção/fila de alertas, cobertura integral de auditoria e validação operacional ainda não estão concluídos.
 
 ### 5.3 Limites da evidência técnica
 
-- A existência de código, migration ou variável de exemplo não comprova integração com serviço hospedado.
-- O middleware isolado e os testes simulados não comprovam autorização integrada às rotas reais do produto.
-- A RLS existente cobre profiles; não comprova isolamento de conversas, memberships, mensagens, anexos ou auditoria.
-- Build, lint e testes unitários não comprovam fluxos funcionais, homologação de infraestrutura ou atendimento às metas operacionais.
-- A aplicação não deve ser considerada pronta para produção até que a arquitetura compatível com a FORD esteja formalizada, implementada e homologada.
+- A existência de código, migration, workflow, configuração ou variável de exemplo não comprova, isoladamente, integração ponta a ponta nem homologação de produção.
+- A aprovação da Q-025 comprova a compatibilidade e o modelo de utilização dos provedores nomeados no escopo e nos limites registrados; não substitui testes, integração, verificação de controles por componente ou evidências de operação.
+- Os testes SQL de RLS comprovam os cenários executados no ambiente descrito, mas não demonstram proteção automática de handlers que não invoquem a autorização nem autorização de objetos Storage ou canais Realtime.
+- Os testes unitários de validação de anexos não equivalem a parser completo de PDF/JPEG, scanner antimalware, teste de download ou validação de todo o ciclo de anexos.
+- A instalação limpa de migrations em PostgreSQL local descartável comprova a sequência local testada, não a restauração de backup, a integridade de produção ou homologação de ambiente.
+- As entregas de auditoria comprovam estruturas e writers nos escopos implementados; não comprovam cobertura de todos os eventos e handlers administrativos.
+- A divergência entre o requisito de 10 MB e a configuração de 10 MiB deve ser resolvida antes do aceite do ciclo de anexos.
+- A existência de workflow de CI não comprova branch protection, required checks ou aprovação de release.
+- A aplicação não deve ser considerada pronta para produção até que os fluxos da baseline estejam implementados, testados, revisados e homologados, com evidências de continuidade e Go/No-Go.
 
 ## 6. Autorização e comportamento de erro
 
-O contrato existente no módulo isolado de autorização e coberto por testes simulados é:
+O contrato de autorização utiliza validação server-side combinada com RLS no PostgreSQL/Supabase Database. Os papéis válidos são `user` e `ti`; identidade, papel e estado da conta devem ser obtidos de fonte confiável, nunca de body, query, filtros ou metadados fornecidos pelo cliente.
 
-- Token ausente: HTTP 401; operação protegida não prossegue.
-- Token inválido/expirado ou identidade não retornada pelo provedor: HTTP 401.
-- Perfil ausente, papel diferente de user/ti ou conta inativa: HTTP 403.
-- Falha ao consultar perfil ou exceção de infraestrutura: HTTP 503 genérico e falha fechada.
-- Rota restrita a TI chamada por Usuário: HTTP 403, desde que a autenticação anteceda a verificação de papel.
-- Identidade, papel e estado são obtidos de fonte confiável no servidor, não de body/query fornecidos pelo cliente.
+### Contrato funcional
+
+- Token ausente, inválido ou expirado: a requisição protegida não prossegue e retorna falha de autenticação.
+- Perfil ausente, papel diferente de `user`/`ti` ou conta inativa: a requisição não recebe autorização.
+- Falha ao consultar perfil, validar sessão ou consultar dependência necessária: falha fechada, sem concessão de acesso.
+- Rota restrita a TI chamada por Usuário: negar acesso.
 - Respostas não devem revelar stack trace, tokens, chaves ou mensagens internas do banco.
+- Toda rota ou handler protegido deve invocar o adaptador/middleware de autorização adequado antes de executar a operação.
 
-**Limitação:** esses comportamentos foram observados em módulo isolado e testes com serviço simulado. Ainda não comprovam integração com o runtime definitivo escolhido para a infraestrutura FORD.
+### Implementação e cobertura observadas
+
+- `src/auth/supabase-session.mjs` implementa login por username, validação de access token, refresh, reconsulta de perfil/estado, revogação e logout.
+- As rotas `POST /api/auth/login`, `GET /api/auth/session` e `POST /api/auth/logout` integram os fluxos de autenticação no Next.js App Router.
+- `src/auth/authorization.mjs` mantém funções de autenticação/autorização server-side; `src/auth/next-authorization.mjs` integra o adaptador ao App Router.
+- As policies RLS de domínio integradas pela PR #172 cobrem conversas, memberships, mensagens, metadados de anexos, leituras, alertas e tabelas de configuração.
+- A evidência da PR #172 registra 16/16 cenários SQL aprovados no Polyford e um teste separado de criação de conversa direta, com transações revertidas.
+- A PR #175 integrou o adaptador à rota `GET /api/auth/session`; seus registros reportam testes unitários e verificações de lint, TypeScript, build e smoke test aprovados no head revisado.
+
+### Limites conhecidos
+
+- Os mecanismos disponíveis não protegem automaticamente handlers que não os invoquem.
+- O aceite de RLS não cobre objetos do Storage, autorização de download ou canais Realtime.
+- A revogação de membership precisa ser aplicada nos handlers e nos fluxos persistentes/Realtime correspondentes.
+- A revisão do Tech Lead na PR #172 registrou que o SQA não conseguiu certificar, no escopo daquela PR, a ausência de `service_role` no frontend. Essa verificação permanece necessária até haver evidência conclusiva.
+- A integração de sessão não significa que o ciclo administrativo completo de criação, alteração e recuperação de contas esteja concluído.
 
 ## 7. Testes e evidências
 
-A suíte de autorização existente contém 11 testes com Supabase simulado: usuário ativo, ausência de token, sessão inválida, conta inativa, falha de consulta, papel desconhecido, acesso TI, bloqueio de Usuário em rota TI, perfil ausente, exceção do provedor e rota TI sem autenticação.
+As evidências abaixo distinguem teste especificado, teste executado e escopo efetivamente comprovado. Nenhum resultado isolado equivale à homologação completa do MVP.
 
-Comandos locais disponíveis no projeto:
-- npm test
-- npm run lint
-- npm run typecheck
-- npm run build
+- **Sessão e autorização Next.js — PR #175 / Issue #105:** foram adicionados testes para sessão válida/inválida, restrição de TI, perfil TI, falha fechada e papéis desconhecidos. A PR registra 55 testes, ESLint, TypeScript, build e smoke test aprovados no head revisado.
+- **RLS de domínio — PR #172 / Issue #101:** `supabase/tests/issue_101_rls.integration.sql` registrou 16/16 cenários aprovados no Polyford, usando identidades/dados sintéticos e transações revertidas. O teste `supabase/tests/issue_101_direct_conversation_creation.sql` validou separadamente a criação/visibilidade de conversa direta.
+- **Auditoria genérica — PR #173 / Issue #102:** testes SQL registraram os cenários de auditoria, retenção e descarte controlado com transações revertidas. A cobertura dos call sites de todos os eventos administrativos não está concluída.
+- **Auditoria privilegiada — PR #170 / Issue #124:** existem testes unitários e verificações da estrutura/writer/pesquisa server-side; os handlers reais e a cobertura completa de eventos privilegiados permanecem pendentes.
+- **Migrations — PR #180:** instalação limpa aplicou 18 migrations em PostgreSQL local descartável, sem executar `migration repair`, `db reset` ou `db push` remoto. O resultado 18/18 comprova reprodutibilidade local da sequência testada, não restore ou homologação de produção.
+- **Storage — PR #181:** verificação SQL confirmou bucket `attachments` privado, limite de 10 MiB, allowlist MIME PDF/JPEG e ausência de policies de acesso direto em `storage.objects`; na verificação registrada não havia objetos armazenados.
+- **Upload — PR #185:** foram adicionados 10 casos unitários para validação de extensão, MIME, assinatura binária e tamanho de arquivos. A validação não é parser completo nem scanner antimalware. A PR não implementa download, URLs temporárias, quotas, PDF protegido por senha, EXIF/GPS ou backup de objetos.
+- **CI:** o workflow GitHub Actions executa testes, ESLint, TypeScript e build. Os checks devem ser verificados no head atualizado da PR correspondente; a existência do workflow ou a aprovação de um commit anterior não comprova o estado de outro head.
 
-O workflow GitHub Actions executa essas etapas. A execução consultada para a main em 17/11/2026 concluiu com sucesso: [GitHub Actions run #44115773963](https://github.com/Aluvioz/Polychat/actions/runs/44115773963).
-
-Essas evidências não comprovam integração com infraestrutura FORD, aplicação de migrations em ambiente homologado, RLS de domínio, autenticação pela interface, mensageria realtime, storage, antimalware, auditoria funcional ou homologação dos critérios completos.
+As evidências demonstram os cenários e os ambientes descritos, dentro dos limites de cada entrega. Ainda são necessários testes integrados/E2E de jornadas completas, validação de Storage e Realtime, verificação de credenciais privilegiadas no frontend, testes de segurança, desempenho, compatibilidade e continuidade, além de homologação funcional e aceite formal.
 
 ## 8. Questões e decisões restantes
 
-As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). Permanecem abertas somente:
+As questões históricas Q-001 a Q-025 são preservadas no [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). No nível de levantamento de requisitos, permanece aberta somente a confirmação dos ativos oficiais de marca em Q-019. Q-018 foi resolvida pelo PO e Q-025 foi concluída em 24/11/2026.
 
-- Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
-- Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
-- Q-025 — Reconciliação da arquitetura e das ADRs anteriores com a exigência de infraestrutura sob controle da FORD, sem terceiro acessando, armazenando ou processando dados.
+- **Q-018 — Resolvida:** arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
+- **Q-019 — Parcialmente concluída:** paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
+- **Q-025 — Resolvida em 24/11/2026:** TI e FORD aprovaram a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, inclusive Storage, dentro dos limites e responsabilidades registrados. Não deve permanecer como questão aberta nem ser utilizada para reabrir a ADR-003.
 
-Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
+As pendências de implementação, testes, segurança, Storage, Realtime, operação, continuidade e release permanecem nas Issues e ADRs técnicas correspondentes. Elas não reabrem definições de produto já respondidas nem a avaliação de compatibilidade concluída na Q-025.
+
+Os grupos de requisitos alinhados com Desenvolvimento não são pendências de definição de produto. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
 ## 9. Registro de mudanças e impactos
 
@@ -321,7 +350,8 @@ Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências
 | Monitoramento e severidades | FORD v2 e alinhamento com Desenvolvimento | Atualiza RF-014/RF-015 | Lista de regras, fila, prazos e fluxo TI |
 | Retenção e continuidade | FORD v2 e alinhamento com Desenvolvimento | Atualiza RN-021/RN-023 e RNF-009 | Backups, exclusão, expiração de cópias e evidências |
 | Infraestrutura FORD | FORD v2 | Atualiza RN-022 e RNF-013 | Requer revisão de arquitetura/ADRs e da antiga direção Supabase/Vercel |
-| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criado | Mantém somente refinamento de UX, insumos de marca e reconciliação arquitetural |
+| Questões em aberto | Respostas do questionário e alinhamento do PO | Q-001 a Q-024 reclassificadas; Q-025 criada e concluída em 24/11/2026 | Mantém somente a pendência de ativos oficiais de marca em Q-019; questões técnicas continuam nas Issues/ADRs próprias |
+| Revisão documental de consistência da v0.5 | Decisão da Q-025, ADR-003 Accepted e PRs integradas até 26/11/2026 | Atualiza o status da Q-025 e a fotografia técnica por componentes, sem alterar requisitos de produto nem incrementar a versão da baseline | ADRs e Issues devem manter o mesmo estado decisório e as respectivas pendências de implementação/validação |
 
 ## 10. Referências e documentos relacionados
 
