@@ -51,6 +51,18 @@ test("nega usuário comum e preserva tokens renovados para a sessão", async () 
   assert.equal(result.session.refreshToken, "rotated-refresh");
 });
 
+test("nega papel ausente ou desconhecido", async () => {
+  const result = await authorizeTIConsoleRequest(requestCookies("access"), {
+    validate: async () => ({
+      user: { id: "unknown-1", username: "sem-papel", role: "admin" },
+    }),
+  });
+
+  assert.equal(result.authorized, false);
+  assert.equal(result.status, 403);
+  assert.equal(result.session, null);
+});
+
 test("nega sessão ausente ou expirada", async () => {
   const result = await authorizeTIConsoleRequest(requestCookies(), {
     validate: async () => null,
