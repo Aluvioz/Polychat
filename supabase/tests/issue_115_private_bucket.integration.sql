@@ -12,8 +12,8 @@ begin
   if v_bucket.file_size_limit is distinct from 10485760 then
     raise exception 'attachments bucket must enforce the 10 MiB limit';
   end if;
-  if not (array['application/pdf','image/jpeg']::text[] <@ v_bucket.allowed_mime_types) then
-    raise exception 'PDF/JPEG MIME allowlist missing';
+  if v_bucket.allowed_mime_types is distinct from array['application/pdf','image/jpeg']::text[] then
+    raise exception 'attachments bucket must allow only PDF and JPEG MIME types';
   end if;
   select count(*) into v_policy_count
   from pg_policies
