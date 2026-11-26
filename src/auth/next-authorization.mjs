@@ -2,7 +2,7 @@ import {
   AUTH_COOKIE_NAMES,
   validateSession,
 } from "./supabase-session.mjs";
-import { normalizeAllowedRoles } from "./authorization.mjs";
+import { isRoleAllowed, normalizeAllowedRoles } from "./authorization.mjs";
 
 /**
  * Next.js App Router adapter for the existing session and role rules.
@@ -27,7 +27,7 @@ export async function authorizeNextRequest(
       return { authorized: false, status: 401, session: null };
     }
 
-    if (!roles.has(session.user?.role)) {
+    if (!isRoleAllowed(session.user?.role, roles)) {
       return { authorized: false, status: 403, session: null };
     }
 
