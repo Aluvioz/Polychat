@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server.js";
 import { authorizeNextRequest } from "../auth/next-authorization.mjs";
 import { applyRefreshedSessionCookies } from "../auth/next-session-cookies.mjs";
 import {
