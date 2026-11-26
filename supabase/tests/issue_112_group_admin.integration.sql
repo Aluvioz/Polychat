@@ -166,7 +166,8 @@ begin
       '63333333-3333-4333-8333-333333333333',
       'Must not modify direct conversation'
     );
-    raise exception 'Expected direct-conversation rejection did not occur';
+    raise exception 'Expected direct-conversation rejection did not occur'
+      using errcode = 'P0002';
   exception when sqlstate 'P0001' then
     null;
   end;
