@@ -97,12 +97,15 @@ export async function POST(request: NextRequest) {
     bytes,
   });
   if (!validation.ok) {
-    const message = validation.status === 413
+    const validationStatus = typeof validation.status === "number"
+      ? validation.status
+      : 400;
+    const message = validationStatus === 413
       ? "O arquivo excede o limite de 10 MB."
-      : validation.status === 415
+      : validationStatus === 415
         ? "Envie somente um PDF ou JPEG válido."
         : "O arquivo enviado é inválido.";
-    return json(validation.status, { error: message });
+    return json(validationStatus, { error: message });
   }
 
   // This read is performed with the caller's JWT. RLS hides messages the
