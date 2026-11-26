@@ -158,7 +158,7 @@ A decisão geral da stack Supabase + Vercel registrada na ADR-003 não substitui
 - [Requisitos funcionais — RF-009, RF-010 e RF-019](../03-requisitos-funcionais.md)
 - [Regras de negócio — RN-007 e RN-014](../05-regras-de-negocio-e-restricoes.md)
 - [Glossário e questões — Q-003 e Q-024](../08-glossario-e-questoes-em-aberto.md)
-- [Glossário e questões — Q-025 (compatibilidade da stack)](../08-glossario-e-questoes-em-aberto.md#q-025-compatibilidade-da-stack-adotada-com-os-requisitos-de-infraestrutura-ford)
+- [Glossário e questões — Q-025 (compatibilidade da stack)](../08-glossario-e-questoes-em-aberto.md)
 - [ADR-003 — Supabase + Vercel](ADR-003-supabase-vercel.md)
 - [ADR-006 — Autorização server-side e RLS](ADR-006-autorizacao-rls.md)
 - [Evidências da Issue #101](../security/issue-101-rls-evidence.md)
