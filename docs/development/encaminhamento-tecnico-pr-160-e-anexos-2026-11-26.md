@@ -28,6 +28,8 @@ A falha ocorreu antes da inicialização da CLI, da criação do ambiente Postgr
 4. Registrar evidência de que as 18 migrations são aplicadas em PostgreSQL local descartável e que `supabase migration list --local` retorna **18/18**.
 5. Preservar a separação entre teste local e ambiente remoto: não executar `db push`, `migration repair`, reset ou reaplicação de migrations no Polyford para corrigir esse check.
 
+A documentação oficial de [`supabase/setup-cli@v1`](https://github.com/supabase/setup-cli/tree/v1) confirma os inputs `version` e `github-token`; o README exemplifica o uso de `github-token: ${{ github.token }}` quando `version: latest`.
+
 **Evidência anterior positiva:** a instalação limpa combinada já passou na execução [#45856604234](https://github.com/Aluvioz/Polychat/actions/runs/45856604234), associada à PR #180: 18 migrations aplicadas localmente e 18/18 entradas verificadas. A repetição da PR #160 deve voltar a ficar verde; a falha atual é de setup da CLI, não uma reprovação dessa sequência SQL.
 
 ## 3. Fotografia técnica que deve orientar a continuidade
