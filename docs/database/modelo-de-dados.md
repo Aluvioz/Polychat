@@ -149,7 +149,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 - Desativação é bloqueio lógico e revoga sessões, mas não apaga histórico de mensagens, anexos ou auditoria.
 - Dados pessoais adicionais, como matrícula ou departamento, não devem ser adicionados sem requisito e fonte confirmados.
 
-**Evidência existente:** a migration `202611160001_profiles_roles_and_account_status.sql` vincula `profiles.id` a `auth.users(id)` com `ON DELETE CASCADE` e inclui RLS específica de perfis. Ela constitui o scaffold inicial de integração com Supabase Auth; sua revisão técnica deve preservar o histórico de domínio, evitando exclusão em cascata de conversas, mensagens, anexos ou auditoria.
+**Evidência existente:** a migration `20261124191059_profiles_roles_and_account_status.sql` vincula `profiles.id` a `auth.users(id)` com `ON DELETE CASCADE` e inclui RLS específica de perfis. Ela constitui o scaffold inicial de integração com Supabase Auth; sua revisão técnica deve preservar o histórico de domínio, evitando exclusão em cascata de conversas, mensagens, anexos ou auditoria.
 
 ### 5.2 conversations — conversas individuais e em grupo
 
@@ -588,7 +588,7 @@ A Q-025 continua aberta para documentar e tratar a compatibilidade entre a stack
 
 O parecer original de 20/11/2026 confirmou a regra de produto como “até 10 MB por arquivo”, sem especificar naquele registro a base numérica da unidade. Para eliminar a ambiguidade de implementação, o PO complementa a regra nesta revisão: **10 MB deve ser interpretado em unidade decimal, isto é, 10.000.000 bytes**. `10 MiB` corresponde a 10.485.760 bytes e não é equivalente ao limite aprovado.
 
-Esta precisão não altera formatos permitidos, quantidade de anexos por mensagem ou regras de quota; apenas explicita a unidade do limite já definido. A diferença observada na migration da PR #165 e no bucket provisionado pela PR #181 permanece como desvio técnico a corrigir nas Issues #115/#117. Este complemento não aprova schema físico, migration, configuração operacional ou implementação de upload.
+Esta precisão não altera formatos permitidos, quantidade de anexos por mensagem ou regras de quota; apenas explicita a unidade do limite já definido. A diferença observada na migration da PR #165, no bucket provisionado pela PR #181 e no endpoint da PR #185 permanece como desvio técnico a corrigir nas Issues #115/#117. Este complemento não aprova schema físico, migration, configuração operacional ou implementação de upload.
 
 ## 12. Parecer do Product Owner — 20/11/2026
 
