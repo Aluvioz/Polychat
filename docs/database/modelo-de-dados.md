@@ -531,9 +531,9 @@ Esta seção registra exclusivamente as decisões de produto concluídas. Não c
 
 ## 14. Limites do documento para uso em implementação
 
-O modelo desta versão está validado somente no significado e nas regras funcionais de domínio. Ainda não é um schema físico aprovado nem uma autorização para criar/aplicar migrations.
+O modelo desta versão continua sendo um registro conceitual validado pelo PO; não constitui, por si só, um DER físico aprovado pelo PO nem uma homologação operacional. Parte da estrutura física já foi implementada, revisada e integrada pelas PRs registradas na seção 2.2. Essa implementação técnica não amplia retroativamente o escopo da aprovação funcional do PO.
 
-A futura estrutura física deve preservar, sem alterar as decisões de produto:
+A estrutura física já integrada e os incrementos técnicos ainda pendentes devem preservar, sem alterar as decisões de produto:
 
 - unicidade da conversa individual por par;
 - histórico de períodos de membership e revogação/reentrada sem recuperação do histórico anterior;
@@ -547,7 +547,7 @@ A futura estrutura física deve preservar, sem alterar as decisões de produto:
 - persistência somente das configurações identificadas no inventário;
 - identidade, armazenamento e processamento de acordo com a stack definida (Supabase + Vercel), com os impactos frente às restrições da FORD tratados explicitamente na Q-025.
 
-Qualquer escolha de tabela, campo, tipo, constraint, índice, FK, estratégia de autenticação, armazenamento, RLS ou migration permanece uma decisão de implementação. Uma solução física poderá variar desde que preserve os requisitos e não contradiga o parecer funcional do PO.
+Para aspectos ainda não definidos ou que dependam de evolução, qualquer escolha de tabela, campo, tipo, constraint, índice, FK, estratégia de autenticação, armazenamento, RLS ou migration continua sendo decisão de implementação. As entregas já integradas estão delimitadas na seção 2.2; novos ajustes poderão variar desde que preservem os requisitos e não contradigam o parecer funcional do PO.
 
 ## 15. Histórico de revisões
 
