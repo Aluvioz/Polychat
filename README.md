@@ -2,17 +2,17 @@
 
 Aplicação web de comunicação interna em desenvolvimento para a FORD.
 
-**Baseline de produto:** POLY-REQ-001 v0.4, baseada no questionário FORD v2 e nos alinhamentos consolidados em 19/11/2026.
+**Baseline de produto:** POLY-REQ-001 v0.5, baseada no questionário FORD v2 e nos alinhamentos consolidados em 20/11/2026. A direção tecnológica Supabase + Vercel permanece adotada e obrigatória, conforme ADR-003 — Accepted (revisão de 24/11/2026).
 
-> **Restrição obrigatória de infraestrutura:** hospedagem, armazenamento e processamento de dados devem permanecer sob controle da FORD, preferencialmente no Brasil. Nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Não configure provedores externos como destino de produção do Polychat.
+> **Requisitos de infraestrutura da FORD:** hospedagem, armazenamento e processamento de dados devem atender às restrições de controle, localização, acesso e operação registradas na baseline. A configuração e o modelo de uso da stack adotada Supabase + Vercel devem ser avaliados na Q-025 antes da homologação de produção; essa avaliação não altera nem substitui a ADR-003 por inferência.
 
 ## Estado atual
 
 O repositório contém a fundação do frontend em Next.js 16, React 19, TypeScript e App Router. A interface atual é uma página institucional. Os fluxos de autenticação, conversas, grupos, mensagens, anexos, alertas e administração ainda não estão implementados de ponta a ponta.
 
-A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript. Isso não aprova, por si só, qualquer serviço externo de hospedagem, identidade, banco de dados ou armazenamento.
+A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript. A direção tecnológica de plataforma, hospedagem e backend é Supabase + Vercel, conforme ADR-003 — Accepted; os detalhes de configuração e homologação são tratados nas ADRs específicas e na Q-025.
 
-A direção anterior Supabase + Vercel foi retirada como arquitetura-alvo após a FORD v2; consulte ADR-003. A escolha e homologação da arquitetura operacional compatível com a infraestrutura FORD permanecem em reconciliação técnica (Q-025).
+Supabase + Vercel não foi retirada como arquitetura-alvo: permanece como stack adotada e obrigatória na ADR-003. A Q-025 deve verificar a compatibilidade da configuração, do fluxo de dados, dos acessos e das responsabilidades com os requisitos da FORD, sem autorizar substituição implícita.
 
 ## Requisitos de desenvolvimento
 
@@ -51,13 +51,13 @@ O GitHub Actions executa testes automatizados, lint, verificação de tipos e bu
 ## Diretrizes de arquitetura e segurança
 
 - O frontend não é uma fronteira de segurança: autenticação, autorização e operações privilegiadas devem ser validadas no servidor.
-- Serviços de identidade, banco de dados, armazenamento, antimalware, auditoria, monitoramento, backup e recuperação devem operar dentro da fronteira de controle da FORD.
+- Serviços de identidade, banco de dados, armazenamento, antimalware, auditoria, monitoramento, backup e recuperação devem atender aos requisitos de controle da FORD; a configuração dos serviços da stack adotada e as evidências de compatibilidade devem ser registradas na Q-025.
 - Bibliotecas e atualizações que não acessem dados da FORD podem ser utilizadas, respeitadas as políticas aplicáveis.
 - Dados em trânsito e em repouso devem ser protegidos conforme os requisitos consolidados; a solução não deve ser apresentada como criptografia ponta a ponta (E2EE).
 - Ambientes de desenvolvimento, homologação e produção devem permanecer isolados.
 - Não trate migrations, variáveis de exemplo, testes unitários ou builds como evidência de integração ou homologação de produção.
 
-Os arquivos de exemplo e referências históricas a Supabase/Vercel não representam autorização para conectar ou usar esses serviços com dados da FORD. A arquitetura final deverá ser formalizada nas ADRs após a compatibilização com a infraestrutura da organização.
+A ADR-003 formaliza Supabase + Vercel como stack adotada e obrigatória. Arquivos de exemplo, migrations, variáveis e previews não comprovam integração funcional, conformidade ou homologação de produção. A Q-025 deve registrar a configuração, os controles, as responsabilidades e as evidências de compatibilidade com os requisitos da FORD; seus resultados não substituem a decisão de arquitetura. Consulte também a [governança de decisões arquiteturais](docs/10-governanca-desenvolvimento.md#8-governanca-de-decisoes-arquiteturais).
 
 ## Documentação do produto
 
