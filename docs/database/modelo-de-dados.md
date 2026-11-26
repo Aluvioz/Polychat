@@ -548,11 +548,14 @@ A implementação técnica dos mecanismos de retenção não altera nem reduz as
 | memberships | RF-005, RF-006, RF-008, RF-010; RN-007 | #99, #100, #101, #124; PR #165 (schema), PR #172 (RLS) e instrumentação privilegiada coordenada com #124; decisões de remoção/reentrada nesta versão |
 | messages | RF-008 a RF-010, RF-019, RF-020; RN-006, RN-007, RN-014 | #99, #109, #110, #111; PR #165 (schema), PR #172 (RLS) e PR #173 (auditoria das ações administrativas de edição/exclusão lógica); ADR-007; mensagem com anexo e recibos de leitura |
 | message_reads | RF-007, RF-019 | #99, #111, #112, #113; recibo por mensagem e leitor definido nesta versão |
-| attachments | RF-011 a RF-013; RN-008, RN-011; RNF-010 | #99, #114, #115, #116, #117; PR #165 (metadados e limite físico), PR #172 (RLS dos metadados) e PR #181 (bucket privado de 10 MiB); divergência de tamanho e ciclo funcional pendentes em #115/#117; Q-004/Q-011 respondidas; ADR-008 |
+| attachments | RF-011, RF-012, RF-013; RN-008, RN-011; RNF-010 | #99, #114, #115, #116, #117; PR #165 (metadados e limite físico), PR #172 (RLS dos metadados) e PR #181 (bucket privado de 10 MiB); divergência de tamanho e ciclo funcional pendentes em #115/#117; Q-004/Q-011 respondidas; ADR-008 |
 | audit_events | RF-016, RF-020, RF-021, RF-022; RN-014, RN-021; RNF-004 e RNF-011 | #99, #102, #121, #124; PR #173 (trilha genérica e controles de retenção); auditoria privilegiada e call-sites de contas/grupos/memberships permanecem coordenados com #124; Q-009/Q-010 respondidas; ADR-010 |
 | security_alerts | RF-014, RF-015; RN-012, RN-013 | #99, #122, #123; Q-007/Q-008 respondidas; ADR-010 |
 | Configurações TI | RF-014/RF-015; RN-003; Q-018 | #99, #101, #102, #122; PR #165 (estruturas específicas), PR #172 (RLS) e PR #173 (writer de auditoria; call-sites de configuração ainda pendentes) |
 | Autorização e RLS de domínio | Regras de acesso por perfil, participação vigente e estado da conversa | #100, #101; PR #172; ADR-006 |
+| Segurança, identidade e infraestrutura transversal | RF-001 a RF-004; RN-001 a RN-005, RN-016, RN-022; RNF-001, RNF-002, RNF-003, RNF-013 | #99, #100, #103, #105; ADR-003 (**Accepted**), ADR-004, ADR-005, ADR-006; Q-025; autenticação, proteção de dados, gestão de sessão e fronteira de infraestrutura são restrições transversais, não novas entidades por inferência |
+| Continuidade, capacidade e retenção operacional | RF-009, RF-010, RF-022; RN-018, RN-021, RN-023; RNF-004, RNF-007, RNF-008, RNF-009, RNF-011 | #99, #102, #117, #124; seção 9; backups, restauração, RPO/RTO e capacidade são requisitos operacionais, ainda sem comprovação de execução/homologação nesta revisão |
+| Dispositivo, interface e aviso de monitoramento | RF-017, RF-018, RF-023; RN-015, RN-025; RNF-005, RNF-006, RNF-012 | POLY-UX-DEC-001 e critérios de homologação; requisitos de apresentação/restrição de dispositivo não justificam tabela de domínio sem necessidade de persistência definida; RF-023 exige apresentação do aviso no primeiro acesso, sem requisito explícito de tabela de aceite nesta baseline |
 
 ## 11. Decisões de produto consolidadas nesta versão
 
