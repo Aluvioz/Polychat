@@ -111,7 +111,7 @@ As confirmações do Tech Lead são evidência de aceite operacional para as iss
 ## Pendências para Accepted
 
 - Documentar e validar a configuração dos ambientes Supabase e Vercel, do pipeline de deploy, das permissões e da gestão de segredos; registrar na Q-025 as evidências dos controles e das condições operacionais aplicáveis.
-- Definir como Preview, homologação e produção serão isolados na infraestrutura-alvo.
+- Definir o modelo de segregação entre Preview, homologação e produção nos projetos/ambientes Supabase e nas configurações/deployments Vercel, com credenciais distintas e sem acesso inadvertido a dados ou segredos de produção.
 - Documentar a gestão de segredos e o acesso mínimo por ambiente, sem expor valores.
 - Revalidar smoke test, deploy e rollback na configuração e no modelo de utilização propostos para a stack Supabase + Vercel adotada, observando o resultado e as evidências da avaliação Q-025.
 - Registrar evidências e aprovadores de TI/Tech Lead e atualizar esta ADR após a decisão.
