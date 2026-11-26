@@ -64,7 +64,7 @@ Essa execução comprova a instalação limpa local daquela sequência combinada
 
 Na PR #160, o workflow de repetição [#45899085733](https://github.com/Aluvioz/Polychat/actions/runs/45899085733) falhou ao executar `supabase/setup-cli@v1` com `version: latest`: a ação não conseguiu resolver a release da CLI devido a `rate limit exceeded`. A falha ocorreu antes da inicialização da CLI, da criação do ambiente descartável e da aplicação de migrations. A etapa de limpeza também falhou porque o workspace ainda não existia após a etapa de preparação ser ignorada.
 
-Portanto, essa execução não demonstra defeito nas migrations. A equipe de Desenvolvimento deve estabilizar a instalação da CLI (por exemplo, fixando uma versão testada em vez de resolver `latest`) e tornar a limpeza condicional à existência do workspace; em seguida, deve repetir o job e registrar resultado verde com 18/18. A documentação da ação `supabase/setup-cli@v1` expõe apenas o input `version`; não se deve presumir um input `github-token` nessa versão.
+Portanto, essa execução não demonstra defeito nas migrations. A equipe de Desenvolvimento deve estabilizar a instalação da CLI (por exemplo, fixando uma versão testada em vez de resolver `latest`) e tornar a limpeza condicional à existência do workspace; em seguida, deve repetir o job e registrar resultado verde com 18/18. A ação `supabase/setup-cli@v1` documenta também o input opcional `github-token`, justamente para resolver `latest` sem depender do limite não autenticado. A equipe pode utilizá-lo com `${{ github.token }}` ou, alternativamente, fixar uma versão validada da CLI.
 
 ## Segurança e limites das operações remotas
 
