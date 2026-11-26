@@ -15,9 +15,13 @@ export async function proxy(request: NextRequest) {
     }
 
     if (authorization.status === 403) {
-      return NextResponse.redirect(
+      const response = NextResponse.redirect(
         new URL("/acesso-negado?area=ti", request.url),
       );
+      if (authorization.session?.refreshed) {
+        setSessionCookies(response, authorization.session);
+      }
+      return response;
     }
 
     return NextResponse.redirect(
