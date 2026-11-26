@@ -10,9 +10,9 @@
 
 O Polychat é uma aplicação web interna da FORD. A baseline atual contempla aproximadamente 25 usuários finais do setor técnico e 2 a 3 administradores de TI, com perfis Usuário e TI, conversas individuais e em grupo, mensagens, anexos PDF/JPEG, alertas, consulta administrativa e auditoria.
 
-A FORD v2 estabelece uma restrição arquitetural obrigatória: hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados podem ser utilizadas.
+A FORD v2 estabelece como regra geral que hospedagem e infraestrutura permaneçam sob controle da FORD, preferencialmente no Brasil, e que serviços de terceiros não acessem, armazenem ou processem dados da organização. A Q-025, concluída em 24/11/2026, registra a aprovação expressa da TI e da FORD para Supabase e Vercel como provedores nomeados da stack, dentro do modelo de utilização aprovado. A restrição geral permanece aplicável a outros fornecedores e serviços não aprovados; bibliotecas e atualizações sem acesso aos dados podem ser utilizadas.
 
-A ADR-003, revisada em 24/11/2026, mantém Supabase + Vercel como stack adotada e obrigatória. As restrições da FORD v2 continuam válidas e precisam ser reconciliadas com a configuração e o modelo de uso da stack na Q-025. Essa tensão deve ser tratada como questão de compatibilidade, risco ou bloqueio específico; não autoriza retirar ou depreciar a ADR-003 por inferência. Qualquer proposta de substituição deve seguir o processo formal de mudança arquitetural em `docs/10-governanca-desenvolvimento.md`.
+A ADR-003, revisada em 24/11/2026, mantém Supabase + Vercel como stack adotada e obrigatória. A compatibilidade e o modelo de utilização desses provedores foram aprovados pela TI e pela FORD na Q-025, concluída em 24/11/2026. Esta ADR deve detalhar a arquitetura lógica, os componentes, os fluxos de dados, as fronteiras de confiança e as responsabilidades de acordo com esse modelo aprovado e com as demais restrições da FORD v2. Essa análise não reabre a Q-025 nem autoriza retirar ou depreciar a ADR-003 por inferência. Qualquer proposta de substituição deve seguir o processo formal de mudança arquitetural em `docs/10-governanca-desenvolvimento.md`.
 
 O repositório contém Next.js 16, React 19, TypeScript, uma página institucional, um módulo isolado de autorização e uma migration de perfis vinculada ao modelo anterior. Não há implementação funcional ponta a ponta do chat nem comprovação de integração com infraestrutura FORD.
 
@@ -28,7 +28,7 @@ Definir fronteiras de confiança, responsabilidades e componentes lógicos sem p
 
 ## Decisão proposta
 
-Adotar uma arquitetura lógica modular, com todos os componentes que tratam dados da FORD executados em infraestrutura sob controle da própria organização. A ADR permanece Proposed até a revisão técnica e a compatibilização com o ambiente corporativo.
+Adotar uma arquitetura lógica modular que utilize a stack Supabase + Vercel aprovada na Q-025, observando os limites, fluxos, fronteiras de confiança e responsabilidades definidos para esses provedores. A ADR permanece Proposed até a revisão formal do Tech Lead e da TI sobre a arquitetura lógica, seus componentes e suas responsabilidades; essa revisão não representa reabertura da compatibilidade da stack já aprovada.
 
 As responsabilidades lógicas são:
 
@@ -73,11 +73,11 @@ Configuração incorreta de autorização; credenciais privilegiadas expostas; R
 
 A `main` contém Next.js 16/React 19/TypeScript, página institucional, o módulo `src/auth/authorization.mjs` e uma migration de perfis vinculada ao Supabase. Não foram encontradas rotas funcionais de chat, serviços de domínio, armazenamento de anexos, canais realtime ou trilha de auditoria funcional.
 
-A existência desses artefatos não comprova integração funcional nem homologação de produção. A stack Supabase + Vercel permanece adotada conforme ADR-003; a configuração, o fluxo dos dados, os acessos, as responsabilidades e a compatibilidade com os requisitos da FORD devem ser evidenciados na Q-025. A análise não altera o status da ADR-003 por si só.
+A existência desses artefatos não comprova integração funcional nem homologação de produção. A stack Supabase + Vercel permanece adotada conforme ADR-003, e sua compatibilidade e modelo de utilização foram aprovados na Q-025. A evidência de implementação, integração, fluxos efetivos de dados e controles operacionais deve ser produzida nas issues e nos ambientes correspondentes; essas verificações não reabrem a decisão de compatibilidade nem alteram o status da ADR-003.
 
 ## Pendências para Accepted
 
-- Compatibilizar a arquitetura lógica com a infraestrutura efetivamente disponibilizada e controlada pela FORD (Q-025).
+- Detalhar e submeter à revisão formal a arquitetura lógica e sua correspondência com o modelo Supabase + Vercel aprovado na Q-025, incluindo componentes, fluxos, fronteiras de confiança, responsabilidades e limites de cada serviço.
 - Revisão do Tech Lead e TI sobre componentes, fronteiras server-side, identidade, banco, armazenamento, antimalware, auditoria, continuidade e operação.
 - Registrar na ADR a solução técnica selecionada, os responsáveis pela aprovação, a data, as evidências de viabilidade e os limites do aceite.
 
