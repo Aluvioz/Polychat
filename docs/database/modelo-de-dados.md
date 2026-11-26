@@ -85,7 +85,6 @@ erDiagram
     MESSAGES ||--o{ MESSAGE_READS : "recebe_confirmacoes"
     PROFILES ||--o{ MESSAGE_READS : "registra_leitura"
     PROFILES ||--o{ AUDIT_EVENTS : "executa"
-    CONVERSATIONS o|--o{ AUDIT_EVENTS : "pode_ser_alvo"
     MESSAGES ||--o{ SECURITY_ALERTS : "pode_gerar"
 ~~~
 
@@ -98,7 +97,7 @@ erDiagram
 - Uma conversa contém mensagens. Cada mensagem possui um autor e deve conter texto não vazio, pelo menos um anexo válido ou ambos.
 - `message_reads` representa conceitualmente a confirmação por mensagem e por leitor, com o instante em que a mensagem foi marcada como lida. Em grupos, o autor da mensagem pode consultar quais participantes a leram e em qual horário.
 - Uma mensagem pode conter até cinco anexos PDF/JPEG. Limite individual de armazenamento e capacidade total são administrados pelo TI.
-- `audit_events` registra operações administrativas previstas nos requisitos, incluindo consultas, exportações, alterações/exclusões de mensagens e ações sobre anexos e configurações.
+- `audit_events` registra operações administrativas por ator TI ativo e referência polimórfica (`resource_type`/`resource_id`). Os registros de edição/exclusão lógica de mensagens, fechamento de alertas e controles de retenção possuem geração transacional integrada; consulta/exportação de conversas, ações de anexos e alterações de configuração ainda dependem de call-sites. A tabela não possui FK direta para conversas.
 - `security_alerts` registra ocorrências geradas por regras determinísticas de detecção e encaminhadas à fila de revisão do TI.
 - A configuração persistente limita-se às regras/lista de detecção e às quotas individuais e totais de anexos. A forma física de persistência será definida tecnicamente; não se presume uma tabela genérica `configs`.
 
@@ -243,40 +242,61 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.6 audit_events — eventos de auditoria
 
-**Necessidade funcional:** confirmada; estrutura técnica detalhada vinculada à #102.
+**Status:** estrutura física `public.audit_events` integrada pela PR #173, com revisão favorável do SQA e aprovação do Tech Lead dentro do escopo da entrega. Esta implementação concretiza parte da necessidade conceitual da #99 e da estratégia da #102; não significa que todos os eventos previstos já tenham call-sites na aplicação nem que toda a retenção operacional esteja concluída.
 
-**Finalidade:** registrar as operações administrativas e de segurança definidas na baseline, permitindo identificar operador, instante, ação, recurso afetado e resultado/metadados necessários.
+**Finalidade:** registrar ações administrativas e de segurança com identificação do operador, tipo de evento, recurso associado, instante, resultado e metadados mínimos. A tabela não armazena cópia integral de mensagens/conversas nem credenciais, tokens ou segredos.
 
-| Campo conceitual | Obrigatório | Regra funcional | Situação |
-|---|---:|---|---|
-| id | Sim | Identificador do evento. | Proposta técnica |
-| actor_profile_id | Conforme evento | Identifica o operador TI quando a ação é administrativa; eventos automáticos podem exigir tratamento próprio. | Regra confirmada |
-| event_type | Sim | Catálogo de ação auditada. | Catálogo definido funcionalmente; persistência em #102 |
-| resource_type / resource_id | Conforme evento | Recurso afetado, como conta, conversa, grupo, mensagem, anexo, alerta ou configuração. | Necessidade confirmada |
-| occurred_at | Sim | Instante confiável do evento. | Regra confirmada |
-| outcome / metadata | Conforme evento | Resultado e metadados necessários, sem segredos ou conteúdo integral desnecessário. | Regra confirmada |
-| reason | Não obrigatório | Não exigir justificativa para consulta/exportação de conversas nem encerramento de alerta. | Q-009/Q-008 resolvidas |
+#### Estrutura física integrada
 
-**Eventos que devem ser rastreáveis:**
+| Campo | Obrigatório | Estrutura/regra implementada |
+|---|---:|---|
+| `id` | Sim | UUID, chave primária, gerado por `gen_random_uuid()` quando omitido. |
+| `actor_profile_id` | Sim | UUID com FK para `profiles(id)` e `ON DELETE RESTRICT`. Deve corresponder a `auth.uid()` e a um operador TI ativo; o ator não é opcional para eventos automáticos. |
+| `event_type` | Sim | Texto restrito ao catálogo permitido pela migration #173. O tipo deve corresponder ao tipo de recurso aceito. |
+| `resource_type` | Sim | Texto restrito aos tipos `session`, `account`, `group`, `membership`, `conversation`, `alert`, `attachment`, `message`, `configuration` e `retention`. |
+| `resource_id` | Condicional | UUID do recurso; obrigatório para todos os eventos, exceto `admin_login`, que admite `NULL`. É uma referência polimórfica, não uma FK genérica para cada tabela de domínio. |
+| `occurred_at` | Sim | `timestamptz`, preenchido pelo banco; o trigger de inserção define o instante com `clock_timestamp()`. |
+| `outcome` | Sim | Texto não vazio. A migration valida que o valor não seja vazio após `btrim`; não define uma enumeração funcional de resultados. |
+| `metadata` | Sim | `jsonb`, padrão `{}`, obrigatoriamente objeto JSON. A validação recursiva rejeita chaves que indiquem conteúdo de mensagem/conversa, senha, token, segredo, credencial, cookie ou chave sensível. |
 
-- Login administrativo.
-- Criação, alteração, desativação e reativação de contas.
-- Criação, encerramento, ativação e desativação de grupos.
-- Inclusão e remoção de participantes.
-- Consulta e exportação de conversas.
-- Revisão e encerramento de alertas.
-- Download e liberação excepcional de anexos.
-- Edição e exclusão administrativa de mensagens.
-- Alterações das configurações permitidas.
+Não existe coluna física `conversation_id` nem campo `reason` em `audit_events`. A justificativa não é requisito obrigatório para consulta/exportação de conversa ou encerramento de alerta, conforme decisões de produto. O vínculo com o recurso é representado pelo par `resource_type`/`resource_id`; por isso, não se deve modelar uma FK direta de `conversations` para `audit_events`.
 
-**Regras funcionais:**
+#### Catálogo de eventos
 
-- Consultas e exportações de conversas por TI são permitidas sem justificativa, mas sempre auditadas.
-- Encerramento de alerta não exige justificativa obrigatória.
-- Somente TI consulta e gerencia registros de auditoria; Usuários comuns não podem ler, alterar ou excluir esses registros.
-- Eventos não devem armazenar senhas, tokens, chaves secretas ou cópia integral do conteúdo das conversas por padrão.
-- Mensagens, anexos, alertas e eventos de auditoria não sofrem exclusão automática enquanto o sistema operar. Exclusões autorizadas e descarte das cópias de backup devem gerar evidência de auditoria.
-- Integridade, proteção contra alteração, acesso e retenção detalhados pertencem à implementação da #102; esta seção registra o conteúdo funcional necessário.
+A migration e o writer explícito restringem os eventos a este catálogo e ao tipo de recurso correspondente:
+
+| Grupo | `event_type` | `resource_type` |
+|---|---|---|
+| Sessão | `admin_login` | `session` |
+| Conta | `account_created`, `account_updated`, `account_deactivated`, `account_reactivated` | `account` |
+| Grupo | `group_created`, `group_closed`, `group_activated`, `group_deactivated` | `group` |
+| Participação | `participant_added`, `participant_removed` | `membership` |
+| Conversa | `conversation_viewed`, `conversation_exported` | `conversation` |
+| Alerta | `alert_reviewed`, `alert_closed` | `alert` |
+| Anexo | `attachment_downloaded`, `attachment_released` | `attachment` |
+| Mensagem | `message_admin_edited`, `message_admin_deleted` | `message` |
+| Configuração | `configuration_changed` | `configuration` |
+| Retenção | `retention_discarded`, `retention_hold_placed`, `retention_hold_released` | `retention` |
+
+#### Eventos efetivamente cobertos pela implementação integrada
+
+- **Com triggers transacionais:** `message_admin_edited` e `message_admin_deleted`, gerados na edição/exclusão lógica administrativa de mensagens; `alert_closed`, gerado no fechamento de alerta. Os eventos são gravados na mesma transação da mutação correspondente.
+- **Com controles de retenção:** `retention_hold_placed` e `retention_hold_released`, gerados quando um hold é criado/liberado; `retention_discarded`, registrado pela função de descarte controlado antes da remoção autorizada de um registro de `audit_events`.
+- **Writer explícito:** `src/audit/audit-events.mjs` valida o evento e o par tipo/recurso, exige access token do usuário, usa a chave publishable e envia a operação com o JWT do chamador. Não aceita nem utiliza `service_role`.
+- **Proteção da trilha:** leitura e escrita são restritas ao TI ativo; o ator gravado deve ser o usuário autenticado. Alterações diretas `UPDATE`, `DELETE` e `TRUNCATE` são rejeitadas; a remoção de um evento só ocorre pelo fluxo controlado de retenção. Eventos de controle de retenção não podem ser descartados.
+- **Proteção de investigação:** `retention_holds` permite proteger o próprio evento ou o recurso subjacente. O descarte verifica ambos, registra `retention_discarded` e não remove conteúdo de mensagens, anexos, alertas ou registros de auditoria privilegiada.
+
+#### Call-sites e responsabilidades ainda pendentes
+
+- `conversation_viewed` e `conversation_exported`: catalogados, mas dependem de call-sites nos fluxos de consulta/exportação de conversas.
+- `attachment_downloaded` e `attachment_released`: catalogados, mas dependem dos fluxos de download/liberação; Storage, buckets, políticas de objeto e descarte físico continuam na Issue #117.
+- `configuration_changed`: catalogado e suportado pelo writer, mas sem call-sites validados. Os triggers inicialmente criados para configurações foram removidos pela migration subsequente porque a atribuição do ator não passou na validação; portanto, não declarar auditoria automática de mudanças de configuração.
+- `alert_reviewed`: consta do catálogo; a PR #173 comprova o trigger de `alert_closed`, não um call-site independente para `alert_reviewed`.
+- Eventos de login, conta, grupo e membership permanecem coordenados com a Issue #124 e a auditoria privilegiada correspondente. A PR #173 não duplica nem substitui `privileged_action_audit`.
+
+**Limite de retenção:** o descarte controlado implementado nesta entrega cobre somente registros de `audit_events`. Backup diário por 12 meses, restauração e evidência de RPO/RTO de até 24 horas não foram configurados ou comprovados pela PR #173. A implementação não declara a retenção operacional integral do Polychat concluída.
+
+**Evidências da entrega:** testes SQL de auditoria/holds e descarte foram executados com `ROLLBACK`; testes unitários do writer foram incluídos no CI. Os testes demonstram os cenários executados, mas não deixaram dados de teste persistidos. A aprovação SQA e do Tech Lead é restrita ao escopo da PR #173.
 
 ### 5.7 security_alerts — alertas de conteúdo suspeito
 
@@ -350,8 +370,8 @@ Não fazem parte desse inventário: segredos, tokens, credenciais, endpoints de 
 | messages | pode conter | attachments | 1:0..5 | Mensagem pode ter texto, anexos ou ambos; no máximo cinco anexos. |
 | messages | possui | message_reads | 1:N | Uma confirmação por mensagem e participante leitor. |
 | profiles | registra | message_reads | 1:N | Um participante pode registrar leitura de muitas mensagens. |
-| profiles | executa | audit_events | 1:N | Eventos administrativos identificam o operador quando aplicável. |
-| conversations | pode ser alvo de | audit_events | 1:N | Consultas e exportações administrativas devem ser rastreáveis. |
+| profiles | executa | audit_events | 1:N | Cada evento exige `actor_profile_id` vinculado a um perfil TI ativo; a FK física usa `ON DELETE RESTRICT`. |
+| conversations | recurso referenciado por | audit_events | Referência polimórfica, sem FK | Quando `resource_type='conversation'`, `resource_id` identifica a conversa; não há coluna `conversation_id` nem FK direta. Os call-sites de consulta/exportação ainda estão pendentes. |
 | messages | pode gerar | security_alerts | 1:N | Uma mensagem pode gerar ocorrência(s) conforme regras determinísticas. |
 
 ### 6.1 Invariantes funcionais a preservar
@@ -394,7 +414,7 @@ Os itens desta seção expressam invariantes funcionais e candidatos a restriç�
 | messages | Texto não vazio ou ao menos um anexo válido | Impedir mensagem sem conteúdo |
 | attachments | MIME PDF/JPEG, tamanho até 10 MB e até cinco por mensagem | Aplicar limites funcionais; quota individual/total é adicional |
 | message_reads | Unicidade por mensagem e leitor; instante de leitura obrigatório | Representar confirmação individual por mensagem |
-| audit_events | Eventos administrativos exigem operador/recurso/instante conforme tipo de evento | Assegurar rastreabilidade |
+| audit_events | `actor_profile_id` obrigatório, FK para `profiles` com `ON DELETE RESTRICT`, ator igual a `auth.uid()` e TI ativo; `event_type`/`resource_type` compatíveis; `resource_id` obrigatório exceto em `admin_login`; `occurred_at` gerado pelo banco; `outcome` não vazio; `metadata` objeto JSON sem chaves sensíveis; append-only com descarte controlado | Assegurar atribuição, integridade e proteção da trilha de auditoria |
 | security_alerts | Severidade baixa/média/alta e vínculo à mensagem/regra | Preservar ocorrência e fluxo de revisão |
 
 ### 7.3 Índices candidatos
@@ -405,7 +425,7 @@ Os itens desta seção expressam invariantes funcionais e candidatos a restriç�
 - `messages(conversation_id, created_at)` para paginação e ordenação.
 - `attachments(message_id)` para recuperar anexos de uma mensagem.
 - `message_reads(message_id, reader_profile_id)` para consultar recibos de leitura.
-- `audit_events(actor_profile_id, occurred_at)` e `audit_events(conversation_id, occurred_at)` para trilhas de auditoria.
+- Índices integrados pela #102: `audit_events(actor_profile_id, occurred_at DESC)` e `audit_events(resource_type, resource_id, occurred_at DESC)`. Não existe coluna `conversation_id`; consultas por recurso usam o índice polimórfico.
 - `security_alerts(status, severity, detected_at)` como candidato para fila TI.
 
 Seletividade, ordenação, custo de escrita e índices compostos devem ser avaliados com as consultas reais e o volume inicial previsto. Não criar índices indiscriminadamente.
