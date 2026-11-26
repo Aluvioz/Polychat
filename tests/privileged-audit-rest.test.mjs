@@ -123,3 +123,24 @@ test("não expõe detalhes do provedor quando a consulta falha", async () => {
     (error) => error.message === "Não foi possível consultar a trilha de auditoria.",
   );
 });
+
+test("combina os limites inferior e superior de data na mesma consulta", async () => {
+  let requestUrl;
+  await searchPrivilegedAuditEventsRest({
+    params: new URLSearchParams(
+      "from=2026-11-01T00%3A00%3A00Z&to=2026-11-20T23%3A59%3A59Z",
+    ),
+    env,
+    fetchImpl: async (url) => {
+      requestUrl = new URL(String(url));
+      return new Response("[]", {
+        status: 200,
+        headers: { "Content-Range": "*/0" },
+      });
+    },
+  });
+  assert.equal(
+    requestUrl.searchParams.get("and"),
+    "(occurred_at.gte.2026-11-01T00:00:00Z,occurred_at.lte.2026-11-20T23:59:59Z)",
+  );
+});
