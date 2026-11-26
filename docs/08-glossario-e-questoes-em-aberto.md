@@ -28,7 +28,7 @@ As questões respondidas permanecem neste documento para preservar rastreabilida
 | Scrum | Framework ágil informado como contexto de trabalho da equipe. |
 | UML | Linguagem de modelagem utilizada para representar aspectos estruturais e comportamentais do sistema. |
 
-## 8.2 Histórico das questões levantadas — Q-001 a Q-024
+## 8.2 Histórico das questões levantadas — Q-001 a Q-025
 
 A tabela mantém as perguntas da documentação anterior e registra a decisão obtida. Os itens marcados como resolvidos não devem ser reabertos como pendências de levantamento.
 
@@ -47,7 +47,7 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 | Q-011 | Arquivos | PDF e JPEG; até 10 MB por arquivo; até 5 arquivos por mensagem; limites individuais e capacidade total definidos pelo TI; sem limite específico por conversa. PDF protegido por senha é recusado. Antimalware dentro da infraestrutura FORD; falha/inconclusão mantém anexo bloqueado. TI pode liberar qualquer arquivo; usuário não contorna o scanner. | Resolvida |
 | Q-012 | Dispositivos | Usuário: celulares Android/iOS, Chrome e Safari móveis atuais. TI: computadores, Chrome, Edge e Firefox atuais. Tablets não são permitidos. | Resolvida |
 | Q-013 | Segurança técnica | Criptografia em trânsito e em repouso, sem E2EE. Chaves administradas pelo servidor sob responsabilidade do TI. Proteção de credenciais e gestão de chaves alinhadas com Desenvolvimento. Os administradores TI possuem poderes iguais; a confiança e os riscos do modelo foram considerados avaliados pelo projeto. | Resolvida como decisão de produto e alinhamento técnico |
-| Q-014 | Infraestrutura e jurisdição | Hospedagem e infraestrutura sob controle da FORD, preferencialmente no Brasil. Nenhum terceiro pode acessar, armazenar ou processar dados da FORD. Bibliotecas e atualizações sem acesso aos dados são permitidas. Ambientes de desenvolvimento, homologação e produção isolados conforme alinhamento com Desenvolvimento. | Resolvida quanto à regra do cliente; compatibilização da arquitetura registrada em Q-025 |
+| Q-014 | Infraestrutura e jurisdição | Hospedagem e infraestrutura sob controle da FORD, preferencialmente no Brasil. Nenhum terceiro pode acessar, armazenar ou processar dados da FORD. Bibliotecas e atualizações sem acesso aos dados são permitidas. Ambientes de desenvolvimento, homologação e produção isolados conforme alinhamento com Desenvolvimento. | Resolvida quanto à regra do cliente; compatibilidade e modelo de utilização dos provedores nomeados aprovados na Q-025 em 24/11/2026, dentro dos limites e responsabilidades registrados |
 | Q-015 | Solicitações legais | Solicitações legais dirigidas à FORD ou a fornecedores de infraestrutura são tratadas pela própria FORD. A FORD espera ser informada quando isso for juridicamente permitido. | Resolvida |
 | Q-016 | Carga e desempenho | Capacidade inicial de até 25 conexões simultâneas de usuários finais, além dos administradores TI. Volume esperado de mensagens e anexos baixo/ocasional. Metas de desempenho alinhadas com Desenvolvimento e consideradas completas. | Resolvida |
 | Q-017 | Disponibilidade e recuperação | Disponibilidade mensal de 99%; RPO de até 24 horas em desastre/falha de infraestrutura; RTO de até 24 horas; backups diários de banco e anexos com retenção de 12 meses; manutenção fora do horário comercial com aviso prévio; suporte em horário comercial. | Resolvida |
@@ -58,6 +58,7 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 | Q-022 | Orçamento | R$ 450.000,00 é referência comercial global e inclui implantação. Não inclui infraestrutura, licenças, suporte, manutenção ou treinamento; custos recorrentes ficam com a FORD. O valor não foi declarado teto aprovado. | Resolvida quanto às condições informadas |
 | Q-023 | Idioma e notificações | Interface exclusivamente em português. Não haverá notificações push nem notificações do navegador. O indicador de mensagens não lidas aparece dentro do aplicativo. | Resolvida |
 | Q-024 | Edição e exclusão de mensagens | Usuários comuns não podem editar nem excluir mensagens. TI pode editar e excluir a qualquer momento; operações administrativas geram auditoria. | Resolvida |
+| Q-025 | Compatibilidade e modelo de utilização da arquitetura | A compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, inclusive Storage, foram aprovados pela TI e pela FORD em 24/11/2026, dentro dos limites e responsabilidades registrados na decisão. A stack permanece adotada conforme ADR-003. A aprovação não comprova implementação ponta a ponta, controles completos por módulo, backup/restore, continuidade, homologação integral ou autorização de release; essas evidências permanecem nas ADRs e Issues correspondentes, especialmente #115, #116, #117 e #130. | Resolvida em 24/11/2026 |
 
 ## 8.3 Questões que permanecem abertas
 
@@ -67,7 +68,6 @@ Somente os itens abaixo continuam exigindo ação. Q-018 foi encerrada como deci
 |---|---|---|---|---|
 
 | Q-019 | Ativos oficiais de marca | Receber/confirmar o arquivo autorizado do Ford Oval e eventuais regras corporativas específicas de aplicação/tipografia. A paleta provisória não depende desses arquivos. | A direção cromática provisória foi definida pelo PO; resta somente a confirmação dos ativos oficiais para uso do logotipo e identidade final. | FORD / responsável pela marca |
-| Q-025 | Compatibilização da arquitetura com a infraestrutura FORD | Revisar as ADRs e decisões técnicas que ainda pressupõem serviços gerenciados Supabase/Vercel. Definir arquitetura que mantenha hospedagem e processamento de dados sob controle da FORD, sem terceiro acessando, armazenando ou processando dados. Preservar tecnologias de aplicação apenas se forem compatíveis com essa restrição. | A documentação e a Issue #88 registram Supabase + Vercel como direção anterior, enquanto a FORD v2 impõe infraestrutura sob seu controle. A exigência do cliente está definida; a solução arquitetural precisa ser reconciliada e documentada. | Tech Lead / Desenvolvimento / TI da FORD / PO |
 
 ## 8.4 Decisões consolidadas que não devem ser reabertas como pendência
 
@@ -85,16 +85,16 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 
 ## 8.5 Decisões arquiteturais e limites
 
-- A restrição da FORD de não permitir que terceiros acessem, armazenem ou processem seus dados é uma decisão de cliente confirmada.
-- A existência de Next.js, Vercel, Supabase, migrations ou ADRs no repositório não constitui, por si só, aprovação dessas plataformas para produção sob a restrição atual.
-- A direção Supabase/Vercel anterior deve ser revisada e formalmente reconciliada; não deve prevalecer automaticamente sobre a decisão mais recente da FORD.
-- A tecnologia definitiva deve ser registrada em ADR revisada, mantendo a distinção entre requisito de negócio, decisão arquitetural, implementação e homologação.
-- A aprovação de uma decisão técnica não deve ser confundida com evidência de implantação ou teste.
+- A restrição da FORD sobre acesso, armazenamento, processamento e controle de dados permanece como requisito vigente.
+- Supabase + Vercel permanece como stack adotada e obrigatória pela ADR-003; a compatibilidade e o modelo de utilização dos provedores nomeados foram aprovados na Q-025 em 24/11/2026, dentro dos limites e responsabilidades registrados.
+- A aprovação da Q-025 não equivale à comprovação de que cada módulo esteja integrado, que todos os controles tenham sido executados ou que o produto esteja homologado para produção.
+- A inclusão de qualquer provedor ou serviço adicional que acesse, armazene ou processe dados da FORD exige avaliação e aprovação explícitas.
+- A documentação deve manter a distinção entre requisito de negócio, decisão arquitetural aprovada, implementação, evidência operacional e homologação.
 
 ## 8.6 Histórico e rastreabilidade
 
-- Q-001 a Q-024 são identificadores históricos preservados das versões anteriores.
-- Q-025 foi criado para registrar a reconciliação técnica necessária após a restrição de infraestrutura informada na FORD v2.
+- Q-001 a Q-025 são identificadores históricos preservados para rastreabilidade das questões levantadas no projeto.
+- Q-025 foi criada para registrar a avaliação de compatibilidade após a restrição de infraestrutura informada na FORD v2 e foi concluída em 24/11/2026, com aprovação da TI e da FORD para o modelo de utilização Supabase + Vercel dentro dos limites e responsabilidades registrados.
 - Questões resolvidas permanecem documentadas para preservar a origem e a decisão.
 - Q-018 foi concluída pelo PO em 20/11/2026; a arquitetura da informação está registrada em `docs/ux/decisoes-produto-q018-q019.md`.
 - Q-019 possui paleta provisória definida pelo PO em 20/11/2026; a obtenção do arquivo oficial do logotipo continua como pendência específica.
