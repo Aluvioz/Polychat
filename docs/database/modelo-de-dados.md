@@ -1,8 +1,8 @@
 # Modelo de dados — Polychat
 
 - **Identificador:** POLY-DATA-001
-- **Versão:** 0.3 — 20/11/2026
-- **Status:** Modelo lógico conceitual com escopo funcional validado pelo PO; implementação física parcialmente integrada pelas PRs #165, #168, #172 e #173, com limites e pendências registrados na seção 2.2; Issue #99 permanece aberta
+- **Versão:** 0.4 — 26/11/2026
+- **Status:** Modelo lógico conceitual com escopo funcional validado pelo PO; implementação física parcialmente integrada pelas PRs #165, #168, #172, #173 e #181, com limites e pendências registrados na seção 2.2; o limite de anexos foi precisado como 10 MB decimais (10.000.000 bytes), ainda não refletido nas restrições físicas; Issue #99 permanece aberta
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados (**Proposed**)
 - **Stack tecnológica adotada pelo projeto:** Supabase + Vercel; PostgreSQL é utilizado via Supabase, enquanto Vercel atende à hospedagem e ao deploy da aplicação
@@ -46,12 +46,12 @@ Esta seção registra entregas técnicas efetivamente integradas e os limites do
 
 | Entrega | Conteúdo integrado | Revisão e evidência registrada | Limites que permanecem |
 |---|---|---|---|
-| **PR #165 — schema inicial da #99** | Migrations do schema inicial para `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e estruturas específicas de configuração; FKs, constraints, triggers e RLS habilitada nas tabelas novas. | Mesclada em 24/11/2026. A aplicação no Supabase de desenvolvimento Polyford e a verificação das tabelas/triggers foram registradas na PR. Tech Lead aprovou e SQA emitiu parecer favorável dentro do escopo da entrega. | `profiles.username` permanece nullable até haver estratégia confiável de preenchimento. A invariante de mensagem com texto/anexo é protegida no commit, mas o fluxo server-side/RPC que grava mensagem e anexos conjuntamente ainda precisa ser integrado. A auditoria genérica ficou para #102; as policies RLS foram entregues separadamente em #172. |
+| **PR #165 — schema inicial da #99** | Migrations do schema inicial para `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e estruturas específicas de configuração; FKs, constraints, triggers e RLS habilitada nas tabelas novas. | Mesclada em 24/11/2026. A aplicação no Supabase de desenvolvimento Polyford e a verificação das tabelas/triggers foram registradas na PR. Tech Lead aprovou e SQA emitiu parecer favorável dentro do escopo da entrega. | `profiles.username` permanece nullable até haver estratégia confiável de preenchimento. A invariante de mensagem com texto/anexo é protegida no commit, mas o fluxo server-side/RPC que grava mensagem e anexos conjuntamente ainda precisa ser integrado. A auditoria genérica ficou para #102; as policies RLS foram entregues separadamente em #172. A restrição física de `attachments.size_bytes` ainda está em 10.485.760 bytes (10 MiB), acima da precisão funcional registrada na seção 5.5; requer ajuste aditivo nas issues de anexos. |
 | **PR #168 — cobertura de índices de FKs** | Migration aditiva versionada com seis índices de cobertura para FKs de `conversations`, `memberships`, `messages` e `security_alerts`. | Mesclada em 25/11/2026. Tech Lead e SQA aprovaram a migration e a atualização documental; CI e Preview foram registrados como aprovados no head revisado. | Os seis índices foram criados/verificados somente dentro de uma transação de teste encerrada com `ROLLBACK`. A própria PR declara que a migration ainda não havia sido aplicada persistentemente ao Supabase. Portanto, os índices estão versionados no repositório, mas sua persistência no Polyford não está comprovada por aquele teste. |
 | **PR #172 — autorização e RLS da #101** | Policies RLS para conversas, memberships, mensagens, anexos, leituras, alertas e tabelas de configuração; restrições de grants por tabela/coluna e funções auxiliares no schema `private`. | Mesclada em 26/11/2026. Evidências registram 16/16 cenários de RLS aprovados e teste separado de criação de conversa direta, ambos com `ROLLBACK`; SQA emitiu parecer favorável após correções, Tech Lead aprovou e os workflows CI passaram. | O SQA não certificou a ausência de `service_role` no frontend. Storage/buckets e políticas de objetos permanecem na #117. A divergência histórica entre identificadores Git e o histórico remoto de migrations anteriores não foi reconciliada por essa PR. |
 | **PR #173 — auditoria e retenção da #102** | Estrutura `audit_events`, catálogo de eventos, controles TI-only, proteção de metadata, comportamento append-only para alterações diretas, `retention_holds`, descarte controlado e auditoria transacional de edição/exclusão lógica administrativa de mensagens e fechamento de alertas. Inclui writer explícito autenticado com JWT de usuário e chave publishable. | Mesclada em 26/11/2026. Testes SQL de auditoria/holds e descarte, executados com `ROLLBACK`, e testes unitários do writer foram registrados; SQA emitiu parecer favorável após correção do dollar quoting, Tech Lead aprovou e os workflows CI passaram. | Ainda faltam call-sites para visualização/exportação de conversas, download/liberação de anexos e alterações de configuração. Backup diário por 12 meses, restauração e evidência de RPO/RTO de até 24h não foram comprovados/configurados. Storage e descarte físico de anexos permanecem na #117; auditoria privilegiada de contas/grupos/memberships permanece na #124. |
 
-**Situação consolidada:** o schema de domínio inicial, as policies RLS e o núcleo de auditoria/retention controls possuem entregas integradas na `main`, cada qual com revisão restrita ao seu escopo. A Issue #101 e a Issue #102 foram encerradas após suas respectivas integrações, mas isso não elimina as ressalvas e dependências acima. A Issue #99 permanece aberta; não se declara a conclusão integral do modelo, de todos os fluxos funcionais, da retenção operacional, do Storage ou da homologação da FORD.
+**Evidência adicional de Storage — PR #181 / Issue #115:** a PR #181 foi integrada em 26/11/2026 e provisionou o bucket privado `attachments`, com MIME PDF/JPEG e `file_size_limit = 10.485.760` bytes (10 MiB). A entrega não implementou upload/download funcional, scanner, quotas ou backup. O limite do bucket coincide com o limite físico registrado na migration de `attachments`, mas ambos permanecem acima do limite funcional de 10 MB decimais definido na seção 5.5; a divergência precisa ser corrigida por migration aditiva e teste integrado nas Issues #115/#117.\n\n**Situação consolidada:** o schema de domínio inicial, as policies RLS, o núcleo de auditoria/retention controls e a fundação privada do Storage possuem entregas integradas na `main`, cada qual com revisão restrita ao seu escopo. A Issue #101 e a Issue #102 foram encerradas após suas respectivas integrações, mas isso não elimina as ressalvas e dependências acima. As Issues #115 e #117 permanecem abertas para completar a implementação dos anexos. A Issue #99 permanece aberta; não se declara a conclusão integral do modelo, de todos os fluxos funcionais, da retenção operacional, do Storage ou da homologação da FORD.
 
 A divergência histórica de migrations anteriores continua sem procedimento de `repair`, `reset` ou reaplicação. Nenhuma das aprovações citadas autoriza essas operações por inferência.
 
@@ -228,7 +228,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 **Regras funcionais:**
 
 - Formatos aceitos: somente PDF e JPEG.
-- Tamanho máximo: 10 MB por arquivo; até cinco arquivos por mensagem.
+- Tamanho máximo funcional: 10 MB decimais, equivalentes a **10.000.000 bytes**, por arquivo; até cinco arquivos por mensagem.
 - O TI administra limites individuais de armazenamento e capacidade total. Não existe quota específica por conversa.
 - PDF protegido por senha é recusado.
 - A validação considera o conteúdo real, não apenas a extensão ou o MIME informado pelo cliente.
@@ -238,7 +238,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 - Download exige autorização vigente sobre a conversa/mensagem. Links temporários possuem validade máxima de cinco minutos.
 - A remoção de participante revoga imediatamente links já emitidos e o acesso a anexos anteriores.
 - TI pode baixar anexos durante investigações, com registro em auditoria.
-- Não há exclusão automática de anexos enquanto o sistema operar; exclusões seguem autorização do TI e a política de retenção.
+- Não há exclusão automática de anexos enquanto o sistema operar; exclusões seguem autorização do TI e a política de retenção.\n\n**Precisão da unidade — decisão do PO nesta revisão (26/11/2026):** para eliminar a ambiguidade da expressão aprovada “10 MB”, o limite funcional fica formalizado no sentido decimal do SI: **10 MB = 10.000.000 bytes**. `10 MiB` corresponde a **10.485.760 bytes** e não é equivalente a 10 MB. Os termos não devem ser usados como sinônimos.\n\n**Divergência da implementação observada:** a migration da PR #165 define `attachments.size_bytes <= 10.485.760`, e a PR #181 configurou `storage.buckets.file_size_limit = 10.485.760` (10 MiB). Portanto, banco e bucket permitem atualmente até 485.760 bytes a mais que o limite funcional formalizado (aproximadamente 4,86% acima do máximo). A configuração física não deve ser considerada aderente ao limite até que as restrições do banco e do Storage sejam ajustadas para **10.000.000 bytes** por migration aditiva, com testes de fronteira. Essa correção pertence às Issues #115/#117; esta atualização documental não altera migrations, schema ou ambiente.
 
 ### 5.6 audit_events — eventos de auditoria
 
@@ -334,7 +334,7 @@ A migration e o writer explícito restringem os eventos a este catálogo e ao ti
 | Limite individual de armazenamento de anexos | TI | Define a quota individual por conta. | Parâmetro administrável; alteração auditada. |
 | Capacidade total de armazenamento de anexos | TI | Define a capacidade total disponível. | Parâmetro administrável; alteração auditada. |
 
-Não fazem parte desse inventário: segredos, tokens, credenciais, endpoints de infraestrutura, chaves de serviço ou parâmetros arbitrários de deploy. Limite de 10 MB por arquivo e máximo de cinco anexos por mensagem são regras fixas do produto, não parâmetros genéricos de configuração.
+Não fazem parte desse inventário: segredos, tokens, credenciais, endpoints de infraestrutura, chaves de serviço ou parâmetros arbitrários de deploy. Limite de 10 MB decimais (10.000.000 bytes) por arquivo e máximo de cinco anexos por mensagem são regras fixas do produto, não parâmetros genéricos de configuração.
 
 **Decisão do PO:** o inventário de configurações necessário ao escopo funcional da #99 está definido. Não é necessário manter a questão de produto aberta nem criar uma tabela genérica `configs` por conveniência. A estrutura de persistência, versionamento técnico e separação das entidades é matéria de implementação.
 
@@ -412,7 +412,7 @@ Os itens desta seção expressam invariantes funcionais e candidatos a restriç�
 | memberships | No máximo um período vigente por perfil/conversa | Evitar participação ativa duplicada |
 | messages | FKs para conversa e autor | Preservar origem e autoria |
 | messages | Texto não vazio ou ao menos um anexo válido | Impedir mensagem sem conteúdo |
-| attachments | MIME PDF/JPEG, tamanho até 10 MB e até cinco por mensagem | Aplicar limites funcionais; quota individual/total é adicional |
+| attachments | MIME PDF/JPEG, tamanho até 10 MB decimais (10.000.000 bytes) e até cinco por mensagem | Aplicar limites funcionais; quota individual/total é adicional |
 | message_reads | Unicidade por mensagem e leitor; instante de leitura obrigatório | Representar confirmação individual por mensagem |
 | audit_events | `actor_profile_id` obrigatório, FK para `profiles` com `ON DELETE RESTRICT`, ator igual a `auth.uid()` e TI ativo; `event_type`/`resource_type` compatíveis; `resource_id` obrigatório exceto em `admin_login`; `occurred_at` gerado pelo banco; `outcome` não vazio; `metadata` objeto JSON sem chaves sensíveis; append-only com descarte controlado | Assegurar atribuição, integridade e proteção da trilha de auditoria |
 | security_alerts | Severidade baixa/média/alta e vínculo à mensagem/regra | Preservar ocorrência e fluxo de revisão |
@@ -569,7 +569,7 @@ O PO ratifica como núcleo do modelo as entidades `profiles`, `conversations`, `
 5. **Ciclo de vida dos grupos:** grupos desativados ficam em modo somente leitura para participantes vigentes; grupos encerrados ficam disponíveis apenas ao TI até eventual reativação.
 6. **Mensagens:** pode haver texto, anexo(s) ou ambos, mas não mensagem vazia; TI pode editar/excluir e as ações são auditadas; usuários comuns não editam/excluem.
 7. **Leitura:** confirmação por mensagem e participante, com horário; em grupos, o autor pode ver quais participantes leram suas próprias mensagens e quando. Contagem de não lidas segue RF-007/RF-019.
-8. **Anexos:** PDF/JPEG, até 10 MB por arquivo, até cinco arquivos por mensagem, quotas individuais e capacidade total administradas pelo TI, sem quota por conversa; antimalware interno à FORD, bloqueio em falha/inconclusão e liberação excepcional autenticada/auditada pelo TI.
+8. **Anexos:** PDF/JPEG, até 10 MB decimais (10.000.000 bytes) por arquivo, até cinco arquivos por mensagem, quotas individuais e capacidade total administradas pelo TI, sem quota por conversa; antimalware interno à FORD, bloqueio em falha/inconclusão e liberação excepcional autenticada/auditada pelo TI.
 9. **Alertas:** detecção determinística por lista/regras mantidas pelo TI, severidades e prazos definidos; sem bloqueio ou punição automática.
 10. **Auditoria e retenção:** consultas/exportações/ações administrativas auditadas; sem justificativa obrigatória para consulta/exportação/encerramento de alerta; retenção e backups conforme RN-021.
 11. **Configurações:** inventário restrito à lista/regras de detecção e às quotas individuais/capacidade total de anexos; sem tabela genérica aprovada por inferência.
@@ -628,7 +628,7 @@ Para aspectos ainda não definidos ou que dependam de evolução, qualquer escol
 |---|---|---|---|
 | 0.1 | 18/11/2026 | Primeira proposta do modelo lógico, dicionário preliminar, relacionamentos, rastreabilidade e registro das decisões pendentes. | Proposta inicial |
 | 0.2 | 19/11/2026 | Valida o escopo funcional das entidades centrais, inclui `security_alerts` e delimita configurações persistentes como dependentes de inventário. | Escopo conceitual validado pelo PO |
-| 0.3 | 20/11/2026 | Atualiza a baseline para v0.5; alinha o modelo conceitual à stack Supabase + Vercel definida para o projeto; atualiza decisões de grupos, memberships, mensagens, anexos, auditoria, alertas e configurações; define unicidade de conversas individuais, mensagens só com anexo e leitura por mensagem/participante. | Escopo funcional conceitual validado pelo PO; schema físico e migrations não aprovados |
+| 0.3 | 20/11/2026 | Atualiza a baseline para v0.5; alinha o modelo conceitual à stack Supabase + Vercel definida para o projeto; atualiza decisões de grupos, memberships, mensagens, anexos, auditoria, alertas e configurações; define unicidade de conversas individuais, mensagens só com anexo e leitura por mensagem/participante. | Escopo funcional conceitual validado pelo PO; schema físico e migrations não aprovados |\n| 0.4 | 26/11/2026 | Registra evidências das PRs #165, #168, #172, #173 e #181, detalha RLS/auditoria/retenção e formaliza o limite de anexos como 10 MB decimais (10.000.000 bytes), identificando a divergência dos limites físicos atuais de 10 MiB. | Escopo funcional conceitual validado pelo PO; desvio técnico de tamanho permanece pendente em #115/#117 |
 
 ## 16. Referências internas
 
