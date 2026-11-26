@@ -1,9 +1,9 @@
 # ADR-001 — Arquitetura lógica geral
 
 - **Status:** Proposed
-- **Data de revisão:** 19/11/2026
+- **Data de revisão:** 24/11/2026
 - **Issue:** #89
-- **Baseline:** POLY-REQ-001 v0.4
+- **Baseline:** POLY-REQ-001 v0.5
 - **Responsáveis pela decisão:** Tech Lead e TI; PO valida aderência ao escopo
 
 ## Contexto
@@ -12,7 +12,7 @@ O Polychat é uma aplicação web interna da FORD. A baseline atual contempla ap
 
 A FORD v2 estabelece uma restrição arquitetural obrigatória: hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados podem ser utilizadas.
 
-Essa restrição prevalece sobre decisões e registros tecnológicos anteriores incompatíveis. A direção Supabase + Vercel da Issue #88 foi retirada como arquitetura-alvo e está registrada como histórica/depreciada na ADR-003. A escolha da arquitetura operacional compatível ainda precisa ser concluída (Q-025).
+A ADR-003, revisada em 24/11/2026, mantém Supabase + Vercel como stack adotada e obrigatória. As restrições da FORD v2 continuam válidas e precisam ser reconciliadas com a configuração e o modelo de uso da stack na Q-025. Essa tensão deve ser tratada como questão de compatibilidade, risco ou bloqueio específico; não autoriza retirar ou depreciar a ADR-003 por inferência. Qualquer proposta de substituição deve seguir o processo formal de mudança arquitetural em `docs/10-governanca-desenvolvimento.md`.
 
 O repositório contém Next.js 16, React 19, TypeScript, uma página institucional, um módulo isolado de autorização e uma migration de perfis vinculada ao modelo anterior. Não há implementação funcional ponta a ponta do chat nem comprovação de integração com infraestrutura FORD.
 
@@ -73,7 +73,7 @@ Configuração incorreta de autorização; credenciais privilegiadas expostas; R
 
 A `main` contém Next.js 16/React 19/TypeScript, página institucional, o módulo `src/auth/authorization.mjs` e uma migration de perfis vinculada ao Supabase. Não foram encontradas rotas funcionais de chat, serviços de domínio, armazenamento de anexos, canais realtime ou trilha de auditoria funcional.
 
-A existência desses artefatos históricos não comprova que Supabase ou Vercel estejam autorizados para produção. A baseline v0.4 registra a restrição FORD e a necessidade de reconciliação arquitetural.
+A existência desses artefatos não comprova integração funcional nem homologação de produção. A stack Supabase + Vercel permanece adotada conforme ADR-003; a configuração, o fluxo dos dados, os acessos, as responsabilidades e a compatibilidade com os requisitos da FORD devem ser evidenciados na Q-025. A análise não altera o status da ADR-003 por si só.
 
 ## Pendências para Accepted
 
