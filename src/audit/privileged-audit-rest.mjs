@@ -25,6 +25,18 @@ function apiHeaders(secretKey, extra = {}) {
   };
 }
 
+/**
+ * @param {{
+ *   actor?: { id: string, role: string, isActive: boolean } | null,
+ *   eventType: string,
+ *   resourceType: string,
+ *   resourceId?: string | null,
+ *   outcome?: string,
+ *   metadata?: Record<string, unknown>,
+ *   env?: NodeJS.ProcessEnv,
+ *   fetchImpl?: typeof fetch,
+ * }} options
+ */
 export async function recordPrivilegedAuditEventRest({
   actor = null,
   eventType,
