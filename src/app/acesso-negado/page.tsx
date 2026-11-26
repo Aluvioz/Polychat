@@ -2,7 +2,7 @@ import Link from "next/link";
 import "../ti/console.css";
 
 type AccessDeniedPageProps = {
-  searchParams: Promise<{ motivo?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function AccessDeniedPage({ searchParams }: AccessDeniedPageProps) {
