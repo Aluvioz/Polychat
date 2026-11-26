@@ -12,7 +12,7 @@ O Polychat é uma aplicação web interna da FORD. A baseline v0.5 contempla apr
 
 A FORD v2 estabelece que hospedagem e infraestrutura devem permanecer sob controle da FORD, preferencialmente no Brasil, e que nenhum serviço de terceiro pode acessar, armazenar ou processar dados da organização. Bibliotecas e atualizações sem acesso aos dados são permitidas.
 
-A ADR-003, com status **Accepted** e revisão de 24/11/2026, mantém Supabase + Vercel como stack tecnológica adotada e obrigatória. A restrição da FORD permanece válida e deve ser compatibilizada com a configuração e o modelo de uso da stack na Q-025. Essa avaliação deve registrar evidências, controles, responsabilidades, limitações e riscos residuais. Uma tensão ou incompatibilidade identificada não altera automaticamente a ADR-003; eventual incompatibilidade concreta não mitigável deve ser encaminhada ao PO e às responsabilidades competentes da FORD para decisão formal e avaliação de impacto.
+A ADR-003, com status **Accepted**, mantém Supabase + Vercel como stack tecnológica adotada e obrigatória. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados, inclusive Storage, dentro dos limites e responsabilidades registrados. Essa aprovação não substitui as evidências de implementação, integração, segurança por componente, continuidade, homologação ou release. Qualquer evidência posterior de uso fora dos limites aprovados ou de incompatibilidade concreta não mitigável deve ser encaminhada ao PO e às responsabilidades competentes da FORD para decisão formal e avaliação de impacto.
 
 O estado atual do repositório é de **implementação parcial por componentes**, não de produto funcional ponta a ponta. Já existem entregas integradas de sessão/autorização, schema de domínio, políticas RLS, auditoria genérica, base de auditoria privilegiada e fundação/upload privado de anexos. Esses componentes têm limites de escopo e não comprovam, isoladamente, que todos os fluxos do MVP estejam integrados ou homologados.
 
@@ -30,7 +30,7 @@ Definir fronteiras de confiança, responsabilidades e componentes lógicos para 
 
 Adotar uma arquitetura lógica modular, utilizando Vercel para hospedagem/deploy e Supabase como plataforma de backend, conforme a ADR-003. As responsabilidades e integrações específicas permanecem detalhadas nas ADRs 002 a 010.
 
-Esta ADR permanece **Proposed** até a revisão técnica de arquitetura pela Tech Lead e TI e a apresentação das evidências necessárias para a Q-025. A decisão de stack não equivale a declaração de compatibilidade operacional, homologação de produção ou conclusão de todos os componentes.
+Esta ADR permanece **Proposed** até a revisão técnica da arquitetura pela Tech Lead e TI e a validação dos limites e integrações descritos neste documento. A conclusão da Q-025 registra a aprovação do modelo de utilização Supabase + Vercel dentro dos limites acordados, mas não equivale a homologação de produção nem à conclusão de todos os componentes.
 
 As responsabilidades lógicas são:
 
@@ -43,11 +43,11 @@ As responsabilidades lógicas são:
 - **Arquivos:** Supabase Storage com bucket privado e operações mediadas por servidor confiável. A fundação do bucket privado e o endpoint server-side de upload PDF/JPEG estão integrados; download autorizado, URLs temporárias, scanner antimalware, quarentena/liberação, quotas, validação de PDF protegido, remoção EXIF/GPS e backup dos objetos continuam nos escopos específicos de #116, #117 e #130.
 - **Mensageria em tempo real:** Supabase Realtime permanece como opção a validar na ADR-007. O banco é a fonte de verdade; a publicação de eventos não substitui persistência nem autorização. Canais, subscriptions, revogação em conexões ativas, reconexão e consistência ainda precisam de prova de conceito e validação técnica.
 - **Auditoria e monitoramento:** a arquitetura separa a trilha genérica de eventos (`audit_events`), os registros de ações privilegiadas e os mecanismos de monitoramento/alertas. A base de auditoria genérica, retenção investigativa e descarte controlado foi integrada; a base independente de auditoria privilegiada também foi integrada. Call sites e cobertura de eventos permanecem pendentes nos fluxos administrativos e de consulta, conforme Issues #102 e #124 e ADR-010.
-- **Operação e continuidade:** ambientes de desenvolvimento, homologação/Preview e produção devem permanecer segregados entre projetos Supabase e deployments Vercel. Os aceites das Issues #96 e #98 devem ser preservados em seus escopos originais. Q-025 permanece para documentar a configuração e a compatibilidade; backup/restore, retenção de 12 meses e comprovação de RPO/RTO permanecem sujeitos às evidências operacionais da Issue #130.
+- **Operação e continuidade:** ambientes de desenvolvimento, homologação/Preview e produção devem permanecer segregados entre projetos Supabase e deployments Vercel. Os aceites das Issues #96 e #98 devem ser preservados em seus escopos originais. A compatibilidade e o modelo de utilização dos provedores foram aprovados na Q-025, dentro dos limites registrados; backup/restore, retenção de 12 meses e comprovação de RPO/RTO permanecem sujeitos às evidências operacionais da Issue #130.
 
 Operações sensíveis devem negar por padrão e falhar fechadas. Criptografia em trânsito e em repouso é obrigatória; a solução não deve ser descrita como E2EE, pois o servidor precisa acessar o conteúdo para as funções administrativas e de monitoramento definidas pela FORD.
 
-Supabase e Vercel são as plataformas oficialmente adotadas pelo projeto. A inclusão de qualquer fornecedor ou suboperador adicional que acesse, armazene ou processe dados depende de aprovação explícita e avaliação de segurança/privacidade. A configuração e o modelo de uso das plataformas oficiais ainda devem ser demonstrados em relação aos requisitos de infraestrutura da FORD; esta ADR não presume que essa compatibilidade já esteja comprovada.
+Supabase e Vercel são as plataformas oficialmente adotadas pelo projeto, e a Q-025 registrou a aprovação da TI e da FORD para o modelo de utilização dos provedores nomeados, dentro dos limites e responsabilidades definidos. Essa aprovação não homologa automaticamente cada integração, controle funcional ou operação de produção. A inclusão de qualquer fornecedor ou suboperador adicional que acesse, armazene ou processe dados depende de aprovação explícita e avaliação de segurança/privacidade.
 
 ## Justificativa
 
@@ -87,13 +87,13 @@ As evidências abaixo refletem entregas integradas à `main` até 26/11/2026. In
 - **Mensageria:** a ADR-007, revisada em 25/11/2026, registra que o schema e a RLS de domínio já existem, mas não há canais/subscriptions Supabase Realtime, política de canal nem prova de conceito de revogação em conexão ativa.
 - **Ambientes e deploy:** as Issues #96 e #98 foram encerradas com aceite dos respectivos escopos operacionais. Esses aceites não equivalem a homologação integral de todos os fluxos do produto ou a auditoria independente de todas as configurações.
 - **Continuidade:** a Issue #130 permanece aberta. Backup diário com retenção de 12 meses, restauração e evidência de RPO/RTO de até 24 horas não estão comprovados como capacidade operacional concluída.
-- **Compatibilidade FORD:** Q-025 permanece aberta para documentar configuração, regiões, projetos, acessos, segredos, processamento, responsabilidades, evidências e riscos residuais da stack oficial frente aos requisitos da FORD.
+- **Compatibilidade FORD:** Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados, dentro dos limites e responsabilidades registrados. A Issue #130 permanece aberta para evidências de continuidade, backup/restore, operação e release.
 
-A existência dessas entregas, migrations, testes, configurações ou previews não comprova, isoladamente, integração ponta a ponta, cobertura completa de requisitos, homologação de produção ou compatibilidade operacional integral com a FORD.
+A existência dessas entregas, migrations, testes, configurações ou previews não comprova, isoladamente, integração ponta a ponta, cobertura completa de requisitos, homologação de produção ou execução integral dos controles operacionais acordados com a FORD.
 
 ## Pendências para Accepted
 
-- Concluir a avaliação documentada da configuração e do modelo de uso de Supabase + Vercel frente aos requisitos da FORD (Q-025), com regiões, ambientes, acessos, segredos, responsabilidades, evidências e riscos residuais.
+- Revisar com Tech Lead e TI a manutenção da arquitetura e das configurações dentro do modelo de utilização aprovado na Q-025, registrando alterações relevantes e evidências técnicas sem reabrir a compatibilidade já aprovada.
 - Obter revisão técnica da Tech Lead e TI sobre componentes, fronteiras server-side, identidade, persistência, RLS, armazenamento, antimalware, Realtime, auditoria, continuidade e operação.
 - Validar os limites e integrações ainda pendentes indicados nas ADRs específicas, sem reabrir decisões funcionais já consolidadas e sem declarar integração ou homologação sem evidências.
 - Registrar a solução arquitetural revisada, os responsáveis pela aprovação, a data, as evidências de viabilidade e os limites explícitos do aceite.
