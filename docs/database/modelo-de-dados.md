@@ -2,18 +2,18 @@
 
 - **Identificador:** POLY-DATA-001
 - **Versão:** 0.3 — 20/11/2026
-- **Status:** Modelo lógico conceitual com escopo funcional validado pelo PO; schema físico, DDL e migrations não aprovados
+- **Status:** Modelo lógico conceitual com escopo funcional validado pelo PO; implementação física parcialmente integrada pelas PRs #165, #168, #172 e #173, com limites e pendências registrados na seção 2.2; Issue #99 permanece aberta
 - **Issue de referência:** #99 — Modelar schema PostgreSQL e migrations iniciais
 - **ADR relacionada:** ADR-005 — Banco de dados e modelo de dados (**Proposed**)
 - **Stack tecnológica adotada pelo projeto:** Supabase + Vercel; PostgreSQL é utilizado via Supabase, enquanto Vercel atende à hospedagem e ao deploy da aplicação
 
-> **Importante:** este documento registra o modelo lógico conceitual do Polychat e as decisões funcionais validadas pelo PO para a baseline v0.5. Distingue regras confirmadas, evidências legadas e propostas técnicas. Não representa aprovação do schema físico, não aprova tecnologia de autenticação/armazenamento nem autoriza, por si só, a criação ou aplicação de migrations.
+> **Importante:** este documento registra o modelo lógico conceitual do Polychat e as decisões funcionais validadas pelo PO para a baseline v0.5. Distingue regras confirmadas, implementação técnica integrada, evidências de aplicação/teste e propostas técnicas. A validação do PO não equivale à aprovação do schema físico. O estado das entregas técnicas e seus limites estão consolidados na seção 2.2; não se deve inferir, a partir do merge de uma PR ou de um teste revertido, que toda a implementação esteja aplicada, homologada ou pronta para produção.
 
 ## 1. Objetivo
 
 Documentar as entidades, atributos candidatos, relacionamentos, regras de integridade e dependências necessárias para persistir os dados do MVP do Polychat.
 
-O modelo serve como referência de produto e domínio para a Issue #99. Esta revisão registra decisões funcionais do PO; não aprova a estrutura física nem antecipa a implementação de migrations.
+O modelo serve como referência de produto e domínio para a Issue #99. Esta revisão registra decisões funcionais do PO e não equivale a uma aprovação do PO sobre estrutura física, DDL ou migrations. As implementações técnicas posteriores foram submetidas a revisões próprias e estão resumidas na seção 2.2, sem ampliar o escopo da validação funcional.
 
 ## 2. Escopo e fontes
 
@@ -32,10 +32,28 @@ As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinha
 | Status | Significado |
 |---|---|
 | **Implementado no repositório** | Existe no repositório em migration versionada. Não significa, por si só, que foi aplicado ou homologado no ambiente Supabase do projeto. |
+| **Integrado à `main`** | A PR foi mesclada e seu conteúdo passou a integrar o histórico do repositório. Não comprova aplicação persistente no Supabase nem conclusão de todo o fluxo funcional. |
+| **Aplicado no Polyford (evidência registrada)** | Comentários/notas da entrega registram aplicação no Supabase de desenvolvimento. É uma evidência específica daquele ambiente e não equivale à homologação da FORD ou à prontidão de produção. |
+| **Testado com `ROLLBACK`** | Os cenários foram executados em transação revertida. O teste demonstra o comportamento observado, mas não deixa os dados/objetos de teste persistidos no ambiente. |
 | **Confirmado** | Há requisito ou regra de negócio que sustenta a necessidade funcional da informação. |
 | **Proposta técnica** | É uma solução preliminar para discussão e revisão; ainda não deve ser tratada como decisão aprovada. |
 | **Pendente** | Depende de decisão de negócio, aprovação, detalhamento ou validação técnica. |
 | **Fora do escopo confirmado** | Não deve ser incluído no MVP com base nas informações atuais. |
+
+### 2.2 Estado da implementação técnica — fotografia de 26/11/2026
+
+Esta seção registra entregas técnicas efetivamente integradas e os limites documentados nas respectivas PRs. O status de merge é distinto da aplicação persistente no banco, da integração de todos os fluxos de produto e da homologação da FORD.
+
+| Entrega | Conteúdo integrado | Revisão e evidência registrada | Limites que permanecem |
+|---|---|---|---|
+| **PR #165 — schema inicial da #99** | Migrations do schema inicial para `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e estruturas específicas de configuração; FKs, constraints, triggers e RLS habilitada nas tabelas novas. | Mesclada em 24/11/2026. A aplicação no Supabase de desenvolvimento Polyford e a verificação das tabelas/triggers foram registradas na PR. Tech Lead aprovou e SQA emitiu parecer favorável dentro do escopo da entrega. | `profiles.username` permanece nullable até haver estratégia confiável de preenchimento. A invariante de mensagem com texto/anexo é protegida no commit, mas o fluxo server-side/RPC que grava mensagem e anexos conjuntamente ainda precisa ser integrado. A auditoria genérica ficou para #102; as policies RLS foram entregues separadamente em #172. |
+| **PR #168 — cobertura de índices de FKs** | Migration aditiva versionada com seis índices de cobertura para FKs de `conversations`, `memberships`, `messages` e `security_alerts`. | Mesclada em 25/11/2026. Tech Lead e SQA aprovaram a migration e a atualização documental; CI e Preview foram registrados como aprovados no head revisado. | Os seis índices foram criados/verificados somente dentro de uma transação de teste encerrada com `ROLLBACK`. A própria PR declara que a migration ainda não havia sido aplicada persistentemente ao Supabase. Portanto, os índices estão versionados no repositório, mas sua persistência no Polyford não está comprovada por aquele teste. |
+| **PR #172 — autorização e RLS da #101** | Policies RLS para conversas, memberships, mensagens, anexos, leituras, alertas e tabelas de configuração; restrições de grants por tabela/coluna e funções auxiliares no schema `private`. | Mesclada em 26/11/2026. Evidências registram 16/16 cenários de RLS aprovados e teste separado de criação de conversa direta, ambos com `ROLLBACK`; SQA emitiu parecer favorável após correções, Tech Lead aprovou e os workflows CI passaram. | O SQA não certificou a ausência de `service_role` no frontend. Storage/buckets e políticas de objetos permanecem na #117. A divergência histórica entre identificadores Git e o histórico remoto de migrations anteriores não foi reconciliada por essa PR. |
+| **PR #173 — auditoria e retenção da #102** | Estrutura `audit_events`, catálogo de eventos, controles TI-only, proteção de metadata, comportamento append-only para alterações diretas, `retention_holds`, descarte controlado e auditoria transacional de edição/exclusão lógica administrativa de mensagens e fechamento de alertas. Inclui writer explícito autenticado com JWT de usuário e chave publishable. | Mesclada em 26/11/2026. Testes SQL de auditoria/holds e descarte, executados com `ROLLBACK`, e testes unitários do writer foram registrados; SQA emitiu parecer favorável após correção do dollar quoting, Tech Lead aprovou e os workflows CI passaram. | Ainda faltam call-sites para visualização/exportação de conversas, download/liberação de anexos e alterações de configuração. Backup diário por 12 meses, restauração e evidência de RPO/RTO de até 24h não foram comprovados/configurados. Storage e descarte físico de anexos permanecem na #117; auditoria privilegiada de contas/grupos/memberships permanece na #124. |
+
+**Situação consolidada:** o schema de domínio inicial, as policies RLS e o núcleo de auditoria/retention controls possuem entregas integradas na `main`, cada qual com revisão restrita ao seu escopo. A Issue #101 e a Issue #102 foram encerradas após suas respectivas integrações, mas isso não elimina as ressalvas e dependências acima. A Issue #99 permanece aberta; não se declara a conclusão integral do modelo, de todos os fluxos funcionais, da retenção operacional, do Storage ou da homologação da FORD.
+
+A divergência histórica de migrations anteriores continua sem procedimento de `repair`, `reset` ou reaplicação. Nenhuma das aprovações citadas autoriza essas operações por inferência.
 
 ## 3. Premissas e limites
 
@@ -50,7 +68,7 @@ As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinha
 9. TI pode consultar e exportar qualquer conversa sem justificativa ou aprovação prévia de outra pessoa; essas operações são auditadas.
 10. Mensagens, anexos, alertas e registros administrativos não sofrem exclusão automática enquanto o sistema operar. Exclusões dependem de autorização do TI e respeitam a retenção e o ciclo de backups definidos na baseline.
 11. O catálogo de configurações persistentes do TI está delimitado à lista/regras de detecção e às quotas individuais/capacidade total de anexos. Não criar tabela genérica de configurações sem necessidade demonstrada.
-12. O documento valida significado e regras funcionais. Tipos SQL, normalização, chaves, constraints, índices, FKs, RLS, estratégia física e migrations permanecem fora desta aprovação do PO.
+12. O documento valida significado e regras funcionais. Tipos SQL, normalização, chaves, constraints, índices, FKs, RLS, estratégia física e migrations permanecem fora desta aprovação do PO. As entregas físicas posteriormente integradas e suas revisões técnicas/SQA são registradas separadamente na seção 2.2.
 
 ## 4. Diagrama lógico preliminar
 
@@ -115,7 +133,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.2 conversations — conversas individuais e em grupo
 
-**Necessidade funcional:** confirmada. Não há migration de domínio identificada.
+**Necessidade funcional:** confirmada. A estrutura física `public.conversations` foi criada pela migration da PR #165, integrada à `main` e reportada como aplicada no Supabase de desenvolvimento Polyford. As policies de domínio/RLS correspondentes foram integradas pela PR #172.
 
 | Campo conceitual | Obrigatório | Regra funcional | Situação |
 |---|---:|---|---|
@@ -144,7 +162,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.3 memberships — períodos de participação em conversas
 
-**Necessidade funcional:** confirmada. Não há migration identificada.
+**Necessidade funcional:** confirmada. A estrutura física `public.memberships` foi criada pela migration da PR #165, integrada à `main` e reportada como aplicada no Supabase de desenvolvimento Polyford. As policies de domínio/RLS correspondentes foram integradas pela PR #172.
 
 | Campo conceitual | Obrigatório | Regra funcional | Situação |
 |---|---:|---|---|
@@ -170,7 +188,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.4 messages — mensagens
 
-**Necessidade funcional:** confirmada. Não há migration identificada.
+**Necessidade funcional:** confirmada. A estrutura física `public.messages` foi criada pela migration da PR #165, integrada à `main` e reportada como aplicada no Supabase de desenvolvimento Polyford. As invariantes de conteúdo/anexos são verificadas no commit da transação; a integração server-side/RPC para efetuar a gravação conjunta de mensagem e anexos permanece uma pendência de fluxo. As policies de domínio/RLS foram integradas pela PR #172.
 
 | Campo conceitual | Obrigatório | Regra funcional | Situação |
 |---|---:|---|---|
@@ -196,7 +214,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.5 attachments — metadados dos anexos
 
-**Necessidade funcional:** confirmada. Não há migration de domínio identificada.
+**Necessidade funcional:** confirmada. A estrutura física `public.attachments` para metadados e referência de armazenamento foi criada pela migration da PR #165, integrada à `main` e reportada como aplicada no Supabase de desenvolvimento Polyford. Isso não comprova bucket privado, políticas de objetos, fluxo de upload, varredura antimalware ou exclusão física; esses pontos permanecem vinculados à Issue #117. As policies RLS sobre a tabela foram integradas pela PR #172.
 
 | Campo conceitual | Obrigatório | Regra funcional | Situação |
 |---|---:|---|---|
@@ -262,7 +280,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.7 security_alerts — alertas de conteúdo suspeito
 
-**Necessidade funcional:** confirmada por RF-014/RF-015 e pelas decisões Q-007/Q-008.
+**Necessidade funcional:** confirmada por RF-014/RF-015 e pelas decisões Q-007/Q-008. A tabela física `public.security_alerts` foi criada pela PR #165 e suas policies de domínio/RLS foram integradas pela PR #172.
 
 **Finalidade:** persistir ocorrência associada a mensagem sinalizada por regra determinística e permitir sua revisão pelo TI.
 
@@ -288,7 +306,7 @@ Os nomes e atributos a seguir descrevem necessidades de domínio e candidatos de
 
 ### 5.8 Configurações persistentes — inventário funcional definido
 
-**Status:** inventário funcional delimitado pelo PO conforme RF-014/RF-015, Q-018 e POLY-UX-DEC-001. A estrutura física de persistência não está aprovada.
+**Status:** inventário funcional delimitado pelo PO conforme RF-014/RF-015, Q-018 e POLY-UX-DEC-001. A PR #165 criou as estruturas específicas `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity`, aprovadas pelo Tech Lead dentro daquele escopo; as respectivas policies de autorização foram integradas pela PR #172. Não foi criada tabela genérica `configs`.
 
 | Configuração | Quem administra | Regra funcional | Observação para o modelo |
 |---|---|---|---|
@@ -302,7 +320,7 @@ Não fazem parte desse inventário: segredos, tokens, credenciais, endpoints de 
 
 ### 5.9 message_reads — confirmações de leitura por mensagem
 
-**Necessidade funcional:** confirmada por RF-019. A granularidade funcional para grupos é definida nesta versão; a estrutura física permanece técnica.
+**Necessidade funcional:** confirmada por RF-019. A granularidade funcional para grupos é definida nesta versão; a tabela física `public.message_reads` foi criada pela PR #165 e suas policies de domínio/RLS foram integradas pela PR #172.
 
 | Campo conceitual | Obrigatório | Regra funcional | Situação |
 |---|---:|---|---|
@@ -391,6 +409,8 @@ Os itens desta seção expressam invariantes funcionais e candidatos a restriç�
 - `security_alerts(status, severity, detected_at)` como candidato para fila TI.
 
 Seletividade, ordenação, custo de escrita e índices compostos devem ser avaliados com as consultas reais e o volume inicial previsto. Não criar índices indiscriminadamente.
+
+A migration aditiva da PR #168 versiona seis índices de cobertura de FKs (em `conversations`, `memberships`, `messages` e `security_alerts`). O teste relatado criou e verificou os índices dentro de transação revertida com `ROLLBACK`; como a PR informa que a migration ainda não foi aplicada persistentemente ao Supabase, esses índices não devem ser descritos como persistidos no Polyford com base nessa evidência.
 
 ## 8. Segurança, identidade e acesso aos dados
 
