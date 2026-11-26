@@ -8,24 +8,49 @@
 - Conta com `is_active = false`, perfil ausente/desconhecido ou falha de consulta não recebe acesso (fail closed).
 - Role e estado só podem ser alterados por operações confiáveis no servidor.
 
-## Uso em rotas Vercel/Express
+## Integração com Next.js App Router
+
+O projeto utiliza cookies HttpOnly para manter a sessão. O adaptador
+`src/auth/next-authorization.mjs` conecta esse fluxo às rotas do Next.js sem
+duplicar a validação do Supabase:
 
 ```js
-import { createClient } from "@supabase/supabase-js";
-import { requireAuthenticatedUser, requireRole } from "../src/auth/authorization.mjs";
+import { authorizeNextRequest } from "@/auth/next-authorization.mjs";
 
-const supabase = createClient(process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  { auth: { persistSession: false, autoRefreshToken: false } });
+export async function GET(request) {
+  const authorization = await authorizeNextRequest(request, {
+    allowedRoles: ["ti"],
+  });
 
-const authenticated = requireAuthenticatedUser({ supabase });
-const onlyTI = requireRole("ti");
-// Na rota: authenticated, onlyTI, handler
+  if (!authorization.authorized) {
+    return Response.json(
+      { error: "Acesso não autorizado." },
+      { status: authorization.status },
+    );
+  }
+
+  // Use authorization.session.user após a validação server-side.
+  return Response.json({ user: authorization.session.user });
+}
 ```
 
-Nunca exponha `SUPABASE_SERVICE_ROLE_KEY` ao navegador nem use prefixo
-`NEXT_PUBLIC_` (ou equivalente). O token Bearer deve ser o access token
-da sessão do usuário.
+A rota existente `GET /api/auth/session` já utiliza o adaptador e aceita
+somente os perfis válidos `user` e `ti`. Para rotas futuras, informe a lista
+mínima de perfis em `allowedRoles`; uma rota administrativa deve usar
+`["ti"]`. O adaptador consulta a sessão e o perfil pelo serviço existente,
+rejeita conta inativa/perfil inválido e falha fechada em erro do provedor.
+A renovação de tokens continua sendo responsabilidade de
+`validateSession`, preservando a rotação atual dos cookies.
+
+## Middleware Express legado
+
+`requireAuthenticatedUser` e `requireRole` permanecem disponíveis para
+handlers Express que usem token Bearer e cliente Supabase criado no servidor.
+Não use esse middleware Express diretamente como handler do Next.js.
+
+Nunca exponha a chave privilegiada do Supabase ao navegador nem use prefixo
+`NEXT_PUBLIC_` para segredos. Identidade, papel e estado não devem ser aceitos
+do body, query string ou metadados controlados pelo cliente.
 
 ## Migration e usuários existentes
 Aplicar `supabase/migrations/202611160001_profiles_roles_and_account_status.sql`.
@@ -39,6 +64,10 @@ Os testes usam Supabase simulado; testes de integração em projeto Supabase
 de homologação ainda são necessários.
 
 ## Limite de integração
-O repositório não possui aplicação JavaScript/Vercel integrada identificada.
-Este módulo é independente e compatível com middleware Express-style; a
-conexão às rotas reais deve ocorrer quando a aplicação for incorporada.
+A rota de sessão do Next.js está integrada ao adaptador de autorização. No
+estado atual do repositório, as demais rotas de API existentes são login e
+logout, que são operações públicas de autenticação; não há handlers de
+recursos de negócio que justifiquem aplicar uma role exclusiva. Quando esses
+handlers forem implementados, devem chamar `authorizeNextRequest` antes de
+executar qualquer operação protegida. A autorização de dados de domínio
+continua dependendo das políticas RLS próprias de cada recurso.
