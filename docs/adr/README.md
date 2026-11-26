@@ -92,7 +92,7 @@ Essas entregas pertencem às ADRs e Issues indicadas; não devem ser confundidas
 - **Q-019:** parcialmente concluída; permanece apenas a obtenção/confirmação do arquivo autorizado do Ford Oval e eventuais regras corporativas específicas de aplicação/tipografia. A paleta provisória está definida.
 - **Q-025:** concluída em 24/11/2026, com aprovação de TI/FORD para compatibilidade e modelo de utilização Supabase + Vercel, inclusive Storage, dentro dos limites e responsabilidades registrados. Não deve permanecer listada como questão aberta nem ser usada para reabrir a escolha da stack.
 
-O registro histórico das questões permanece em `docs/08-glossario-e-questoes-em-aberto.md`. Referências antigas que ainda classifiquem Q-025 como aberta precisam ser reconciliadas com a decisão de 24/11/2026 antes da revisão final integrada.
+O registro histórico das questões permanece em `docs/08-glossario-e-questoes-em-aberto.md`. Na revisão documental de 26/11/2026, as referências residuais que tratavam Q-025 como aberta foram reconciliadas nas ADRs 001, 003, 004, 005, 006 e 007 e no glossário. A avaliação de compatibilidade não deve ser reaberta; permanecem apenas as validações de implementação, operação, continuidade e homologação nos seus escopos próprios.
 
 ## Issue #89 e esta revisão corretiva
 
