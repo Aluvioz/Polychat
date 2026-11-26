@@ -1,22 +1,23 @@
 name: Supabase clean migration install
 
 on:
-  push:
-    branches:
-      - fix/supabase-migration-history-reconciliation-20261126
   pull_request:
     branches:
       - main
+    paths:
+      - "supabase/migrations/**"
+      - "supabase/tests/**"
+      - ".github/workflows/supabase-clean-install.yml"
 
 permissions:
   contents: read
 
 jobs:
   clean-install:
-    name: Clean PostgreSQL install and CLI migration history
+    name: Clean PostgreSQL install and migration integration checks
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout reconciliation PR
+      - name: Checkout pull request
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -30,14 +31,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin feat/issue-115-private-attachment-storage
-          mkdir -p "$RUNNER_TEMP/polychat-clean/supabase/migrations" "$RUNNER_TEMP/polychat-clean/supabase/tests"
-          cp supabase/migrations/*.sql "$RUNNER_TEMP/polychat-clean/supabase/migrations/"
-          git show origin/feat/issue-115-private-attachment-storage:supabase/migrations/20261126131156_issue_115_private_attachment_bucket.sql > "$RUNNER_TEMP/polychat-clean/supabase/migrations/20261126131156_issue_115_private_attachment_bucket.sql"
-          git show origin/feat/issue-115-private-attachment-storage:supabase/tests/issue_115_private_bucket.integration.sql > "$RUNNER_TEMP/polychat-clean/supabase/tests/issue_115_private_bucket.integration.sql"
-          count=$(find "$RUNNER_TEMP/polychat-clean/supabase/migrations" -maxdepth 1 -type f -name '*.sql' | wc -l)
-          test "$count" -eq 18
-          echo "Prepared $count migration files from PR #180 plus PR #181."
+          workspace="$RUNNER_TEMP/polychat-clean"
+          mkdir -p "$workspace/supabase/migrations" "$workspace/supabase/tests"
+          shopt -s nullglob
+          migrations=(supabase/migrations/*.sql)
+          test "${#migrations[@]}" -gt 0
+          cp "${migrations[@]}" "$workspace/supabase/migrations/"
+
+          integration_tests=(
+            supabase/tests/issue_112_group_admin.integration.sql
+            supabase/tests/issue_115_private_bucket.integration.sql
+          )
+          for test_file in "${integration_tests[@]}"; do
+            if [[ -f "$test_file" ]]; then
+              cp "$test_file" "$workspace/supabase/tests/"
+            fi
+          done
+
+          printf 'Prepared %s migration files from the pull request.\n' "${#migrations[@]}"
+          find "$workspace/supabase/migrations" -maxdepth 1 -type f -name '*.sql' -printf '%f\n' | sort
 
       - name: Initialize isolated Supabase local project
         working-directory: ${{ runner.temp }}/polychat-clean
@@ -51,14 +63,23 @@ jobs:
         working-directory: ${{ runner.temp }}/polychat-clean
         run: supabase db reset --local
 
-      - name: Run Issue #115 private bucket integration assertion
+      - name: Run available database integration assertions
         working-directory: ${{ runner.temp }}/polychat-clean
         shell: bash
         run: |
           set -euo pipefail
           db_container=$(docker ps --format '{{.Names}}' | grep '^supabase_db_' | head -n 1)
           test -n "$db_container"
-          docker exec "$db_container" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c "$(cat supabase/tests/issue_115_private_bucket.integration.sql)"
+
+          for test_file in \
+            supabase/tests/issue_112_group_admin.integration.sql \
+            supabase/tests/issue_115_private_bucket.integration.sql; do
+            if [[ -f "$test_file" ]]; then
+              container_file="/tmp/$(basename "$test_file")"
+              docker cp "$test_file" "$db_container:$container_file"
+              docker exec "$db_container" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$container_file"
+            fi
+          done
 
       - name: Verify CLI migration history
         working-directory: ${{ runner.temp }}/polychat-clean
