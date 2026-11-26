@@ -72,3 +72,11 @@ A conclusão técnica ainda depende das verificações finais:
 - revisão técnica das RPCs privilegiadas e confirmação do modelo de segurança descrito acima.
 
 A aprovação da PR #175 não equivale à aprovação da PR #178. O status de implementação não deve ser confundido com validação final de CI/Supabase. A Issue #112 só deve ser marcada como concluída após essas verificações.
+
+## Validação contínua após integração com `main`
+
+Na execução de CI do commit anterior, o workflow de testes identificou um erro de resolução ESM ao importar `next/server` diretamente no Node.js. O import foi ajustado para `next/server.js` no commit `90b721a`; a nova execução de CI deve confirmar a correção.
+
+O workflow separado de instalação limpa do Supabase falhou antes de inicializar o Supabase local: a etapa de preparação tenta obter arquivos de outra branch (`feat/issue-115-private-attachment-storage`) e interrompeu antes de aplicar migrations ou executar testes. Portanto, essa falha não é evidência de erro na migration da Issue #112 e também não valida seu SQL.
+
+A validação SQL/RLS específica da Issue #112 continua pendente de execução em ambiente Supabase de homologação. A revisão estática do SQL não substitui essa execução.
