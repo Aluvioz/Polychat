@@ -64,7 +64,7 @@ A PR #180 reconciliou os nomes locais das migrations com as versões remotas ide
 
 ### 2.3 Documentação correlata harmonizada na `main`
 
-A revisão cruzada desta versão identificou documentos de apoio que precisavam ser atualizados para refletir entregas já integradas. Essas harmonizações foram realizadas diretamente na branch `main), em atualização documental separada desta PR. A tabela registra o estado documental publicado e preserva as pendências técnicas que não foram resolvidas por essas atualizações.
+A revisão cruzada desta versão identificou documentos de apoio que precisavam ser atualizados para refletir entregas já integradas. Essas harmonizações foram realizadas diretamente na branch `main`, em atualização documental separada desta PR. A tabela registra o estado documental publicado e preserva as pendências técnicas que não foram resolvidas por essas atualizações.
 
 | Documento | Harmonização publicada na `main` | Limites que permanecem |
 |---|---|---|
