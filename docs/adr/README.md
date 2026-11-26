@@ -58,7 +58,7 @@ A existência de código, migrations, testes em Polyford ou sucesso no CI não c
 
 | Tema | Responsável pela revisão/decisão | Evidência necessária |
 |---|---|---|
-| Arquitetura e compatibilidade operacional da stack | Tech Lead + TI | Configuração Vercel/Supabase, fluxos, fronteiras, localização de dados, acessos e responsabilidades documentados na Q-025/ADRs |
+| Arquitetura lógica geral (ADR-001) | Tech Lead + TI; PO valida aderência ao escopo | Revisão e decisão formal da arquitetura modular, dos componentes, das fronteiras de confiança e das responsabilidades. A compatibilidade e o modelo de utilização Supabase + Vercel já foram aprovados na Q-025 (24/11/2026) e registrados na ADR-003; essa aprovação não está pendente nem precisa ser repetida. |
 | Autenticação e sessões | Tech Lead + Dev backend + TI | Implementação e testes integrados no ambiente sob controle da FORD |
 | Banco de dados e autorização/RLS de domínio | Tech Lead + Dev backend + TI | Migrations, políticas e testes de isolamento no ambiente homologado |
 | Realtime, storage e antimalware | Tech Lead + Dev backend + TI | Prova de conceito e testes de acesso, revogação e falha segura |
