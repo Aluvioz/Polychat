@@ -12,7 +12,7 @@ O MVP contempla conversas individuais e em grupo. Mensagens confirmadas pelo ser
 
 A ADR-003 mantém Supabase + Vercel como stack adotada. Esta ADR trata exclusivamente do desenho de mensageria e notificação dentro dessa stack; não reabre nem substitui a decisão tecnológica.
 
-A Q-025 trata da compatibilidade da stack Supabase + Vercel com os requisitos de infraestrutura da FORD. Essa decisão de stack delimita o contexto desta ADR, mas não aprova automaticamente o Supabase Realtime nem sua modalidade de transporte (Postgres Changes ou Broadcast), não comprova sua configuração e não dispensa a prova de conceito, a validação das políticas, a revogação imediata e os testes descritos aqui. A decisão de stack da Q-025 e a decisão específica de mensageria desta ADR têm objetos distintos.
+A Q-025 foi concluída em 24/11/2026, com aprovação da TI/FORD para a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, dentro dos limites e responsabilidades registrados. Essa aprovação delimita o contexto desta ADR, mas não aprova automaticamente o Supabase Realtime nem sua modalidade de transporte (Postgres Changes ou Broadcast), não comprova sua configuração e não dispensa a prova de conceito, a validação das políticas, a revogação imediata e os testes descritos aqui. A decisão de stack da Q-025 e a decisão específica de mensageria desta ADR têm objetos distintos.
 
 ### Estado atual do modelo de dados — Issue #99 / PR #165
 
