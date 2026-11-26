@@ -1,6 +1,6 @@
 # ADR-008 — Armazenamento privado e anexos
 
-- **Status:** Accepted
+- **Status:** Proposed
 - **Data de revisão:** 26/11/2026
 - **Issues relacionadas:** #89, #115, #116 e #117
 - **Baseline:** POLY-REQ-001 v0.5
@@ -21,21 +21,23 @@ Armazenar, analisar e entregar anexos em armazenamento privado, sem exposição 
 
 ## Alternativas consideradas
 
-1. **Supabase Storage — alternativa selecionada:** capacidade de armazenamento de objetos integrante da stack nomeada Supabase + Vercel e expressamente aprovada pela TI e pela FORD na Q-025. O uso fica limitado ao armazenamento privado de anexos, com os controles de acesso, processamento, auditoria e operação definidos nesta ADR.
+1. **Supabase Storage — provedor nomeado aprovado na Q-025; proposta técnica desta ADR:** a TI e a FORD aprovaram o serviço como capacidade privada de armazenamento no modelo Supabase + Vercel. Essa aprovação do provedor não equivale ao aceite desta ADR nem comprova a conclusão dos controles e fluxos de anexos; esta proposta detalha o bucket privado, a autorização, o processamento e a operação necessários.
 2. **Armazenamento próprio em infraestrutura corporativa da FORD — não selecionado:** exigiria adotar uma arquitetura de armazenamento diferente da stack aprovada para o Polychat, além de especificar e comprovar sua integração, capacidade, disponibilidade, segregação de ambientes, backup, restauração e operação. Não é a solução arquitetural aprovada para esta entrega; eventual adoção dependeria de mudança arquitetural formal.
 3. **Armazenamento dos arquivos binários no banco relacional — não selecionado:** não é adequado como repositório principal dos bytes dos anexos. O banco permanece responsável pelos metadados e vínculos necessários à autorização, rastreabilidade e associação com mensagens e conversas.
 4. **Outro serviço externo de armazenamento ou análise — não selecionado:** nenhum provedor adicional está autorizado pela Q-025. A adoção de outro serviço exigiria aprovação específica da TI/FORD e revisão formal da arquitetura. Em particular, esta ADR não autoriza encaminhar arquivos a scanner antimalware SaaS ou a qualquer serviço externo de processamento.
 
-## Decisão
+## Proposta de decisão
 
-Adotar **Supabase Storage como capacidade de armazenamento privado de anexos** na stack Supabase + Vercel. A TI e a FORD aprovaram o uso do serviço na Q-025 em 24/11/2026, condicionado aos controles definidos nesta ADR: bucket/objetos privados, autorização server-side, segregação por ambiente, emissão controlada de links temporários, revogação de acesso, scanner antimalware interno e proteção de backups. A decisão aprova a arquitetura-alvo; não declara que a implementação funcional do Storage já esteja concluída.
+Propor **Supabase Storage como capacidade de armazenamento privado de anexos** na stack Supabase + Vercel. A TI e a FORD aprovaram o serviço como provedor nomeado e a utilização como capacidade de armazenamento privado na Q-025, concluída em 24/11/2026. Essa aprovação não representa aceite automático desta ADR: a ADR-008 permanece **Proposed** até a revisão e aprovação específicas da arquitetura e dos controles aqui descritos, incluindo autorização server-side, links e revogação, scanner interno, quotas, retenção e proteção de backups. O bucket privado e o endpoint parcial de upload das PRs #181 e #185 são evidências de implementação parcial, não de conclusão do ciclo de anexos.
 
-### Registro de aprovação
+### Registro formal da Q-025 — provedor autorizado, sem aceite automático da ADR-008
 
-**Aprovadores funcionais:** TI e representante da FORD.  
+**Aprovadores da Q-025:** TI e representante da FORD.  
 **Data:** 24/11/2026.  
 **Referência:** Q-025 — Compatibilidade da stack Supabase + Vercel, concluída.  
-**Resultado:** Supabase Storage aprovado como provedor nomeado de armazenamento privado do Polychat. A análise antimalware permanece dentro da infraestrutura e responsabilidade operacional da TI; não há autorização para scanner SaaS ou serviço externo de análise.
+**Resultado:** Supabase Storage aprovado como provedor nomeado e capacidade privada de armazenamento do Polychat, nos limites e responsabilidades do modelo de utilização aprovado. A análise antimalware permanece dentro da infraestrutura e da responsabilidade operacional da TI; não há autorização para scanner SaaS ou serviço externo de análise.
+
+Este registro comprova a aprovação do provedor e do modelo de utilização na Q-025; não altera o status **Proposed** desta ADR nem declara os controles e fluxos de anexos concluídos.
 
 A aprovação é da direção arquitetural e do modelo operacional. Bucket, handlers, políticas de acesso, scanner, revogação efetiva de links e testes de ponta a ponta continuam sendo entregas de implementação e homologação nas issues correspondentes.
 
@@ -159,6 +161,6 @@ As entregas devem permanecer rastreadas nas issues de implementação, sem reabr
 - Executar e registrar testes de restauração, retenção e descarte de anexos, incluindo o tratamento de objetos removidos e cópias de backup.
 - Demonstrar os parâmetros de continuidade aprovados (RPO e RTO de até 24 horas) para dados e anexos, sem presumir que backup de banco cubra os objetos do Storage.
 
-Essas entregas não condicionam a aprovação arquitetural da ADR-008 nem reabrem a Q-025; permanecem critérios de implementação e homologação do produto.
+Essas entregas comprovam apenas partes da implementação. Não convertem a ADR-008 de Proposed em Accepted; a aprovação do provedor e do modelo de utilização na Q-025 permanece concluída e não é reaberta. Download, scanner, quotas, retenção e evidências ponta a ponta continuam nos critérios de implementação e homologação do produto.
 
 Os limites de arquivo, quantidade por mensagem, quotas individuais e total, ausência de quota por conversa, comportamento fail-closed, formatos, retenção, scanner interno e responsabilidades do TI são requisitos consolidados; não devem ser reabertos como pendências de produto nesta ADR.
