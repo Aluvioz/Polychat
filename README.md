@@ -8,7 +8,7 @@ Aplicação web de comunicação interna em desenvolvimento para a FORD.
 
 ## Estado atual
 
-O repositório contém a fundação do frontend em Next.js 16, React 19, TypeScript e App Router. A interface atual é uma página institucional. Os fluxos de autenticação, conversas, grupos, mensagens, anexos, alertas e administração ainda não estão implementados de ponta a ponta.
+O repositório contém a fundação do frontend em Next.js 16, React 19, TypeScript e App Router. A interface inclui a página institucional e uma tela de login, com rotas server-side de login, sessão e logout integradas ao Supabase Auth e testes unitários com respostas simuladas. A autenticação ainda não foi validada ponta a ponta com usuários reais no Polyford, que está sem identidades Auth. Os fluxos de conversas, grupos, mensagens, anexos, alertas e administração ainda não estão implementados de ponta a ponta.
 
 A stack de frontend registrada na ADR-002 permanece Next.js 16 + React 19 + TypeScript. A direção tecnológica de plataforma, hospedagem e backend é Supabase + Vercel, conforme ADR-003 — Accepted; os detalhes de configuração e homologação são tratados nas ADRs específicas e na Q-025.
 
