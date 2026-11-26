@@ -792,3 +792,8 @@ A aprovação do PO cobre aderência ao escopo, critérios funcionais, valor e i
 | 0.3 | 20/11/2026 | Corrige parâmetros para FORD v2, remove piloto de lançamento, atualiza RPO/RTO/99%/backups e explicita que a implementação funcional ainda não começou. |
 | 0.4 | 20/11/2026 | Registrou temporariamente a ADR-003 como Deprecated, conforme interpretação documental vigente à época; essa classificação foi posteriormente corrigida pela revisão da ADR-003 em 24/11/2026. |
 | 0.5 | 24/11/2026 | Alinha o plano à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; atualiza rastreabilidade das PRs #151–#154, distingue alertas de conteúdo de incidentes operacionais e registra que Q-007 a Q-017 estão resolvidas como decisões, sem presumir implementação ou evidências. |
+
+
+## Complemento de evidência — Supabase/Vercel (26/11/2026)
+
+A avaliação direta do ambiente está em [polyford-backup-restore-assessment-2026-11-26.md](polyford-backup-restore-assessment-2026-11-26.md). O projeto Supabase está no plano Free; não há backup diário automático do banco nesse plano. O backup do banco não inclui objetos Storage. O bucket privado foi provisionado, mas está sem objetos. Não há destino off-site, retenção de 365 dias ou teste de restore comprovados. RPO <= 24h e RTO <= 24h permanecem não demonstrados. Nenhuma dessas lacunas é tratada como aceite ou homologação.
