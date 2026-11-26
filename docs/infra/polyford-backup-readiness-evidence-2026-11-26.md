@@ -89,9 +89,14 @@ O deployment Preview associado à PR #182 não foi confundido com produção. Um
 
 ## 5. Workflow e ausência de rotina de backup
 
-A documentação versionada do repositório descreve o CI como execução de testes automatizados, ESLint, verificação TypeScript e build. A avaliação técnica da PR #182 registra que o workflow de CI consultado não possui etapa de backup/restauração.
+Foram inspecionadas as execuções de CI do commit atualizado da PR #182:
 
-Na coleta desta evidência, não foi encontrada configuração/execução comprovada de rotina agendada de backup ou restore no workflow documentado. Portanto, a conclusão é limitada: **não há rotina de backup/restore demonstrada pelo CI/workflow consultado**. Isso não deve ser interpretado como prova de que nenhum processo externo, manual ou administrado por outro sistema exista.
+- [CI — run 45862298339](https://github.com/Aluvioz/Polychat/actions/runs/45862298339): job `build`; passos observados: checkout e scripts de build/validação.
+- [CI — run 45862298557](https://github.com/Aluvioz/Polychat/actions/runs/45862298557): job `Lint, typecheck and build`; passos observados: instalação de dependências, testes automatizados, ESLint, TypeScript, build Next.js e smoke test.
+
+Ambas as execuções terminaram com sucesso. Nos passos dos jobs consultados não há etapa de exportação/backup do banco, cópia de objetos Storage, retenção, verificação de cópia ou restauração. A documentação do repositório também descreve o CI como testes, lint, typecheck e build.
+
+Conclusão limitada à evidência consultada: **as execuções/workflows de CI inspecionados não demonstram uma rotina automatizada de backup/restore**. Isso não prova que nenhum processo externo, manual ou administrado por outro sistema exista; não foi feita essa afirmação.
 
 ## 6. Limites e reprodutibilidade
 
