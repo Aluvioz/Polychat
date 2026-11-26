@@ -1,36 +1,35 @@
 # Issue #124 — Auditoria de ações privilegiadas
 
-## Implementação incluída
+## Base de persistência
 
-A migration `202611250001_issue_124_privileged_audit.sql` cria uma trilha própria em `public.privileged_action_audit`; ela não depende de outra tabela de auditoria. A tabela:
+A migration `supabase/migrations/20261125222249_issue_124_privileged_audit.sql` cria a trilha independente `public.privileged_action_audit`. A tabela registra ator, tipo do evento, recurso, instante gerado pelo banco, resultado e metadados; possui índices para pesquisa; mantém RLS habilitado; não concede acesso a `anon` ou `authenticated`; e impede alteração/exclusão direta dos registros.
 
-- registra ator, tipo do evento, recurso, instante gerado pelo banco, resultado e metadados;
-- possui índices por data, evento, ator e recurso para pesquisa;
-- mantém RLS habilitado e não concede acesso a `anon` ou `authenticated`;
-- concede leitura/inserção apenas a `service_role` e impede `UPDATE`/`DELETE` para essa role;
-- recebe eventos por `write_privileged_audit_event`, que valida o catálogo, exige ator TI ativo (exceto falha de login sem identidade validada) e remove recursivamente chaves de credenciais dos metadados.
+A função `write_privileged_audit_event` valida o catálogo e o ator TI ativo (com exceção de falha de login sem identidade autenticada), remove recursivamente campos de credenciais dos metadados e grava o evento. O módulo `src/audit/privileged-audit.mjs` contém as regras de validação e sanitização.
 
-O módulo `src/audit/privileged-audit.mjs` oferece `recordPrivilegedAuditEvent` e `searchPrivilegedAuditEvents`. As duas funções exigem cliente Supabase server-side; a pesquisa exige ator TI ativo e aceita filtros exatos por evento, ator, recurso, resultado e intervalo de data, com paginação limitada a 100 registros.
+## Integrações realizadas nesta entrega
 
-## Catálogo de eventos
+- O endpoint existente `POST /api/auth/login` registra login TI bem-sucedido.
+- Tentativas de login TI com identidade conhecida e conta inativa, e falhas de autenticação após localizar o perfil TI, geram `admin.login.failed`. Usuários comuns não são classificados como tentativas de login administrativo.
+- Se a gravação do evento de login TI falhar, a rota não entrega os cookies da sessão e retorna erro genérico.
+- `GET /api/admin/audit` exige sessão válida de perfil TI ativo e disponibiliza pesquisa paginada, com filtros por evento, ator, recurso, resultado e intervalo de data. A chave privilegiada é utilizada exclusivamente no servidor.
+
+## Catálogo de eventos disponível
 
 - `admin.login.succeeded` / `admin.login.failed`
 - `account.created` / `account.updated` / `account.deactivated`
 - `group.created` / `group.updated` / `group.member_added` / `group.member_removed`
 - `sensitive.consultation` / `sensitive.change`
 
-## Regras de uso seguro
+## Limites funcionais verificados
 
-1. Obter o ator exclusivamente de `req.authUser` após `requireAuthenticatedUser` e `requireRole("ti")`; nunca aceitar `actor_profile_id` do corpo/query do cliente.
-2. Usar a chave `service_role` somente em ambiente server-side. Nunca expor essa chave ao navegador nem usar prefixo `NEXT_PUBLIC_`.
-3. Metadados devem conter somente identificadores e contexto operacional mínimo. Não registrar senhas, tokens, cookies, cabeçalhos de autorização, conteúdo de mensagens, anexos ou dados pessoais desnecessários. A sanitização remove chaves com nomes de credenciais, mas não substitui a obrigação de não enviar segredos dentro de valores genéricos.
-4. Para manter a mutação e seu evento indivisíveis, os futuros handlers de conta/grupo devem executar a mutação e a inserção de auditoria na mesma transação PostgreSQL/RPC. Não tratar uma chamada de auditoria posterior como prova de atomicidade.
-5. Consultas administrativas de conteúdo só podem ser instrumentadas quando a finalidade, justificativa, escopo, período, transparência e governança forem aprovados. Esta implementação não cria nem habilita endpoint de consulta de conversas.
+O README e a árvore atual do repositório mostram que os fluxos de administração de contas/grupos, consulta de conversas/alertas, download de anexos, alterações de configuração, exportação e edição/exclusão administrativa de mensagens ainda não possuem handlers funcionais de ponta a ponta. Portanto, o catálogo e o writer suportam esses tipos de evento, mas não há operações existentes para instrumentar nesses fluxos. Esta entrega não inventa endpoints ou comportamentos de negócio para substituir funcionalidades ainda não implementadas.
 
-## Limites de integração no estado atual do repositório
+A consulta administrativa de conteúdo não foi criada nem habilitada. A ADR-010 permanece `Proposed` e declara que consulta/monitoramento de conteúdo não podem ser ativados em produção antes das aprovações ali especificadas.
 
-O README informa que autenticação, conversas, grupos, mensagens e administração ainda não estão implementados de ponta a ponta. Portanto, esta entrega disponibiliza o armazenamento, o catálogo, o writer e a pesquisa, mas não declara que eventos reais já estejam sendo emitidos por fluxos funcionais de login, gestão de contas/grupos ou consulta sensível. A integração desses call sites depende da implementação dos respectivos handlers; a consulta de conteúdo também depende das aprovações registradas na ADR-010.
+A atomicidade entre futuras mutações administrativas e seus eventos deve ser implementada na mesma transação PostgreSQL/RPC quando esses handlers forem desenvolvidos. Uma gravação posterior separada não é evidência de atomicidade.
 
-## Evidência de teste
+## Evidências e limites de teste
 
-`node --test tests/privileged-audit.test.mjs` cobre catálogo, sanitização recursiva, validação de ator, falha de persistência, autorização de pesquisa, filtros e paginação. Esses testes são unitários com Supabase simulado; não comprovam integração/homologação do projeto remoto.
+Os testes unitários existentes usam respostas Supabase simuladas. Os novos testes cobrem o writer REST, sanitização, validação de ator, filtros e paginação. Eles não comprovam integração ponta a ponta no Polyford.
+
+Na verificação do banco de desenvolvimento em 26/11/2026, as tabelas `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `security_alerts` e `privileged_action_audit` estavam sem registros. Assim, não foi possível executar login TI real ou gerar evidência de eventos com usuários reais.
