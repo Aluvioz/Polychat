@@ -92,7 +92,9 @@ Estas regras são limites já sustentados pela ADR-006, baseline e requisitos; n
 9. **Erros:** manter respostas genéricas e não revelar existência de conversas, mensagens, perfis, tokens, chaves, stack traces ou erros internos a atores sem autorização.
 10. **SECURITY DEFINER:** a função existente `public.is_active_ti()` usa `SECURITY DEFINER` e `search_path = ''`. Qualquer nova função desse tipo exige revisão explícita de owner, grants, objetos totalmente qualificados, search_path, superfície de execução e testes; esta issue não cria novas funções privilegiadas.
 
-## 5. Inventário de enforcement observado na `main`
+## 5. Inventário de enforcement observado na `main` — fotografia histórica de 17/11/2026
+
+> Esta tabela preserva a auditoria original de 17/11/2026. A afirmação de que não havia RLS de domínio na `main` foi superada pela integração da PR #172 em 26/11/2026. Consulte o complemento da seção 11 antes de usar esta fotografia para orientar trabalho atual.
 
 | Componente | Estado observado | O que efetivamente comprova | O que não comprova |
 |---|---|---|---|
@@ -150,7 +152,9 @@ A baseline #88 e ADR-006 registram 11 testes unitários em `tests/authorization.
 
 Esses testes são evidência existente no repositório, não execução realizada por este documento. Não foram encontrados testes de RLS real, isolamento entre usuários/conversas ou Storage. Não se declara teste novo, execução local, execução hospedada ou aprovação que não tenha ocorrido.
 
-## 7. Lacunas, impactos e responsáveis
+## 7. Lacunas, impactos e responsáveis — fotografia inicial de 17/11/2026
+
+> As lacunas abaixo preservam o diagnóstico feito antes das entregas subsequentes. Os itens de schema/RLS devem ser lidos em conjunto com a atualização pós-PR #172 na seção 11.
 
 | Lacuna / decisão | Evidência | Impacto na matriz | Risco de presumir | Responsável indicado na documentação | Próxima ação |
 |---|---|---|---|---|---|
@@ -201,3 +205,38 @@ A #101 não deve usar policies permissivas para contornar lacunas. Onde a regra 
 | Sem regressão nos fluxos relacionados | **Não verificado nesta alteração.** A matriz é documental; CI da PR deve ser executado e revisado |
 
 **Regra de encerramento:** não fechar a Issue #100 até que a matriz receba a aprovação necessária, os casos de teste estejam definidos com resultados sustentados, a PR seja revisada/aprovada, os checks exigidos passem e as limitações sejam aceitas/replanejadas sem alterar o escopo original.
+
+
+## 11. Complemento de evidências após a PR #172 — 26/11/2026
+
+Este complemento atualiza a fotografia técnica da matriz sem apagar a auditoria original de 17/11/2026, sem alterar a decisão funcional já registrada e sem modificar a Issue #100.
+
+### 11.1 Schema e RLS de domínio
+
+- A PR #165 integrou o schema inicial das entidades de domínio e as constraints/relacionamentos correspondentes, com revisão de Tech Lead e SQA no escopo da entrega.
+- A PR #168 integrou seis índices de cobertura de FKs; a verificação posterior no Polyford confirmou sua persistência.
+- A PR #172 integrou policies RLS e hardening de privilégios para conversas, memberships, mensagens, anexos, leituras, alertas e tabelas de configuração, mantendo os papéis `user` e `ti`.
+- A evidência `docs/security/issue-101-rls-evidence.md` registra 16/16 cenários transacionais de RLS aprovados no ambiente Polyford de desenvolvimento. As identidades e os dados de teste foram revertidos ao final das transações.
+- A PR #172 foi integrada à `main` e recebeu parecer favorável do SQA e aprovação do Tech Lead dentro do escopo técnico revisado.
+
+Consequentemente, a afirmação na fotografia de 17/11 de que não havia RLS de conversas/memberships/mensagens/anexos na `main` não representa o estado atual após 26/11. O inventário da seção 5 é histórico e não deve ser utilizado isoladamente como diagnóstico vigente.
+
+### 11.2 Limites que continuam válidos
+
+- A RLS não substitui a autorização no servidor nem a validação dos fluxos reais de cada handler. A evidência de testes SQL não comprova, sozinha, integração ponta a ponta de todas as rotas da aplicação.
+- Identidade autenticada, role e membership continuam sendo dimensões distintas. O cliente não pode escolher o próprio papel nem declarar membership como prova de autorização.
+- A matriz preserva a distinção entre regra funcional, policy técnica integrada e comportamento de aplicação efetivamente testado.
+- A ADR-006 permanece a referência Accepted para a autorização/RLS dentro do escopo aprovado. ADRs Proposed e questões ainda abertas não devem ser convertidas em permissões por inferência.
+- O schema e a RLS de anexos não concluem o ciclo de Storage: download, links temporários, revogação, scanner/quarentena, quotas e descarte físico continuam dependentes das entregas específicas de anexos.
+- A aprovação técnica da PR #172 não equivale à aprovação de negócio/segurança desta matriz como documento integral. O estado de aprovação da própria matriz continua sujeito ao fluxo competente e aos critérios documentados na Issue #100.
+
+### 11.3 Rastreabilidade da atualização
+
+| Entrega | Evidência atual | Limite preservado |
+|---|---|---|
+| Schema inicial | [PR #165](https://github.com/Aluvioz/Polychat/pull/165) | Não encerra automaticamente a Issue #99 |
+| Índices de FKs | [PR #168](https://github.com/Aluvioz/Polychat/pull/168) | Persistência verificada em ambiente de desenvolvimento; sem alegação de benchmark de produção |
+| Policies e testes RLS | [PR #172](https://github.com/Aluvioz/Polychat/pull/172) e `docs/security/issue-101-rls-evidence.md` | Não substitui teste de todos os handlers/fluxos de aplicação |
+| Auditoria/retention controls | [PR #173](https://github.com/Aluvioz/Polychat/pull/173) | Call-sites e backup/restore permanecem limitados às evidências próprias |
+
+Nenhuma descrição, critério, estado, assignee, label ou comentário da Issue #100 foi alterado por esta atualização documental.
