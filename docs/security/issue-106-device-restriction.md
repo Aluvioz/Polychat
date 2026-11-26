@@ -60,7 +60,7 @@ A autorização do papel ocorre antes da checagem de dispositivo. Nunca aceite
   consegue distinguir com segurança esse caso sem sinais adicionais do cliente.
 - A classificação é indicativa e pode ser falsificada. Não usar para conceder
   privilégios, substituir autenticação, autorização, validação de sessão ou RLS.
-- A área administrativa `/ti` está sendo implementada separadamente na PR #177. A aplicação da mesma política à navegação do console deve ocorrer nessa integração, sem duplicar autenticação ou autorização.
+- A PR #177 aplica a mesma política à área administrativa `/ti`, reutilizando o adaptador e sem duplicar autenticação ou autorização.
 - A jornada completa de conversas mobile ainda não existe no repositório. A integração cobre a operação protegida de upload existente, sem inventar páginas de produto.
 
 ## Testes
