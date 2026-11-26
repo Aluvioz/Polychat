@@ -66,7 +66,7 @@ Esta ADR não reabre decisões de produto já registradas:
 - **RF-009 / RF-010:** envio de mensagens individuais e em grupo; mensagens confirmadas pelo servidor são persistidas e recuperadas após reconexão normal.
 - **CA-009.5:** o sistema não apresenta como confirmada uma mensagem que ainda não recebeu confirmação de persistência do servidor.
 - **RF-019:** registrar a leitura, apresentar o horário em que a mensagem foi lida e exibir a quantidade de mensagens não lidas por conversa. A tabela `message_reads` já oferece a estrutura de persistência do recibo.
-- **Q-003 / RN-007:** somente TI administra grupos e participantes; a remoção de participante revoga imediatamente o acesso às mensagens e anexos anteriores do grupo.
+- **Q-003 / RN-007:** somente TI cria, encerra, desativa e reativa grupos e inclui ou remove participantes; usuários não podem sair voluntariamente dos grupos. A remoção de participante revoga imediatamente o acesso às mensagens e anexos anteriores do grupo.
 - **Q-024 / RN-014 / RF-020:** Usuários comuns não editam nem excluem mensagens; TI pode fazê-lo, com auditoria.
 
 Q-003 e Q-024 estão resolvidas no nível de produto. RF-019 também está confirmado. Permanecem pendentes nesta ADR apenas o desenho técnico, a integração e a comprovação dos comportamentos de mensageria.
