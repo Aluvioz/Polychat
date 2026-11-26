@@ -10,7 +10,8 @@
 
 O Polychat é uma aplicação web interna da FORD. A baseline atual contempla aproximadamente 25 usuários finais do setor técnico e 2 a 3 administradores de TI, com perfis Usuário e TI, conversas individuais e em grupo, mensagens, anexos PDF/JPEG, alertas, consulta administrativa e auditoria.
 
-A FORD v2 estabelece como regra geral que hospedagem e infraestrutura permaneçam sob controle da FORD, preferencialmente no Brasil, e que serviços de terceiros não acessem, armazenem ou processem dados da organização. A Q-025, concluída em 24/11/2026, registra a aprovação expressa da TI e da FORD para Supabase e Vercel como provedores nomeados da stack, dentro do modelo de utilização aprovado. A restrição geral permanece aplicável a outros fornecedores e serviços não aprovados; bibliotecas e atualizações sem acesso aos dados podem ser utilizadas.
+A FORD v2 estabelece como regra geral que hospedagem, processamento e operação dos dados sigam os controles definidos pela organização, preferencialmente no Brasil, e que fornecedores não aprovados não acessem, armazenem ou processem dados da FORD. A Q-025, concluída em 24/11/2026, registra a aprovação expressa da TI e da FORD para Supabase e Vercel como provedores nomeados da stack, dentro do modelo de utilização, dos serviços e dos controles aprovados. Essa exceção é específica: não autoriza automaticamente outros fornecedores, subprocessadores ou serviços externos. Bibliotecas e atualizações sem acesso aos dados podem ser utilizadas conforme as regras técnicas e de segurança aplicáveis.
+
 
 A ADR-003, revisada em 24/11/2026, mantém Supabase + Vercel como stack adotada e obrigatória. A compatibilidade e o modelo de utilização desses provedores foram aprovados pela TI e pela FORD na Q-025, concluída em 24/11/2026. Esta ADR deve detalhar a arquitetura lógica, os componentes, os fluxos de dados, as fronteiras de confiança e as responsabilidades de acordo com esse modelo aprovado e com as demais restrições da FORD v2. Essa análise não reabre a Q-025 nem autoriza retirar ou depreciar a ADR-003 por inferência. Qualquer proposta de substituição deve seguir o processo formal de mudança arquitetural em `docs/10-governanca-desenvolvimento.md`.
 
@@ -18,67 +19,69 @@ O repositório contém Next.js 16, React 19, TypeScript, uma página institucion
 
 ## Problema
 
-Definir fronteiras de confiança, responsabilidades e componentes lógicos sem presumir provedores externos, tratar controles visuais como segurança ou confundir código existente com arquitetura implementada e homologada.
+Definir fronteiras de confiança, responsabilidades e componentes lógicos coerentes com a stack Supabase + Vercel e com as decisões arquiteturais já aceitas, sem tratar controles visuais como segurança nem confundir decisões aprovadas, código existente e integração homologada.
 
 ## Alternativas consideradas
 
-1. **Arquitetura modular executada em infraestrutura sob controle da FORD:** aplicação, identidade, banco, armazenamento, análise antimalware, auditoria e operação permanecem dentro da fronteira de controle da organização.
-2. **Serviços gerenciados externos para componentes centrais:** recusados para dados da FORD quando o terceiro puder acessar, armazenar ou processar esses dados, em desacordo com a FORD v2.
+1. **Arquitetura modular sobre a stack Supabase + Vercel aprovada:** aplicação hospedada e executada na Vercel, com os serviços Supabase previstos nas ADRs específicas, respeitando os limites e controles aceitos pela TI e pela FORD na Q-025.
+2. **Outros serviços gerenciados ou fornecedores externos:** não autorizados a acessar, armazenar ou processar dados da FORD sem aprovação específica. A aprovação da Q-025 é restrita aos provedores e usos nomeados Supabase e Vercel; não constitui autorização genérica para terceiros.
 3. **Aplicação concentrada em um único componente:** reduz configuração inicial, mas aumenta acoplamento e dificulta separar privilégios, testar fronteiras e evoluir a operação.
 
 ## Decisão proposta
 
-Adotar uma arquitetura lógica modular que utilize a stack Supabase + Vercel aprovada na Q-025, observando os limites, fluxos, fronteiras de confiança e responsabilidades definidos para esses provedores. A ADR permanece Proposed até a revisão formal do Tech Lead e da TI sobre a arquitetura lógica, seus componentes e suas responsabilidades; essa revisão não representa reabertura da compatibilidade da stack já aprovada.
+Adotar uma arquitetura lógica modular sobre a stack Supabase + Vercel, aprovada na ADR-003 e na Q-025. A Vercel é a plataforma de hospedagem, deployment e execução da aplicação; o Supabase fornece os serviços de backend previstos nas ADRs específicas, incluindo autenticação, PostgreSQL e armazenamento privado. A composição, os fluxos, as fronteiras de confiança e as responsabilidades devem respeitar os limites operacionais e de segurança registrados na Q-025 e nas ADRs 004 a 009. A ADR-001 permanece Proposed até a revisão formal do Tech Lead e da TI sobre a arquitetura lógica e sua correspondência com essas decisões. Essa revisão não reabre nem substitui decisões já aceitas, em especial ADR-003, ADR-005, ADR-008 e ADR-009.
 
 As responsabilidades lógicas são:
 
-- **Apresentação:** frontend web Next.js 16 + React 19 + TypeScript, conforme ADR-002. O navegador não recebe credenciais privilegiadas nem decide permissões.
-- **Camada server-side:** handlers e serviços da aplicação responsáveis por autenticação, autorização, validação de entradas, regras de negócio e operações privilegiadas.
-- **Identidade e sessões:** mecanismo de autenticação operado dentro da fronteira de controle da FORD, sem provedor externo que acesse ou processe credenciais, identidades ou sessões. Regras funcionais e de credenciais seguem a baseline e a ADR-004.
-- **Persistência:** banco relacional sob controle da FORD. PostgreSQL é a tecnologia proposta na ADR-005, ainda sujeita à validação técnica da implantação.
-- **Autorização de dados:** verificações server-side e políticas no banco, incluindo RLS quando suportada e adequada. As permissões devem refletir os perfis Usuário e TI e as regras de participação em conversas e grupos.
-- **Arquivos:** armazenamento privado na infraestrutura FORD, com autorização no servidor, revogação de acesso e análise antimalware dentro da mesma fronteira. Não utilizar buckets ou serviços externos para dados da organização.
-- **Mensageria em tempo real:** transporte interno/autorizado para notificar participantes; o banco permanece a fonte de verdade. A tecnologia específica não está decidida nesta ADR.
-- **Auditoria e monitoramento:** registros e processamento de alertas dentro da infraestrutura FORD, com acesso administrativo conforme a baseline e trilha auditável.
-- **Operação:** ambientes de desenvolvimento, homologação e produção isolados e sob controle da FORD; backup, restauração, gestão de chaves e monitoramento conforme os requisitos não funcionais consolidados.
+- **Apresentação:** frontend web Next.js 16 + React 19 + TypeScript, conforme ADR-002, hospedado e publicado pela Vercel na configuração aprovada. O navegador não recebe credenciais privilegiadas nem decide permissões.
+- **Camada server-side:** handlers e serviços da aplicação executados no ambiente de aplicação da Vercel, responsáveis por autenticação, autorização, validação de entradas, regras de negócio e operações privilegiadas. Segredos e operações privilegiadas permanecem no servidor, nunca no bundle do cliente.
+- **Identidade e sessões:** a arquitetura prevê Supabase Auth como capacidade de identidade da stack aprovada. O contrato funcional e o detalhamento dos fluxos, da sessão e dos controles técnicos permanecem sujeitos à ADR-004, ainda Proposed; não se deve presumir integração completa nem introduzir outro provedor de identidade sem aprovação específica.
+- **Persistência:** PostgreSQL no Supabase Database, decisão tecnológica Accepted na ADR-005. O banco relacional mantém os dados de domínio, vínculos e metadados; o aceite da tecnologia não significa que todos os fluxos de negócio estejam integrados ou homologados.
+- **Autorização de dados:** verificações server-side combinadas com políticas RLS no PostgreSQL, conforme ADR-006 Accepted. O aceite e os testes existentes cobrem os escopos documentados nessa ADR; a integração uniforme de todos os handlers de negócio continua sendo trabalho de implementação.
+- **Arquivos:** Supabase Storage como capacidade de armazenamento privado, conforme ADR-008 Accepted. Upload e download devem passar por autorização server-side, com objetos privados e revogação de acesso. O scanner antimalware permanece dentro da infraestrutura e da responsabilidade operacional da FORD/TI; não encaminhar arquivos ou metadados para scanner SaaS ou outro serviço externo não aprovado.
+- **Mensageria em tempo real:** notificação dos participantes sem substituir a persistência como fonte de verdade. A solução e seus controles seguem a ADR-007, ainda Proposed; esta ADR não antecipa o aceite de uma tecnologia específica para realtime.
+- **Auditoria e monitoramento:** eventos e registros de auditoria devem utilizar a persistência e os serviços da stack aprovada, com autorização administrativa e rastreabilidade conforme baseline e ADRs aplicáveis. Os detalhes e controles de segurança/monitoramento permanecem sujeitos à ADR-010 e às issues de implementação.
+- **Operação:** ambientes de desenvolvimento, homologação e produção segregados na stack Supabase + Vercel conforme ADR-009 Accepted. A TI mantém as responsabilidades operacionais de acesso, configuração, segredos, monitoramento, backup e continuidade, sem confundir o modelo aprovado com evidência de execução de todos os testes de recuperação.
 
 Operações sensíveis devem negar por padrão e falhar fechadas. Criptografia em trânsito e em repouso é obrigatória; a solução não deve ser descrita como E2EE, pois o servidor precisa acessar o conteúdo para as funções administrativas e de monitoramento definidas pela FORD.
 
-Nenhum fornecedor, serviço externo ou suboperador pode receber acesso a dados da FORD ou assumir seu armazenamento/processamento. Dependências de software sem acesso a esses dados não são, por si só, proibidas.
+Supabase e Vercel são os provedores nomeados e aprovados na Q-025, exclusivamente para os serviços e o modelo de utilização previstos na arquitetura do Polychat. Nenhum outro fornecedor, serviço externo ou subprocessador pode receber acesso a dados da FORD ou assumir seu armazenamento/processamento sem aprovação específica. A aprovação da stack não autoriza scanner externo, análise SaaS ou encaminhamento de arquivos e metadados para serviços não aprovados. Dependências de software sem acesso a esses dados não são, por si só, proibidas.
 
 ## Justificativa
 
-A modularidade mantém responsabilidades testáveis e reduz a confiança no cliente. A execução sob controle FORD respeita a restrição de infraestrutura mais recente e permite que autenticação, dados, arquivos, antimalware, auditoria e recuperação permaneçam dentro da fronteira exigida pelo cliente.
-
-A seleção de tecnologias específicas deve considerar compatibilidade com a infraestrutura corporativa, operação, segurança, continuidade e capacidade de homologação, sem reintroduzir serviços externos incompatíveis.
+A modularidade mantém responsabilidades testáveis e reduz a confiança no cliente. A stack Supabase + Vercel, expressamente aprovada pela TI e pela FORD na Q-025, fornece a direção tecnológica obrigatória. As ADRs específicas definem como cada capacidade deve ser configurada e controlada: os provedores nomeados são exceções explícitas à restrição geral a terceiros, enquanto fornecedores e serviços adicionais continuam vedados sem aprovação específica. A aprovação arquitetural não substitui implementação, testes nem homologação operacional.
 
 ## Consequências
 
 **Positivas:**
-- Alinhamento com a restrição de soberania e controle de infraestrutura da FORD.
+- Alinhamento com a stack Supabase + Vercel e com os limites aprovados pela TI e pela FORD na Q-025.
 - Fronteiras claras entre apresentação, regras, identidade, dados e operação.
-- Menor dependência de provedores externos para tratar dados corporativos.
-- Decisões técnicas rastreáveis e passíveis de substituição por componente.
+- Decisões técnicas rastreáveis por ADR e passíveis de evolução por componente, sem substituição informal da stack.
 
 **Negativas e cuidados:**
-- Maior responsabilidade da FORD/equipe sobre operação, disponibilidade, atualização e recuperação.
-- Necessidade de comprovar capacidade de infraestrutura, observabilidade, backup/restore e suporte.
-- Integração e testes de segurança precisam ocorrer no ambiente operacional real.
+- Dependência das plataformas Supabase e Vercel e necessidade de manter suas configurações, acessos e responsabilidades operacionais sob governança da TI.
+- Necessidade de comprovar capacidade, observabilidade, backup/restore e suporte conforme os critérios das ADRs e do plano operacional.
+- Integração e testes de segurança precisam ocorrer nos ambientes efetivos; aprovação dos provedores não comprova integração funcional nem prontidão para produção.
 
 ## Riscos
 
-Configuração incorreta de autorização; credenciais privilegiadas expostas; RLS incompleta; acesso indevido a anexos; falha no antimalware; perda de histórico; publicação de eventos antes da persistência; segregação inadequada de ambientes; dependência externa que passe a acessar ou processar dados.
+Configuração incorreta de autorização; credenciais privilegiadas expostas; RLS incompleta; acesso indevido a anexos; falha no antimalware; perda de histórico; publicação de eventos antes da persistência; segregação inadequada de ambientes; uso de fornecedor ou subprocessador não aprovado; configuração incorreta dos serviços Supabase/Vercel ou desvio dos limites aprovados na Q-025.
 
 ## Evidências e estado atual
 
-A `main` contém Next.js 16/React 19/TypeScript, página institucional, o módulo `src/auth/authorization.mjs` e uma migration de perfis vinculada ao Supabase. Não foram encontradas rotas funcionais de chat, serviços de domínio, armazenamento de anexos, canais realtime ou trilha de auditoria funcional.
+A `main` contém Next.js 16/React 19/TypeScript, rotas e módulos de autenticação/autorização, migrations de domínio e políticas RLS, estruturas de auditoria, bucket privado no Supabase Storage e o endpoint server-side parcial de upload de anexos PDF/JPEG incorporado pelas entregas #181 e #185. As policies RLS de domínio foram testadas no ambiente de desenvolvimento no escopo da ADR-006. Esses componentes representam entregas parciais e não comprovam a implementação funcional ponta a ponta do chat.
 
-A existência desses artefatos não comprova integração funcional nem homologação de produção. A stack Supabase + Vercel permanece adotada conforme ADR-003, e sua compatibilidade e modelo de utilização foram aprovados na Q-025. A evidência de implementação, integração, fluxos efetivos de dados e controles operacionais deve ser produzida nas issues e nos ambientes correspondentes; essas verificações não reabrem a decisão de compatibilidade nem alteram o status da ADR-003.
+Permanecem sem comprovação de integração ponta a ponta, entre outros pontos, o conjunto completo de handlers de conversas/mensagens, a mensageria realtime, o fluxo completo de download e emissão/revogação de links, o scanner antimalware interno, quotas efetivas, remoção de EXIF/GPS, rejeição de PDF protegido por senha e os testes de backup/restauração dos anexos. As entregas e seus limites estão distribuídos nas ADRs 004, 006, 007, 008, 009 e 010 e nas issues correspondentes.
+
+A stack Supabase + Vercel permanece adotada conforme ADR-003; a compatibilidade e o modelo de utilização foram aprovados na Q-025. A existência de migrations, políticas, bucket, handlers parciais ou configurações não equivale à homologação do MVP nem à prontidão para produção. A evidência de implementação, integração, fluxos efetivos de dados e controles operacionais deve ser mantida nas issues e nos ambientes correspondentes; essas verificações não reabrem a decisão de compatibilidade nem alteram o status das ADRs já aceitas.
 
 ## Pendências para Accepted
 
-- Detalhar e submeter à revisão formal a arquitetura lógica e sua correspondência com o modelo Supabase + Vercel aprovado na Q-025, incluindo componentes, fluxos, fronteiras de confiança, responsabilidades e limites de cada serviço.
-- Revisão do Tech Lead e TI sobre componentes, fronteiras server-side, identidade, banco, armazenamento, antimalware, auditoria, continuidade e operação.
-- Registrar na ADR a solução técnica selecionada, os responsáveis pela aprovação, a data, as evidências de viabilidade e os limites do aceite.
+- Detalhar e submeter à revisão formal do Tech Lead e da TI a arquitetura lógica sobre a stack Supabase + Vercel, incluindo componentes, fluxos de dados, fronteiras de confiança, responsabilidades e limites de cada serviço.
+- Confirmar a coerência da arquitetura com as ADRs específicas: ADR-003 (Accepted) para a stack; ADR-005 (Accepted) para PostgreSQL/Supabase Database; ADR-006 (Accepted) para autorização/RLS; ADR-008 (Accepted) para Supabase Storage; ADR-009 (Accepted) para ambientes e deploy. Não reabrir essas decisões por inferência.
+- Manter explícitos os pontos ainda sujeitos a decisão ou detalhamento nas ADRs Proposed, especialmente ADR-004 (autenticação/sessões), ADR-007 (realtime) e ADR-010 (segurança/auditoria/monitoramento), sem antecipar seus aceites.
+- Registrar os responsáveis pela revisão, a data, as evidências de viabilidade, os limites do aceite e eventuais recomendações de alteração nas ADRs correspondentes.
+
+
 
 Os parâmetros funcionais e grupos de requisitos técnicos já alinhados com Desenvolvimento permanecem consolidados nos documentos de requisitos; não são reabertos por esta revisão arquitetural.
