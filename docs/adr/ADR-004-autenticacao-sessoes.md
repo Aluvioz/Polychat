@@ -11,7 +11,7 @@ A FORD definiu autenticação por nome de usuário e senha, com contas criadas e
 
 A FORD não exige troca obrigatória de senha no primeiro acesso, expiração periódica ou MFA. A recuperação de senha é realizada exclusivamente pelo TI. As regras de proteção de credenciais, sessões e gestão de chaves estão consolidadas na baseline e nos requisitos não funcionais; esta ADR não acrescenta parâmetros de senha ou timeout não aprovados.
 
-A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. Supabase Auth é a plataforma de identidade utilizada pela implementação atual, enquanto Vercel hospeda a aplicação. A configuração e o modelo de uso desses serviços devem continuar sujeitos à avaliação de compatibilidade da Q-025 com os requisitos da FORD sobre infraestrutura, localização, acesso e processamento. A Q-025 não altera por inferência a decisão de stack.
+A ADR-003 mantém Supabase + Vercel como stack adotada e obrigatória. Supabase Auth é a plataforma de identidade utilizada pela implementação atual, enquanto Vercel hospeda a aplicação. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados dentro dos limites e responsabilidades registrados. Essa aprovação não certifica os fluxos de autenticação, a proteção efetiva de credenciais ou a homologação de produção, que dependem de implementação e evidências próprias.
 
 ## Problema
 
@@ -19,14 +19,14 @@ Definir o contrato funcional e as fronteiras de segurança da autenticação e d
 
 ## Alternativas consideradas
 
-1. **Supabase Auth na stack adotada:** serviço oficial de identidade do Polychat, com autenticação e sessões integradas à aplicação e controles de acesso sob governança definida pela FORD, sujeito à Q-025.
+1. **Supabase Auth na stack adotada:** serviço oficial de identidade do Polychat, com autenticação e sessões integradas à aplicação e controles de acesso sob governança definida pela FORD, dentro do modelo de utilização aprovado na Q-025.
 2. **Outro provedor externo de identidade/SaaS:** não faz parte da direção aprovada. Qualquer substituição ou inclusão de provedor que acesse ou processe dados da FORD exige avaliação e decisão formal.
 3. **Autenticação artesanal implementada pela aplicação:** não recomendada; a aplicação não deve criar suas próprias primitivas criptográficas, mecanismos de hash ou emissão/validação de tokens.
 4. **SSO corporativo:** não presumido como requisito ou integração aprovada nesta baseline.
 
 ## Decisão proposta
 
-Manter autenticação por nome de usuário e senha, utilizando Supabase Auth na stack Supabase + Vercel definida pela ADR-003. A configuração, as responsabilidades e a compatibilidade com os requisitos da FORD devem ser avaliadas na Q-025 e revisadas por TI e Tech Lead. Esta ADR permanece **Proposed**.
+Manter autenticação por nome de usuário e senha, utilizando Supabase Auth na stack Supabase + Vercel definida pela ADR-003. A configuração e as responsabilidades devem permanecer dentro do modelo de utilização aprovado na Q-025 e ser validadas tecnicamente por TI e Tech Lead no escopo desta ADR. Esta ADR permanece **Proposed**.
 
 O contrato funcional obrigatório é:
 
@@ -78,7 +78,7 @@ A verificação de conta ativa ocorre durante a validação de sessão/requisiç
 
 O provisionamento exclusivo pelo TI corresponde ao modelo operacional confirmado pela FORD. O fluxo usa Supabase Auth para autenticar credenciais e consulta o perfil confiável para validar papel e estado, sem permitir que o navegador escolha privilégios. A renovação e a revogação de sessões são centralizadas no serviço de identidade, enquanto o adaptador Next.js oferece uma fronteira reutilizável para proteger handlers.
 
-A separação entre autenticação, autorização de recursos e administração de contas evita tratar uma sessão válida como autorização irrestrita. A Q-025 permanece necessária para demonstrar que a configuração e o modelo de uso da stack estão compatíveis com as restrições de infraestrutura da FORD.
+A separação entre autenticação, autorização de recursos e administração de contas evita tratar uma sessão válida como autorização irrestrita. A aprovação registrada na Q-025 define o modelo de utilização dos provedores, mas não comprova a implementação ponta a ponta da autenticação, a proteção efetiva das credenciais ou a homologação de produção.
 
 ## Consequências
 
@@ -95,11 +95,11 @@ A separação entre autenticação, autorização de recursos e administração 
 - A integração entre username e identidade Auth depende da consistência do cadastro em `profiles` e `auth.users`.
 - Operações administrativas completas de contas e recuperação de credenciais precisam de handlers e auditoria próprios.
 - A integração da sessão não implica que todas as futuras rotas de domínio já estejam protegidas.
-- Testes unitários/simulados e CI não substituem a validação completa no ambiente de homologação e a análise de compatibilidade da Q-025.
+- Testes unitários/simulados e CI não substituem a validação completa no ambiente de homologação nem a verificação de que a configuração e os acessos permanecem dentro do modelo aprovado na Q-025.
 
 ## Riscos
 
-Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevida; comprometimento de conta administrativa; exposição de chave secreta; divergência entre `profiles` e `auth.users`; username não preenchido; falha de revogação após desativação; handler que não invoque a autorização; cache ou canal persistente que continue ativo após mudança de membership; configuração Supabase/Vercel incompatível com requisitos da FORD.
+Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevida; comprometimento de conta administrativa; exposição de chave secreta; divergência entre `profiles` e `auth.users`; username não preenchido; falha de revogação após desativação; handler que não invoque a autorização; cache ou canal persistente que continue ativo após mudança de membership; alteração de configuração ou uso fora dos limites e responsabilidades aprovados pela FORD.
 
 ## Evidências atuais
 
@@ -110,13 +110,13 @@ Roubo de credencial ou sessão; provisionamento incorreto; recuperação indevid
 - **Testes de sessão:** `tests/supabase-session.test.mjs` cobre login por username, usuário inexistente, conta inativa, senha inválida, desativação durante o login, refresh de sessão, revogação e logout com access token expirado.
 - **Testes do adaptador:** `tests/next-authorization.test.mjs` cobre sessão válida/inválida, restrição de TI, perfil TI, falha fechada e rejeição de roles desconhecidas.
 - **Modelo de identidade:** a migration versionada relaciona `profiles.id` à identidade Auth e mantém os papéis `user` e `ti`; `profiles.username` permanece nullable.
-- **Stack e compatibilidade:** ADR-003 permanece Accepted para Supabase + Vercel; a avaliação do modelo de uso e da configuração frente à FORD segue na Q-025.
+- **Stack e compatibilidade:** ADR-003 permanece Accepted para Supabase + Vercel; a Q-025 foi concluída em 24/11/2026 com aprovação da TI/FORD para o modelo de utilização e compatibilidade dos provedores nomeados, dentro dos limites e responsabilidades registrados.
 
 As aprovações e os checks de PR comprovam os escopos revisados nas respectivas entregas. Não comprovam provisionamento administrativo completo, recuperação funcional pelo TI, integração de todas as rotas de negócio ou homologação integral de produção.
 
 ## Pendências para Accepted
 
-- Concluir revisão da configuração de Supabase Auth, das consultas administrativas e do uso da chave secreta server-side na Q-025, com evidências de acesso mínimo e ausência de exposição ao cliente.
+- Validar tecnicamente a configuração do Supabase Auth, as consultas administrativas e o uso da chave secreta server-side conforme o modelo aprovado na Q-025, comprovando acesso mínimo e ausência de exposição ao cliente; essa verificação não reabre a avaliação de compatibilidade concluída.
 - Implementar/validar os fluxos administrativos de criação e alteração de contas, redefinição de senha pelo TI e auditoria correspondente, sem cadastro aberto.
 - Confirmar que os handlers protegidos existentes e futuros sempre invocam a autorização adequada ao perfil e ao recurso.
 - Validar em ambiente homologado os fluxos positivos e negativos de login, logout, refresh, conta inativa, revogação, cookies e falhas do provedor.
