@@ -55,7 +55,7 @@ export async function recordPrivilegedAuditEventRest({
   if (resourceId !== null && (typeof resourceId !== "string" || resourceId.length > 128)) {
     throw new TypeError("Identificador de recurso inválido.");
   }
-  if (eventType === "admin.login.failed" && actor === null) {
+  if (eventType === "admin.login.failed" && actor === null && outcome === "failure") {
     // A failed TI login may have no authenticated identity.
   } else if (!actor || actor.role !== "ti" || actor.isActive !== true ||
       typeof actor.id !== "string" || !UUID_PATTERN.test(actor.id)) {
