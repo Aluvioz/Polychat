@@ -98,7 +98,7 @@ Esses assuntos foram alinhados com Desenvolvimento e/ou avaliados pelo responsá
 | Stack e responsabilidade | ADR-003 — Accepted | Supabase + Vercel aprovados como stack obrigatória. |
 | Ambiente Supabase de desenvolvimento | Projeto Polyford, região `sa-east-1`, PostgreSQL `17.11.0.019`, estado observado `ACTIVE_HEALTHY`; notas da #99 | Ambiente de desenvolvimento reconhecido e aprovado no modelo de ambientes. |
 | Ambientes e deploy | Issues #96 e #98 encerradas; auditoria #96 e runbook #98 | Configuração operacional, segregação por estágio, deploy, domínio/HTTPS, smoke test e rollback aceitos no escopo das respectivas issues. |
-| Banco de dados | Migrations #99 e registro de aplicação no Polyford | Schema e invariantes iniciais aprovados; políticas de autorização e integração funcional seguem nas issues de implementação. |
+| Banco de dados | Migrations #99 e registro de aplicação no Polyford; PR #172 (#101) | Schema e invariantes iniciais aprovados; policies RLS de domínio/configuração integradas e testadas em desenvolvimento. A integração funcional uniforme dos handlers permanece nas issues correspondentes. |
 | Storage e anexos | ADR-008, Issue #117 e baseline POLY-REQ-001 v0.5 | Supabase Storage aprovado como capacidade de armazenamento privado da stack; scanner permanece interno, sob responsabilidade operacional da TI. |
 | Dados e provedores | ADR-003, ADR-008 e ADR-009 | Fluxos entre aplicação Vercel e serviços Supabase aprovados; não autoriza compartilhamento com outros provedores. |
 | Segredos e acesso | Auditoria da #96, ADR-009 e baseline | Uso de variáveis segregadas por ambiente, privilégio mínimo e secrets fora do código, cliente e logs aprovado. Valores secretos não são reproduzidos na documentação. |
