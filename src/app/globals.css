@@ -451,14 +451,18 @@ h2 {
   width: 100%;
   min-height: 46px;
   padding: 0 13px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--muted);
   border-radius: 9px;
   color: var(--ink);
   font: inherit;
 }
 .login-form input:focus {
-  outline: 2px solid #1769aa44;
   border-color: var(--ford-blue-bright);
+}
+
+.login-card :is(a, input, button):focus-visible {
+  outline: 3px solid var(--ford-blue-bright);
+  outline-offset: 3px;
 }
 .login-form button {
   min-height: 48px;
