@@ -1,4 +1,5 @@
-export const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+// Product limit: 10 MB decimal = exactly 10,000,000 bytes.
+export const MAX_ATTACHMENT_BYTES = 10_000_000;
 
 const MIME_BY_EXTENSION = Object.freeze({
   pdf: "application/pdf",
