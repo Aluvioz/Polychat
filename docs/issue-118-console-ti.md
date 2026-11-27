@@ -84,25 +84,36 @@ Consulta read-only ao projeto de homologação Polyfordtest (`rferhswvesmoyaqvko
 
 A alteração ficou restrita ao Polyfordtest. Nenhuma alteração foi feita no projeto de produção Polyford (`oixifpdfvrenlhvycszy`), na identidade Auth ou na senha. A senha não foi solicitada nem manipulada.
 
-## Homologação autenticada — PENDENTE
+## Homologação autenticada — PARCIAL
 
-Ainda não foi executado login pelo formulário do Polychat com a conta `Teste_TI`. O registro de último login do Supabase Auth antecede a atualização do username e não comprova autenticação pelo fluxo da aplicação.
+### Produção — conta Aluvioz
 
-Permanecem pendentes:
-1. **Bloqueio de configuração Vercel identificado:** no projeto Vercel `polyford`, as variáveis atualmente listadas estão compartilhadas entre Production, Preview e Development. `NEXT_PUBLIC_SUPABASE_URL` aponta para `https://oixifpdfvrenlhvycszy.supabase.co` (Polyford produção), e não há variáveis específicas para a branch `feat/issue-118-ti-console-dashboard`. Portanto, o Preview atual não é seguro para homologação com a conta TI.
-2. Isolar a configuração da branch Preview para apontar integralmente ao Polyfordtest, incluindo URL, publishable key e chave privilegiada `SUPABASE_SECRET_KEY`. Não basta trocar somente a URL: todas as credenciais Supabase do servidor devem pertencer ao mesmo projeto de homologação. A chave de homologação precisa ser fornecida/configurada pelo administrador sem compartilhá-la no chat.
-3. Confirmar por leitura que a configuração efetiva do Preview está exclusivamente conectada ao Polyfordtest e que Production continua inalterada.
-4. Realizar login pelo formulário com a senha inserida diretamente pelo responsável no ambiente de homologação; não compartilhar senha em chat, comentário ou documentação.
-3. Confirmar redirecionamento para `/ti`, Dashboard, menu lateral e navegação persistente.
-4. Confirmar que T-03 a T-08 permanecem indisponíveis, sem ações falsas.
-5. Testar atualização da página e preservação da sessão conforme o fluxo existente, e executar logout.
-6. Forçar loading e error boundary em condições controladas, registrando o resultado.
-7. Registrar data, ambiente, commit, cenários e capturas sem credenciais ou dados sensíveis.
+Em 27/11/2026, o responsável confirmou que a captura enviada nesta conversa foi obtida no ambiente de produção, após acesso com a conta Aluvioz. A evidência visual mostra:
+- Dashboard TI (T-02) renderizado com o título e a descrição esperados.
+- Navegação lateral persistente com T-02 ativo.
+- Áreas T-03 a T-08 visíveis e identificadas como “Indisponível nesta entrega”.
+- Mensagem de boas-vindas ao ambiente administrativo.
+- Ausência de indicadores ou dados demonstrativos apresentados como reais.
 
-Não declarar homologação autenticada até esses cenários serem efetivamente executados e evidenciados.
+Esta evidência confirma o carregamento visual do Dashboard autenticado em produção conforme declaração do responsável e captura fornecida. A imagem, por si só, não expõe identificador da sessão, claims ou logs de autenticação; por isso, a identidade da conta e o ambiente são registrados com base na confirmação expressa do responsável. A senha não foi registrada nem incluída na documentação.
 
+### Configuração Preview — bloqueio separado
+
+A inspeção anterior do projeto Vercel `polyford` identificou variáveis compartilhadas entre Production, Preview e Development, com `NEXT_PUBLIC_SUPABASE_URL` apontando para Polyford produção e sem variáveis específicas para a branch `feat/issue-118-ti-console-dashboard`. O Preview atual, portanto, não está isolado do banco de produção. A captura acima foi declarada como realizada no ambiente de produção; ela não comprova isolamento do Preview nem altera esse achado de configuração.
+
+### Cenários ainda pendentes
+
+A homologação autenticada está parcial. Ainda precisam ser executados e registrados:
+1. Atualização da página e preservação da sessão.
+2. Logout e confirmação de bloqueio após encerramento da sessão.
+3. Acesso direto a `/ti` sem sessão e com perfil sem permissão, quando houver conta de teste apropriada.
+4. Estados de loading e error boundary em condições controladas.
+5. Registro de data, ambiente, commit e evidências adicionais sem credenciais ou dados sensíveis.
+
+Não declarar homologação integral nem solicitar aprovação final do SQA até a conclusão desses cenários. A captura atual deve ser tratada como evidência positiva de Dashboard em produção, não como prova de todos os controles de sessão e autorização.
+ 
 ## Estado e próximos gates
 
-No momento desta atualização, a PR #177 está aberta, em Draft, com base `main`. O HEAD anteriormente verificado era `a461fce0f06ae3a36dab633f9415d4dc48b2f188`; a atualização documental gera um novo commit e exige revalidação dos workflows nesse novo HEAD.
+No momento desta atualização, a PR #177 está aberta, em Draft, com base `main`. O HEAD de código/documentação validado antes deste registro é `766b11a72a243cee5a23e723e700f0cbd2c42d54`; esta atualização documental gera um novo commit e exige revalidação dos workflows nesse novo HEAD.
 
 A aprovação técnica integral continua condicionada à homologação TI autenticada, à comprovação de loading/error boundary e a novo parecer SQA. Não houve merge nem encerramento da Issue #118.
