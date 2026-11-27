@@ -1,27 +1,40 @@
 # Issue #94 — Kit de registro para sessões e achados (MODELOS EM BRANCO)
 
 **Estado:** somente formulários e roteiro de apoio. **Nenhuma sessão, observação ou achado real foi registrado neste arquivo.**  
-**Referência metodológica aprovada:** PR #152, plano de validação UX v0.3 integrado à `main`. A [proposta de uso complementar clicável](./issue-94-decisao-metodologica-proposta.md) permanece sem decisão do PO/SQA.  
+**Referência metodológica aprovada:** PR #152, plano de validação UX v0.3 integrado à `main`. O PO registrou em 26/11/2026 parecer favorável ao protótipo clicável como complemento opcional, mantendo os wireframes como instrumento principal. A manifestação independente do SQA sobre esse protocolo ainda está pendente; consultar a [decisão metodológica](./issue-94-decisao-metodologica-proposta.md).  
 **Protótipo opcional para revisão prévia:** [navegação exploratória v0.1](./issue-94-prototipo-v01.md).
 
-> Não utilizar este kit para iniciar recrutamento ou coletar dados sem autorização institucional e responsável definidos. Guardar registros brutos no local autorizado pela FORD, não automaticamente no GitHub. Publicar somente sínteses anonimizadas e aprovadas.
+> Distinguir a simulação interna por papéis de qualquer pesquisa institucional com a FORD. O PO aceitou a simulação interna como evidência complementar limitada, com voluntariedade, consentimento, dados fictícios e controles de registro; a reavaliação independente do SQA permanece pendente. Não recrutar funcionários FORD, usar dados corporativos ou iniciar pesquisa institucional sem autorização formal específica. Guardar registros brutos somente em local autorizado e publicar apenas sínteses anonimizadas e aprovadas.
 
-## 0. Gate obrigatório — preencher antes de qualquer convite
+## 0. Gates por tipo de atividade
+
+### 0.1 Simulação interna por papéis — evidência limitada
+
+| Condição | Registro | Situação |
+|---|---|---|
+| Aceite do PO para simulação interna por papéis | Review da PR #164, 26/11/2026 | **REGISTRADO** |
+| Manifestação independente do SQA sobre protocolo e controles | Review SQA da PR #164 | **PENDENTE** |
+| Voluntários e observador designados | Definir antes da execução | PENDENTE |
+| Informação sobre caráter fictício e consentimento para participação/registro | Preparar e registrar antes da execução | PENDENTE |
+| Armazenamento controlado e acesso restrito às anotações | Definir antes da execução | PENDENTE |
+| Versões/commits exatos dos wireframes e do protótipo | Congelar antes da execução | PENDENTE |
+
+Esta simulação pode produzir somente evidência interna limitada sobre clareza do roteiro, neutralidade das instruções e preparação do facilitador. Não representa pesquisa com usuários reais, não substitui a amostra do plano v0.3 e não autoriza gravação por padrão. O uso do protótipo clicável como complemento deve respeitar o protocolo da decisão metodológica e a reavaliação independente do SQA.
+
+### 0.2 Pesquisa institucional com funcionários ou dados FORD
 
 | Condição | Registro institucional/documento de referência | Situação |
 |---|---|---|
 | Autorização formal de recrutamento e sessões pela FORD | A definir formalmente | PENDENTE |
 | Responsável por recrutamento | A definir | PENDENTE |
-| Facilitador e observador | A definir | PENDENTE |
 | Responsável pela custódia dos registros | A definir | PENDENTE |
 | Local/ferramenta aprovado para armazenamento | A definir | PENDENTE |
 | Perfis autorizados a acessar evidências | A definir | PENDENTE |
 | Prazo/critério de retenção | A definir | PENDENTE |
 | Texto de consentimento e política de gravação | A definir | PENDENTE |
 | Versão do roteiro e protótipo congelada | A definir | PENDENTE |
-| Decisão escrita PO/SQA sobre usar o protótipo clicável apenas como complemento aos wireframes estáticos | [Proposta pendente](./issue-94-decisao-metodologica-proposta.md); a baseline atual é a pesquisa estática da PR #152 | PENDENTE |
 
-**Se houver qualquer pendência, não recrutar nem executar sessão.** O escopo e a amostra foram validados pelo PO, mas isso não substitui estas condições.
+**Não convidar funcionários FORD nem iniciar pesquisa institucional enquanto qualquer condição deste gate estiver pendente.** O aceite do PO para a simulação interna não supre a autorização institucional da FORD.
 
 ## 1. Abertura neutra sugerida (rascunho, requer aprovação)
 
@@ -38,19 +51,22 @@
 | Sessão | Pré-teste / sessão regular |
 | Data e horário | Pendente |
 | Local e modalidade autorizados | Pendente |
+| Instrumento/fase | Wireframe estático (principal) / protótipo clicável (complementar, se admitido pelo SQA) |
 | Versão do protótipo / commit / URL usada | Pendente |
-| Versão do roteiro da PR #152 | Pendente |
+| Versão do wireframe e roteiro da PR #152 | Pendente |
+| Ordem dos instrumentos e desvios | Pendente |
 | Navegador e versão / dispositivo | Pendente |
 | Facilitador/observador (referência institucional, não publicar dados desnecessários) | Pendente |
 | Registro/consentimento autorizado | Pendente |
 | Gravação autorizada? (se aplicável) | Pendente |
 | Interrupções ou desvios | Pendente |
 
-**Uma linha por tarefa executada:**
+**Uma linha por tarefa e por instrumento/fase:**
 
-| ID tarefa | Resultado (sem ajuda/com ajuda/não concluída/N/A) | Ação/erro observável | Hesitação e ajuda | Feedback compreendido? | Facilidade 1–7 | Evidência autorizada |
-|---|---|---|---|---|---|---|
-| U-01 ou T-01 | NÃO EXECUTADA | — | — | — | — | — |
+| ID tarefa | Instrumento/fase | Resultado (sem ajuda/com ajuda/não concluída/N/A) | Ação/erro observável | Hesitação e ajuda | Feedback compreendido? | Facilidade 1–7 | Evidência autorizada |
+|---|---|---|---|---|---|---|---|
+| U-01 ou T-01 | Wireframe estático (principal) | NÃO EXECUTADA | — | — | — | — | — |
+| U-01 ou T-01 | Protótipo clicável (complementar, se admitido) | NÃO EXECUTADA | — | — | — | — | — |
 
 Códigos do plano: U-01 a U-08 e T-01 a T-06. As perguntas devem ser neutras e por tarefa, sem induzir "o botão correto". Tempo, quando anotado, é exploratório e não métrica de aceite funcional.
 
@@ -89,7 +105,7 @@ Códigos do plano: U-01 a U-08 e T-01 a T-06. As perguntas devem ser neutras e p
 | Reavaliação | Pendente | Pendente |
 | Parecer PO / SQA | Pendente | Pendente |
 
-Ao concluir uma rodada autorizada, criar uma síntese por perfil, consolidar problemas, registrar severidade e encaminhar as mudanças ao PO e SQA. Não marcar a issue #94 como aceita antes de sessões, alterações justificadas, revisão por PR e verificação de regressão.
+Ao concluir uma simulação interna autorizada nos limites definidos, criar síntese identificada como evidência interna limitada, com voluntários e consentimento documentados, sem alegar participação da FORD ou representatividade. Para pesquisa com funcionários FORD, cumprir integralmente o gate institucional. Em qualquer rodada, separar resultados por instrumento, consolidar problemas e encaminhar mudanças ao PO e SQA. Não marcar a Issue #94 como aceita antes do cumprimento de seus próprios critérios.
 
 ## 5. Condições de fechamento e rastreabilidade
 
