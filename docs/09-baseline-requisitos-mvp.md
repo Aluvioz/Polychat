@@ -305,11 +305,11 @@ Comandos locais disponíveis no projeto:
 Essas evidências comprovam apenas os escopos e ambientes indicados. Não comprovam login positivo com usuário real, todos os handlers de negócio, Storage/scanner, backup/restore, realtime, homologação de produção ou cobertura integral dos critérios de aceite.
 ## 8. Questões e decisões restantes
 
-As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). Permanecem abertas somente:
+As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). **Somente Q-019 permanece parcialmente aberta**, restrita à confirmação/entrega dos ativos oficiais de marca.
 
-- Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
 - Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
-- Q-025 — Concluída em 24/11/2026: compatibilidade da stack Supabase + Vercel aprovada pela TI e pela FORD, com provedores nomeados, controles, responsabilidades e limites de utilização registrados; sem substituição da stack por inferência.
+
+Q-018 permanece registrada como decisão de produto resolvida em 20/11/2026. Q-025 permanece registrada como concluída em 24/11/2026, com aprovação da compatibilidade da stack Supabase + Vercel pela TI e pela FORD. Esses registros históricos e suas decisões permanecem preservados, mas não integram a relação de questões abertas.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
