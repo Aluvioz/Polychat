@@ -113,7 +113,7 @@ O aceite não comprova:
 - políticas de acesso a objetos Storage ou download autorizado;
 - revogação imediata de assinaturas Realtime já abertas;
 - ausência certificada de `service_role` em todo o frontend;
-- compatibilidade operacional integral da stack com a FORD, homologação de produção ou cumprimento de backup/restore.
+- execução de todos os controles operacionais, homologação de produção ou cumprimento de backup/restore. A compatibilidade e o modelo de utilização dos provedores Supabase + Vercel já foram aprovados pela TI e pela FORD na Q-025; este aceite delimitado não comprova, por si só, a execução integral desses controles.
 
 ## Evidências e testes
 
