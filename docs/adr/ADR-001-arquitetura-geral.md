@@ -1,6 +1,6 @@
 # ADR-001 — Arquitetura lógica geral
 
-- **Status:** Proposed
+- **Status:** Proposed — concordância específica do Tech Lead considerada recebida pelo PO em 26/11/2026; decisão formal da TI sobre a arquitetura lógica ainda pendente.
 - **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
@@ -29,7 +29,7 @@ Definir fronteiras de confiança, responsabilidades e componentes lógicos coere
 
 ## Decisão proposta
 
-Adotar uma arquitetura lógica modular sobre a stack Supabase + Vercel, aprovada na ADR-003 e na Q-025. A Vercel é a plataforma de hospedagem, deployment e execução da aplicação; o Supabase fornece os serviços de backend previstos nas ADRs específicas, incluindo autenticação, PostgreSQL e armazenamento privado. A composição, os fluxos, as fronteiras de confiança e as responsabilidades devem respeitar os limites operacionais e de segurança registrados na Q-025 e nas ADRs 004 a 009. A ADR-001 permanece Proposed até a revisão formal do Tech Lead e da TI sobre a arquitetura lógica e sua correspondência com essas decisões. Essa revisão não reabre nem substitui decisões já aceitas, em especial ADR-003, ADR-006 (escopo delimitado) e ADR-009 (escopo delimitado). As ADRs-005 e 008 permanecem Proposed para suas decisões técnicas específicas; isso não reabre a Q-025 nem a aprovação dos provedores nomeados Supabase + Vercel, inclusive Storage.
+Adotar uma arquitetura lógica modular sobre a stack Supabase + Vercel, aprovada na ADR-003 e na Q-025. A Vercel é a plataforma de hospedagem, deployment e execução da aplicação; o Supabase fornece os serviços de backend previstos nas ADRs específicas, incluindo autenticação, PostgreSQL e armazenamento privado. A composição, os fluxos, as fronteiras de confiança e as responsabilidades devem respeitar os limites operacionais e de segurança registrados na Q-025 e nas ADRs 004 a 009. **Registro do PO em 26/11/2026:** para o encaminhamento desta decisão, a concordância específica do Tech Lead com a arquitetura lógica descrita nesta ADR é considerada recebida, por orientação expressa do PO, quanto aos componentes, aos fluxos de dados, às fronteiras de confiança, às responsabilidades e à coerência com a ADR-003/Q-025 e com as ADRs específicas. Este registro é uma premissa de governança assumida pelo PO; não é uma declaração assinada pelo Tech Lead nem um evento formal `APPROVED` no GitHub. A decisão formal da TI sobre a arquitetura lógica permanece pendente. Por isso, a ADR-001 permanece `Proposed` até a revisão/decisão da TI e o registro dos respectivos limites. Essa etapa não reabre nem substitui decisões já aceitas, em especial ADR-003, ADR-006 (escopo delimitado) e ADR-009 (escopo delimitado). As ADRs-005 e 008 permanecem Proposed para suas decisões técnicas específicas; isso não reabre a Q-025 nem a aprovação dos provedores nomeados Supabase + Vercel, inclusive Storage.
 
 As responsabilidades lógicas são:
 
@@ -77,10 +77,10 @@ A stack Supabase + Vercel permanece adotada conforme ADR-003; a compatibilidade 
 
 ## Pendências para Accepted
 
-- Detalhar e submeter à revisão formal do Tech Lead e da TI a arquitetura lógica sobre a stack Supabase + Vercel, incluindo componentes, fluxos de dados, fronteiras de confiança, responsabilidades e limites de cada serviço.
+- Concluir e registrar a revisão/decisão formal da TI sobre a arquitetura lógica modular descrita nesta ADR, incluindo componentes, fluxos de dados, fronteiras de confiança, responsabilidades e limites de cada serviço. A concordância específica do Tech Lead é considerada recebida pelo PO em 26/11/2026, nos limites descritos na seção “Decisão proposta”; este registro não substitui a decisão da TI nem constitui `APPROVED` formal no GitHub.
 - Confirmar a coerência da arquitetura com as ADRs específicas: ADR-003 (Accepted) para a stack; ADR-005 (Proposed) para PostgreSQL/Supabase Database; ADR-006 (Accepted — escopo delimitado) para autorização/RLS; ADR-008 (Proposed) para a arquitetura específica de Storage/anexos, sem reabrir a autorização do provedor na Q-025; ADR-009 (Accepted — escopo delimitado) para ambientes e deploy.
 - Manter explícitos os pontos ainda sujeitos a decisão ou detalhamento nas ADRs Proposed, especialmente ADR-004 (autenticação/sessões), ADR-007 (realtime) e ADR-010 (segurança/auditoria/monitoramento), sem antecipar seus aceites.
-- Registrar os responsáveis pela revisão, a data, as evidências de viabilidade, os limites do aceite e eventuais recomendações de alteração nas ADRs correspondentes.
+- Registrar a decisão da TI, a data, as evidências de viabilidade, os limites do aceite e eventuais recomendações de alteração nas ADRs correspondentes. A concordância do Tech Lead assumida pelo PO está registrada como tal, sem atribuição de parecer formal não publicado.
 
 
 
