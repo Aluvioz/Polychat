@@ -89,8 +89,10 @@ A alteração ficou restrita ao Polyfordtest. Nenhuma alteração foi feita no p
 Ainda não foi executado login pelo formulário do Polychat com a conta `Teste_TI`. O registro de último login do Supabase Auth antecede a atualização do username e não comprova autenticação pelo fluxo da aplicação.
 
 Permanecem pendentes:
-1. Confirmar que o Preview ou ambiente local usado está configurado exclusivamente para Polyfordtest, nunca Polyford produção.
-2. Realizar login pelo formulário com a senha inserida diretamente pelo responsável no ambiente de homologação; não compartilhar senha em chat, comentário ou documentação.
+1. **Bloqueio de configuração Vercel identificado:** no projeto Vercel `polyford`, as variáveis atualmente listadas estão compartilhadas entre Production, Preview e Development. `NEXT_PUBLIC_SUPABASE_URL` aponta para `https://oixifpdfvrenlhvycszy.supabase.co` (Polyford produção), e não há variáveis específicas para a branch `feat/issue-118-ti-console-dashboard`. Portanto, o Preview atual não é seguro para homologação com a conta TI.
+2. Isolar a configuração da branch Preview para apontar integralmente ao Polyfordtest, incluindo URL, publishable key e chave privilegiada `SUPABASE_SECRET_KEY`. Não basta trocar somente a URL: todas as credenciais Supabase do servidor devem pertencer ao mesmo projeto de homologação. A chave de homologação precisa ser fornecida/configurada pelo administrador sem compartilhá-la no chat.
+3. Confirmar por leitura que a configuração efetiva do Preview está exclusivamente conectada ao Polyfordtest e que Production continua inalterada.
+4. Realizar login pelo formulário com a senha inserida diretamente pelo responsável no ambiente de homologação; não compartilhar senha em chat, comentário ou documentação.
 3. Confirmar redirecionamento para `/ti`, Dashboard, menu lateral e navegação persistente.
 4. Confirmar que T-03 a T-08 permanecem indisponíveis, sem ações falsas.
 5. Testar atualização da página e preservação da sessão conforme o fluxo existente, e executar logout.
