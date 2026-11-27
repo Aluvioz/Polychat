@@ -101,17 +101,32 @@ Esta evidência confirma o carregamento visual do Dashboard autenticado em produ
 
 A inspeção anterior do projeto Vercel `polyford` identificou variáveis compartilhadas entre Production, Preview e Development, com `NEXT_PUBLIC_SUPABASE_URL` apontando para Polyford produção e sem variáveis específicas para a branch `feat/issue-118-ti-console-dashboard`. O Preview atual, portanto, não está isolado do banco de produção. A captura acima foi declarada como realizada no ambiente de produção; ela não comprova isolamento do Preview nem altera esse achado de configuração.
 
-### Cenários ainda pendentes
+### Resultado atualizado da homologação — 27/11/2026
 
-A homologação autenticada está parcial. Ainda precisam ser executados e registrados:
-1. Atualização da página e preservação da sessão.
-2. Logout e confirmação de bloqueio após encerramento da sessão.
-3. Acesso direto a `/ti` sem sessão e com perfil sem permissão, quando houver conta de teste apropriada.
-4. Estados de loading e error boundary em condições controladas.
-5. Registro de data, ambiente, commit e evidências adicionais sem credenciais ou dados sensíveis.
+O responsável confirmou que os seguintes cenários foram aprovados em produção:
+1. Dashboard TI carregado com a conta Aluvioz.
+2. Atualização da página.
+3. Acesso direto à rota `/ti`.
+4. Proteção de rotas.
 
-Não declarar homologação integral nem solicitar aprovação final do SQA até a conclusão desses cenários. A captura atual deve ser tratada como evidência positiva de Dashboard em produção, não como prova de todos os controles de sessão e autorização.
- 
+Os seguintes cenários não puderam ser executados no contexto de homologação disponibilizado:
+1. Logout.
+2. Expiração da sessão.
+3. Error boundary em condição de falha controlada.
+
+O carregamento do Dashboard foi observado como lento. Esse comportamento fica registrado como observação de desempenho, sem atribuição de causa ou declaração de aprovação de performance. Não foi fornecida medição de duração, trace ou perfil de rede que permita diagnosticar a origem.
+
+As limitações acima não devem ser convertidas em resultados PASS nem em defeitos confirmados. A homologação fica classificada como parcial: os quatro cenários aprovados estão registrados, enquanto logout, expiração e error boundary permanecem não verificados. A lentidão permanece como observação que requer avaliação.
+
+### Avaliação e encaminhamento ao SQA
+
+Solicita-se ao SQA parecer explícito sobre:
+- se logout, expiração de sessão e error boundary são bloqueadores para aprovação desta entrega, considerando a impossibilidade prática de executá-los no ambiente atual;
+- se a lentidão observada exige correção nesta PR ou pode ser acompanhada separadamente, mediante evidência técnica;
+- quais evidências alternativas, se necessárias, são aceitáveis para encerrar os pontos não verificáveis.
+
+Até o parecer, a PR permanece em Draft. Não se declara homologação integral, não se solicita merge e não se encerra a Issue #118.
+
 ## Estado e próximos gates
 
 No momento desta atualização, a PR #177 está aberta, em Draft, com base `main`. O HEAD de código/documentação validado antes deste registro é `766b11a72a243cee5a23e723e700f0cbd2c42d54`; esta atualização documental gera um novo commit e exige revalidação dos workflows nesse novo HEAD.
