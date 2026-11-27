@@ -38,7 +38,7 @@ Metadados registrados são mínimos: operação e, na edição, lista do campo a
 - Membership inicial: não definida para a criação na Issue #112; permanece fora do escopo.
 - Ciclo de vida `disabled/closed`: não implementado nesta issue.
 - Integração real com projeto Supabase e testes RLS/transacionais em ambiente autorizado ainda precisam ser executados.
-- A dependência de código da Issue #105 foi resolvida: a PR #175 foi aprovada pelo Tech Lead e integrada à `main` em 26/11/2026. A PR #178 deve ser validada agora diretamente contra `main`.
+- A dependência da Issue #105 foi resolvida pela integração da PR #175 à `main` em 26/11/2026. Esta branch também depende da política de compatibilidade da Issue #106, implementada na PR #176; por isso, a PR #178 está empilhada sobre `feat/issue-106-device-restriction`, e não deve ser retargeted para `main` antes da integração da #176.
 
 ## Testes
 
@@ -64,10 +64,10 @@ O roteiro SQL de integração foi ampliado para verificar que:
 
 ## Estado de conclusão da implementação
 
-A implementação da Issue #112 está desenvolvida no branch da PR #178. A integração da PR #175 removeu a dependência de uma branch intermediária e permite validar esta alteração contra `main`.
+A implementação da Issue #112 está desenvolvida no branch da PR #178. A PR #175 já está integrada à `main`, mas esta implementação reutiliza `enforceDeviceCompatibility` da PR #176. Portanto, a base atual da #178 permanece `feat/issue-106-device-restriction`; após a integração da #176, a #178 poderá ser retargeted para `main`.
 
 A conclusão técnica ainda depende das verificações finais:
-- CI da PR #178 contra `main`: testes, lint, typecheck, build e smoke test;
+- CI completo da PR #178 sobre a base final após a integração da PR #176 em `main`: testes, lint, typecheck, build e smoke test;
 - execução do roteiro `supabase/tests/issue_112_group_admin.integration.sql` em projeto Supabase de homologação, com migrations aplicadas;
 - revisão técnica das RPCs privilegiadas e confirmação do modelo de segurança descrito acima.
 
@@ -75,7 +75,7 @@ A aprovação da PR #175 não equivale à aprovação da PR #178. O status de im
 
 ## Validação contínua após integração com `main`
 
-Na execução anterior, o CI identificou um erro de resolução ESM ao importar `next/server` diretamente no Node.js. O import foi ajustado para `next/server.js` no commit `90b721a`. No commit `6418b97`, a execução completa de CI (testes automatizados, ESLint, TypeScript, build Next.js e smoke test) concluiu com sucesso.
+Na execução anterior, o CI identificou um erro de resolução ESM ao importar `next/server` diretamente no Node.js. O import foi ajustado para `next/server.js` no commit `90b721a`. No commit `6418b97`, a execução completa de CI (testes automatizados, ESLint, TypeScript, build Next.js e smoke test) concluiu com sucesso. Essa evidência é histórica e não comprova a validação do HEAD atual `76e0990`; a PR permanece empilhada sobre a #176 e os workflows configurados para PRs direcionadas a `main` ainda precisam ser executados após a integração da dependência.
 
 O workflow de instalação limpa foi corrigido para preparar o ambiente somente com as migrations presentes no checkout da PR, sem contagem fixa de arquivos nem dependência de outra branch. A execução confirmou a aplicação das 19 migrations em um Supabase local vazio. O teste SQL de integração encontrou um delimitador inválido na função temporária que simula falha de auditoria; o delimitador foi corrigido no commit `6418b97`, e a nova execução do workflow está em andamento.
 
