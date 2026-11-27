@@ -61,6 +61,8 @@ Esta revisão das imagens não equivale a percorrer manualmente os fluxos no nav
 
 **Conclusão desta revisão limitada:** não foi confirmado defeito que justifique alteração de HTML/CSS/JS apenas com base nas capturas. O comportamento da notificação fixa fica registrado para confirmação interativa. As imagens oferecem evidência visual pontual de renderização, não substituem a inspeção humana completa nem autorizam marcar itens do checklist como PASS.
 
+**Defasagem de versão:** as três capturas citadas foram geradas no commit `9f226667686cbb115b9613032103d6fbad040995`, anterior à harmonização do limite de anexos para 10 MiB no commit `fb398c2d31e328844b5a60fd0f97a4f672824ffa`. Portanto, não usar a captura de anexos como evidência da apresentação atual desse limite; a nova execução Playwright da versão corrigida deve produzir capturas atualizadas.
+
 ## 5. Trilha de execução (em branco)
 
 - Data/hora:
