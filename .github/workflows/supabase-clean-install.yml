@@ -51,8 +51,8 @@ jobs:
             fi
           done
 
-          printf 'Prepared %s migration files from the pull request.\\n' "${#migrations[@]}"
-          find "$workspace/supabase/migrations" -maxdepth 1 -type f -name '*.sql' -printf '%f\\n' | sort
+          printf 'Prepared %s migration files from the pull request.\n' "${#migrations[@]}"
+          find "$workspace/supabase/migrations" -maxdepth 1 -type f -name '*.sql' -printf '%f\n' | sort
 
       - name: Initialize isolated Supabase local project
         working-directory: ${{ runner.temp }}/polychat-clean
