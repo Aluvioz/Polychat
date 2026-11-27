@@ -17,10 +17,11 @@ function getConfig(env) {
   return { baseUrl, secretKey };
 }
 
+// Supabase secret API keys are opaque API keys, not JWTs. Send them only
+// through the apikey header; Authorization is reserved for user/legacy JWTs.
 function apiHeaders(secretKey, extra = {}) {
   return {
     apikey: secretKey,
-    Authorization: `Bearer ${secretKey}`,
     ...extra,
   };
 }
@@ -104,7 +105,7 @@ function readInteger(params, key, fallback, min, max = Number.MAX_SAFE_INTEGER) 
 function readDate(params, key) {
   const value = params.get(key);
   if (value === null || value === "") return null;
-  if (!/^\d{4}-\d{2}-\d{2}T/.test(value) || !Number.isFinite(Date.parse(value))) {
+  if (!/^\\d{4}-\\d{2}-\\d{2}T/.test(value) || !Number.isFinite(Date.parse(value))) {
     throw new TypeError(`Parâmetro ${key} inválido.`);
   }
   return value;
@@ -195,7 +196,7 @@ export async function searchPrivilegedAuditEventsRest({
   const events = await response.json();
   if (!Array.isArray(events)) throw new Error("Não foi possível consultar a trilha de auditoria.");
   const contentRange = response.headers.get("content-range") ?? "";
-  const totalMatch = contentRange.match(/\/(\d+|\*)$/);
+  const totalMatch = contentRange.match(/\\/(\\d+|\\*)$/);
   const total = totalMatch && totalMatch[1] !== "*" ? Number(totalMatch[1]) : events.length;
   return { events, total, limit, offset };
 }
