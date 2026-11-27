@@ -96,7 +96,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Compartilhamento de formatos diferentes de PDF e JPEG.
 - Notificações push e notificações do navegador.
 - Integrações com outros aplicativos ou serviços externos de comunicação.
-- Serviços externos que acessem, armazenem ou processem dados da FORD.
+- Serviços externos adicionais, além dos provedores nomeados Supabase e Vercel e dos usos expressamente aprovados na Q-025, que acessem, armazenem ou processem dados da FORD sem aprovação específica.
 
 ### 2.3 Público e capacidade
 
