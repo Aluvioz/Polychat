@@ -78,3 +78,42 @@ Esta revisão das imagens não equivale a percorrer manualmente os fluxos no nav
 - Execução automática de Chromium (link do Actions):
 - Achados:
 - Encaminhamento ao PO/SQA:
+
+
+## 6. Verificação interativa assistida por IA — 27/11/2026
+
+Execução de navegador real (Playwright, Chromium 141.0.7390.37, Ubuntu 24.04, Linux 7.0.0-1018-aws, file://, 320/390 × 720/844 e 1280 × 900), commit `a19ef02593523ae727f47c8233697e9749a8cf0b`. HTML/CSS/JS inalterados desde `3bc2c2e`. [Workflow e log](https://github.com/Aluvioz/Polychat/actions/runs/46036069268) · [ZIP com PNGs e results.json](https://github.com/Aluvioz/Polychat/actions/runs/46036069268/artifacts/15217375376) (retenção até 11/12). Testador: agente IA a pedido de UX, sem sessão com pessoa. Nenhum resultado abaixo substitui a inspeção humana, que continua PENDENTE na tabela principal. 22 verificações automatizadas PASS, das quais algumas parciais em relação ao procedimento integral; 3 não executadas. Não houve erros JavaScript. A primeira execução válida teve falha de seletor do próprio teste A94-01; seletor corrigido e reteste PASS.
+
+| ID | Resultado técnico | Observação | PNG no ZIP |
+|---|---|---|---|
+| M94-01 | PASS (assistido) | Perfil mobile; sem pageerror | evidence/M94-01.png |
+| M94-02 | PASS (assistido) | Erro genérico; acesso fictício | evidence/M94-02.png |
+| M94-03 | PASS (assistido) | Recentes e não lidas | evidence/M94-03.png |
+| M94-04 | PASS (assistido) | Busca vazia, Rafael e histórico próprio | evidence/M94-04.png |
+| M94-05 | PASS (assistido) | Grupo, histórico e participantes | evidence/M94-05.png |
+| M94-06 | PASS (assistido) | Envio e status não entregue | evidence/M94-06.png |
+| M94-07 | PASS (assistido) | PDF/JPEG e nove ações de erro/recuperação | evidence/M94-07.png |
+| M94-08 | PASS (assistido) | Offline e sessão expirada | evidence/M94-08.png |
+| M94-09 | PASS (assistido) | TI e dashboard auxiliar | evidence/M94-09.png |
+| M94-10 | PASS (assistido) | Busca vazia, Cancelar/Confirmar e foco | evidence/M94-10.png |
+| M94-11 | PASS (assistido) | Remoção e revogação informada | evidence/M94-11.png |
+| M94-12 | PASS (assistido) | Consulta, exportação e edição fictícias | evidence/M94-12.png |
+| M94-13 | PASS (assistido) | Severidades/prazos e sem bloqueio automático | evidence/M94-13.png |
+| M94-14 | PASS (assistido) | Somente termos e quotas | evidence/M94-14.png |
+| M94-15 | PASS (assistido) | Auditoria auxiliar, não log | evidence/M94-15.png |
+| A94-01 | PARCIAL | Teclado em trajetos selecionados; não integral | evidence/A94-01.png |
+| A94-02 | PASS (assistido) | Link de salto; main recebe foco | evidence/A94-02.png |
+| A94-03 | PARCIAL | Foco no H1 na navegação start/login | evidence/A94-03.png |
+| A94-04 | PASS (assistido) | Escape/Cancelar devolvem foco | evidence/A94-04.png |
+| A94-05 | NÃO EXECUTADO | Zoom nativo não executado | — |
+| A94-06 | PARCIAL | 320/390 CSS px no login; sem dispositivos físicos | evidence/A94-06.png |
+| A94-07 | NÃO EXECUTADO | Sem Edge/Firefox desktop nesta execução | — |
+| A94-08 | NÃO EXECUTADO | Sem leitor de tela | — |
+| A94-09 | PARCIAL | Cores computadas do input; contraste completo não aferido | evidence/A94-09.png |
+| A94-10 | PASS (assistido) | Nenhuma requisição externa observada nos trajetos | evidence/A94-10.png |
+
+### Notificação mobile
+No viewport 320 × 720, clique no exemplo de scanner indisponível, scroll ao fim da página, captura com notificação (`toast-320-before.png`) e após 12,1 s (`toast-320-after.png`). O teste geométrico retornou lista vazia de interseções entre toast e botões nessa posição; não confirmou obstrução dos controles nesse cenário. Não elimina sobreposição de outros conteúdos ou em posições/ambientes diferentes; confirmar visualmente por pessoa. Nenhum defeito de produto declarado com base nesse teste isolado.
+
+### Limites e próximos passos
+A inspeção humana completa, wireframes estáticos como instrumento principal, sessões com voluntários autorizadas e registros individualizados continuam pendentes. Não houve usuário FORD, dados reais, login real ou homologação. Vercel apresentava limite diário na última consulta; execução local estática via CI não comprova acesso publicado. Solicitar avaliação SQA da evidência complementar, sem merge ou encerramento da issue.
