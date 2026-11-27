@@ -699,7 +699,7 @@ Para aspectos ainda não definidos ou que dependam de evolução, qualquer escol
 - PR #181 — provisionamento do bucket privado `attachments` da Issue #115; limite provisionado de 10 MiB.
 - PR #182 — evidências documentais de backup/restore e lacunas da Issue #130.
 - PR #185 — endpoint server-side inicial de upload privado PDF/JPEG da Issue #115; limite de 10 MiB (10.485.760 bytes), alinhado ao limite funcional vigente.
-- PR #160 — atualização documental do modelo lógico e das decisões de produto da Issue #99; permanece aberta e em Draft enquanto aguarda as revisões correspondentes.
+- PR #160 — atualização documental do modelo lógico e das decisões de produto da Issue #99; mesclada em 26/11/2026 após aprovação do Tech Lead. Integra a versão conceitual v0.5 à `main`, sem representar aprovação do schema físico.
 
 ### ADRs, baseline e decisões
 
