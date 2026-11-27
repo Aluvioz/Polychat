@@ -9,11 +9,11 @@
 
 O Polychat precisa persistir perfis e contas, conversas individuais e em grupo, participantes, mensagens, anexos, alertas e eventos de auditoria. O produto atende uma única organização (FORD); a baseline não prevê operação multi-tenant.
 
-A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. A FORD v2 mantém requisitos sobre controle de hospedagem, armazenamento e processamento; a compatibilidade da configuração e do modelo de uso do Supabase Database com esses requisitos deve ser avaliada na Q-025. Uma preocupação ou incompatibilidade identificada deve ser registrada e encaminhada para decisão formal, sem retirar ou depreciar a ADR-003 por inferência.
+A ADR-003 estabelece Supabase + Vercel como stack adotada e obrigatória. A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados, incluindo Supabase Database/PostgreSQL, dentro dos limites e responsabilidades registrados. Essa aprovação confirma o provedor e o modelo de uso autorizado; não equivale à aprovação desta ADR, nem demonstra integração completa, operação de produção, backup/restauração ou continuidade.
 
-PostgreSQL é a tecnologia relacional prevista no contexto do Supabase Database, componente da plataforma Supabase adotada na ADR-003. Esta ADR detalha o modelo lógico/físico e a configuração do banco; a Q-025 registra as evidências e condições operacionais da configuração, sem reabrir a escolha da stack.
+PostgreSQL é o mecanismo relacional utilizado no Supabase Database dentro da stack aprovada. A definição arquitetural específica de banco, incluindo modelagem, schema, migrations, operação, monitoramento e recuperação, permanece documentada como proposta nesta ADR, sem reabrir a Q-025 ou a ADR-003.
 
-A fotografia inicial desta ADR foi superada por entregas técnicas posteriores já integradas à `main`. A PR #165 incorporou o schema inicial de domínio; a #168 adicionou índices de cobertura; a #172 implementou policies RLS e hardening de privilégios; a #173 integrou estruturas e controles de auditoria/retenção; e a #180 reconciliou a sequência local de migrations. A PR #181 provisionou o bucket privado de anexos e a #185 acrescentou o endpoint inicial server-side de upload. Essas entregas ampliaram a implementação, mas não representam a conclusão de todos os fluxos funcionais, da operação nem da homologação pela FORD.
+O schema versionado inclui `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts`, introduzidos pelas migrations #99. As estruturas `detection_rules`, `attachment_user_quotas` e `attachment_storage_capacity` também estão versionadas. As policies RLS de domínio foram integradas e testadas em desenvolvimento pela #101 (PR #172). A trilha `audit_events` e os controles de retenção de eventos foram integrados pela #102 (PR #173); callsites adicionais e backup/restore permanecem pendentes.
 
 ## Problema
 
@@ -21,14 +21,23 @@ Definir a persistência de dados relacionais no contexto da stack adotada, prese
 
 ## Alternativas consideradas
 
-1. **PostgreSQL por meio do Supabase Database:** tecnologia relacional prevista no contexto da plataforma Supabase adotada pela ADR-003 e direção considerada para esta proposta. Configuração, modelo, controles e operação permanecem sujeitos ao detalhamento técnico desta ADR.
-2. **PostgreSQL autogerenciado ou outro banco relacional:** não é a direção atual. Sua adoção exigiria justificativa, avaliação de impacto e decisão formal de mudança arquitetural; não decorre automaticamente dos requisitos de infraestrutura.
-3. **Outro serviço de banco gerenciado fora da stack adotada:** não selecionado nesta decisão. Eventual inclusão dependeria de necessidade demonstrada e aprovação formal, sem constituir proibição genérica aos serviços gerenciados.
+1. **PostgreSQL no Supabase Database — proposta em avaliação:** caminho relacional coerente com a stack adotada pela ADR-003 e com a aprovação do provedor/modelo de uso na Q-025; o detalhamento técnico específico permanece sujeito à revisão desta ADR.
+2. **Outro banco relacional:** não faz parte da direção vigente; eventual substituição exige processo formal de mudança arquitetural e decisão explícita, não bastando uma preocupação isolada de compatibilidade.
+3. **Banco de dados gerenciado por fornecedor não aprovado:** não permitido. O Supabase é a exceção expressamente aprovada pela FORD como provedor nomeado da stack do Polychat, sob os controles e limites registrados na Q-025.
 4. **Banco documental:** não selecionado nesta proposta, pois as relações entre conversas, participantes, autoria, mensagens e auditoria exigem integridade relacional.
 
-## Decisão proposta
+## Proposta de decisão
 
-Manter **PostgreSQL por meio do Supabase Database** como tecnologia de banco relacional prevista no contexto da stack adotada pela ADR-003. Esta ADR permanece Proposed até a revisão do modelo e da configuração técnica. A configuração do projeto, backups, administração, monitoramento, recuperação, acessos e responsabilidades devem ser detalhados nesta ADR e avaliados operacionalmente na Q-025. A proposta não autoriza trocar a stack nem declara a implantação homologada.
+Propor **PostgreSQL no Supabase Database como tecnologia relacional do Polychat**, dentro da stack Supabase + Vercel definida pela ADR-003. A proposta é compatível com a aprovação da TI/FORD registrada na Q-025 para o modelo de uso dos provedores nomeados. A ADR-005 permanece **Proposed**, aguardando revisão e aceite técnico de sua definição específica, configuração, responsabilidades operacionais e evidências de continuidade. A Q-025 permanece concluída e a stack não pode ser substituída por inferência.
+
+### Registro da aprovação formal da Q-025 — não equivale ao aceite desta ADR
+
+**Aprovadores da Q-025:** TI e representante da FORD.  
+**Data:** 24/11/2026.  
+**Referência:** Q-025 — Compatibilidade da stack Supabase + Vercel, concluída.  
+**Resultado:** compatibilidade e modelo de utilização dos provedores nomeados Supabase + Vercel, incluindo Supabase Database/PostgreSQL, aprovados dentro dos limites e responsabilidades registrados.
+
+Essa decisão formal autoriza o uso dos provedores nomeados no modelo aprovado; não converte a ADR-005 em Accepted nem declara schema completo, backup/restauração ou continuidade comprovados. A proposta desta ADR permanece sujeita à revisão técnica e aprovação específicas.
 
 O modelo lógico deve contemplar, no mínimo:
 
@@ -56,20 +65,20 @@ Não introduzir deleções em cascata ou expiração automática que contrariem 
 
 ## Justificativa
 
-O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. PostgreSQL, disponibilizado pelo Supabase Database no contexto da stack adotada, oferece modelo relacional, integridade referencial e transações adequadas a essas relações. A configuração e os controles de acesso, backup, recuperação e operação devem ser detalhados e evidenciados conforme esta ADR e a Q-025.
+O domínio é composto por relações explícitas entre contas, conversas, participantes, mensagens, anexos e registros administrativos. Um banco relacional oferece integridade referencial e transações adequadas a essas relações. A operação sob controle da FORD atende à restrição de infraestrutura, independentemente do fornecedor de software utilizado para o mecanismo de banco.
 
 ## Consequências
 
 **Positivas:**
 - Integridade referencial e transações para o domínio de comunicação.
-- Integração do banco relacional à plataforma Supabase adotada, mantendo o modelo de domínio e os controles documentados.
+- Independência de um serviço externo específico de banco de dados.
 - Possibilidade de aplicar controle de acesso no servidor e no próprio banco.
 - Rastreabilidade de operações administrativas e regras de retenção.
 
 **Negativas e cuidados:**
-- A equipe do projeto/FORD deverá administrar o modelo de dados, as permissões, as configurações disponíveis, a observabilidade e os procedimentos de backup/recuperação, respeitando a divisão de responsabilidades do serviço gerenciado Supabase.
+- A operação, o monitoramento, a atualização, a proteção e a recuperação da instância ficam sob responsabilidade operacional da TI, conforme o modelo aprovado.
 - Migrations, índices, backup/restore e testes de autorização precisam ser validados no ambiente homologado.
-- O schema inicial e as estruturas centrais de domínio já estão versionados; permanecem a validação técnica contínua, os fluxos funcionais ainda não integrados, a homologação e a comprovação operacional de backup/restore e recuperação.
+- O esquema parcial vinculado ao Supabase deverá ser revisado e ampliado para cobrir o domínio, mantendo rastreabilidade e compatibilidade com a stack adotada.
 
 ## Riscos
 
@@ -77,21 +86,26 @@ Modelo de domínio incompleto; políticas de acesso permissivas; perda de histó
 
 ## Evidências atuais
 
-- `supabase/migrations/202611160001_profiles_roles_and_account_status.sql` cria `profiles`, limita os papéis a `user` e `ti`, define estado da conta e habilita RLS. A migration é um artefato versionado da stack Supabase adotada, mas não comprova sua aplicação no projeto gerenciado nem a homologação operacional.
-- **Schema de domínio — PR #165:** migrations versionadas e integradas para `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads`, `security_alerts` e estruturas de configuração. A PR recebeu aprovação do Tech Lead e parecer favorável do SQA no escopo revisado.
-- **Índices — PR #168:** migration aditiva com seis índices de cobertura de FKs integrada; verificação posterior em `pg_indexes` confirmou sua persistência no Polyford de desenvolvimento.
-- **Autorização — PR #172:** policies RLS e hardening para recursos de domínio/configuração integrados. A evidência de testes registra 16/16 cenários aprovados, com dados sintéticos revertidos ao fim das transações; consultar `docs/security/issue-101-rls-evidence.md`.
-- **Auditoria e retenção — PR #173:** estrutura `audit_events`, controles de retenção e writer explícito integrados, com testes transacionais registrados. A integração de todos os call-sites de negócio e os fluxos de auditoria de outras entregas permanecem delimitados às respectivas responsabilidades.
-- **Histórico de migrations — PR #180 e PR #181:** a sequência local passou a conter 18 arquivos SQL, incluindo a migration do bucket privado. A instalação limpa combinada executada no workflow da PR #180 aplicou 18 migrations em PostgreSQL local descartável e confirmou 18/18 entradas em `supabase migration list --local`. Essa evidência não equivale a alteração do histórico remoto.
-- **Storage/upload — PRs #181 e #185:** o bucket privado `attachments` foi provisionado no Polyford com allowlist PDF/JPEG e limite de 10.485.760 bytes; a PR #185 integrou o endpoint inicial server-side de upload. Download, URLs temporárias, scanner/quarentena, quotas, descarte físico, backup de objetos e fluxo ponta a ponta continuam incompletos.
-- **Histórico remoto:** a consulta registrada após a PR #181 identificou 18 versões remotas. Não foram executados `db push`, `migration repair` ou reset no Polyford remoto.
-- **PR #160:** a atualização do modelo conceitual para POLY-REQ-001 v0.5 segue em PR separada, aberta e em Draft na última consulta. Seu workflow de instalação limpa falhou ao tentar resolver `latest` na `supabase/setup-cli@v1`, com `rate limit exceeded`; o erro ocorreu antes de inicializar a CLI e antes de aplicar migrations. A execução não demonstra falha do SQL. A repetição bem-sucedida ainda deve ser obtida.
-- **Arquitetura:** a ADR-003 Accepted mantém Supabase + Vercel como stack adotada. ADR-005 permanece **Proposed** e Q-025 continua aberta para avaliação da compatibilidade operacional com as restrições da FORD.
+- `202611160001_profiles_roles_and_account_status.sql` estabelece `profiles`, papéis e estado da conta.
+- `202611240001_issue_99_initial_domain_schema.sql` cria as tabelas principais do domínio e habilita RLS sem policies de domínio.
+- `202611240002_issue_99_integrity_and_configuration.sql` implementa invariantes de mensagem/anexos e estruturas específicas de configuração.
+- **Schema — PR #165:** as migrations iniciais de domínio foram integradas e revisadas no escopo da entrega; as estruturas `profiles`, `conversations`, `memberships`, `messages`, `attachments`, `message_reads` e `security_alerts` permanecem versionadas.
+- **Índices — PR #168:** migration aditiva com índices de cobertura de FKs integrada; a verificação posterior em `pg_indexes` confirmou sua persistência no Polyford de desenvolvimento.
+- As notas da Issue #99 registram a aplicação e inspeção dessas migrations no projeto Supabase Polyford de desenvolvimento, região `sa-east-1`.
+- As policies RLS de domínio foram integradas pela PR #172 e os testes de isolamento passaram em Polyford; a evidência não equivale à homologação de produção ou cobertura de todos os handlers.
+- A trilha `audit_events`, `retention_holds` e descarte controlado de eventos foram integrados pela PR #173 e testados em Polyford; retenção física de mensagens/anexos, backup/restore e callsites para todas as operações continuam pendentes.
+- A infraestrutura separada `privileged_action_audit` foi integrada pela PR #170 para a #124; handlers/callsites de negócio ainda precisam ser instrumentados.
+- **Histórico de migrations — PR #180 e PR #181:** a sequência local contém 18 migrations, incluindo a migration do bucket privado. A instalação limpa no workflow da #180 aplicou 18 migrations em PostgreSQL local descartável e confirmou 18/18 entradas em `supabase migration list --local`. Essa evidência não altera o histórico remoto nem representa aplicação de DDL no Polyford.
+- **Storage e upload — PRs #181 e #185:** a PR #181 provisionou o bucket privado `attachments` no Polyford, com allowlist PDF/JPEG e limite de 10.485.760 bytes (10 MiB); a PR #185 integrou o endpoint inicial server-side de upload, com validação de sessão/autoria, extensão/MIME/assinatura, limite de 10 MiB e metadados sob RLS. Não comprova download, links temporários, scanner/quarentena, quotas, backup de objetos ou fluxo ponta a ponta.
+- O histórico remoto consultado após a PR #181 registrou 18 versões correspondentes à sequência consolidada. Não foram executados `db push`, `migration repair` ou reset no Polyford remoto.
+- A baseline POLY-REQ-001 v0.5 consolida as regras de acesso, leitura, retenção, auditoria, exclusão e continuidade.
 
-## Pendências para Accepted
+## Trabalho de implementação remanescente
 
-- Confirmar com Tech Lead e TI a configuração do PostgreSQL/Supabase Database na stack adotada, incluindo modelo, controles, backup, recuperação e responsabilidades; registrar as evidências operacionais correspondentes na Q-025.
-- Revisar o modelo físico, migrations, índices, políticas de autorização e estratégia de backup/restore no ambiente de homologação.
-- Registrar a decisão técnica, aprovadores e evidências de teste.
+- Integrar autenticação/autorização de forma uniforme aos handlers reais de conversas, grupos, mensagens e anexos.
+- Concluir os fluxos server-side/transacionais de mensagens e anexos e aplicar políticas de objetos no Storage.
+- Instrumentar callsites restantes de `audit_events` e `privileged_action_audit`, incluindo consultas/exportações e operações administrativas previstas.
+- Configurar e comprovar quotas individuais/globais, Storage privado e scanner interno.
+- Executar e registrar testes de backup/restauração, retenção física, autorização ponta a ponta e continuidade previstos nas issues de implementação e operação.
 
 Os parâmetros de armazenamento, retenção, desempenho, backup, RPO/RTO, gestão de chaves e isolamento dos ambientes já alinhados com Desenvolvimento são requisitos consolidados; não são reabertos como pendências de produto por esta ADR.
