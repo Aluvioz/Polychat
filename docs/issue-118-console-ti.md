@@ -59,3 +59,36 @@ Foi executada uma verificação automatizada de interface em Chromium com viewpo
 ## Fora do escopo
 
 Gestão de usuários/credenciais (#119), gestão de grupos (#120), limites e antimalware de anexos (#117), consulta administrativa de conversas, revisão de alertas, operações de auditoria e alteração de configurações.
+
+
+## Atualização de validação — 27/11/2026
+
+### Commit de formatação publicado
+
+- Commit: `6d2b06b828359dc00797541d41543d578ef65b92` — `style(issue-118): format changed console files`.
+- A branch `feat/issue-118-ti-console-dashboard` e o HEAD da PR #177 apontam para esse commit no momento da verificação.
+- Foram formatados somente os nove arquivos incluídos no commit. A checagem Prettier direcionada a esses nove arquivos passou; `git diff --check` também passou.
+- Não foi executada formatação global do repositório, para não alterar arquivos fora do escopo.
+
+### CI no HEAD de formatação
+
+Os dois workflows associados ao commit `6d2b06b828359dc00797541d41543d578ef65b92` concluíram com sucesso:
+
+| Run | Resultado | Evidência |
+| --- | --- | --- |
+| 46071987967 | PASS | [GitHub Actions](https://github.com/Aluvioz/Polychat/actions/runs/46071987967) |
+| 46071987988 | PASS | [GitHub Actions](https://github.com/Aluvioz/Polychat/actions/runs/46071987988) |
+
+O run 46071987988 concluiu as etapas de testes automatizados, ESLint, TypeScript, build Next.js e smoke test do build. O teste focado `tests/ti-console-authorization.test.mjs` também passou (7 testes, 0 falhas) na execução local anterior à publicação.
+
+### Conta TI e homologação real — ainda bloqueadas
+
+Em consulta read-only ao projeto Supabase de homologação Polyfordtest (`rferhswvesmoyaqvkoet)), não foi encontrado perfil `Teste_TI` nem perfil com o e-mail informado para a conta de homologação. Nenhum registro foi criado ou alterado nesta consulta.
+
+O conector Supabase disponível nesta sessão não oferece operação administrativa de convite/criação de usuário Auth. Não foi criado usuário parcial por SQL nem realizada qualquer alteração no projeto de produção Polyford (`oixifpdfvrenlhvycszy`). Portanto, ainda não foi possível executar login real e homologar Dashboard, navegação autenticada, loading e error boundary com uma conta TI.
+
+Para concluir essa etapa, é necessário provisionar no Polyfordtest, pelo fluxo administrativo seguro do projeto/Supabase Auth, o usuário com username `Teste_TI`, role `ti`, status ativo e e-mail de homologação já informado, garantindo também o perfil correspondente em `public.profiles`. A senha deve ser definida pelo próprio usuário por convite ou fluxo seguro de recuperação, nunca compartilhada nesta PR ou conversa.
+
+### Estado da PR e próximo gate
+
+A PR #177 permanece aberta e em Draft. Os resultados automatizados acima não substituem a homologação com conta TI real nem a revisão final do SQA. Não houve merge nem encerramento da Issue #118.
