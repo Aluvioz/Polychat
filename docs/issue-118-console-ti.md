@@ -12,7 +12,7 @@
 
 ## Segurança e dependências
 
-A branch parte de feat/issue-105-next-authorization, que contém a integração do adaptador da PR #175. O novo helper src/auth/ti-console.mjs restringe o adaptador existente a allowedRoles ["ti"]; não cria nova validação Supabase nem consulta papel informado pelo navegador.
+A PR #175 (Issue #105) já foi integrada à `main`. Esta branch, porém, também reutiliza a política de compatibilidade de dispositivo implementada na PR #176; por isso, a PR #177 está empilhada sobre `feat/issue-106-device-restriction`. O helper `src/auth/ti-console.mjs` restringe o adaptador existente a `allowedRoles: ["ti"]`; não cria nova validação Supabase nem consulta papel informado pelo navegador.
 
 O src/proxy.ts protege /ti/:path* no servidor. A sessão, o papel e o estado da conta continuam validados pelo serviço existente. O adaptador também aplica a matriz RN-015/RF-017/RF-018 antes de liberar o console: TI somente em computador com navegador homologado; a mensagem de incompatibilidade é distinta da negação por perfil. A rotação de cookies HttpOnly retornada pelo serviço é preservada. Falhas de autenticação redirecionam ao login; perfil sem autorização vai para a página de acesso negado; falhas do provedor resultam em indisponibilidade, sem liberar a área.
 
@@ -37,7 +37,7 @@ Os testes, lint, typecheck, format check e build precisam ser executados pelo CI
 
 ## Dependência de revisão
 
-Esta é uma PR empilhada sobre a PR #175 (Issue #105), pois a autorização Next.js reutilizada ainda está nessa branch. Após a integração da #175, a PR desta issue deverá ser retargeted para main e validada novamente.
+Esta PR está empilhada sobre a PR #176 (Issue #106), pois utiliza `enforceDeviceCompatibility` e a política compartilhada de dispositivo para proteger `/ti`. A PR #175 (Issue #105) já está integrada à `main`; a dependência ainda não integrada é a #176. Após a integração da #176, a PR #177 deverá ser retargeted para `main` e validada novamente. Enquanto a base permanecer na branch da #176, os workflows configurados para PRs direcionadas a `main` não fornecem evidência de CI para o HEAD desta PR.
 
 ## Fora do escopo
 
