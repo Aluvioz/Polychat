@@ -121,7 +121,7 @@ Modelo de domínio incompleto; migrations locais divergentes do histórico remot
 - **Limites da instalação limpa:** o resultado 18/18 demonstra reprodutibilidade da sequência local no banco descartável. Não substitui a verificação do ambiente remoto, testes de integração completos, homologação ou validação de recuperação.
 - **Compatibilidade e continuidade:** a Q-025 aprovou, em 24/11/2026, a compatibilidade e o modelo de utilização dos provedores nomeados dentro dos limites e responsabilidades registrados. Separadamente, backup diário, retenção de 12 meses, restauração e evidência de RPO/RTO não estão comprovados como capacidade operacional concluída e permanecem acompanhados pela Issue #130.
 
-As evidências acima comprovam componentes e testes em seus ambientes e escopos descritos. Não comprovam homologação de produção, cobertura integral do MVP ou compatibilidade operacional completa com a FORD.
+As evidências acima comprovam componentes e testes em seus ambientes e escopos descritos. Não comprovam homologação de produção, cobertura integral do MVP ou execução de todos os controles operacionais. A compatibilidade e o modelo de utilização dos provedores Supabase + Vercel já foram aprovados pela TI e pela FORD na Q-025; permanecem necessárias evidências próprias de que a configuração e a operação do banco seguem esse modelo aprovado.
 
 ## Pendências para Accepted
 
