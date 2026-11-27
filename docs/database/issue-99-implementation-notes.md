@@ -144,7 +144,7 @@ A aprovação da estrutura de dados não substitui a revisão da instrumentaçã
 
 ## 5. Relação com outras issues — sem transferência de escopo
 
-- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A PR #172 integrou policies RLS e hardening de privilégios; a evidência registra 16/16 cenários aprovados. Não reabrir como pendência a implementação básica de policies, mas manter a validação dos handlers e fluxos reais que dependem delas.
+- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A PR #172 integrou policies RLS e hardening de privilégios; a evidência registra 16/16 cenários aprovados. Para a #99, reutilizar os cenários pertinentes como evidência de enforcement server-side na camada de banco; não transformar isso em exigência de implementação de handlers/endpoints genéricos.
 - **#102:** auditoria, retenção e descarte; a definição canônica de `audit_events` está na migration integrada `20261125232432`; a versão remota histórica da PR #166 é representada por arquivo de ledger sem DDL.
 - **#105:** fluxos de perfis/contas e operações associadas.
 - **#111:** requisitos de leitura/não lidas refletidos por `message_reads`.
