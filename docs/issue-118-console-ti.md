@@ -80,13 +80,19 @@ Os dois workflows associados ao commit `6d2b06b828359dc00797541d41543d578ef65b92
 
 O run 46071987988 concluiu as etapas de testes automatizados, ESLint, TypeScript, build Next.js e smoke test do build. O teste focado `tests/ti-console-authorization.test.mjs` também passou (7 testes, 0 falhas) na execução local anterior à publicação.
 
-### Conta TI e homologação real — ainda bloqueadas
+### Conta TI e homologação real — atualização em 27/11/2026
 
-Em consulta read-only ao projeto Supabase de homologação Polyfordtest (`rferhswvesmoyaqvkoet)), não foi encontrado perfil `Teste_TI` nem perfil com o e-mail informado para a conta de homologação. Nenhum registro foi criado ou alterado nesta consulta.
+A consulta ao projeto Supabase de homologação Polyfordtest (`rferhswvesmoyaqvkoet`) localizou a conta Auth já existente e seu perfil correspondente:
 
-O conector Supabase disponível nesta sessão não oferece operação administrativa de convite/criação de usuário Auth. Não foi criado usuário parcial por SQL nem realizada qualquer alteração no projeto de produção Polyford (`oixifpdfvrenlhvycszy`). Portanto, ainda não foi possível executar login real e homologar Dashboard, navegação autenticada, loading e error boundary com uma conta TI.
+- Perfil: `640dc282-20c6-4530-820e-eab12a6e3386`.
+- E-mail: `12726121378@ulife.com.br`.
+- `role = 'ti'`, `is_active = true`, e-mail confirmado e usuário Auth não excluído.
+- A conta já existia, mas `public.profiles.username` estava nulo, impedindo a busca pelo identificador usada pelo formulário de login.
+- Após verificar o código de autenticação, a unicidade parcial de `username` e a ausência de conflito, foi preenchido somente `username = 'Teste_TI'` no perfil correspondente. A leitura posterior confirmou o valor, mantendo `role = 'ti'` e `is_active = true`.
 
-Para concluir essa etapa, é necessário provisionar no Polyfordtest, pelo fluxo administrativo seguro do projeto/Supabase Auth, o usuário com username `Teste_TI`, role `ti`, status ativo e e-mail de homologação já informado, garantindo também o perfil correspondente em `public.profiles`. A senha deve ser definida pelo próprio usuário por convite ou fluxo seguro de recuperação, nunca compartilhada nesta PR ou conversa.
+A alteração foi restrita ao Polyfordtest. Nenhuma alteração foi realizada no projeto de produção Polyford (`oixifpdfvrenlhvycszy`), nem na identidade Auth ou na senha. A senha não foi solicitada nem manipulada.
+
+**Pendente:** ainda não foi executado um login pelo formulário do Polychat com essa conta e senha. O registro de último login do Supabase Auth é anterior à atualização do username e, isoladamente, não comprova autenticação pelo fluxo da aplicação. Portanto, Dashboard, navegação interna autenticada, loading e error boundary continuam aguardando homologação real em navegador desktop. A senha deve ser inserida diretamente pelo responsável no ambiente de homologação, nunca compartilhada nesta PR ou conversa.
 
 ### Estado da PR e próximo gate
 
