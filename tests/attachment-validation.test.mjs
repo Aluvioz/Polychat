@@ -90,6 +90,9 @@ test("rejects empty files", () => {
 test("accepts a PDF at exactly the configured 10 MiB limit", () => {
   const bytes = new Uint8Array(MAX_ATTACHMENT_BYTES);
   bytes.set(pdf, 0);
+  // Keep the PDF end-of-file marker at the end of the full-size fixture.
+  const eof = new TextEncoder().encode("%%EOF");
+  bytes.set(eof, bytes.length - eof.length);
   const result = validateAttachment({
     filename: "boundary.pdf",
     mimeType: "application/pdf",
