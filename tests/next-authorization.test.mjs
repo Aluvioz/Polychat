@@ -93,3 +93,22 @@ test("rejeita configuração de roles vazia ou desconhecida", async () => {
     TypeError,
   );
 });
+
+
+test("preserva sessão renovada em 403 somente quando solicitado pela rota", async () => {
+  const denied = await authorizeNextRequest(requestCookies("access", "refresh"), {
+    allowedRoles: ["ti"],
+    validate: async () => activeUserSession,
+  });
+  assert.equal(denied.status, 403);
+  assert.equal(denied.session, null);
+
+  const preserved = await authorizeNextRequest(requestCookies("access", "refresh"), {
+    allowedRoles: ["ti"],
+    preserveSessionOnForbidden: true,
+    validate: async () => activeUserSession,
+  });
+  assert.equal(preserved.status, 403);
+  assert.equal(preserved.authorized, false);
+  assert.equal(preserved.session, activeUserSession);
+});
