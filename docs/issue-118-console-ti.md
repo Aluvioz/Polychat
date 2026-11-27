@@ -60,7 +60,6 @@ Foi executada uma verificação automatizada de interface em Chromium com viewpo
 
 Gestão de usuários/credenciais (#119), gestão de grupos (#120), limites e antimalware de anexos (#117), consulta administrativa de conversas, revisão de alertas, operações de auditoria e alteração de configurações.
 
-
 ## Atualização de validação — 27/11/2026
 
 ### Commit de formatação publicado
@@ -74,10 +73,10 @@ Gestão de usuários/credenciais (#119), gestão de grupos (#120), limites e ant
 
 Os dois workflows associados ao commit `6d2b06b828359dc00797541d41543d578ef65b92` concluíram com sucesso:
 
-| Run | Resultado | Evidência |
-| --- | --- | --- |
-| 46071987967 | PASS | [GitHub Actions](https://github.com/Aluvioz/Polychat/actions/runs/46071987967) |
-| 46071987988 | PASS | [GitHub Actions](https://github.com/Aluvioz/Polychat/actions/runs/46071987988) |
+| Run         | Resultado | Evidência                                                                      |
+| ----------- | --------- | ------------------------------------------------------------------------------ |
+| 46071987967 | PASS      | [GitHub Actions](https://github.com/Aluvioz/Polychat/actions/runs/46071987967) |
+| 46071987988 | PASS      | [GitHub Actions](https://github.com/Aluvioz/Polychat/actions/runs/46071987988) |
 
 O run 46071987988 concluiu as etapas de testes automatizados, ESLint, TypeScript, build Next.js e smoke test do build. O teste focado `tests/ti-console-authorization.test.mjs` também passou (7 testes, 0 falhas) na execução local anterior à publicação.
 
@@ -92,3 +91,9 @@ Para concluir essa etapa, é necessário provisionar no Polyfordtest, pelo fluxo
 ### Estado da PR e próximo gate
 
 A PR #177 permanece aberta e em Draft. Os resultados automatizados acima não substituem a homologação com conta TI real nem a revisão final do SQA. Não houve merge nem encerramento da Issue #118.
+
+### Revalidação local do HEAD documental
+
+No clone limpo da branch em `af5c68a177ef66f1895a7f392bf7bd7b44f339ac`, foram executados `npm test` (87 testes aprovados, 0 falhas), `npm run lint`, `npm run typecheck` e `npm run build`; todos concluíram com sucesso. A checagem Prettier direcionada aos nove arquivos do commit de formatação e a `git diff --check` também passaram. A checagem foi restrita aos nove arquivos, sem executar formatação global do repositório.
+
+O clone não possui `package-lock.json`; por isso `npm ci` não pôde ser usado nessa validação local. As dependências foram instaladas com `npm install --ignore-scripts --no-audit --no-fund`. O CI do GitHub, que executa sua própria etapa de instalação, passou nos dois workflows para o HEAD documental indicado acima.
