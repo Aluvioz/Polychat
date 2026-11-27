@@ -42,6 +42,7 @@ jobs:
             supabase/tests/issue_112_group_admin.integration.sql
             supabase/tests/issue_107_direct_conversation_rpc.integration.sql
             supabase/tests/issue_107_active_profile_search.integration.sql
+            supabase/tests/issue_107_recent_conversations.integration.sql
             supabase/tests/issue_115_private_bucket.integration.sql
           )
           for test_file in "${integration_tests[@]}"; do
@@ -50,8 +51,8 @@ jobs:
             fi
           done
 
-          printf 'Prepared %s migration files from the pull request.\n' "${#migrations[@]}"
-          find "$workspace/supabase/migrations" -maxdepth 1 -type f -name '*.sql' -printf '%f\n' | sort
+          printf 'Prepared %s migration files from the pull request.\\n' "${#migrations[@]}"
+          find "$workspace/supabase/migrations" -maxdepth 1 -type f -name '*.sql' -printf '%f\\n' | sort
 
       - name: Initialize isolated Supabase local project
         working-directory: ${{ runner.temp }}/polychat-clean
@@ -73,10 +74,11 @@ jobs:
           db_container=$(docker ps --format '{{.Names}}' | grep '^supabase_db_' | head -n 1)
           test -n "$db_container"
 
-          for test_file in \
-            supabase/tests/issue_112_group_admin.integration.sql \
-            supabase/tests/issue_107_direct_conversation_rpc.integration.sql \
-            supabase/tests/issue_107_active_profile_search.integration.sql \
+          for test_file in \\
+            supabase/tests/issue_112_group_admin.integration.sql \\
+            supabase/tests/issue_107_direct_conversation_rpc.integration.sql \\
+            supabase/tests/issue_107_active_profile_search.integration.sql \\
+            supabase/tests/issue_107_recent_conversations.integration.sql \\
             supabase/tests/issue_115_private_bucket.integration.sql; do
             if [[ -f "$test_file" ]]; then
               container_file="/tmp/$(basename "$test_file")"
