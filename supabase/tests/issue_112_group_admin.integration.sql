@@ -186,6 +186,8 @@ end;
 $rls$;
 
 -- An inactive TI profile must be rejected by the privileged RPC.
+-- The database-owner fixture update must not inherit the previous authenticated JWT claim.
+select set_config('request.jwt.claim.role','service_role',true);
 update public.profiles set is_active=false where id='61111111-1111-4111-8111-111111111111';
 set local role service_role;
 select set_config('request.jwt.claim.role','service_role',true);
