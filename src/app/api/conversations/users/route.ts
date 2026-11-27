@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
   });
 
   if (!result.ok) {
-    return json(result.status, {
+    return json(result.status ?? 503, {
       error: result.status === 401
         ? "Sessão inválida ou expirada."
         : result.status === 403
