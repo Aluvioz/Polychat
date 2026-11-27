@@ -2,7 +2,7 @@
 
 ## Escopo entregue nesta branch
 
-- Endpoint server-side `POST /api/attachments/upload`.
+- Endpoint server-side `POST /api/attachments/upload` prepara um token de upload assinado para um caminho único no bucket privado. O navegador envia os bytes diretamente ao Supabase Storage; o arquivo não atravessa o corpo de requisição da Function Vercel.\n- Endpoint `PUT /api/attachments/upload` finaliza o fluxo: revalida a sessão e a autoria da mensagem, lê o objeto no Storage pelo servidor, valida os bytes efetivos e só então registra os metadados com o JWT do usuário.
 - Sessão validada pelos cookies HTTP-only existentes.
 - Mensagem consultada com o JWT do usuário; RLS filtra mensagens não acessíveis.
 - Upload permitido somente quando o usuário autenticado é o remetente da mensagem, em alinhamento com a policy `attachments_insert_member` da #101.
@@ -11,9 +11,9 @@
 - Limite de 10 MiB aplicado antes do upload.
 - Registro dos metadados em `public.attachments` usando o JWT do usuário, preservando o enforcement RLS.
 - Remoção compensatória do objeto Storage se o registro do metadado falhar.
-- Testes unitários da validação de arquivo.
+- Testes unitários da validação de arquivo, incluindo aceitação explícita de exatamente 10.485.760 bytes e rejeição de 10.485.761 bytes.
 
-## Limites preservados
+## Contrato de upload em duas fases\n\n1. O cliente envia JSON para `POST /api/attachments/upload` com `messageId`, `filename`, `mimeType` e `sizeBytes`. A API valida sessão, remetente e metadados e responde com `upload.signedUrl`, `upload.path`, `upload.token` e `upload.contentType`.\n2. O cliente envia os bytes diretamente para `upload.signedUrl` usando HTTP PUT e o Content-Type retornado.\n3. Após o upload, o cliente envia os mesmos metadados e `path` para `PUT /api/attachments/upload`. A API lê o objeto privado, compara o tamanho real com o informado, valida o conteúdo e registra o metadado. Se a validação ou o registro falhar, tenta remover o objeto.\n\nO token de upload assinado do Supabase é válido por até duas horas e autoriza somente o objeto/caminho emitido. Não é um link de download. A existência do token não registra nem libera o anexo: o registro só ocorre após a finalização server-side.\n\n## Limites preservados
 
 Esta entrega não implementa nem declara:
 - download, URL assinada ou autorização de download (Issue #116);
