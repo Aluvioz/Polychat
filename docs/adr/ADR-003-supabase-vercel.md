@@ -17,7 +17,7 @@ Em 24/11/2026, o Product Owner confirmou novamente que Supabase + Vercel é a di
 
 ## Problema
 
-Manter uma direção tecnológica única e coerente entre ADRs, baseline, issues, PRs e planejamento de implementação, sem transformar uma análise de compatibilidade ainda pendente em uma decisão implícita de substituição da stack.
+Manter uma direção tecnológica única e coerente entre ADRs, baseline, issues, PRs e planejamento de implementação, registrando que a análise de compatibilidade então pendente foi concluída na Q-025 em 24/11/2026, sem transformar as restrições gerais em decisão implícita de substituição da stack.
 
 ## Decisão
 
