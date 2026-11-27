@@ -35,9 +35,10 @@ jobs:
           cp supabase/migrations/*.sql "$RUNNER_TEMP/polychat-clean/supabase/migrations/"
           git show origin/feat/issue-115-private-attachment-storage:supabase/migrations/20261126131156_issue_115_private_attachment_bucket.sql > "$RUNNER_TEMP/polychat-clean/supabase/migrations/20261126131156_issue_115_private_attachment_bucket.sql"
           git show origin/feat/issue-115-private-attachment-storage:supabase/tests/issue_115_private_bucket.integration.sql > "$RUNNER_TEMP/polychat-clean/supabase/tests/issue_115_private_bucket.integration.sql"
+          cp supabase/tests/issue_109_message_idempotency.integration.sql "$RUNNER_TEMP/polychat-clean/supabase/tests/"
           count=$(find "$RUNNER_TEMP/polychat-clean/supabase/migrations" -maxdepth 1 -type f -name '*.sql' | wc -l)
-          test "$count" -eq 18
-          echo "Prepared $count migration files from PR #180 plus PR #181."
+          test "$count" -eq 19
+          echo "Prepared $count migration files from the current PR plus PR #181."
 
       - name: Initialize isolated Supabase local project
         working-directory: ${{ runner.temp }}/polychat-clean
@@ -50,6 +51,15 @@ jobs:
       - name: Apply all migrations to an empty local database
         working-directory: ${{ runner.temp }}/polychat-clean
         run: supabase db reset --local
+
+      - name: Run Issue #109 message idempotency integration assertion
+        working-directory: ${{ runner.temp }}/polychat-clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_container=$(docker ps --format '{{.Names}}' | grep '^supabase_db_' | head -n 1)
+          test -n "$db_container"
+          docker exec "$db_container" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c "$(cat supabase/tests/issue_109_message_idempotency.integration.sql)"
 
       - name: Run Issue #115 private bucket integration assertion
         working-directory: ${{ runner.temp }}/polychat-clean

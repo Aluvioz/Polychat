@@ -43,11 +43,14 @@ export async function POST(request: NextRequest) {
     return json(400, {
       error: input.reason === "empty_message"
         ? "A mensagem não pode estar vazia."
-        : "Informe uma conversa e uma mensagem válidas.",
+        : input.reason === "invalid_message_id"
+          ? "Informe um identificador de mensagem válido."
+          : "Informe uma conversa e uma mensagem válidas.",
     });
   }
 
   const result = await persistTextMessage({
+    id: input.id,
     conversationId: input.conversationId,
     senderProfileId: authorization.session.user.id,
     body: input.body,
@@ -60,12 +63,14 @@ export async function POST(request: NextRequest) {
         ? "Sessão inválida ou expirada."
         : result.status === 403
           ? "Você não tem permissão para enviar mensagens nesta conversa."
-          : result.status === 400
-            ? "Não foi possível registrar a mensagem."
-            : "Serviço de mensagens indisponível.",
+          : result.status === 409
+            ? "O identificador desta mensagem já foi utilizado com outros dados."
+            : result.status === 400
+              ? "Não foi possível registrar a mensagem."
+              : "Serviço de mensagens indisponível.",
     });
   }
 
-  // A 201 is returned only after PostgREST confirms the persisted row.
-  return json(201, { message: result.message });
+  // A new row returns 201; an identical retry returns the original row as 200.
+  return json(result.created ? 201 : 200, { message: result.message });
 }

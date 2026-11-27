@@ -4,27 +4,39 @@
 
 - Endpoint server-side `POST /api/messages`.
 - Reutiliza `authorizeNextRequest` e a sessão existente; não cria fluxo de login ou autorização paralelo.
-- Valida JSON, UUID da conversa e corpo textual não vazio.
+- Valida JSON, UUID da mensagem, UUID da conversa e corpo textual não vazio.
 - Persiste em `public.messages` usando o JWT do usuário, a chave publicável e as políticas RLS existentes.
 - O perfil remetente é obtido da sessão validada, nunca do payload do cliente.
-- A resposta de sucesso só é emitida depois que o banco retorna a linha persistida.
+- A resposta de sucesso só é emitida depois que o banco confirma a linha persistida.
 - Erros de sessão, permissão, transporte e resposta inesperada falham sem expor detalhes internos.
-- Testes unitários cobrem validação, uso do JWT, confirmação da persistência e falhas.
 
-## Limite que impede declarar a issue concluída
+## Contrato de idempotência aprovado
 
-A migration/RLS atual concede INSERT apenas nas colunas `conversation_id`, `sender_profile_id` e `body`; não existe campo de chave de idempotência nem contrato documentado para identificar uma repetição de envio. Portanto, esta implementação não inventa uma chave, não altera a migration de domínio e não promete deduplicação de retries. Um retry após timeout pode resultar em uma segunda mensagem caso o primeiro INSERT tenha sido confirmado pelo banco e a resposta não tenha chegado ao cliente.
+- O cliente gera um UUID (por exemplo, `crypto.randomUUID()`) uma única vez para cada mensagem lógica.
+- O cliente envia esse valor no campo `id` de `POST /api/messages` e deve reutilizar exatamente o mesmo UUID em todas as tentativas da mesma mensagem, inclusive após timeout ou falha de rede.
+- O UUID é persistido em `public.messages.id`, cuja chave primária garante unicidade no banco.
+- O INSERT usa resolução de conflito por ignorar duplicados; nunca atualiza/substitui a mensagem já persistida.
+- Quando o INSERT não retorna uma linha, a API consulta a mensagem pelo mesmo ID usando o JWT do solicitante.
+- A repetição retorna sucesso com a linha original somente se ID, conversa, remetente derivado da sessão e conteúdo forem iguais.
+- Se o ID já estiver associado a outra conversa, remetente ou conteúdo, a API retorna HTTP 409 e preserva a linha original.
+- Uma nova mensagem retorna HTTP 201; uma repetição idêntica retorna HTTP 200.
+- O cliente não deve gerar um novo UUID ao repetir o envio de uma mesma mensagem lógica.
 
-Para concluir o critério de duplicidade/retry, é necessária uma decisão de produto/arquitetura sobre o identificador idempotente e sua persistência única/transacional, seguida de migration e testes de concorrência. Até lá, a PR permanece Draft e a Issue #109 não deve ser fechada.
+## Segurança e autorização
+
+A API continua usando o JWT da sessão validada e a chave publicável. O remetente nunca é aceito do payload do cliente. A policy RLS de INSERT continua exigindo que o remetente seja `auth.uid()` e que o usuário seja membro ativo de uma conversa ativa. A migration concede ao papel `authenticated` INSERT na coluna `id`, sem ampliar as permissões de linha ou alterar as policies RLS.
+
+## Verificação
+
+- Testes unitários cobrem validação do ID, persistência, JWT, retry idêntico, conflito de conteúdo/remetente/conversa, resposta não confirmada e falhas de transporte.
+- Teste SQL de integração cobre INSERT com ID explícito sob o papel `authenticated`, unicidade e preservação da linha diante de repetição/conflito.
+- O teste SQL deve ser executado no workflow de instalação limpa do Supabase.
+- Os testes simulados não substituem uma validação contra o projeto Supabase hospedado (Polyford).
+- CI deve executar testes, lint, typecheck e build no head da PR.
 
 ## Fora do escopo desta branch
 
 - Publicação ou assinatura Realtime (ADR-007 Proposed; Issue #110).
 - Histórico paginado e recibos de leitura.
 - Alterações no login, sessão, cookies ou helpers de autenticação.
-- Alterações nas policies RLS existentes.
-- Interface de chat, que permanece fora do endpoint de persistência.
-
-## Verificação
-
-Os testes adicionados usam respostas HTTP simuladas e validam o contrato do serviço. Eles não comprovam integração com projeto Supabase real, aplicação das migrations no Polyford ou comportamento de concorrência/idempotência. CI deve executar testes, lint, typecheck e build no head da PR.
+- Interface de chat.
