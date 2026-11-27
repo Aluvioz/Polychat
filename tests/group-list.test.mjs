@@ -60,6 +60,6 @@ test("falha de rede retorna erro genérico", async () => {
     }),
     (error) => error instanceof GroupAdminError &&
       error.status === 503 &&
-      error.message === "Não foi possível acessar o serviço de grupos.",
+      error.message === "Não foi possível consultar os grupos.",
   );
 });
