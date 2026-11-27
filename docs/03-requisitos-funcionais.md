@@ -167,7 +167,7 @@ A prioridade **Alta** indica que a funcionalidade faz parte do escopo inicial ap
 **Critérios de aceitação:**
 
 - CA-011.1 — Usuário consegue anexar PDF ou JPEG a conversa autorizada.
-- CA-011.2 — Cada arquivo possui tamanho máximo de 10 MB.
+- CA-011.2 — Cada arquivo possui tamanho máximo de 10 MiB (10.485.760 bytes), conforme esclarecimento da unidade pelo PO em 26/11/2026 (`POLY-DATA-001 v0.5`, seção 11.2).
 - CA-011.3 — Uma mensagem aceita até 5 arquivos.
 - CA-011.4 — Limite individual de armazenamento é definido pelo TI; capacidade total também é definida pelo TI conforme a infraestrutura; não há limite específico por conversa.
 - CA-011.5 — Envio que ultrapasse um limite é bloqueado e informa o motivo ao usuário.
