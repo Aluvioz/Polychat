@@ -111,7 +111,19 @@ As policies de domínio e configuração foram integradas posteriormente pela PR
 
 ### 3.3 Situação específica de audit_events
 
-A tabela `public.audit_events` e a versão remota histórica `20261124210245` permanecem no Polyford. A PR #166 foi encerrada sem merge; por isso, seu conteúdo SQL original não foi incorporado à `main`. A definição completa e reproduzível de `audit_events` está versionada na migration `20261125232432_issue_102_audit_retention_controls.sql`, com criação idempotente. A branch de reconciliação adiciona um arquivo de ledger sem DDL para representar a versão histórica remota, sem duplicar a criação da tabela.
+**Status do requisito de modelagem da Issue #99: estrutura de banco implementada e versionada.** A Issue #99 exige que `audit_events` faça parte do modelo persistente; isso é atendido pela tabela existente e pela definição canônica integrada na PR #173, cuja migration reproduzível está em `20261125232432_issue_102_audit_retention_controls.sql`. A migration inclui a estrutura, constraints, índices e controles de retenção associados. A PR #173 também integrou o writer genérico `src/audit/audit-events.mjs` e testes relacionados.
+
+A versão remota histórica `20261124210245` permanece registrada no histórico do Polyford. A PR #166 foi encerrada sem merge; por isso, seu conteúdo SQL original não foi incorporado à `main`. O arquivo de ledger local representa essa versão histórica sem reaplicar DDL. A definição completa e reproduzível da tabela está na migration canônica acima, sem duplicar a criação da tabela.
+
+**Limite importante — modelagem não é cobertura operacional completa.** A existência da tabela e do writer não comprova que todos os fluxos de negócio emitam eventos. A instrumentação dos call-sites/handlers é trabalho de integração funcional e auditoria operacional acompanhado pelas issues correspondentes, especialmente #102 e #124 e pelas issues dos fluxos administrativos. Não deve ser apresentada como pendência de criação do schema da #99, nem ser marcada como concluída sem evidência de cada call-site.
+
+Para a rastreabilidade da #99, considerar:
+- [x] Entidade `audit_events` representada no modelo e criada por migration versionada.
+- [x] Estrutura canônica, constraints, índices e controles de retenção integrados pela PR #173.
+- [x] Writer genérico e testes associados integrados pela PR #173.
+- [ ] Cobertura de todos os eventos/call-sites operacionais: não comprovada por esta evidência; permanece rastreada nas issues de auditoria e nos fluxos correspondentes, sem ampliar o escopo da modelagem #99.
+
+A aprovação da estrutura de dados não substitui a revisão da instrumentação operacional nas issues responsáveis.
 
 ## 4. Testes, CI e limites das evidências
 
