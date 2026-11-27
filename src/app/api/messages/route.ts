@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     accessToken: authorization.session.accessToken,
   });
 
-  if (!result.ok) {
+  if (!("message" in result) || !("created" in result)) {
     return json(result.status ?? 503, {
       error: result.status === 401
         ? "Sessão inválida ou expirada."
