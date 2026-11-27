@@ -19,7 +19,7 @@
 
 ## 2. Objetivo e limites
 
-Este é um artefato **adicional** aos wireframes Miro de baixa fidelidade aceitos nas #91/#92, voltado à inspeção de navegação, rótulos e feedback. O plano aprovado da PR #152 prevê avaliação moderada de **wireframes estáticos**. Esta PR propõe o protótipo clicável apenas **como material complementar, não como substituto**. A decisão metodológica deve ser formalizada por PO/SQA no [registro de decisão](./issue-94-decisao-metodologica-proposta.md) antes de utilizar o clicável nas sessões, mantendo o roteiro e a versão do instrumento rastreáveis. **Interação de demonstrador não equivale a função pronta**.
+Este é um artefato **adicional** aos wireframes Miro de baixa fidelidade aceitos nas #91/#92, voltado à inspeção de navegação, rótulos e feedback. O plano v0.3 da PR #152 mantém os **wireframes estáticos como instrumento principal**. Em review formal de 26/11/2026, o PO autorizou o protótipo clicável somente como **complemento opcional**, após a tarefa estática e com registros separados. A reavaliação independente do SQA continua pendente; até sua manifestação, não presumir aprovação SQA para uso em sessões. Consultar o [registro de decisão](./issue-94-decisao-metodologica-proposta.md). **Interação de demonstrador não equivale a função pronta**.
 
 Paleta provisória Q-019 (azuis Ford e neutros), **sem Ford Oval** ou fontes proprietárias. Sem Supabase, Vercel API, autenticação, sessão, autorização/RLS, auditoria real, upload, antimalware, Realtime, persistência ou E2E. A restrição mobile/desktop é mostrada visualmente, não aplicada como controle de dispositivo ou segurança.
 
@@ -46,7 +46,11 @@ O `t-dashboard` é **etapa de apoio a T-01**, e `t-audit` é **tela auxiliar de 
 
 ## 4. Pré-condições para recrutar ou coletar
 
-A PR #152, com o plano v0.3, **foi aprovada documentalmente por PO/SQA e integrada à `main`**. Esse aceite do planejamento **não concedeu autorização operacional institucional de coleta**, nem validou o clicável como instrumento complementar. Não enviar convites nem coletar dados até documentar:
+A PR #152, com o plano v0.3, **foi aprovada documentalmente por PO/SQA e integrada à `main`**. O PO também registrou decisão específica favorável ao uso complementar e opcional do clicável, mantendo os wireframes como instrumento principal; a reavaliação independente do SQA permanece pendente. Distinguir duas atividades:
+
+**Simulação interna por papéis:** aceite limitado do PO registrado; requer voluntários, informação e consentimento, dados exclusivamente fictícios, acesso restrito e armazenamento controlado. Não apresentar voluntários como funcionários FORD, não usar dados corporativos e não gravar por padrão. Seguir os gates do [kit de registros](./issue-94-kit-registros-sessoes.md) e aguardar a manifestação independente do SQA sobre o protocolo.
+
+**Pesquisa institucional com funcionários ou dados FORD:** não enviar convites nem coletar dados até documentar:
 
 1. autorização FORD para recrutamento/coleta, escopo e responsável;
 2. quem recruta, facilita, observa e guarda registros;
@@ -66,15 +70,18 @@ Para ajustes posteriores: ID do achado, tela, versão antes/depois, justificativ
 
 - Testes estáticos: [tests/issue-94-ux-prototype.test.mjs](../../tests/issue-94-ux-prototype.test.mjs), executáveis via npm test; validam telas, destinos, ações simuladas e avisos, não comportamento real de navegador.
 - QA humano: abrir o HTML, testar sequência Tab/Shift+Tab, mobile 320/390px e desktop, foco, diálogos, zoom e leitor de tela. Registrar navegador, versão e observações reais. Não presumir PASS.
-- Revisão requerida: Berthed/PO (escopo, adequação do clicável e tarefas), Dante/SQA (método/evidências), UI/UX e Tech Lead quando necessário. Conformidade funcional e acessibilidade de produção pertencem às issues de implementação/#129.
-- A aprovação do plano v0.3 por PO **não é aprovação deste novo protótipo**.
+- Decisões do PO sobre escopo, uso complementar do clicável e simulação interna por papéis estão registradas na PR #164 em 26/11/2026. Não solicitar nova deliberação PO sobre os mesmos pontos sem fato novo.
+- Revisão independente pendente: Dante/SQA (método, evidências e inspeção humana); UI/UX deve executar a inspeção do checklist. Tech Lead somente se uma correção alterar aspectos técnicos relevantes. Conformidade funcional e acessibilidade de produção pertencem às issues de implementação/#129.
+- A aprovação documental do plano v0.3 não equivale, isoladamente, à aprovação técnica deste protótipo; o aceite técnico restrito do Tech Lead e a decisão do PO estão registrados, mas a aprovação SQA permanece pendente.
 
 ## 7. Aceite da #94 — posição atual
 
 | Critério | Situação |
 |---|---|
 | Protótipo clicável de duas trilhas | **Entregue para revisão** |
-| Plano | PR #152, v0.3 **aprovado documentalmente por PO/SQA e integrado à `main`**; autorização para recrutamento e uso do protótipo clicável segue pendente |
+| Plano | PR #152, v0.3 **aprovado documentalmente por PO/SQA e integrado à `main`** |
+| Decisão do PO | **REGISTRADA** em 26/11/2026: clicável opcional como complemento; simulação interna por papéis aceita como evidência limitada |
+| Reavaliação metodológica SQA | **PENDENTE**; wireframes estáticos permanecem baseline aprovada até a manifestação independente |
 | Governança/autorização de coleta | **PENDENTE FORD** |
 | Sessões com participantes | **NÃO REALIZADAS** |
 | Achados reais e priorização | **NÃO DISPONÍVEIS** |
@@ -112,7 +119,7 @@ O [plano v0.3 aprovado na PR #152](https://github.com/Aluvioz/Polychat/pull/152)
 | T-05 | `t-alerts` | T-05 · Revisão de alertas | Verificação de alertas |
 | T-06 | `t-settings` | T-06 · Configurações | Verificação de configurações |
 
-Os testes estáticos e Playwright verificam correspondência entre **rótulo, tela e tarefa**, sem afirmar conclusão da pesquisa. A [proposta de decisão metodológica](./issue-94-decisao-metodologica-proposta.md) foi preparada para assinatura/manifestação de PO/SQA; até essa manifestação, **não usar o protótipo clicável como instrumento autorizado de sessão**.
+Os testes estáticos e Playwright verificam correspondência entre **rótulo, tela e tarefa**, sem afirmar conclusão da pesquisa. A decisão do PO sobre uso complementar foi registrada em 26/11/2026; a manifestação independente do SQA continua pendente. Até essa reavaliação, a baseline aprovada é o instrumento estático da PR #152 e não se deve presumir autorização SQA para o clicável.
 
 
 ## 10. Rastreabilidade canônica mobile após revisão SQA da PR #164
@@ -130,4 +137,4 @@ A tarefa oficial prevalece sobre a posição da tela no fluxo. **O aviso inicial
 | U-07 | Seção de erros dentro de `u-attach` | U-07 · Erros e recuperação de anexos | Marcador único no bloco de erros, sem criar tela nova |
 | U-08 | `u-session` + simulação offline em `u-conversations`/`u-chat` | U-08 · Sessão expirada ou desconectada | Estado de sessão e perda de conexão |
 
-Os testes estáticos verificam oito marcadores canônicos sem duplicação; os testes Chromium confirmam a navegação e a correspondência real dos códigos. **Esses resultados são automatizados, não observações de usuários representativos da FORD.** A proposta de uso complementar do clicável continua pendente de parecer PO/SQA.
+Os testes estáticos verificam oito marcadores canônicos sem duplicação; os testes Chromium confirmam a navegação e a correspondência real dos códigos. **Esses resultados são automatizados, não observações de usuários representativos da FORD.** O PO autorizou o uso complementar opcional do clicável; a reavaliação independente do SQA permanece pendente.

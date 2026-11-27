@@ -44,7 +44,7 @@
 
 Por cada linha, substituir PENDENTE por PASS/FAIL/NÃO EXECUTADO/NÃO APLICÁVEL **após a ação de fato**, informando por que e com que evidência. Anotar defeitos com passos, esperado, observado, ambiente, severidade proposta e link para evidência. **CI em Chromium** fornece evidência separada de teste automatizado e não marca automaticamente itens de Safari, Edge, Firefox, leitor de tela, 200%/400% ou usabilidade como PASS.
 
-Usar [matriz FORD v2](./issue-94-matriz-aderencia-ford-v2.md) para verificar aderência de textos e fluxos às perguntas Q1–Q34. Não iniciar sessões com pessoas até o [gate institucional](./issue-94-kit-registros-sessoes.md) estar autorizado.
+Usar [matriz FORD v2](./issue-94-matriz-aderencia-ford-v2.md) para verificar aderência de textos e fluxos às perguntas Q1–Q34. Não iniciar pesquisa com funcionários FORD ou com dados corporativos até o [gate institucional](./issue-94-kit-registros-sessoes.md) estar autorizado. A simulação interna por papéis aceita pelo PO é atividade distinta e deve seguir os gates específicos do kit, incluindo a reavaliação independente do SQA.
 
 
 ## 4. Revisão visual documental das capturas automatizadas — 26/11/2026
