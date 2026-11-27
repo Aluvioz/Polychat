@@ -46,7 +46,22 @@ Por cada linha, substituir PENDENTE por PASS/FAIL/NÃO EXECUTADO/NÃO APLICÁVEL
 
 Usar [matriz FORD v2](./issue-94-matriz-aderencia-ford-v2.md) para verificar aderência de textos e fluxos às perguntas Q1–Q34. Não iniciar sessões com pessoas até o [gate institucional](./issue-94-kit-registros-sessoes.md) estar autorizado.
 
-## 4. Trilha de execução (em branco)
+
+## 4. Revisão visual documental das capturas automatizadas — 26/11/2026
+
+**Escopo:** análise visual das três capturas produzidas pelo workflow Playwright/Chromium no commit `9f226667686cbb115b9613032103d6fbad040995`. [Execução UX #45834039735 e artefato #15123311900](https://github.com/Aluvioz/Polychat/actions/runs/45834039735/artifacts/15123311900).
+
+Esta revisão das imagens não equivale a percorrer manualmente os fluxos no navegador e não é a inspeção independente do SQA/UI/UX. Os itens M94-01 a M94-15 e A94-01 a A94-10 permanecem pendentes até que seus procedimentos sejam executados por responsável identificado, com ambiente e evidências próprios.
+
+| Captura | Observação visual | Limite da evidência |
+|---|---|---|
+| `mobile-conversas-390.png` | A tela exibe o marcador U-02, a lista de conversas e os elementos principais no viewport de 390 px; não há corte horizontal aparente na imagem. | Não demonstra que uma pessoa concluiu a tarefa nem valida outros navegadores/dispositivos. |
+| `mobile-anexos-320.png` | Os marcadores U-06/U-07 e os controles de exemplo aparecem no viewport de 320 px; os rótulos quebram linha sem corte horizontal aparente. Uma notificação fixa ocupa a parte inferior e sobrepõe conteúdo/rodapé na captura. | A duração da notificação e o impacto após a interação não podem ser avaliados por uma imagem isolada; confirmar em inspeção interativa antes de classificar como defeito. |
+| `ti-dashboard-1280.png` | O dashboard TI está identificado visualmente como etapa auxiliar; navegação e cartões aparecem no viewport de 1280 px, sem corte aparente na imagem. | Não demonstra execução das tarefas T-01 a T-06 nem compatibilidade fora do Chromium. |
+
+**Conclusão desta revisão limitada:** não foi confirmado defeito que justifique alteração de HTML/CSS/JS apenas com base nas capturas. O comportamento da notificação fixa fica registrado para confirmação interativa. As imagens oferecem evidência visual pontual de renderização, não substituem a inspeção humana completa nem autorizam marcar itens do checklist como PASS.
+
+## 5. Trilha de execução (em branco)
 
 - Data/hora:
 - Testador:
