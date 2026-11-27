@@ -125,7 +125,7 @@ A fotografia abaixo reflete as entregas integradas à main pelas PRs #181 e #185
 - As verificações SQL no Polyford confirmaram a configuração do bucket, mas não houve upload/download real de arquivo no ambiente consultado; a verificação posterior registrou zero objetos em storage.objects.
 - A existência do bucket, da rota e dos testes unitários não comprova integração ponta a ponta com o fluxo de criação de mensagem, análise antimalware, leitura/download ou experiência completa do usuário.
 - A Issue #115 permanece aberta; as PRs #181 e #185 entregam, respectivamente, a fundação privada e uma camada inicial de upload, sem declarar encerrados todos os critérios da issue.
-- A regra funcional retificada pelo PO em 26/11/2026 estabelece **10 MiB (10.485.760 bytes)** por arquivo. O bucket da PR #181 e o endpoint da PR #185 aplicam esse mesmo limite; não há pendência de decisão sobre a unidade. Permanecem necessários testes de fronteira (10.485.760 bytes permitido e 10.485.761 bytes rejeitado) e evidência de aplicação no fluxo integrado.
+- A regra funcional retificada pelo PO em 26/11/2026 estabelece **10 MiB (10.485.760 bytes)** por arquivo. O bucket da PR #181 e o endpoint da PR #185 aplicam esse mesmo limite; não há pendência de decisão sobre a unidade. A suíte `tests/attachment-validation.test.mjs` já verifica a rejeição de `MAX_ATTACHMENT_BYTES + 1` (10.485.761 bytes). Ainda falta um teste positivo explícito que confirme a aceitação de exatamente 10.485.760 bytes e a evidência do limite no fluxo integrado de upload.
 
 As evidências de implementação estão registradas em docs/storage/issue-115-private-storage-evidence.md, docs/storage/issue-115-upload-implementation.md e docs/infra/polyford-integration-validation-2026-11-26.md.
 
@@ -138,7 +138,7 @@ As entregas devem permanecer rastreadas nas issues de implementação, sem reabr
 - Completar a validação de PDF/JPEG além da checagem de extensão, MIME declarado e assinatura binária, incluindo validação estrutural compatível com os requisitos.
 - Executar testes de integração do endpoint com upload real no ambiente de desenvolvimento/homologação, verificar objeto e metadados, falhas e limpeza compensatória e produzir evidências reproduzíveis.
 - Integrar o upload ao fluxo de criação de mensagens com anexos, preservando consistência entre mensagem, metadados e objeto no Storage; os fluxos atualmente existentes não comprovam transação ponta a ponta.
-- Implementar e registrar testes de fronteira do limite retificado: 10.485.760 bytes permitido e 10.485.761 bytes rejeitado; comprovar o comportamento no fluxo integrado de upload.
+- Acrescentar teste positivo explícito para a aceitação de exatamente 10.485.760 bytes; preservar a cobertura negativa já existente para 10.485.761 bytes e comprovar o comportamento no fluxo integrado de upload.
 
 ### Issue #116 — download autorizado e links temporários
 
