@@ -10,6 +10,7 @@ const userAgents = {
   desktopEdge: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0",
   desktopFirefox: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0",
   androidTablet: "Mozilla/5.0 (Linux; Android 14; SM-X900) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  androidSamsungInternet: "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/28.0 Chrome/130.0.0.0 Mobile Safari/537.36",
   ipad: "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
 };
 
@@ -54,6 +55,16 @@ test("nega tablets para ambos os perfis", () => {
     assert.equal(result.reason, "TABLET_NOT_SUPPORTED");
   }
   assert.equal(evaluateDeviceCompatibility({ role: "user", userAgent: userAgents.ipad }).reason, "TABLET_NOT_SUPPORTED");
+});
+
+test("nega Samsung Internet mesmo quando o User-Agent também contém Chrome", () => {
+  const result = evaluateDeviceCompatibility({
+    role: "user",
+    userAgent: userAgents.androidSamsungInternet,
+  });
+  assert.equal(result.compatible, false);
+  assert.equal(result.browser, "samsung-internet");
+  assert.equal(result.reason, "BROWSER_NOT_SUPPORTED");
 });
 
 test("nega navegadores fora da lista homologada", () => {
