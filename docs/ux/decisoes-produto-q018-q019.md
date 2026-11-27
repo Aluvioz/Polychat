@@ -143,7 +143,7 @@ A referência pública consultada identifica Ford Blue `#00095B`, Ford Twilight 
 
 - Q-018: resolvida; referência normativa de produto para navegação e páginas.
 - Q-019: paleta provisória estabelecida; ativos oficiais de marca ainda pendentes.
-- Q-025: permanece aberta e independente; trata da compatibilização arquitetural com a infraestrutura sob controle da FORD.
+- Q-025: **na data deste documento (20/11/2026), permanecia aberta** e independente; tratava da compatibilização arquitetural com a infraestrutura sob controle da FORD. Posteriormente, foi concluída em **24/11/2026**, com aprovação da compatibilidade e do modelo de utilização de Supabase + Vercel pela TI e pela FORD. O registro atualizado da decisão está preservado em [08 — Glossário e questões em aberto](../08-glossario-e-questoes-em-aberto.md).
 - Esta decisão não altera RFs, não autoriza serviços externos, não declara implementação no runtime nem substitui validação de UX, acessibilidade, SQA ou homologação.
 
 *Documento de decisão do Product Owner, 20/11/2026.*

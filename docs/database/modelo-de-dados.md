@@ -23,7 +23,7 @@ O modelo considera:
 - A ADR-005, atualmente **Proposed**, que deve ser alinhada à stack definida para o projeto: PostgreSQL via Supabase e aplicação hospedada/deployada na Vercel.
 - A baseline vigente **POLY-REQ-001 v0.5 — 20/11/2026**, os requisitos RF-001 a RF-023, as regras RN-001 a RN-025 e as decisões consolidadas da FORD v2.
 - A migration existente de perfis `supabase/migrations/20261124191059_profiles_roles_and_account_status.sql`, que constitui o scaffold inicial da integração com Supabase Auth e deve ser avaliada como parte da stack do projeto.
-- A Q-025, que mantém registrada a análise de compatibilidade entre a stack Supabase + Vercel definida para o projeto e a exigência de infraestrutura sob controle da FORD.
+- A Q-025, concluída em 24/11/2026, que registra a aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, dentro dos limites e responsabilidades definidos.
 
 As decisões Q-003, Q-005, Q-007 a Q-012, Q-016 e Q-024 foram respondidas/alinhadas no nível funcional e não devem continuar classificadas como dúvidas de produto. As decisões adicionais de produto tomadas nesta versão estão registradas nas seções 11 e 12.
 
@@ -68,7 +68,7 @@ A revisão cruzada desta versão identificou documentos de apoio que precisavam 
 
 | Documento | Harmonização publicada na `main` | Limites que permanecem |
 |---|---|---|
-| [`docs/adr/ADR-005-dados-postgresql.md`](../adr/ADR-005-dados-postgresql.md) | Atualiza contexto e evidências para refletir schema de domínio, índices, RLS, auditoria, reconciliação das migrations e estado pós-PRs #165, #168, #172, #173 e #180. | ADR-005 permanece **Proposed**. A compatibilidade da configuração e do modelo de uso com as restrições da FORD continua em avaliação na Q-025; a atualização documental não equivale a aceite arquitetural ou homologação. |
+| [`docs/adr/ADR-005-dados-postgresql.md`](../adr/ADR-005-dados-postgresql.md) | Atualiza contexto e evidências para refletir schema de domínio, índices, RLS, auditoria, reconciliação das migrations e estado pós-PRs #165, #168, #172, #173 e #180. | ADR-005 permanece **Proposed** para a decisão técnica específica sobre PostgreSQL/Supabase Database e as evidências próprias de integração, operação e continuidade. A compatibilidade e o modelo de utilização Supabase + Vercel já foram aprovados na Q-025; essa aprovação não equivale a aceite automático da ADR-005 nem a homologação. |
 | [`docs/adr/ADR-008-storage-anexos.md`](../adr/ADR-008-storage-anexos.md) | Registra o bucket privado `attachments` provisionado pela #181, o endpoint inicial de upload da #185 e o limite funcional/técnico de 10 MiB (10.485.760 bytes) por arquivo, até cinco anexos por mensagem. | ADR-008 permanece **Proposed**. Download autorizado, links temporários e revogação, scanner/quarentena, quotas, EXIF/GPS, rejeição de PDF protegido por senha, descarte físico, backup/restore e homologação continuam com suas evidências e implementações próprias pendentes. |
 | [`docs/storage/politica-anexos-e-antimalware.md`](../storage/politica-anexos-e-antimalware.md) — POLY-STO-001 v0.3 | Consolida as decisões funcionais: PDF/JPEG, limite de 10 MiB, até cinco arquivos por mensagem, quotas individuais e capacidade total administradas pelo TI sem quota por conversa, seleção de JPEG da galeria sem captura, remoção de EXIF/GPS, rejeição de PDF protegido por senha e liberação excepcional pelo TI autenticada e auditada. | O documento não declara o ciclo de anexos concluído. Scanner interno da FORD, quarentena e operação fail-closed, downloads e revogação, quotas/capacidade em operação, descarte físico, backup/restore e homologação permanecem pendentes de implementação/evidência. |
 | [`docs/database/issue-99-implementation-notes.md`](issue-99-implementation-notes.md) | Atualiza a rastreabilidade pós-merge das PRs #172, #173, #180, #181 e #185, distinguindo schema, RLS, auditoria, migrations, Storage e upload inicial, bem como testes locais e observações do ambiente de desenvolvimento. | A Issue #99 permanece aberta. As evidências não declaram todos os fluxos funcionais, integração mensagem/anexo, ciclo de anexos, backup/restore ou homologação da FORD concluídos. |
@@ -77,11 +77,11 @@ A revisão cruzada desta versão identificou documentos de apoio que precisavam 
 
 Como documento operacional complementar, foi publicado na `main` o [encaminhamento técnico ao Desenvolvimento — PR #160 e continuidade do modelo de dados](../development/encaminhamento-tecnico-pr-160-e-anexos-2026-11-26.md). Ele registra a evidência do bloqueio de CI, as ações técnicas solicitadas e os critérios de retorno ao PO; não constitui aceite técnico, revisão SQA, aprovação da Tech Lead nem autorização para alterar o ambiente remoto.
 
-A harmonização documental acima não amplia o escopo desta PR, que continua restrita a `docs/database/modelo-de-dados.md`. A direção Supabase + Vercel da ADR-003 permanece **Accepted**; ADR-005 e ADR-008 permanecem **Proposed**; a Q-025 continua aberta. Nenhuma dessas atualizações documentais equivale a homologação da FORD, conclusão do ciclo de anexos ou conclusão da Issue #99.
+A harmonização documental acima não amplia o escopo desta PR, que continua restrita a `docs/database/modelo-de-dados.md`. A direção Supabase + Vercel da ADR-003 permanece **Accepted**; ADR-005 e ADR-008 permanecem **Proposed** para suas decisões técnicas específicas; a Q-025 foi concluída em 24/11/2026, com aprovação da compatibilidade e do modelo de utilização dos provedores nomeados. Nenhuma dessas atualizações documentais equivale a homologação da FORD, conclusão do ciclo de anexos ou conclusão da Issue #99.
 
 ## 3. Premissas e limites
 
-1. A stack definida para o projeto é Supabase + Vercel: Supabase fornece PostgreSQL e os serviços backend previstos (como Auth, Storage e RLS), enquanto Vercel hospeda/deploya a aplicação. Os detalhes de configuração e implantação devem ser revisados tecnicamente; a compatibilidade com as restrições da FORD é acompanhada na Q-025.
+1. A stack definida para o projeto é Supabase + Vercel: Supabase fornece PostgreSQL e os serviços backend previstos (como Auth, Storage e RLS), enquanto Vercel hospeda/deploya a aplicação. A Q-025 aprovou a compatibilidade e o modelo de utilização dos provedores nomeados; a configuração concreta, a integração de cada serviço e as evidências operacionais devem ser revisadas nas ADRs e Issues próprias, sem reabrir essa decisão.
 2. O escopo inicial é uma única organização, a FORD. Não adicionar `tenant_id` ou arquitetura multi-tenant sem mudança explícita de escopo.
 3. Existem somente dois perfis de aplicação: `user` e `ti`. Participação em conversa é um vínculo de domínio, não um terceiro perfil.
 4. Somente TI administra contas, grupos e participantes conforme RF-003 a RF-006. Usuários não entram nem saem voluntariamente de grupos.
@@ -462,7 +462,7 @@ A migration aditiva da PR #168 versiona seis índices de cobertura de FKs (em `c
 
 ## 8. Segurança, identidade e acesso aos dados
 
-A autenticação do Polychat utiliza Supabase Auth; os dados relacionais utilizam PostgreSQL no Supabase e os arquivos podem utilizar armazenamento privado. A aplicação é hospedada/deployada na Vercel. A stack está definida para o projeto; sua configuração e compatibilidade com as restrições da FORD continuam sujeitas às evidências e à análise registrada na Q-025.
+A autenticação do Polychat utiliza Supabase Auth; os dados relacionais utilizam PostgreSQL no Supabase e os arquivos podem utilizar armazenamento privado. A aplicação é hospedada/deployada na Vercel. A compatibilidade e o modelo de utilização dos provedores Supabase + Vercel foram aprovados na Q-025. A configuração de cada serviço, os controles de acesso e as evidências de integração/operação continuam sujeitos às revisões específicas, sem reabrir a aprovação da stack.
 
 ### 8.1 Princípios funcionais
 
@@ -474,7 +474,7 @@ A autenticação do Polychat utiliza Supabase Auth; os dados relacionais utiliza
 6. Download de anexo exige autorização vigente; link conhecido não substitui autorização e links emitidos devem ser revogados imediatamente após perda de acesso.
 7. Operações administrativas de TI e alterações de configurações previstas geram eventos de auditoria.
 8. Falha na identificação, verificação de conta, membership ou autorização não concede acesso.
-9. Nenhum segredo, token ou chave privilegiada pode ser exposto ao cliente. A exigência da FORD de não permitir acesso/processamento por terceiros deve ser conciliada com o uso de Supabase + Vercel na Q-025; não declarar conformidade antes dessa análise.
+9. Nenhum segredo, token ou chave privilegiada pode ser exposto ao cliente. O uso de Supabase + Vercel deve permanecer dentro do modelo e dos limites aprovados pela TI/FORD na Q-025. A aprovação dos provedores nomeados não autoriza automaticamente outros serviços ou subprocessadores nem comprova, por si só, a implementação dos controles ou a homologação institucional.
 
 ### 8.2 Evidência técnica integrada — PR #172
 
@@ -499,7 +499,7 @@ As funções auxiliares de autorização foram colocadas no schema private, com 
 - A PR #181 provisionou o bucket privado `attachments` e registrou zero policies de acesso direto em `storage.objects`. A ausência de policies diretas é intencional: o acesso deve ser mediado por operações server-side confiáveis. A PR #185 implementou o endpoint inicial de upload: valida a sessão por cookies HTTP-only, consulta a mensagem com JWT do usuário e RLS, exige correspondência entre o remetente e o usuário autenticado, usa a chave secreta `SUPABASE_SECRET_KEY` somente no servidor para o upload e grava os metadados com JWT do usuário. O handler valida extensão/MIME e marcadores binários PDF/JPEG e remove o objeto se a gravação do metadado falhar. Essa entrega não implementa download, signed URLs, revogação de links, scanner antimalware, quotas ou descarte físico; tampouco comprova upload real ponta a ponta no Polyford, cujo bucket estava sem objetos na coleta da PR #182. Não tratar a criação de policies permissivas de acesso direto como correção dessas pendências.
 - A auditoria privilegiada de contas, grupos e memberships permanece na Issue #124; não deve ser duplicada por esta seção.
 - A reconciliação dos identificadores locais de migrations foi entregue separadamente pela PR #180: os nomes locais foram alinhados às versões remotas conhecidas e a instalação limpa conjunta de 18 migrations passou em PostgreSQL local descartável. Isso não alterou o histórico remoto do Polyford; não executar `repair`, `reset` ou `db push` no ambiente remoto por inferência.
-- A Q-025 permanece aberta para avaliar a compatibilidade da stack Supabase + Vercel com as restrições da FORD. A integração das policies no repositório e os testes no ambiente de desenvolvimento não equivalem à homologação da FORD ou à certificação de segurança em produção.
+- A Q-025 foi concluída em 24/11/2026, com aprovação da compatibilidade e do modelo de utilização Supabase + Vercel pela TI e pela FORD. A integração das policies no repositório e os testes no ambiente de desenvolvimento não equivalem à homologação da FORD ou à certificação de segurança em produção.
 
 ## 9. Retenção, exclusão e histórico
 
@@ -585,7 +585,7 @@ As decisões acima são decisões de produto quanto ao comportamento esperado. E
 
 ### 11.1 Dependência arquitetural que permanece fora da decisão de produto
 
-A Q-025 continua aberta para documentar e tratar a compatibilidade entre a stack definida para o projeto (Supabase + Vercel) e as restrições da FORD relativas a hospedagem, armazenamento e processamento de dados por terceiros. A stack não deve ser considerada obsoleta ou substituída por inferência; a análise deve registrar os impactos, riscos e encaminhamentos sem alterar as regras funcionais aprovadas.
+A Q-025 foi concluída em 24/11/2026 e aprovou a compatibilidade e o modelo de utilização da stack Supabase + Vercel com as restrições da FORD relativas a hospedagem, armazenamento e processamento, dentro dos limites e responsabilidades registrados. A stack não deve ser considerada obsoleta ou substituída por inferência; desvios concretos do modelo aprovado devem ser tratados pelos responsáveis competentes, sem reabrir a decisão já concluída ou alterar as regras funcionais aprovadas.
 
 ### 11.2 Retificação do limite de anexos — decisão corrigida do PO em 26/11/2026
 
@@ -625,7 +625,7 @@ Esta aprovação é exclusivamente de produto/negócio e não aprova:
 - desenho físico e operacional detalhado de Supabase Auth, PostgreSQL/RLS, Supabase Storage, Realtime, integração server-side e deploy na Vercel;
 - criação/aplicação de migrations ou homologação em ambiente da FORD.
 
-A stack tecnológica adotada pelo projeto é Supabase + Vercel. A ADR-005 continua com status Proposed e deve ser alinhada a essa direção técnica pelos responsáveis; a Q-025 permanece para tratar a compatibilidade com as restrições registradas pela FORD. A migration Supabase existente é o scaffold inicial da solução, não um artefato a ser descartado.
+A stack tecnológica adotada pelo projeto é Supabase + Vercel, com compatibilidade e modelo de utilização aprovados na Q-025 em 24/11/2026. A ADR-005 continua com status Proposed para revisão da decisão técnica específica sobre PostgreSQL/Supabase Database e de suas evidências próprias; esse status não reabre a Q-025. A migration Supabase existente é o scaffold inicial da solução, não um artefato a ser descartado.
 
 **Conclusão do PO:** o escopo funcional conceitual do modelo está validado para a baseline v0.5 e as lacunas de produto listadas na seção 11 estão decididas. A Issue #99 continua aberta; este parecer não declara schema físico, migrations ou implementação concluídos.
 
@@ -661,7 +661,7 @@ A estrutura física já integrada e os incrementos técnicos ainda pendentes dev
 - ocorrência de alertas com regras, severidade e revisão;
 - retenção e preservação histórica previstas na RN-021;
 - persistência somente das configurações identificadas no inventário;
-- identidade, armazenamento e processamento de acordo com a stack definida (Supabase + Vercel), com os impactos frente às restrições da FORD tratados explicitamente na Q-025.
+- identidade, armazenamento e processamento de acordo com a stack definida (Supabase + Vercel), observando o modelo de utilização, os limites e as responsabilidades aprovados na Q-025.
 
 Para aspectos ainda não definidos ou que dependam de evolução, qualquer escolha de tabela, campo, tipo, constraint, índice, FK, estratégia de autenticação, armazenamento, RLS ou migration continua sendo decisão de implementação. As entregas já integradas estão delimitadas na seção 2.2; novos ajustes poderão variar desde que preservem os requisitos e não contradigam o parecer funcional do PO.
 
@@ -699,7 +699,7 @@ Para aspectos ainda não definidos ou que dependam de evolução, qualquer escol
 - PR #181 — provisionamento do bucket privado `attachments` da Issue #115; limite provisionado de 10 MiB.
 - PR #182 — evidências documentais de backup/restore e lacunas da Issue #130.
 - PR #185 — endpoint server-side inicial de upload privado PDF/JPEG da Issue #115; limite de 10 MiB (10.485.760 bytes), alinhado ao limite funcional vigente.
-- PR #160 — atualização documental do modelo lógico e das decisões de produto da Issue #99; permanece aberta e em Draft enquanto aguarda as revisões correspondentes.
+- PR #160 — atualização documental do modelo lógico e das decisões de produto da Issue #99; mesclada em 26/11/2026 após aprovação do Tech Lead. Integra a versão conceitual v0.5 à `main`, sem representar aprovação do schema físico.
 
 ### ADRs, baseline e decisões
 

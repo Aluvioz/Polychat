@@ -1,10 +1,10 @@
 # ADR-007 — Mensageria e atualizações em tempo real
 
 - **Status:** Proposed
-- **Data de revisão:** 25/11/2026
+- **Data de revisão:** 26/11/2026
 - **Issue:** #89
 - **Baseline:** POLY-REQ-001 v0.5
-- **Dependências:** ADR-003; ADR-005; ADR-006; Q-025; Issues #99, #100, #101, #109, #110, #113 e #114
+- **Dependências:** ADR-003; ADR-005; ADR-006; Issues #99, #100, #101, #109, #110, #113 e #114
 
 ## Contexto
 
@@ -12,11 +12,11 @@ O MVP contempla conversas individuais e em grupo. Mensagens confirmadas pelo ser
 
 A ADR-003 mantém Supabase + Vercel como stack adotada. Esta ADR trata exclusivamente do desenho de mensageria e notificação dentro dessa stack; não reabre nem substitui a decisão tecnológica.
 
-A Q-025 trata da compatibilidade da stack Supabase + Vercel com os requisitos de infraestrutura da FORD. Essa decisão de stack delimita o contexto desta ADR, mas não aprova automaticamente o Supabase Realtime nem sua modalidade de transporte (Postgres Changes ou Broadcast), não comprova sua configuração e não dispensa a prova de conceito, a validação das políticas, a revogação imediata e os testes descritos aqui. A decisão de stack da Q-025 e a decisão específica de mensageria desta ADR têm objetos distintos.
+A Q-025 foi concluída em 24/11/2026, com aprovação da TI/FORD para a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, dentro dos limites e responsabilidades registrados. Essa aprovação delimita o contexto desta ADR, mas não aprova automaticamente o Supabase Realtime nem sua modalidade de transporte (Postgres Changes ou Broadcast), não comprova sua configuração e não dispensa a prova de conceito, a validação das políticas, a revogação imediata e os testes descritos aqui. A decisão de stack da Q-025 e a decisão específica de mensageria desta ADR têm objetos distintos.
 
 ### Estado atual do modelo de dados — Issue #99 / PR #165
 
-A migration `supabase/migrations/202611240001_issue_99_initial_domain_schema.sql`, integrada pela PR #165, já cria as estruturas de domínio relevantes:
+A migration `supabase/migrations/20261124191114_issue_99_initial_domain_schema.sql`, integrada pela PR #165, já cria as estruturas de domínio relevantes:
 
 - `public.conversations`: conversas individuais e em grupo, com estado.
 - `public.memberships`: participação por conversa, com histórico de entrada e encerramento por `ended_at`.
@@ -25,7 +25,9 @@ A migration `supabase/migrations/202611240001_issue_99_initial_domain_schema.sql
 - `public.attachments`: metadados e referência de armazenamento dos anexos.
 - `public.security_alerts`: ocorrências associadas às mensagens.
 
-A migration complementar `202611240002_issue_99_integrity_and_configuration.sql` acrescenta invariantes transacionais, incluindo o limite de cinco anexos por mensagem e a exigência de texto não vazio ou ao menos um anexo. A existência dessas tabelas e invariantes comprova a modelagem versionada, não a implementação dos fluxos de chat nem a publicação de eventos Realtime.
+A migration complementar `20261124191131_issue_99_integrity_and_configuration.sql` acrescenta invariantes transacionais, incluindo o limite de cinco anexos por mensagem e a exigência de texto não vazio ou ao menos um anexo. A existência dessas tabelas e invariantes comprova a modelagem versionada, não a implementação dos fluxos de chat nem a publicação de eventos Realtime.
+
+A PR #180 reconciliou os identificadores locais dessas migrations com as versões observadas no histórico remoto do Polyford, sem executar `migration repair`, `db reset` ou `db push` no projeto remoto. A validação de instalação limpa aplicou 18 migrations em PostgreSQL local descartável; essa evidência comprova a reprodutibilidade da sequência local, não a implementação de mensageria Realtime nem homologação de produção.
 
 ### Estado atual da autorização — Issue #101 / PR #172
 

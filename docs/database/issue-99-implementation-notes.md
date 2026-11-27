@@ -111,7 +111,19 @@ As policies de domínio e configuração foram integradas posteriormente pela PR
 
 ### 3.3 Situação específica de audit_events
 
-A tabela `public.audit_events` e a versão remota histórica `20261124210245` permanecem no Polyford. A PR #166 foi encerrada sem merge; por isso, seu conteúdo SQL original não foi incorporado à `main`. A definição completa e reproduzível de `audit_events` está versionada na migration `20261125232432_issue_102_audit_retention_controls.sql`, com criação idempotente. A branch de reconciliação adiciona um arquivo de ledger sem DDL para representar a versão histórica remota, sem duplicar a criação da tabela.
+**Status do requisito de modelagem da Issue #99: estrutura de banco implementada e versionada.** A Issue #99 exige que `audit_events` faça parte do modelo persistente; isso é atendido pela tabela existente e pela definição canônica integrada na PR #173, cuja migration reproduzível está em `20261125232432_issue_102_audit_retention_controls.sql`. A migration inclui a estrutura, constraints, índices e controles de retenção associados. A PR #173 também integrou o writer genérico `src/audit/audit-events.mjs` e testes relacionados.
+
+A versão remota histórica `20261124210245` permanece registrada no histórico do Polyford. A PR #166 foi encerrada sem merge; por isso, seu conteúdo SQL original não foi incorporado à `main`. O arquivo de ledger local representa essa versão histórica sem reaplicar DDL. A definição completa e reproduzível da tabela está na migration canônica acima, sem duplicar a criação da tabela.
+
+**Limite importante — modelagem não é cobertura operacional completa.** A existência da tabela e do writer não comprova que todos os fluxos de negócio emitam eventos. A instrumentação dos call-sites/handlers é trabalho de integração funcional e auditoria operacional acompanhado pelas issues correspondentes, especialmente #102 e #124 e pelas issues dos fluxos administrativos. Não deve ser apresentada como pendência de criação do schema da #99, nem ser marcada como concluída sem evidência de cada call-site.
+
+Para a rastreabilidade da #99, considerar:
+- [x] Entidade `audit_events` representada no modelo e criada por migration versionada.
+- [x] Estrutura canônica, constraints, índices e controles de retenção integrados pela PR #173.
+- [x] Writer genérico e testes associados integrados pela PR #173.
+- [ ] Cobertura de todos os eventos/call-sites operacionais: não comprovada por esta evidência; permanece rastreada nas issues de auditoria e nos fluxos correspondentes, sem ampliar o escopo da modelagem #99.
+
+A aprovação da estrutura de dados não substitui a revisão da instrumentação operacional nas issues responsáveis.
 
 ## 4. Testes, CI e limites das evidências
 
@@ -128,11 +140,11 @@ A tabela `public.audit_events` e a versão remota histórica `20261124210245` pe
 - A gravação de mensagem composta somente por anexos depende de mensagem e anexos serem persistidos na mesma transação/RPC. A migration contém a invariância diferida, mas a integração funcional do fluxo ainda depende das issues de produto correspondentes.
 - `profiles.username` permanece nullable; não foi inventado preenchimento para contas existentes.
 - A estrutura de `audit_events` está reproduzível a partir da migration integrada de retenção; isso não conclui os callsites funcionais de auditoria que permanecem no escopo da #102.
-- A ADR-005 permanece Proposed e a Q-025 permanece aberta para avaliação da compatibilidade operacional da stack com as restrições FORD.
+- A ADR-005 permanece Proposed para a decisão técnica específica sobre PostgreSQL/Supabase Database e para as evidências próprias de integração, operação e continuidade. A compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel foram aprovados pela TI e pela FORD na Q-025, concluída em 24/11/2026; essa decisão não é reaberta por esta nota.
 
 ## 5. Relação com outras issues — sem transferência de escopo
 
-- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A PR #172 integrou policies RLS e hardening de privilégios; a evidência registra 16/16 cenários aprovados. Não reabrir como pendência a implementação básica de policies, mas manter a validação dos handlers e fluxos reais que dependem delas.
+- **#101:** policies RLS, matriz/enforcement de autorização e testes de acesso. A PR #172 integrou policies RLS e hardening de privilégios; a evidência registra 16/16 cenários aprovados. Para a #99, reutilizar os cenários pertinentes como evidência de enforcement server-side na camada de banco; não transformar isso em exigência de implementação de handlers/endpoints genéricos.
 - **#102:** auditoria, retenção e descarte; a definição canônica de `audit_events` está na migration integrada `20261125232432`; a versão remota histórica da PR #166 é representada por arquivo de ledger sem DDL.
 - **#105:** fluxos de perfis/contas e operações associadas.
 - **#111:** requisitos de leitura/não lidas refletidos por `message_reads`.
@@ -196,3 +208,49 @@ A PR #181 integrou o bucket privado `attachments`, allowlist PDF/JPEG e limite d
 A fundação atual não conclui download, links temporários/revogação, scanner/quarentena, quotas, descarte físico, backup de objetos nem a transação única de criação da mensagem com anexos. A Issue #99 não absorve essas entregas de outras frentes.
 
 **Conclusão atualizada:** existe evidência de schema inicial, índices, RLS, auditoria/controles de retenção, histórico reconciliado, bucket privado e endpoint inicial de upload, cada um revisado dentro de seu escopo. Isso não declara a Issue #99 integralmente concluída, não autoriza seu fechamento e não transfere para ela o ciclo completo de anexos, as políticas operacionais de backup/restore ou a homologação da FORD.
+
+
+## 8. Delimitação da validação SQA da Issue #99 — 27/11/2026
+
+Esta seção corrige a interpretação do apontamento SQA de 27/11/2026 sem alterar a descrição ou os critérios da Issue #99.
+
+### 8.1 Limite do requisito de autorização server-side
+
+A Issue #99 trata da modelagem PostgreSQL e de suas migrations. Seu texto não solicita a implementação de todos os handlers HTTP, endpoints administrativos ou fluxos completos do produto.
+
+Para o escopo de persistência, a validação server-side pertinente é a aplicação das regras de acesso na camada de banco, por meio de RLS e políticas aplicadas pelo PostgreSQL/Supabase. As policies de domínio e configuração foram integradas pela PR #172, no trabalho de autorização da Issue #101. A evidência `docs/security/issue-101-rls-evidence.md` registra 16/16 cenários de isolamento aprovados.
+
+Essa evidência pode ser usada para demonstrar enforcement no servidor/banco sobre as entidades modeladas. Ela não prova a autorização de cada endpoint da aplicação, mas a Issue #99 também não deve ser ampliada para exigir a implementação genérica desses endpoints. Caso o SQA considere necessário validar um handler específico para a #99, a revisão deve apontar qual operação existente, ligada diretamente à modelagem, está sendo avaliada e qual requisito aprovado exige esse handler.
+
+### 8.2 Comportamento de erro no limite do modelo de dados
+
+No escopo da #99, o comportamento de erro verificável é o produzido pelo PostgreSQL pelas constraints, FKs e triggers que protegem a integridade do modelo. A consulta de catálogo ao Polyford em 27/11/2026 confirmou, entre outras, as seguintes regras persistidas:
+
+- `messages_body_not_blank`: rejeita corpo vazio quando informado;
+- `messages_require_content_or_attachment` e `attachments_require_parent_message_content`: triggers diferidas que validam texto ou anexo no commit;
+- `attachments_mime_type_check` e `attachments_size_bytes_check`: limitam MIME a PDF/JPEG e tamanho a 10 MiB;
+- FKs de mensagens, anexos, memberships, conversas, perfis e auditoria;
+- constraints de estado/consistência para memberships, mensagens, alertas e `audit_events`;
+- `enforce_message_attachment_limit`: trigger que rejeita mais de cinco anexos por mensagem.
+
+A trigger de conteúdo/anexo levanta SQLSTATE `23514` quando a mensagem não contém texto não vazio nem anexo. FKs e checks também produzem erros de integridade do PostgreSQL; não são respostas HTTP de handlers.
+
+**Limite da evidência desta revisão:** a consulta ao catálogo comprova que essas regras estão instaladas, mas não executa por si só os casos negativos. Os registros das PRs #165/#168 descrevem testes transacionais de integridade, e a instalação limpa da PR #180 comprova a aplicação das migrations em banco local descartável. Para fechar o apontamento de comportamento de erro com rastreabilidade inequívoca, a evidência deve identificar os casos negativos executados e seus SQLSTATEs/constraints esperados. Não se deve substituir essa prova por implementação de endpoints fora do escopo.
+
+### 8.3 Ausência de regressão — o que é pertinente à #99
+
+Para esta issue, regressão pertinente significa que as migrations e as invariantes do modelo continuam instaláveis e preservam os comportamentos de persistência definidos para as entidades/configurações modeladas. A execução de instalação limpa 18/18 na PR #180 é evidência de instalação/migração; os 16/16 cenários da #101 são evidência de isolamento RLS. Nenhuma dessas evidências, isoladamente, comprova todos os casos de integridade da #99.
+
+A evidência de regressão deve, portanto, cobrir os comportamentos de banco diretamente definidos pelas migrations da #99: relações/FKs, unicidade e constraints, ciclo de membership representado no schema, mensagens com texto ou anexos, limite/MIME/tamanho dos anexos, leitura por mensagem/participante e estruturas de configuração inventariadas. Isso não significa exigir que a #99 implemente fluxos de interface, endpoints de administração, download de anexos, call-sites de auditoria ou outros handlers pertencentes a entregas funcionais distintas.
+
+### 8.4 Estado corrigido da avaliação
+
+| Ponto SQA | Evidência pertinente já identificada | O que ainda precisa ser demonstrado |
+|---|---|---|
+| Autorização server-side | Policies RLS integradas pela PR #172 e evidência de 16/16 cenários em `docs/security/issue-101-rls-evidence.md`. | Relacionar explicitamente os cenários relevantes às entidades/modelagem da #99. Não exigir implementação de handlers genéricos. |
+| Comportamento de erro | Constraints, FKs e triggers estão presentes no schema remoto; migrations versionadas contêm as regras de integridade. | Apontar os testes negativos reproduzíveis e os erros/SQLSTATEs esperados, sem transformar o critério em requisito de API HTTP. |
+| Sem regressão | Instalação limpa 18/18 pela PR #180; CI e evidência RLS 16/16. | Evidência consolidada de regressão das invariantes de integridade e relações próprias do modelo da #99. |
+
+**Conclusão corrigida:** a pendência não é implementar todos os handlers/fluxos de negócio do Polychat. A validação deve permanecer no limite da modelagem e de suas integrações de persistência: enforcement de acesso no banco, erros de integridade e regressão dos comportamentos definidos pelas migrations. Esta seção não declara os três pontos integralmente aprovados; delimita a evidência faltante sem ampliar o escopo da Issue #99.
+
+Nenhuma migration, tabela, policy, dado, configuração Supabase ou metadado da Issue #99 foi alterado nesta correção.
