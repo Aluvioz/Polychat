@@ -40,6 +40,8 @@ jobs:
 
           integration_tests=(
             supabase/tests/issue_112_group_admin.integration.sql
+            supabase/tests/issue_107_direct_conversation_rpc.integration.sql
+            supabase/tests/issue_107_active_profile_search.integration.sql
             supabase/tests/issue_115_private_bucket.integration.sql
           )
           for test_file in "${integration_tests[@]}"; do
@@ -73,6 +75,8 @@ jobs:
 
           for test_file in \
             supabase/tests/issue_112_group_admin.integration.sql \
+            supabase/tests/issue_107_direct_conversation_rpc.integration.sql \
+            supabase/tests/issue_107_active_profile_search.integration.sql \
             supabase/tests/issue_115_private_bucket.integration.sql; do
             if [[ -f "$test_file" ]]; then
               container_file="/tmp/$(basename "$test_file")"

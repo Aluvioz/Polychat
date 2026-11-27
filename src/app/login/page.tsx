@@ -27,7 +27,7 @@ export default function LoginPage() {
         setError(result?.error ?? "Não foi possível iniciar a sessão.");
         return;
       }
-      router.replace("/");
+      router.replace("/conversations");
       router.refresh();
     } catch {
       setError("Não foi possível iniciar a sessão.");
