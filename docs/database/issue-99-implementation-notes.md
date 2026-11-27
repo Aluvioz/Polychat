@@ -44,7 +44,7 @@ A aprovação da PR #165 cobre o conteúdo nela revisado. Não equivale à concl
 
 O parecer complementar do PO de 20/11/2026 ratificou o escopo conceitual para a baseline POLY-REQ-001 v0.5, incluindo as entidades centrais, `security_alerts`, `message_reads` e o inventário delimitado de configurações.
 
-A atualização do documento `docs/database/modelo-de-dados.md` está proposta na [PR #160](https://github.com/Aluvioz/Polychat/pull/160), aberta e em Draft na última consulta de 26/11/2026. A PR trata exclusivamente da atualização documental para a baseline v0.5. A versão atualizada ainda depende de revisão e integração; esta nota não altera a PR #160 nem substitui sua revisão.
+A atualização do documento `docs/database/modelo-de-dados.md` foi integrada pela [PR #160](https://github.com/Aluvioz/Polychat/pull/160), mesclada em 26/11/2026 após aprovação do Tech Lead. A PR trata exclusivamente da atualização documental para a baseline v0.5. Essa integração confirma a documentação conceitual na main, mas não equivale à aprovação do schema físico, DDL ou migrations.
 
 A aprovação funcional do PO não deve ser confundida com aprovação técnica do DER físico, DDL, migrations, constraints, índices, triggers ou RLS. A revisão técnica e SQA do schema físico foi registrada separadamente na PR #165.
 
@@ -145,7 +145,7 @@ Esta separação descreve dependências e limites já registrados no projeto; n�
 
 Esta atualização corrige o registro anterior que ainda descrevia a PR #165 como não integrada e a aprovação SQA como pendente. O estado correto consultado é: PR #165 merged, Tech Lead aprovado e SQA aprovado.
 
-A PR #160 continua separada, aberta e em Draft na última consulta. A PR #166 foi encerrada sem merge; a versão remota histórica é representada na sequência local por arquivo de ledger sem DDL, enquanto a definição canônica permanece na migration integrada de #102. A PR #180 já foi integrada e a migration do bucket da PR #181 também está na `main`.
+A PR #160 foi mesclada em 26/11/2026; o modelo conceitual v0.5 está integrado à main. A PR #166 foi encerrada sem merge; a versão remota histórica é representada na sequência local por arquivo de ledger sem DDL, enquanto a definição canônica permanece na migration integrada de #102. A PR #180 já foi integrada e a migration do bucket da PR #181 também está na `main`.
 
 **Conclusão desta nota:** há evidência documentada de migrations de domínio integradas e aplicadas, schema presente no Supabase de desenvolvimento e revisão técnica/SQA aprovada para a PR #165. Isso atualiza a rastreabilidade da Issue #99, mas não declara todos os critérios originais satisfeitos nem autoriza seu fechamento.
 
@@ -181,7 +181,7 @@ Após a integração das PRs #180 e #181, a `main` contém 18 arquivos de migrat
 
 A instalação limpa combinada foi executada com sucesso no workflow da PR #180 — [execução #45856604234](https://github.com/Aluvioz/Polychat/actions/runs/45856604234) — em PostgreSQL local descartável: 18 migrations aplicadas e 18/18 entradas em `supabase migration list --local`. Essa execução não realizou `db push`, `migration repair` nem reset no Polyford remoto.
 
-Na PR #160, o workflow de repetição [#45899085733](https://github.com/Aluvioz/Polychat/actions/runs/45899085733) falhou no setup de `supabase/setup-cli@v1`, configurado com `version: latest`, ao resolver a release da CLI (`rate limit exceeded`). A execução parou antes de inicializar a CLI, iniciar o ambiente local ou aplicar migrations; portanto, não representa falha de migration. É necessária nova execução verde após a equipe técnica estabilizar a resolução/instalação da CLI e tornar a limpeza resiliente à ausência do workspace.
+Registro histórico: o workflow de repetição da PR #160 [#45899085733](https://github.com/Aluvioz/Polychat/actions/runs/45899085733) falhou no setup de `supabase/setup-cli@v1` (`rate limit exceeded`) antes de inicializar o ambiente ou aplicar migrations. Esse resultado não representou falha de migration e foi superado pela validação posterior da PR #180, que executou instalação limpa das 18 migrations em PostgreSQL local descartável, com 18/18 entradas confirmadas. Não há execução pendente decorrente daquele erro.
 
 ### 7.2 Atualização da RLS e auditoria
 
