@@ -208,3 +208,49 @@ A PR #181 integrou o bucket privado `attachments`, allowlist PDF/JPEG e limite d
 A fundação atual não conclui download, links temporários/revogação, scanner/quarentena, quotas, descarte físico, backup de objetos nem a transação única de criação da mensagem com anexos. A Issue #99 não absorve essas entregas de outras frentes.
 
 **Conclusão atualizada:** existe evidência de schema inicial, índices, RLS, auditoria/controles de retenção, histórico reconciliado, bucket privado e endpoint inicial de upload, cada um revisado dentro de seu escopo. Isso não declara a Issue #99 integralmente concluída, não autoriza seu fechamento e não transfere para ela o ciclo completo de anexos, as políticas operacionais de backup/restore ou a homologação da FORD.
+
+
+## 8. Delimitação da validação SQA da Issue #99 — 27/11/2026
+
+Esta seção corrige a interpretação do apontamento SQA de 27/11/2026 sem alterar a descrição ou os critérios da Issue #99.
+
+### 8.1 Limite do requisito de autorização server-side
+
+A Issue #99 trata da modelagem PostgreSQL e de suas migrations. Seu texto não solicita a implementação de todos os handlers HTTP, endpoints administrativos ou fluxos completos do produto.
+
+Para o escopo de persistência, a validação server-side pertinente é a aplicação das regras de acesso na camada de banco, por meio de RLS e políticas aplicadas pelo PostgreSQL/Supabase. As policies de domínio e configuração foram integradas pela PR #172, no trabalho de autorização da Issue #101. A evidência `docs/security/issue-101-rls-evidence.md` registra 16/16 cenários de isolamento aprovados.
+
+Essa evidência pode ser usada para demonstrar enforcement no servidor/banco sobre as entidades modeladas. Ela não prova a autorização de cada endpoint da aplicação, mas a Issue #99 também não deve ser ampliada para exigir a implementação genérica desses endpoints. Caso o SQA considere necessário validar um handler específico para a #99, a revisão deve apontar qual operação existente, ligada diretamente à modelagem, está sendo avaliada e qual requisito aprovado exige esse handler.
+
+### 8.2 Comportamento de erro no limite do modelo de dados
+
+No escopo da #99, o comportamento de erro verificável é o produzido pelo PostgreSQL pelas constraints, FKs e triggers que protegem a integridade do modelo. A consulta de catálogo ao Polyford em 27/11/2026 confirmou, entre outras, as seguintes regras persistidas:
+
+- `messages_body_not_blank`: rejeita corpo vazio quando informado;
+- `messages_require_content_or_attachment` e `attachments_require_parent_message_content`: triggers diferidas que validam texto ou anexo no commit;
+- `attachments_mime_type_check` e `attachments_size_bytes_check`: limitam MIME a PDF/JPEG e tamanho a 10 MiB;
+- FKs de mensagens, anexos, memberships, conversas, perfis e auditoria;
+- constraints de estado/consistência para memberships, mensagens, alertas e `audit_events`;
+- `enforce_message_attachment_limit`: trigger que rejeita mais de cinco anexos por mensagem.
+
+A trigger de conteúdo/anexo levanta SQLSTATE `23514` quando a mensagem não contém texto não vazio nem anexo. FKs e checks também produzem erros de integridade do PostgreSQL; não são respostas HTTP de handlers.
+
+**Limite da evidência desta revisão:** a consulta ao catálogo comprova que essas regras estão instaladas, mas não executa por si só os casos negativos. Os registros das PRs #165/#168 descrevem testes transacionais de integridade, e a instalação limpa da PR #180 comprova a aplicação das migrations em banco local descartável. Para fechar o apontamento de comportamento de erro com rastreabilidade inequívoca, a evidência deve identificar os casos negativos executados e seus SQLSTATEs/constraints esperados. Não se deve substituir essa prova por implementação de endpoints fora do escopo.
+
+### 8.3 Ausência de regressão — o que é pertinente à #99
+
+Para esta issue, regressão pertinente significa que as migrations e as invariantes do modelo continuam instaláveis e preservam os comportamentos de persistência definidos para as entidades/configurações modeladas. A execução de instalação limpa 18/18 na PR #180 é evidência de instalação/migração; os 16/16 cenários da #101 são evidência de isolamento RLS. Nenhuma dessas evidências, isoladamente, comprova todos os casos de integridade da #99.
+
+A evidência de regressão deve, portanto, cobrir os comportamentos de banco diretamente definidos pelas migrations da #99: relações/FKs, unicidade e constraints, ciclo de membership representado no schema, mensagens com texto ou anexos, limite/MIME/tamanho dos anexos, leitura por mensagem/participante e estruturas de configuração inventariadas. Isso não significa exigir que a #99 implemente fluxos de interface, endpoints de administração, download de anexos, call-sites de auditoria ou outros handlers pertencentes a entregas funcionais distintas.
+
+### 8.4 Estado corrigido da avaliação
+
+| Ponto SQA | Evidência pertinente já identificada | O que ainda precisa ser demonstrado |
+|---|---|---|
+| Autorização server-side | Policies RLS integradas pela PR #172 e evidência de 16/16 cenários em `docs/security/issue-101-rls-evidence.md`. | Relacionar explicitamente os cenários relevantes às entidades/modelagem da #99. Não exigir implementação de handlers genéricos. |
+| Comportamento de erro | Constraints, FKs e triggers estão presentes no schema remoto; migrations versionadas contêm as regras de integridade. | Apontar os testes negativos reproduzíveis e os erros/SQLSTATEs esperados, sem transformar o critério em requisito de API HTTP. |
+| Sem regressão | Instalação limpa 18/18 pela PR #180; CI e evidência RLS 16/16. | Evidência consolidada de regressão das invariantes de integridade e relações próprias do modelo da #99. |
+
+**Conclusão corrigida:** a pendência não é implementar todos os handlers/fluxos de negócio do Polychat. A validação deve permanecer no limite da modelagem e de suas integrações de persistência: enforcement de acesso no banco, erros de integridade e regressão dos comportamentos definidos pelas migrations. Esta seção não declara os três pontos integralmente aprovados; delimita a evidência faltante sem ampliar o escopo da Issue #99.
+
+Nenhuma migration, tabela, policy, dado, configuração Supabase ou metadado da Issue #99 foi alterado nesta correção.
