@@ -59,15 +59,19 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 | Q-023 | Idioma e notificações | Interface exclusivamente em português. Não haverá notificações push nem notificações do navegador. O indicador de mensagens não lidas aparece dentro do aplicativo. | Resolvida |
 | Q-024 | Edição e exclusão de mensagens | Usuários comuns não podem editar nem excluir mensagens. TI pode editar e excluir a qualquer momento; operações administrativas geram auditoria. | Resolvida |
 
-## 8.3 Questões que permanecem abertas
+### Classificação vigente — alinhamento com a baseline POLY-REQ-001 v0.5
 
-A classificação vigente abaixo deve permanecer idêntica à seção 8 da baseline POLY-REQ-001 v0.5. Q-018 está resolvida, Q-019 permanece parcialmente aberta e Q-025 está concluída. Somente Q-019 exige ação de definição de produto; os limites e as evidências da conclusão de Q-025 permanecem detalhados na seção 8.4. As frentes técnicas alinhadas com Desenvolvimento não reabrem essas decisões nem constituem pendências de definição de produto.
+A classificação abaixo é a referência consolidada para a seção 8 da baseline. Q-018 está resolvida, Q-019 permanece parcialmente aberta e Q-025 está concluída.
 
 | Questão | Classificação vigente | Escopo/status |
 |---|---|---|
 | Q-018 | **Resolvida — 20/11/2026** | Arquitetura da informação e catálogo de telas definidos; decisão registrada em `docs/ux/decisoes-produto-q018-q019.md`. |
 | Q-019 | **Parcialmente aberta** | Paleta provisória definida; permanece pendente somente a confirmação/entrega dos ativos oficiais de marca, sobretudo o arquivo autorizado do Ford Oval e eventuais regras de aplicação/tipografia. |
 | Q-025 | **Concluída — 24/11/2026** | Compatibilidade e modelo de utilização de Supabase + Vercel aprovados pela TI e pela FORD, dentro dos limites, controles e responsabilidades registrados. A decisão não equivale à conclusão de todas as integrações ou à homologação de produção. |
+
+## 8.3 Questões que permanecem abertas
+
+Somente Q-019 exige ação de definição de produto. Os limites e as evidências da conclusão de Q-025 permanecem detalhados na seção 8.4. As frentes técnicas alinhadas com Desenvolvimento não reabrem as decisões registradas nem constituem pendências de definição de produto.
 
 | ID | Tema | Ação necessária | Motivo | Responsável sugerido |
 |---|---|---|---|---|
