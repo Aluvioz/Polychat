@@ -193,7 +193,7 @@ Após a integração das PRs #180 e #181, a `main` contém 18 arquivos de migrat
 
 A instalação limpa combinada foi executada com sucesso no workflow da PR #180 — [execução #45856604234](https://github.com/Aluvioz/Polychat/actions/runs/45856604234) — em PostgreSQL local descartável: 18 migrations aplicadas e 18/18 entradas em `supabase migration list --local`. Essa execução não realizou `db push`, `migration repair` nem reset no Polyford remoto.
 
-Registro histórico: o workflow de repetição [#45899085733](https://github.com/Aluvioz/Polychat/actions/runs/45899085733), associado à PR #160, falhou no setup de `supabase/setup-cli@v1` (`version: latest`) por `rate limit exceeded`, antes de inicializar a CLI ou aplicar migrations. Essa execução não representa falha de migration. A PR #160 foi posteriormente integrada à `main`; a validação de instalação limpa das 18 migrations está documentada na execução bem-sucedida da PR #180 indicada acima.
+Registro histórico: o workflow de repetição [#45899085733](https://github.com/Aluvioz/Polychat/actions/runs/45899085733), associado à PR #160, falhou no setup de `supabase/setup-cli@v1` (`version: latest`) por `rate limit exceeded`, antes de inicializar a CLI ou aplicar migrations. Essa execução não representa falha de migration. A necessidade de validação da instalação limpa foi posteriormente atendida pela execução bem-sucedida da PR #180, que aplicou as 18 migrations em PostgreSQL local descartável e confirmou 18/18 entradas em `supabase migration list --local`. Portanto, o erro histórico da PR #160 não deixa pendente a validação da instalação limpa das migrations.
 
 ### 7.2 Atualização da RLS e auditoria
 
