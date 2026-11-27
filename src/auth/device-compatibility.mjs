@@ -27,6 +27,13 @@ function detectDevice(userAgent) {
 }
 
 function detectBrowser(userAgent) {
+  // Samsung Internet includes Chrome in its User-Agent. Identify it first so
+  // it cannot be mistaken for the explicitly homologated Google Chrome.
+  const samsungInternet = userAgent.match(/SamsungBrowser\/([0-9]+)/i);
+  if (samsungInternet) {
+    return { name: "samsung-internet", majorVersion: Number(samsungInternet[1]) };
+  }
+
   const patterns = [
     ["edge", /Edg(?:A|iOS)?\/([0-9]+)/i],
     ["firefox", /(?:Firefox|FxiOS)\/([0-9]+)/i],
