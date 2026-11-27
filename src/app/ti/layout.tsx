@@ -12,9 +12,7 @@ const navigation = [
   { code: "T-08", label: "Configurações", available: false },
 ];
 
-export default function TIConsoleLayout({
-  children,
-}: Readonly<{ children: ReactNode }>) {
+export default function TIConsoleLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <div className="ti-console">
       <aside className="ti-sidebar" aria-label="Console TI">
@@ -28,7 +26,11 @@ export default function TIConsoleLayout({
             {navigation.map((item) => (
               <li key={item.code}>
                 {item.available ? (
-                  <Link className="ti-nav-link ti-nav-link-active" href={item.href ?? "/ti"} aria-current="page">
+                  <Link
+                    className="ti-nav-link ti-nav-link-active"
+                    href={item.href ?? "/ti"}
+                    aria-current="page"
+                  >
                     <span className="ti-nav-code">{item.code}</span>
                     <span>{item.label}</span>
                   </Link>
@@ -46,9 +48,7 @@ export default function TIConsoleLayout({
           </ul>
         </nav>
 
-        <p className="ti-sidebar-footnote">
-          Área administrativa restrita ao perfil TI.
-        </p>
+        <p className="ti-sidebar-footnote">Área administrativa restrita ao perfil TI.</p>
       </aside>
 
       <div className="ti-main-column">

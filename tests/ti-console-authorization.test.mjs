@@ -8,9 +8,12 @@ function requestCookies(accessToken = null, refreshToken = null) {
     ["polychat_refresh_token", refreshToken],
   ]);
   return {
-    headers: { get: (name) => name === "user-agent"
-      ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
-      : null },
+    headers: {
+      get: (name) =>
+        name === "user-agent"
+          ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+          : null,
+    },
     cookies: {
       get(name) {
         const value = values.get(name);
@@ -45,9 +48,12 @@ test("permite acesso ao console para TI autenticado e ativo", async () => {
 test("nega TI em celular e preserva a sessão renovada", async () => {
   const mobileRequest = {
     ...requestCookies("access"),
-    headers: { get: (name) => name === "user-agent"
-      ? "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
-      : null },
+    headers: {
+      get: (name) =>
+        name === "user-agent"
+          ? "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+          : null,
+    },
   };
   const result = await authorizeTIConsoleRequest(mobileRequest, {
     validate: async () => ({ ...userSession, user: { ...userSession.user, role: "ti" } }),

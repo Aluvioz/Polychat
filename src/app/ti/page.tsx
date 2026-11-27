@@ -38,8 +38,8 @@ export default function TIDashboardPage() {
         <p className="ti-eyebrow">T-02 · ÁREA ADMINISTRATIVA</p>
         <h1>Dashboard TI</h1>
         <p>
-          Visão inicial do ambiente administrativo do Polychat e acesso às
-          áreas previstas para a equipe de TI.
+          Visão inicial do ambiente administrativo do Polychat e acesso às áreas previstas para a
+          equipe de TI.
         </p>
       </header>
 
@@ -48,9 +48,8 @@ export default function TIDashboardPage() {
         <div>
           <h2 id="ti-notice-title">Bem-vindo ao ambiente administrativo</h2>
           <p>
-            Esta entrega disponibiliza a estrutura do console e sua navegação.
-            As operações das demais áreas serão habilitadas nas respectivas
-            entregas.
+            Esta entrega disponibiliza a estrutura do console e sua navegação. As operações das
+            demais áreas serão habilitadas nas respectivas entregas.
           </p>
         </div>
       </section>
@@ -77,8 +76,8 @@ export default function TIDashboardPage() {
       </section>
 
       <p className="ti-dashboard-footnote">
-        Não há indicadores operacionais conectados nesta entrega. Nenhuma
-        métrica ou dado demonstrativo é apresentado como informação real.
+        Não há indicadores operacionais conectados nesta entrega. Nenhuma métrica ou dado
+        demonstrativo é apresentado como informação real.
       </p>
     </div>
   );

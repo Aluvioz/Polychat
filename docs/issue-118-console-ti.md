@@ -29,12 +29,12 @@ A checagem de perfil não substitui RLS. A ADR-006 cobre somente o módulo/perfi
 
 Execução local sobre a integração simulada de `main` com a branch da PR:
 
-| Verificação | Resultado |
-| --- | --- |
-| `npm test` | PASS — 121 testes, 0 falhas |
-| `npm run lint` | PASS |
-| `npm run typecheck` | PASS |
-| `npm run build` | PASS — build Next.js concluído |
+| Verificação            | Resultado                                                                                                                     |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `npm test`             | PASS — 121 testes, 0 falhas                                                                                                   |
+| `npm run lint`         | PASS                                                                                                                          |
+| `npm run typecheck`    | PASS                                                                                                                          |
+| `npm run build`        | PASS — build Next.js concluído                                                                                                |
 | `npm run format:check` | FAIL — Prettier reportou 103 arquivos fora do padrão no repositório; 9 arquivos do conjunto alterado também aparecem na lista |
 
 A verificação de formatação foi executada sem aplicar `prettier --write` ao repositório, para evitar alterações em massa fora do escopo desta PR. O workflow CI do repositório não inclui atualmente `format:check`.
@@ -47,12 +47,12 @@ Testes unitários simulados não substituem integração Supabase real ou homolo
 
 Foi executada uma verificação automatizada de interface em Chromium com viewport desktop de 1440×900, sobre o build local resultante da integração com `main`:
 
-| Cenário acessível sem conta TI | Resultado |
-| --- | --- |
-| Login com `?motivo=sessao-expirada` | PASS — aviso de sessão expirada exibido |
-| Página `/acesso-negado` | PASS — título de acesso não autorizado exibido |
-| Página `/indisponivel` | PASS — mensagem de indisponibilidade exibida |
-| Acesso não autenticado a `/ti` | PASS — redirecionado para login com motivo de sessão expirada |
+| Cenário acessível sem conta TI      | Resultado                                                     |
+| ----------------------------------- | ------------------------------------------------------------- |
+| Login com `?motivo=sessao-expirada` | PASS — aviso de sessão expirada exibido                       |
+| Página `/acesso-negado`             | PASS — título de acesso não autorizado exibido                |
+| Página `/indisponivel`              | PASS — mensagem de indisponibilidade exibida                  |
+| Acesso não autenticado a `/ti`      | PASS — redirecionado para login com motivo de sessão expirada |
 
 **Limitações ainda pendentes:** não foi possível autenticar uma conta TI real; portanto, navegação interna autenticada, menu e Dashboard, carregamento real do console e os fluxos de erro do servidor/provedor não foram homologados. Os estados de loading e error boundary não foram forçados nesta execução. Essa verificação parcial não equivale à homologação manual integral solicitada pelo SQA.
 

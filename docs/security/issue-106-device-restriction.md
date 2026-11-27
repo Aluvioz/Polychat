@@ -2,11 +2,11 @@
 
 ## Regra de compatibilidade (RN-015 / RF-017 / RF-018)
 
-| Perfil | Dispositivo permitido | Navegadores homologados |
-|---|---|---|
-| `user` | Celular Android ou iOS | Chrome ou Safari móvel |
-| `ti` | Computador | Chrome, Edge ou Firefox |
-| Ambos | Tablets não permitidos | — |
+| Perfil | Dispositivo permitido  | Navegadores homologados |
+| ------ | ---------------------- | ----------------------- |
+| `user` | Celular Android ou iOS | Chrome ou Safari móvel  |
+| `ti`   | Computador             | Chrome, Edge ou Firefox |
+| Ambos  | Tablets não permitidos | —                       |
 
 O acesso de User em computador deve exibir exatamente a orientação funcional
 **“só pode ser usado em celular”**. TI em celular deve receber orientação para

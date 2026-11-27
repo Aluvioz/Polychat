@@ -10,8 +10,8 @@ export default function TIError({
     <section className="ti-state-card" role="alert">
       <h1>Não foi possível carregar o Console TI</h1>
       <p>
-        Ocorreu uma falha ao apresentar esta página. Tente novamente. Se o
-        problema continuar, entre em contato com a equipe de TI.
+        Ocorreu uma falha ao apresentar esta página. Tente novamente. Se o problema continuar, entre
+        em contato com a equipe de TI.
       </p>
       <button className="ti-state-button" onClick={() => reset()} type="button">
         Tentar novamente

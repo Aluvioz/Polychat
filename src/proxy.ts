@@ -15,9 +15,10 @@ export async function proxy(request: NextRequest) {
     }
 
     if (authorization.status === 403) {
-      const deniedUrl = authorization.reason === "DEVICE_NOT_SUPPORTED"
-        ? new URL("/acesso-negado?area=ti&motivo=dispositivo-incompativel", request.url)
-        : new URL("/acesso-negado?area=ti", request.url);
+      const deniedUrl =
+        authorization.reason === "DEVICE_NOT_SUPPORTED"
+          ? new URL("/acesso-negado?area=ti&motivo=dispositivo-incompativel", request.url)
+          : new URL("/acesso-negado?area=ti", request.url);
       const response = NextResponse.redirect(deniedUrl);
       if (authorization.session?.refreshed) {
         setSessionCookies(response, authorization.session);
@@ -25,9 +26,7 @@ export async function proxy(request: NextRequest) {
       return response;
     }
 
-    return NextResponse.redirect(
-      new URL("/indisponivel?area=ti", request.url),
-    );
+    return NextResponse.redirect(new URL("/indisponivel?area=ti", request.url));
   }
 
   const response = NextResponse.next();
