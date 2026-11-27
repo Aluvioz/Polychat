@@ -1,6 +1,6 @@
 # ADR-003 — Direção tecnológica: Supabase + Vercel
 
-- **Status:** Accepted
+- **Status:** Accepted — stack Supabase + Vercel adotada e obrigatória; compatibilidade/modelo de utilização aprovados na Q-025
 - **Data da decisão original:** 17/11/2026
 - **Data da revisão:** 26/11/2026
 - **Issue de origem:** #89 · **Referência original:** #88
