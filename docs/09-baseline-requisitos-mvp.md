@@ -305,11 +305,15 @@ Comandos locais disponíveis no projeto:
 Essas evidências comprovam apenas os escopos e ambientes indicados. Não comprovam login positivo com usuário real, todos os handlers de negócio, Storage/scanner, backup/restore, realtime, homologação de produção ou cobertura integral dos critérios de aceite.
 ## 8. Questões e decisões restantes
 
-As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). **Somente Q-019 permanece parcialmente aberta**, restrita à confirmação/entrega dos ativos oficiais de marca.
+As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). A classificação vigente das questões Q-018, Q-019 e Q-025 é a mesma registrada nas seções 8.2 a 8.6 do documento de questões:
 
-- Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
+| Questão | Classificação vigente | Escopo/status |
+|---|---|---|
+| Q-018 | **Resolvida — 20/11/2026** | Arquitetura da informação e catálogo de telas definidos; decisão registrada em `docs/ux/decisoes-produto-q018-q019.md`. |
+| Q-019 | **Parcialmente aberta** | Paleta provisória definida; permanece pendente somente a confirmação/entrega dos ativos oficiais de marca, sobretudo o arquivo autorizado do Ford Oval e eventuais regras de aplicação/tipografia. |
+| Q-025 | **Concluída — 24/11/2026** | Compatibilidade e modelo de utilização de Supabase + Vercel aprovados pela TI e pela FORD, dentro dos limites, controles e responsabilidades registrados. A decisão não equivale à conclusão de todas as integrações ou à homologação de produção. |
 
-Q-018 permanece registrada como decisão de produto resolvida em 20/11/2026. Q-025 permanece registrada como concluída em 24/11/2026, com aprovação da compatibilidade da stack Supabase + Vercel pela TI e pela FORD. Esses registros históricos e suas decisões permanecem preservados, mas não integram a relação de questões abertas.
+**Somente Q-019 integra a relação de questões abertas** e permanece parcialmente aberta, restrita à confirmação/entrega dos ativos oficiais de marca. Q-018 e Q-025 permanecem em seus respectivos contextos históricos de resolução e conclusão, sem serem reclassificadas como pendências.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 
