@@ -52,7 +52,7 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 | Q-016 | Carga e desempenho | Capacidade inicial de até 25 conexões simultâneas de usuários finais, além dos administradores TI. Volume esperado de mensagens e anexos baixo/ocasional. Metas de desempenho alinhadas com Desenvolvimento e consideradas completas. | Resolvida |
 | Q-017 | Disponibilidade e recuperação | Disponibilidade mensal de 99%; RPO de até 24 horas em desastre/falha de infraestrutura; RTO de até 24 horas; backups diários de banco e anexos com retenção de 12 meses; manutenção fora do horário comercial com aviso prévio; suporte em horário comercial. | Resolvida |
 | Q-018 | Arquitetura da informação e telas | Catálogo e navegação por perfil consolidados: Usuário mobile com Conversas recentes como área principal, fluxo de nova conversa individual e chat individual/grupo; TI desktop com Dashboard, Usuários, Grupos, Consulta de conversas, Alertas, Auditoria e Configurações restritas aos controles definidos. | Resolvida em 20/11/2026; ver [decisões de produto Q-018/Q-019](ux/decisoes-produto-q018-q019.md) |
-| Q-019 | Identidade visual | Paleta provisória definida: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. O Ford Oval só será aplicado a partir de arquivo oficial autorizado. | Direção cromática provisória resolvida; ativos oficiais de marca ainda pendentes |
+| Q-019 | Identidade visual | Paleta provisória definida: Ford Blue `#00095B`, Ford Twilight `#00142E`, Ford Skyview `#066FEF`, branco `#FFFFFF` e neutros `#F0F0F0`/`#0F0F0F`. O Ford Oval só será aplicado a partir de arquivo oficial autorizado. | Parcialmente aberta — direção cromática provisória definida; permanecem pendentes somente os ativos oficiais de marca |
 | Q-020 | Acessibilidade | A FORD não definiu requisitos adicionais de acessibilidade para o programa inicial. Obrigações legais ou corporativas aplicáveis continuam válidas. | Resolvida como decisão de escopo |
 | Q-021 | Prazo e concorrência | Não há data limite definida nem marco corporativo condicionando o lançamento. O prazo será combinado conforme o planejamento das sprints. | Resolvida; planejamento de sprint é operacional |
 | Q-022 | Orçamento | R$ 450.000,00 é referência comercial global e inclui implantação. Não inclui infraestrutura, licenças, suporte, manutenção ou treinamento; custos recorrentes ficam com a FORD. O valor não foi declarado teto aprovado. | Resolvida quanto às condições informadas |
@@ -61,7 +61,13 @@ A tabela mantém as perguntas da documentação anterior e registra a decisão o
 
 ## 8.3 Questões que permanecem abertas
 
-Somente os itens abaixo continuam exigindo ação. Q-018 foi encerrada como decisão de produto; Q-019 está parcialmente concluída e só mantém a obtenção dos ativos oficiais de marca. A Q-025 foi concluída em 24/11/2026 após aprovação da compatibilidade da stack Supabase + Vercel pela TI e pela FORD; suas evidências e limites permanecem registrados na seção 8.4. As frentes técnicas alinhadas com Desenvolvimento não são pendências de definição de produto.
+A classificação vigente abaixo deve permanecer idêntica à seção 8 da baseline POLY-REQ-001 v0.5. Q-018 está resolvida, Q-019 permanece parcialmente aberta e Q-025 está concluída. Somente Q-019 exige ação de definição de produto; os limites e as evidências da conclusão de Q-025 permanecem detalhados na seção 8.4. As frentes técnicas alinhadas com Desenvolvimento não reabrem essas decisões nem constituem pendências de definição de produto.
+
+| Questão | Classificação vigente | Escopo/status |
+|---|---|---|
+| Q-018 | **Resolvida — 20/11/2026** | Arquitetura da informação e catálogo de telas definidos; decisão registrada em `docs/ux/decisoes-produto-q018-q019.md`. |
+| Q-019 | **Parcialmente aberta** | Paleta provisória definida; permanece pendente somente a confirmação/entrega dos ativos oficiais de marca, sobretudo o arquivo autorizado do Ford Oval e eventuais regras de aplicação/tipografia. |
+| Q-025 | **Concluída — 24/11/2026** | Compatibilidade e modelo de utilização de Supabase + Vercel aprovados pela TI e pela FORD, dentro dos limites, controles e responsabilidades registrados. A decisão não equivale à conclusão de todas as integrações ou à homologação de produção. |
 
 | ID | Tema | Ação necessária | Motivo | Responsável sugerido |
 |---|---|---|---|---|
