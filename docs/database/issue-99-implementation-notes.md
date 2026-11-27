@@ -140,7 +140,7 @@ A aprovação da estrutura de dados não substitui a revisão da instrumentaçã
 - A gravação de mensagem composta somente por anexos depende de mensagem e anexos serem persistidos na mesma transação/RPC. A migration contém a invariância diferida, mas a integração funcional do fluxo ainda depende das issues de produto correspondentes.
 - `profiles.username` permanece nullable; não foi inventado preenchimento para contas existentes.
 - A estrutura de `audit_events` está reproduzível a partir da migration integrada de retenção; isso não conclui os callsites funcionais de auditoria que permanecem no escopo da #102.
-- A ADR-005 permanece Proposed e a Q-025 permanece aberta para avaliação da compatibilidade operacional da stack com as restrições FORD.
+- A ADR-005 permanece Proposed para a decisão técnica específica sobre PostgreSQL/Supabase Database e para as evidências próprias de integração, operação e continuidade. A compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel foram aprovados pela TI e pela FORD na Q-025, concluída em 24/11/2026; essa decisão não é reaberta por esta nota.
 
 ## 5. Relação com outras issues — sem transferência de escopo
 

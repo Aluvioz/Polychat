@@ -96,7 +96,7 @@ A confiança nos administradores TI e os riscos associados à igualdade de poder
 - Compartilhamento de formatos diferentes de PDF e JPEG.
 - Notificações push e notificações do navegador.
 - Integrações com outros aplicativos ou serviços externos de comunicação.
-- Serviços externos que acessem, armazenem ou processem dados da FORD.
+- Serviços externos adicionais, além dos provedores nomeados Supabase e Vercel e dos usos expressamente aprovados na Q-025, que acessem, armazenem ou processem dados da FORD sem aprovação específica.
 
 ### 2.3 Público e capacidade
 
@@ -255,7 +255,7 @@ Snapshot técnico reconciliado com a `main`, considerando as integrações das P
 - **Upload parcial — PR #185:** foi integrado o endpoint server-side `POST /api/attachments/upload`. A rota valida sessão pelos cookies HTTP-only, consulta a mensagem com o JWT do usuário e permite o envio somente ao remetente. Valida extensão, MIME declarado e assinatura binária PDF/JPEG, aplica 10 MiB, grava metadados sob RLS e tenta remover o objeto caso o registro do metadado falhe. Há testes unitários de validação; não houve upload/download real de arquivo no Polyford. A validação de assinatura não é parser estrutural completo nem análise antimalware, e a rota não implementa download nem emite URL pública/temporária.
 - As quotas `attachment_user_quotas` e `attachment_storage_capacity` continuam sem valores semeados nem enforcement integrado de consumo por usuário/capacidade global.
 - Scanner antimalware interno, quarentena, validação estrutural profunda, rejeição de PDF protegido por senha, remoção de EXIF/GPS, download autorizado, links temporários/revogação, fluxo transacional completo de mensagem/anexo e backup/restauração de objetos permanecem pendentes nas issues correspondentes.
-- A retificação funcional do PO em 26/11/2026, registrada no POLY-STO-001 v0.3, seção 16.2, esclareceu o limite em **10 MiB (10.485.760 bytes)** por arquivo, com até cinco anexos por mensagem. A expressão histórica “10 MB” da baseline v0.5 não deve ser interpretada como 10.000.000 bytes. Bucket #181 e endpoint #185 aplicam o limite esclarecido de 10 MiB; permanecem pendentes os testes de fronteira e a comprovação do fluxo real, não uma decisão de produto sobre a unidade.
+- A retificação funcional do PO em 26/11/2026, registrada no POLY-STO-001 v0.3, seção 16.2, esclareceu o limite em **10 MiB (10.485.760 bytes)** por arquivo, com até cinco anexos por mensagem. A expressão histórica “10 MB” da baseline v0.5 não deve ser interpretada como 10.000.000 bytes. Bucket #181 e endpoint #185 aplicam o limite esclarecido de 10 MiB. A suíte `tests/attachment-validation.test.mjs` já verifica a rejeição de 10.485.761 bytes; permanecem pendentes o teste positivo explícito para aceitação de exatamente 10.485.760 bytes e a comprovação do limite no fluxo real de upload, não uma decisão de produto sobre a unidade.
 - Os fluxos completos de conversas, grupos, mensagens, anexos e console administrativo ainda não estão integrados ponta a ponta. A presença dos módulos de autenticação, auditoria, bucket e endpoint parcial de upload não comprova que todos os eventos estejam sendo emitidos por operações reais nem que a jornada de anexos esteja concluída.
 - Evidências: `docs/security/issue-101-rls-evidence.md`, `docs/security/issue-102-audit-retention-evidence.md`, `docs/issue-124-auditoria-privilegiada.md`, `docs/infra/polyford-integration-validation-2026-11-26.md`, `docs/infra/polyford-backup-restore-assessment-2026-11-26.md`, `docs/storage/issue-115-private-storage-evidence.md` e `docs/storage/issue-115-upload-implementation.md`. CI/Preview positivos não substituem testes integrados restantes, verificações SEC/DOC ou homologação de produção.
 
@@ -305,11 +305,15 @@ Comandos locais disponíveis no projeto:
 Essas evidências comprovam apenas os escopos e ambientes indicados. Não comprovam login positivo com usuário real, todos os handlers de negócio, Storage/scanner, backup/restore, realtime, homologação de produção ou cobertura integral dos critérios de aceite.
 ## 8. Questões e decisões restantes
 
-As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). Permanecem abertas somente:
+As questões históricas Q-001 a Q-024 foram preservadas e atualizadas em [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md). A classificação vigente das questões Q-018, Q-019 e Q-025 é a mesma registrada nas seções 8.2 a 8.6 do documento de questões:
 
-- Q-018 — Resolvida pelo PO em 20/11/2026; arquitetura da informação e catálogo de telas registrados em `docs/ux/decisoes-produto-q018-q019.md`.
-- Q-019 — Paleta cromática provisória definida pelo PO em 20/11/2026; permanece pendente somente a confirmação/entrega do arquivo oficial autorizado do Ford Oval e eventuais regras específicas de aplicação.
-- Q-025 — Concluída em 24/11/2026: compatibilidade da stack Supabase + Vercel aprovada pela TI e pela FORD, com provedores nomeados, controles, responsabilidades e limites de utilização registrados; sem substituição da stack por inferência.
+| Questão | Classificação vigente | Escopo/status |
+|---|---|---|
+| Q-018 | **Resolvida — 20/11/2026** | Arquitetura da informação e catálogo de telas definidos; decisão registrada em `docs/ux/decisoes-produto-q018-q019.md`. |
+| Q-019 | **Parcialmente aberta** | Paleta provisória definida; permanece pendente somente a confirmação/entrega dos ativos oficiais de marca, sobretudo o arquivo autorizado do Ford Oval e eventuais regras de aplicação/tipografia. |
+| Q-025 | **Concluída — 24/11/2026** | Compatibilidade e modelo de utilização de Supabase + Vercel aprovados pela TI e pela FORD, dentro dos limites, controles e responsabilidades registrados. A decisão não equivale à conclusão de todas as integrações ou à homologação de produção. |
+
+**Somente Q-019 integra a relação de questões abertas** e permanece parcialmente aberta, restrita à confirmação/entrega dos ativos oficiais de marca. Q-018 e Q-025 permanecem em seus respectivos contextos históricos de resolução e conclusão, sem serem reclassificadas como pendências.
 
 Os oito grupos de requisitos alinhados com Desenvolvimento não são pendências. A confiança nos administradores TI e os riscos do modelo administrativo também não são pendências.
 

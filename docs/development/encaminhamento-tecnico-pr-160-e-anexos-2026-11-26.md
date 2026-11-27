@@ -77,7 +77,7 @@ O detalhamento técnico, a decomposição em entregas e a ordem de implementaç�
 ## 5. Limites e decisões que devem ser preservados
 
 - Stack definida do projeto: **Supabase + Vercel**. A ADR-003 Accepted não deve ser reclassificada nem substituída por inferência.
-- Q-025 permanece aberta para avaliar a compatibilidade da configuração e do modelo de uso com as restrições da FORD; não declarar a questão resolvida sem evidências e decisão formal.
+- A Q-025 foi concluída em 24/11/2026, com aprovação da TI e da FORD para a compatibilidade e o modelo de utilização dos provedores nomeados Supabase + Vercel, dentro dos limites e responsabilidades registrados. ADR-005 e ADR-008 permanecem Proposed para suas decisões técnicas específicas; suas revisões não reabrem a compatibilidade da stack nem a aprovação dos provedores.
 - ADR-005 e ADR-008 permanecem **Proposed** até revisão/decisão arquitetural própria.
 - O aceite funcional do PO sobre POLY-DATA-001 v0.5 e POLY-STO-001 v0.3 não aprova schema físico, DDL, RLS, funções privilegiadas, migrations, desenho do scanner, infraestrutura ou homologação.
 - Não tratar o bucket privado ou o endpoint inicial de upload como ciclo de anexos concluído.
