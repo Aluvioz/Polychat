@@ -115,6 +115,7 @@ test("treats an identical retry as success and returns the original persisted ro
   assert.deepEqual(result.message, storedMessage);
   assert.equal(calls.length, 2);
   assert.equal(calls[1].options.method, "GET");
+  assert.doesNotMatch(calls[1].url, /on_conflict/);
   assert.match(calls[1].url, /id=eq\.33333333-3333-4333-8333-333333333333/);
 });
 

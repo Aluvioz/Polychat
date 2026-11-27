@@ -34,7 +34,7 @@ function configuration(env) {
 function requestHeaders(apiKey, accessToken, extra = {}) {
   return {
     apikey: apiKey,
-    Authorization: \`Bearer \${accessToken}\`,
+    Authorization: "Bearer " + accessToken,
     ...extra,
   };
 }
@@ -68,7 +68,7 @@ async function readExistingMessage({
     "select",
     "id,conversation_id,sender_profile_id,body,created_at",
   );
-  lookup.searchParams.set("id", \`eq.\${id}\`);
+  lookup.searchParams.set("id", "eq." + id);
 
   let response;
   try {
@@ -130,16 +130,18 @@ export async function persistTextMessage({
   const cfg = configuration(env);
   if (!cfg) return { ok: false, status: 503, reason: "configuration_unavailable" };
 
-  const endpoint = new URL(\`\${cfg.baseUrl}/rest/v1/messages\`);
-  endpoint.searchParams.set("on_conflict", "id");
+  // Keep the lookup URL free of the PostgREST insert-only on_conflict parameter.
+  const endpoint = new URL(cfg.baseUrl + "/rest/v1/messages");
   endpoint.searchParams.set(
     "select",
     "id,conversation_id,sender_profile_id,body,created_at",
   );
+  const insertEndpoint = new URL(endpoint);
+  insertEndpoint.searchParams.set("on_conflict", "id");
 
   let response;
   try {
-    response = await fetchImpl(endpoint, {
+    response = await fetchImpl(insertEndpoint, {
       method: "POST",
       headers: requestHeaders(cfg.apiKey, accessToken, {
         "Content-Type": "application/json",
