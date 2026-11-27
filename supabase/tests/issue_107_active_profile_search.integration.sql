@@ -20,21 +20,9 @@ update public.profiles
 set is_active = false
 where id = '44444444-4444-4444-8444-444444444444';
 
-do $prepare_query$
-declare
-  v_query text;
-begin
-  select left(username, 2) into v_query
-  from public.profiles
-  where id = '22222222-2222-4222-8222-222222222222';
-
-  if v_query is null or length(v_query) < 2 then
-    raise exception 'The active recipient fixture must have a searchable username';
-  end if;
-
-  perform set_config('issue107.search_query', v_query, true);
-end;
-$prepare_query$;
+-- Keep the prefix deterministic instead of deriving it from a profile read
+-- that may be hidden by the baseline profile-directory RLS policy.
+select set_config('issue107.search_query', 'qz', true);
 
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '11111111-1111-4111-8111-111111111111', true);
@@ -47,7 +35,7 @@ begin
     select 1
     from public.search_active_profiles(v_query) result
     where result.profile_id = '22222222-2222-4222-8222-222222222222'
-      and result.username is not null
+      and result.username = 'qz107recipient'
   ) then
     raise exception 'The active recipient was not returned by the restricted directory';
   end if;
