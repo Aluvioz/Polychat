@@ -139,3 +139,68 @@ export async function updateGroupMetadata({
     fetchImpl,
   });
 }
+
+/**
+ * Lists groups for the TI console. Membership data is intentionally excluded;
+ * membership mutations and their authorization boundary belong to Issue #113.
+ */
+export async function listGroups({
+  page = "1",
+  limit = "25",
+  search = "",
+  status = "",
+  env = process.env,
+  fetchImpl = fetch,
+}) {
+  const parsedPage = Number(page);
+  const parsedLimit = Number(limit);
+  if (!Number.isInteger(parsedPage) || parsedPage < 1 ||
+      !Number.isInteger(parsedLimit) || parsedLimit < 1 || parsedLimit > 100 ||
+      typeof search !== "string" || search.length > 128 ||
+      !["", "active", "disabled", "closed"].includes(status)) {
+    throw new GroupAdminError("Filtros de grupos inválidos.", 400);
+  }
+
+  const config = getConfig(env);
+  const url = new URL(`${config.baseUrl}/rest/v1/conversations`);
+  url.searchParams.set("select", "id,name,status,created_at,updated_at");
+  url.searchParams.set("kind", "eq.group");
+  url.searchParams.set("order", "created_at.desc,id.asc");
+  url.searchParams.set("limit", String(parsedLimit));
+  url.searchParams.set("offset", String((parsedPage - 1) * parsedLimit));
+  if (search.trim()) url.searchParams.set("name", `ilike.*${search.trim().replace(/[%,]/g, "")}*`);
+  if (status) url.searchParams.set("status", `eq.${status}`);
+
+  let response;
+  try {
+    response = await fetchImpl(url, {
+      headers: {
+        apikey: config.secretKey,
+        Authorization: `Bearer ${config.secretKey}`,
+        Prefer: "count=exact",
+      },
+      cache: "no-store",
+    });
+  } catch {
+    throw new GroupAdminError("Não foi possível consultar os grupos.", 503);
+  }
+
+  if (!response.ok) throw new GroupAdminError("Não foi possível consultar os grupos.", 503);
+  let groups;
+  try {
+    groups = await response.json();
+  } catch {
+    throw new GroupAdminError("Resposta inválida do serviço de grupos.", 503);
+  }
+  if (!Array.isArray(groups)) throw new GroupAdminError("Resposta inválida do serviço de grupos.", 503);
+
+  const contentRange = response.headers?.get?.("content-range") ?? "";
+  const totalText = contentRange.split("/")[1];
+  const total = totalText && totalText !== "*" ? Number(totalText) : null;
+  return {
+    groups,
+    page: parsedPage,
+    limit: parsedLimit,
+    total: Number.isFinite(total) ? total : null,
+  };
+}
