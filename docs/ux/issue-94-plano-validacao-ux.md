@@ -1,6 +1,6 @@
 # Plano de validação de UX com usuários representativos — Issue #94
 
-> **Versão:** 0.3 — critérios de encerramento da rodada de validação incluídos  
+> **Versão:** 0.4 — harmoniza a referência à Q-025 concluída, sem alterar escopo/metodologia de UX  
 > **Data:** 24/11/2026  
 > **Status:** escopo, perfis e dimensionamento ajustados pelo PO conforme baseline FORD v2 e Issue #130; recrutamento e sessões ainda dependem de autorização operacional formal e das condições de governança descritas neste plano  
 > **Issue:** [#94 — Prototipar e validar UX com usuários representativos](https://github.com/Aluvioz/Polychat/issues/94)  
@@ -352,7 +352,7 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 | #129 — Homologação, acessibilidade e regressão | Deve executar a homologação e os testes técnicos pertinentes após implementação |
 | Q-018 | Refinamento interno de arquitetura da informação, telas e navegação pelo PO/UX; regras de negócio já estão definidas | 
 | Q-019 | Obtenção dos arquivos oficiais de marca (logo, manual e códigos exatos) | 
-| Q-025 | Compatibilização da arquitetura com a infraestrutura sob controle da FORD; não define o roteiro de usabilidade nem autoriza presumir uma stack ainda não formalizada | 
+| Q-025 | Concluída em 24/11/2026: TI e FORD aprovaram a compatibilidade/modelo de utilização da stack Supabase + Vercel, conforme ADR-003 — Accepted. Esta decisão não define o roteiro de usabilidade, não comprova integração funcional/homologação e não autoriza serviços adicionais fora do escopo aprovado | 
 | Q-003, Q-007, Q-008, Q-009, Q-010, Q-012 e Q-020 | Resolvidas pela FORD v2; não são questões abertas da pesquisa. Usar as regras vigentes nos cenários e avaliar somente compreensão da interface |
 
 ## 15. Checklist de preparação
@@ -376,4 +376,4 @@ Não marcar os critérios como concluídos com base apenas neste plano, na exist
 
 **Parecer atualizado do PO — 20/11/2026:** aprovo o escopo com duas trilhas separadas e o dimensionamento revisado conforme a população confirmada na Issue #130: P-U com 5–8 participantes no total, incluindo os pré-testes; P-TI com convite a todos os aproximadamente 2–3 administradores elegíveis/disponíveis, também incluindo eventual pré-teste no total. Q-001 está esclarecida; não se deve acrescentar os pilotos à amostra nem recrutar fora dos perfis para completar quota. Esta validação é de produto e planejamento. **Não constitui autorização institucional para recrutamento/coleta** e não substitui a identificação dos responsáveis, do armazenamento autorizado e da retenção antes do início. Nenhuma sessão, achado ou atualização de protótipo é declarada concluída.
 
-A Issue #94 permanece aberta até que as sessões sejam realizadas, os achados priorizados, os protótipos atualizados quando necessário e as evidências/revisões previstas nos critérios de aceite sejam apresentadas. A implementação funcional do Polychat ainda não começou; os materiais #91/#92 são wireframes de baixa fidelidade e não podem ser apresentados como telas implementadas ou protótipo funcional.
+A Issue #94 permanece aberta até que as sessões sejam realizadas, os achados priorizados, os protótipos atualizados quando necessário e as evidências/revisões previstas nos critérios de aceite sejam apresentadas. A `main` contém implementações parciais de autenticação/sessão, RLS de domínio, auditoria, bucket privado e upload parcial de anexos; isso não transforma os materiais #91/#92 em telas funcionais. Os materiais #91/#92 permanecem wireframes de baixa fidelidade e não podem ser apresentados como telas implementadas ou protótipo funcional. Não há registro de sessões de usabilidade executadas na #94.
