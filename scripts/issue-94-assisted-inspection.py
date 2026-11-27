@@ -65,7 +65,7 @@ with sync_playwright() as p:
   go('start');page.keyboard.press('Tab');seen=[]
   for _ in range(10):
    seen.append(page.evaluate('document.activeElement.tagName+":"+document.activeElement.innerText.slice(0,60)'));page.keyboard.press('Tab')
-  assert any('Explorar jornada mobile' in x for x in seen);page.locator('[data-go=u-login]').focus();page.keyboard.press('Enter');assert visible('[data-screen=u-login]');page.locator('[data-action=bad-login]').focus();page.keyboard.press('Space');assert visible('#feedback');page.keyboard.press('Shift+Tab');return 'Tab/Shift+Tab, Enter e Space exercitados em trajetos selecionados (não integral). '+str(seen)
+  assert any('Explorar jornada mobile' in x for x in seen);page.locator('[data-screen=start] [data-go=u-login]').focus();page.keyboard.press('Enter');assert visible('[data-screen=u-login]');page.locator('[data-action=bad-login]').focus();page.keyboard.press('Space');assert visible('#feedback');page.keyboard.press('Shift+Tab');return 'Tab/Shift+Tab, Enter e Space exercitados em trajetos selecionados (não integral). '+str(seen)
  def a02():
   page.reload();page.locator('.skip').focus();page.keyboard.press('Enter');assert page.evaluate('document.activeElement.id')=='conteudo';return 'Link Pular para conteúdo: foco em main.'
  def a03():
@@ -84,7 +84,7 @@ with sync_playwright() as p:
  for id,fn in [('A94-01',a01),('A94-02',a02),('A94-03',a03),('A94-04',a04),('A94-06',a06),('A94-09',a09),('A94-10',a10)]:run(id,fn)
  # toast overlap: inspect bottom button while feedback is visible, pointer hit test
  page.reload();go('u-login');go('u-monitor');go('u-conversations');click('[data-chat=group]');go('u-attach');page.set_viewport_size({'width':320,'height':720})
- target=page.locator('[data-action=attach-scanner-offline]');target.scroll_into_view_if_needed();target.click();shot('toast-320-before')
+ target=page.locator('[data-action=attach-scanner-offline]');target.scroll_into_view_if_needed();target.click();page.evaluate('window.scrollTo(0,document.documentElement.scrollHeight)');shot('toast-320-before')
  geo=page.evaluate('''()=>{const t=document.querySelector('#feedback'),r=t.getBoundingClientRect();return [...document.querySelectorAll('[data-screen=u-attach] button')].map(e=>{let b=e.getBoundingClientRect();let x=Math.max(0,Math.min(b.right,r.right)-Math.max(b.left,r.left)),y=Math.max(0,Math.min(b.bottom,r.bottom)-Math.max(b.top,r.top));return {label:e.innerText,overlap:x*y,rect:{x:b.x,y:b.y,w:b.width,h:b.height}}}).filter(x=>x.overlap>0)}''')
  page.wait_for_timeout(12100);shot('toast-320-after');print('TOAST',geo)
  print('BROWSER',b.version,platform.platform(),'ERRORS',errors)
