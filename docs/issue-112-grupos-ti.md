@@ -34,14 +34,16 @@ As RPCs administrativas executam mutação e auditoria na mesma transação Post
 
 Metadados de auditoria são mínimos; conteúdo de mensagens, credenciais e dados pessoais não são enviados.
 
-## Testes e evidências no HEAD atual
+## Testes e evidências
 
-HEAD da PR #178: `396b1682c2425073fdf1fb45c4eb41ba7653c1ec`  
-Base da PR: `main` — base SHA `dd53c7f3684319fb2f0a0a91abe5a564701d606e`.
+**HEAD de código avaliado pelo SQA:** `e01196e80f18ec0ba667e1788bf6e7b9eb8e1d29`.  
+**Base da PR:** `main` — base SHA `dd53c7f3684319fb2f0a0a91abe5a564701d606e`.
+
+A atualização deste documento é um commit exclusivamente documental posterior ao HEAD de código avaliado; não altera código, migrations, configuração ou testes. Os workflows abaixo permanecem vinculados ao HEAD de código avaliado.
 
 ### CI
 
-No HEAD acima, concluíram com sucesso:
+No HEAD de código acima, concluíram com sucesso:
 
 - `npm test`
 - `npm run lint`
@@ -77,12 +79,10 @@ A execução não deixou dados sintéticos persistidos. O resultado comprova a e
 
 O comentário [#7225495638](https://github.com/Aluvioz/Polychat/pull/178#issuecomment-7225495638) relatou uma execução no projeto **Polyford**. Esse projeto é produção, não o ambiente de homologação. Portanto, aquele registro não é usado como evidência de homologação em Polyfordtest. O histórico do comentário é mantido; este esclarecimento corrige explicitamente a identificação do ambiente. Nenhuma nova alteração foi realizada em Polyford para esta validação.
 
-## Estado da revisão e próximos critérios
+## Estado da revisão SQA
 
-- Tech Lead: aprovação técnica registrada nos comentários da PR.
-- PO: escopo funcional formalmente delimitado; `description` fora do escopo.
-- CI e instalação limpa: aprovados no HEAD informado acima.
-- Homologação SQL hospedada: executada em Polyfordtest, sem erro SQL reportado e com verificação de rollback/ausência de fixtures.
-- SQA: último parecer registrado em [#7226910611](https://github.com/Aluvioz/Polychat/pull/178#issuecomment-7226910611) ainda não aprovou integralmente a PR; solicitou comprovação da homologação no projeto autorizado e atualização desta documentação.
+O parecer SQA mais recente, comentário [#7227168262](https://github.com/Aluvioz/Polychat/pull/178#issuecomment-7227168262), considerou conformes a implementação, autorização, persistência, auditoria, preservação de memberships/mensagens, testes, CI, instalação limpa, homologação SQL em Polyfordtest e decisão formal do PO que exclui `description` do escopo.
+
+A única pendência apontada nesse parecer foi a referência ao HEAD nesta documentação. Este commit corrige a referência para o HEAD de código avaliado pelo SQA (`e01196e80f18ec0ba667e1788bf6e7b9eb8e1d29`) e esclarece que a alteração subsequente é exclusivamente documental.
 
 A PR #178 permanece aberta e não mesclada. A Issue #112 não deve ser encerrada até que o SQA registre aprovação integral. Esta documentação e as evidências não constituem autorização de merge.
