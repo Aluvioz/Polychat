@@ -17,6 +17,7 @@ declare
   v_user_a_id uuid;
   v_user_b_id uuid;
   v_conversation_id uuid := gen_random_uuid();
+  v_existing_conversation_id uuid;
   v_existing_status text;
 begin
   if v_actor_id is null then
@@ -48,7 +49,7 @@ begin
   -- If RLS hides an old/ended conversation, the unique index remains the final
   -- integrity guard and the insert will fail closed rather than duplicate it.
   select c.id, c.status
-    into v_conversation_id, v_existing_status
+    into v_existing_conversation_id, v_existing_status
   from public.conversations c
   where c.kind = 'direct'
     and c.direct_user_a_id = v_user_a_id
@@ -59,7 +60,7 @@ begin
       raise exception 'Conversation is not active'
         using errcode = '42501';
     end if;
-    return v_conversation_id;
+    return v_existing_conversation_id;
   end if;
 
   insert into public.conversations (
