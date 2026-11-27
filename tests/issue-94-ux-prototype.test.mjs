@@ -69,7 +69,7 @@ test('avisa que não existe autenticação ou envio real', () => {
 
 test('regras fundamentais de produto estão rastreáveis no protótipo', () => {
   for (const snippet of [
-    'Sem cadastro público', 'Sem câmera', '10 MB por arquivo',
+    'Sem cadastro público', 'Sem câmera', '10 MiB (10.485.760 bytes) por arquivo',
     '5 arquivos por mensagem', 'sem justificativa ou segunda aprovação',
     'revoga acesso imediato', 'até 1 hora', 'até 1 dia útil',
     'até 3 dias úteis', 'sem bloqueio automático'

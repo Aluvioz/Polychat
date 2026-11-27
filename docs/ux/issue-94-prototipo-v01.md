@@ -32,7 +32,7 @@ Paleta provisória Q-019 (azuis Ford e neutros), **sem Ford Oval** ou fontes pro
 | U-03: iniciar conversa individual | u-conversations → u-contacts → u-chat compartilhado | Busca contextual, sem aba Contatos |
 | U-04: localizar grupo | u-conversations → u-chat (grupo) → u-group | Identificação de grupo, consulta e participantes |
 | U-05: envio/feedback | u-chat | Entendimento de sucesso/falha **simulados** |
-| U-06: anexo | u-chat → u-attach | PDF/JPEG, até 10 MB, até 5 anexos |
+| U-06: anexo | u-chat → u-attach | PDF/JPEG, até 10 MiB (10.485.760 bytes) por arquivo, até 5 anexos |
 | U-07: anexo inválido ou falha | bloco de estados de erro com `data-task=U-07` em u-attach | Diferenciar inválido, falha, bloqueio e recuperação |
 | U-08: sessão expirada ou desconexão | u-session e ação offline em u-conversations/u-chat | Recuperação e limites sem prometer entrega |
 | T-01: acessar console TI | start → t-login → t-dashboard (apoio) | Acesso e localização da área de trabalho |
@@ -94,7 +94,7 @@ Esta versão de revisão incorpora:
 - [Testes reais de navegação em Chromium](../../tests/browser/issue-94-browser.test.mjs), executados pelo [workflow de browser](../../.github/workflows/issue-94-browser.yml) quando a PR é atualizada. Ao contrário dos testes estáticos, esses navegam via Playwright em HTML real, verificam erros JS/rede, mensagens de feedback, confirmação e reflow em 320/390px. **Apenas o resultado do job registrado no GitHub comprova execução; não inferir PASS a partir do código.**
 - Capturas de tela geradas pelo job (somente dados fictícios), publicadas como artefato de Actions, quando o job executar com sucesso. São capturas automáticas do protótipo, **não evidências de participantes**.
 
-**Ajustes realizados antes de validação humana:** preservar nome/histórico corretos ao alternar entre Marina, Rafael e o grupo; distinguir erro de 10 MB, mais de 5 arquivos, PDF com senha e scanner indisponível (apenas texto demonstrativo). Estes ajustes tratam divergências observadas em inspeção da fonte e não devem ser atribuídos a entrevistas.
+**Ajustes realizados antes de validação humana:** preservar nome/histórico corretos ao alternar entre Marina, Rafael e o grupo; distinguir erro de limite excedido de 10 MiB (10.485.760 bytes), mais de 5 arquivos, PDF com senha e scanner indisponível (apenas texto demonstrativo). Estes ajustes tratam divergências observadas em inspeção da fonte e não devem ser atribuídos a entrevistas.
 
 **Limite:** Chromium em CI não substitui Android/iOS reais, Safari/Edge/Firefox, leitor de tela, validação de pixels/contraste completo nem pesquisa com pessoas. O formulário da FORD não contém autorização operacional para coleta da pesquisa #94, e sua declaração sobre privacidade/LGPD não afasta obrigações legais aplicáveis.
 

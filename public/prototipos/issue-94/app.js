@@ -109,7 +109,7 @@
     'bad-login': 'Não foi possível entrar. Verifique os dados e tente novamente. Erro fictício; não houve autenticação.',
     'attach-valid': 'Arquivo permitido neste exemplo. Nenhum arquivo foi acessado, carregado ou enviado.',
     'attach-invalid': 'Arquivo inválido: apenas PDF e JPEG são permitidos. Nenhum upload foi iniciado.',
-    'attach-over-limit': 'Arquivo excede 10 MB. Anexo bloqueado por limite de tamanho (simulação).',
+    'attach-over-limit': 'Arquivo excede 10 MiB (10.485.760 bytes). Anexo bloqueado por limite de tamanho (simulação).',
     'attach-too-many': 'São permitidos até 5 anexos por mensagem. O sexto arquivo não seria aceito (simulação).',
     'attach-protected': 'PDF protegido por senha não é aceito porque não pode ser analisado (simulação).',
     'attach-scanner-offline': 'Scanner indisponível. Anexos permanecem bloqueados até sua recuperação; mensagens de texto continuam disponíveis (simulação).',

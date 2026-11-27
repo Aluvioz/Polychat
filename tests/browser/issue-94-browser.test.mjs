@@ -149,7 +149,7 @@ test('U-06/U-07: tipos, tamanho, quantidade, PDF com senha e scanner', async () 
     assert.match(await page.locator('[data-task="U-07"]').innerText(), /U-07 · ERROS E RECUPERAÇÃO DE ANEXOS/);
     for (const [action, expected] of [
       ['attach-invalid', /apenas PDF e JPEG/],
-      ['attach-over-limit', /excede 10 MB/],
+      ['attach-over-limit', /excede 10 MiB/],
       ['attach-too-many', /até 5 anexos/],
       ['attach-protected', /protegido por senha/],
       ['attach-scanner-offline', /scanner indisponível/i],
