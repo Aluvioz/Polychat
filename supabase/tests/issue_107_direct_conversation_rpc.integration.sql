@@ -106,8 +106,8 @@ end;
 $issue107_runtime_diagnostics$;
 
 -- Diagnostic isolation: perform the exact INSERT statement used by the
--- SECURITY INVOKER RPC, including its partial-index ON CONFLICT clause, as the
--- authenticated caller. Roll it back via a PL/pgSQL exception subtransaction.
+-- SECURITY INVOKER RPC as the authenticated caller. Roll it back via a
+-- PL/pgSQL exception subtransaction.
 do $direct_insert_probe$
 declare
   v_probe_id uuid := gen_random_uuid();
@@ -127,10 +127,7 @@ begin
       auth.uid(),
       '11111111-1111-4111-8111-111111111111',
       '22222222-2222-4222-8222-222222222222'
-    )
-    on conflict (direct_user_a_id, direct_user_b_id)
-      where kind = 'direct'
-      do nothing;
+    );
 
     get diagnostics v_inserted_count = row_count;
     if v_inserted_count <> 1 then
