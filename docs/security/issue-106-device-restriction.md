@@ -2,11 +2,11 @@
 
 ## Regra de compatibilidade (RN-015 / RF-017 / RF-018)
 
-| Perfil | Dispositivo permitido | Navegadores homologados |
-|---|---|---|
-| `user` | Celular Android ou iOS | Chrome ou Safari móvel |
-| `ti` | Computador | Chrome, Edge ou Firefox |
-| Ambos | Tablets não permitidos | — |
+| Perfil | Dispositivo permitido  | Navegadores homologados |
+| ------ | ---------------------- | ----------------------- |
+| `user` | Celular Android ou iOS | Chrome ou Safari móvel  |
+| `ti`   | Computador             | Chrome, Edge ou Firefox |
+| Ambos  | Tablets não permitidos | —                       |
 
 O acesso de User em computador deve exibir exatamente a orientação funcional
 **“só pode ser usado em celular”**. TI em celular deve receber orientação para
@@ -60,7 +60,7 @@ A autorização do papel ocorre antes da checagem de dispositivo. Nunca aceite
   consegue distinguir com segurança esse caso sem sinais adicionais do cliente.
 - A classificação é indicativa e pode ser falsificada. Não usar para conceder
   privilégios, substituir autenticação, autorização, validação de sessão ou RLS.
-- A área administrativa `/ti` está sendo implementada separadamente na PR #177. A aplicação da mesma política à navegação do console deve ocorrer nessa integração, sem duplicar autenticação ou autorização.
+- A PR #177 aplica a mesma política à área administrativa `/ti`, reutilizando o adaptador e sem duplicar autenticação ou autorização.
 - A jornada completa de conversas mobile ainda não existe no repositório. A integração cobre a operação protegida de upload existente, sem inventar páginas de produto.
 
 ## Testes
