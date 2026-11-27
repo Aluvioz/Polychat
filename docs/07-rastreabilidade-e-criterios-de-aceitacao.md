@@ -1,6 +1,6 @@
 # 07 - Rastreabilidade e critérios de aceitação
 
-Este documento relaciona objetivos, requisitos funcionais, requisitos não funcionais e critérios de aceitação da baseline POLY-REQ-001 v0.3, revisada com base na FORD v2 e nos alinhamentos do PO com Desenvolvimento.
+Este documento relaciona objetivos, requisitos funcionais, requisitos não funcionais e critérios de aceitação da baseline vigente POLY-REQ-001 v0.5, consolidada com base na FORD v2 e nos alinhamentos do PO com Desenvolvimento. Considera também as decisões posteriores já formalizadas: aprovação da compatibilidade e do modelo de utilização Supabase + Vercel na Q-025 em 24/11/2026 e retificação do limite de anexos para 10 MiB (10.485.760 bytes) em 26/11/2026.
 
 A rastreabilidade demonstra a origem e a cobertura documental dos requisitos. Não comprova, por si só, implementação, execução de testes ou homologação.
 
@@ -32,8 +32,8 @@ Os critérios individuais estão especificados em [03 — Requisitos funcionais]
 | RF-008 — Leitura e histórico | CA-008.1 a CA-008.5 | Acesso por participante, negação a não participante, paginação e retenção |
 | RF-009 — Mensagem individual e reconexão | CA-009.1 a CA-009.6 | Envio, persistência, estado de confirmação e sincronização após desconexão |
 | RF-010 — Mensagem em grupo | CA-010.1 a CA-010.5 | Envio por membro, negação a não membro e revogação após remoção |
-| RF-011 — Anexos | CA-011.1 a CA-011.12 | PDF/JPEG, tamanho, quantidade, quotas, antimalware, download e liberação TI |
-| RF-012 — Validação de anexos | CA-012.1 a CA-012.6 | Formato real, PDF protegido, limite e bloqueio por falha de scanner |
+| RF-011 — Anexos | CA-011.1 a CA-011.12 | PDF/JPEG; até 10 MiB (10.485.760 bytes) por arquivo; até cinco por mensagem; quotas, antimalware, download e liberação TI |
+| RF-012 — Validação de anexos | CA-012.1 a CA-012.6 | Formato real, PDF protegido, limite exato de 10 MiB (10.485.760 bytes) por arquivo e bloqueio por falha de scanner |
 | RF-013 — JPEG e metadados | CA-013.1 a CA-013.4 | Seleção da galeria, ausência de captura e remoção de metadados |
 | RF-014 — Detecção | CA-014.1 a CA-014.6 | Lista de termos, regras, ausência de análise contextual/IA de terceiros |
 | RF-015 — Alertas | CA-015.1 a CA-015.9 | Fila TI, severidades, prazos e encerramento sem justificativa |
@@ -51,7 +51,7 @@ Os critérios individuais estão especificados em [03 — Requisitos funcionais]
 | Requisito | Evidência / verificação |
 |---|---|
 | RNF-001 — Controle de acesso | Testes de autorização por perfil, operação, URL/API e políticas de banco |
-| RNF-002 — Proteção de dados | Revisão de arquitetura, criptografia em trânsito/repouso, gestão de chaves e fronteira de processamento FORD |
+| RNF-002 — Proteção de dados | Revisão de arquitetura, criptografia em trânsito/repouso, gestão de chaves e fronteira de processamento conforme o modelo de utilização Supabase + Vercel aprovado na Q-025; outros fornecedores/subprocessadores dependem de aprovação específica |
 | RNF-003 — Credenciais e sessões | Testes de armazenamento/transmissão, provisionamento, redefinição, sessão e revogação |
 | RNF-004 — Auditoria | Testes do catálogo de eventos, consulta/gerenciamento TI, integridade e retenção |
 | RNF-005 — Compatibilidade | Matriz de homologação de sistemas operacionais, navegadores e restrições de dispositivo |
@@ -59,14 +59,14 @@ Os critérios individuais estão especificados em [03 — Requisitos funcionais]
 | RNF-007 — Desempenho | Testes com metas e carga constantes do alinhamento técnico aprovado |
 | RNF-008 — Capacidade | Teste de até 25 conexões simultâneas de usuários finais, além do TI, e limites de armazenamento alinhados |
 | RNF-009 — Continuidade | Testes de disponibilidade, backup, restauração, RPO, RTO, retenção de backups e sincronização após reconexão |
-| RNF-010 — Segurança de anexos | Testes de formato, tamanho, quantidade, quotas, antimalware, falhas, liberação TI, links e metadados |
+| RNF-010 — Segurança de anexos | Testes de PDF/JPEG, limite de 10 MiB (10.485.760 bytes) por arquivo, até cinco por mensagem, quotas, antimalware, falhas, liberação TI, links e metadados |
 | RNF-011 — Monitoramento e dados | Teste do aviso no primeiro acesso, permissões, registros e fluxo operacional de solicitações; observar legislação aplicável |
 | RNF-012 — Acessibilidade | Verificação de obrigações legais/corporativas aplicáveis; não há requisito adicional informado pela FORD |
-| RNF-013 — Infraestrutura e ambientes | Evidência de hospedagem sob controle FORD, ausência de terceiro processando dados e isolamento de desenvolvimento/homologação/produção |
+| RNF-013 — Infraestrutura e ambientes | Evidência de que a configuração e o processamento seguem o modelo Supabase + Vercel aprovado na Q-025, com provedores nomeados, limites e responsabilidades registrados; outros fornecedores dependem de aprovação específica; verificar isolamento de desenvolvimento/homologação/produção e controles por ambiente |
 
 ## 7.4 Fluxo de validação e aceite
 
-1. PO mantém objetivos, regras de negócio, requisitos e rastreabilidade consistentes com a FORD v2.
+1. PO mantém objetivos, regras de negócio, requisitos e rastreabilidade consistentes com a baseline POLY-REQ-001 v0.5, a FORD v2 e as decisões posteriores formalmente registradas, incluindo a conclusão da Q-025.
 2. Desenvolvimento utiliza os parâmetros técnicos já alinhados para implementar os requisitos sem reabrir as oito frentes declaradas completas.
 3. QA/SQA deriva e executa casos positivos, negativos, de segurança, compatibilidade, carga, continuidade e integração conforme os critérios aprovados.
 4. Evidências de execução são vinculadas aos critérios CA-xxx.n e aos requisitos correspondentes.
@@ -95,3 +95,5 @@ Os critérios individuais estão especificados em [03 — Requisitos funcionais]
 - [05 — Regras de negócio e restrições](05-regras-de-negocio-e-restricoes.md)
 - [08 — Glossário e questões em aberto](08-glossario-e-questoes-em-aberto.md)
 - [09 — Baseline consolidada do MVP](09-baseline-requisitos-mvp.md)
+- [08 — Q-025 e questões consolidadas](08-glossario-e-questoes-em-aberto.md#84-decisoes-consolidadas-que-nao-devem-ser-reabertas-como-pendencia)
+- [ADR-003 — Stack Supabase + Vercel](adr/ADR-003-supabase-vercel.md)
