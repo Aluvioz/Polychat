@@ -189,3 +189,72 @@ test("sem credenciais de configuração, sessão falha fechada", async () => {
     (error) => error.status === 503,
   );
 });
+
+test("falha de login de perfil TI conhecido gera callback de auditoria", async () => {
+  const tiProfile = { ...profile, role: "ti" };
+  let auditCalls = 0;
+  const { fetchImpl } = mockFetch([
+    { match: (u) => u.pathname === "/rest/v1/profiles" && u.searchParams.has("username"),
+      respond: () => json([tiProfile]) },
+    { match: (u) => u.pathname.startsWith("/auth/v1/admin/users/"),
+      respond: () => json({ email: "private@example.invalid" }) },
+    { match: (u) => u.pathname === "/auth/v1/token",
+      respond: () => json({ msg: "Invalid login credentials" }, 400) },
+  ]);
+  await assert.rejects(
+    loginWithUsername({
+      username: "alvaro",
+      password: "wrong",
+      env,
+      fetchImpl,
+      onAdminLoginFailure: async () => { auditCalls += 1; },
+    }),
+    (error) => error.status === 401,
+  );
+  assert.equal(auditCalls, 1);
+});
+
+test("falha de login de usuário comum não é classificada como falha administrativa", async () => {
+  let auditCalls = 0;
+  const { fetchImpl } = mockFetch([
+    { match: (u) => u.pathname === "/rest/v1/profiles" && u.searchParams.has("username"),
+      respond: () => json([profile]) },
+    { match: (u) => u.pathname.startsWith("/auth/v1/admin/users/"),
+      respond: () => json({ email: "private@example.invalid" }) },
+    { match: (u) => u.pathname === "/auth/v1/token",
+      respond: () => json({ msg: "Invalid login credentials" }, 400) },
+  ]);
+  await assert.rejects(
+    loginWithUsername({
+      username: "alvaro",
+      password: "wrong",
+      env,
+      fetchImpl,
+      onAdminLoginFailure: async () => { auditCalls += 1; },
+    }),
+    (error) => error.status === 401,
+  );
+  assert.equal(auditCalls, 0);
+});
+
+test("falha no registro de tentativa administrativa falha fechada sem revelar detalhes", async () => {
+  const tiProfile = { ...profile, role: "ti" };
+  const { fetchImpl } = mockFetch([
+    { match: (u) => u.pathname === "/rest/v1/profiles" && u.searchParams.has("username"),
+      respond: () => json([tiProfile]) },
+    { match: (u) => u.pathname.startsWith("/auth/v1/admin/users/"),
+      respond: () => json({ email: "private@example.invalid" }) },
+    { match: (u) => u.pathname === "/auth/v1/token",
+      respond: () => json({ msg: "Invalid login credentials" }, 400) },
+  ]);
+  await assert.rejects(
+    loginWithUsername({
+      username: "alvaro",
+      password: "wrong",
+      env,
+      fetchImpl,
+      onAdminLoginFailure: async () => { throw new Error("database private detail"); },
+    }),
+    (error) => error.status === 503 && !error.message.includes("private detail"),
+  );
+});

@@ -88,6 +88,7 @@ export async function loginWithUsername({
   password,
   env = process.env,
   fetchImpl = fetch,
+  onAdminLoginFailure,
 }) {
   if (typeof username !== "string" || typeof password !== "string" ||
       username.trim().length === 0 || password.length === 0 ||
@@ -108,19 +109,19 @@ export async function loginWithUsername({
 
   try {
     const profile = await findProfileByUsername(username, cfg, fetchImpl);
-    if (!profile || profile.is_active !== true ||
-        !["user", "ti"].includes(profile.role)) {
+    const rejectLogin = async () => {
+      if (profile?.role === "ti") await onAdminLoginFailure?.();
       const error = new Error(GENERIC_LOGIN_ERROR);
       error.status = 401;
       throw error;
+    };
+    if (!profile || !["user", "ti"].includes(profile.role)) {
+      return await rejectLogin();
     }
+    if (profile.is_active !== true) return await rejectLogin();
 
     const email = await findAuthEmail(profile.id, cfg, fetchImpl);
-    if (!email) {
-      const error = new Error(GENERIC_LOGIN_ERROR);
-      error.status = 401;
-      throw error;
-    }
+    if (!email) return await rejectLogin();
 
     const tokenResponse = await fetchImpl(
       `${cfg.baseUrl}/auth/v1/token?grant_type=password`,
@@ -135,18 +136,14 @@ export async function loginWithUsername({
     if (!tokenResponse.ok || !tokens?.access_token ||
         !tokens?.refresh_token || !tokens?.user?.id ||
         tokens.user.id !== profile.id) {
-      const error = new Error(GENERIC_LOGIN_ERROR);
-      error.status = 401;
-      throw error;
+      return await rejectLogin();
     }
 
     const currentProfile = await getProfileById(tokens.user.id, cfg, fetchImpl);
     if (!currentProfile || currentProfile.is_active !== true ||
         !["user", "ti"].includes(currentProfile.role)) {
       await revokeSession(tokens.access_token, cfg, fetchImpl);
-      const error = new Error(GENERIC_LOGIN_ERROR);
-      error.status = 401;
-      throw error;
+      return await rejectLogin();
     }
 
     return {
