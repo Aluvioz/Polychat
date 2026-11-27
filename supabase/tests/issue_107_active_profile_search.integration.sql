@@ -13,6 +13,10 @@ insert into auth.users (
    'issue107-search-b-inactive@rls.invalid', now(), now(), '{}', '{}');
 
 update public.profiles
+set username = 'qz107recipient'
+where id = '22222222-2222-4222-8222-222222222222';
+
+update public.profiles
 set is_active = false
 where id = '44444444-4444-4444-8444-444444444444';
 
