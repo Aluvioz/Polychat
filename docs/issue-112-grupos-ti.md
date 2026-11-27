@@ -2,81 +2,87 @@
 
 ## Escopo implementado
 
-A API administrativa permite que uma conta TI autenticada e ativa crie grupos e altere o nome de grupos existentes. O recurso utiliza a tabela `public.conversations`, com `kind = 'group'`.
+A API administrativa permite que uma conta TI autenticada e ativa crie grupos e altere o nome de grupos existentes, usando `public.conversations` com `kind = 'group'`.
 
 - `POST /api/ti/groups`: recebe somente `name`.
 - `PATCH /api/ti/groups/:groupId`: recebe somente `name`.
 - O ator é obtido de `authorizeNextRequest` após validação da sessão; identificadores e papéis enviados pelo cliente não são aceitos.
-- A criação utiliza o estado inicial padrão `active` do schema e grava `created_by_profile_id` com a identidade TI validada.
+- A criação grava `created_by_profile_id` com a identidade TI validada e usa o estado inicial `active` definido pelo schema.
 - A edição altera somente `name` e `updated_at`; não altera tipo, criador, participantes, memberships, mensagens ou status.
-- A edição não executa encerramento, desativação ou reativação.
-- Não é criada membership automaticamente; a gestão de integrantes permanece na Issue #113.
+- Não é criada membership automaticamente. A gestão de integrantes permanece na Issue #113.
+- O ciclo de vida `disabled/closed` não integra esta issue.
 
-## Campo descrição
+## Decisão formal do PO — campo `description`
 
-A descrição resumida da Issue #112 menciona nome/descrição. RF-005 e a migration inicial de `public.conversations` definem identificação/nome, mas não um campo `description`. Nenhuma migration posterior no branch-base consultado adiciona esse campo e não foi encontrada decisão aprovada que defina seu contrato. Por isso, `description` não foi implementado nem persistido. A inclusão depende de decisão do produto e definição de requisitos.
+O parecer formal do PO registrado na PR #178 em 27/11/2026 (comentário [#7227002631](https://github.com/Aluvioz/Polychat/pull/178#issuecomment-7227002631)) delimitou o escopo desta entrega:
 
-## Autorização e persistência
+- Criação de grupos com definição de nome.
+- Edição do nome de grupos existentes.
+- Preservação das regras de autorização, integridade e auditoria.
 
-As rotas usam `authorizeNextRequest` com `allowedRoles: ["ti"]` e `enforceDeviceCompatibility: true`, reutilizando o adaptador da Issue #105. A sessão, o perfil e o estado da conta são validados no servidor; a política RN-015/RF-017/RF-018 também impede operações administrativas fora do computador/navegadores homologados.
+**O campo `description` (descrição complementar do grupo) está fora do escopo desta entrega.** RF-005 e o modelo de dados vigente definem a identificação do grupo pelo nome; não há contrato funcional aprovado nem estrutura de persistência para descrição. Portanto, não será incluída coluna, migration, teste ou alteração de rota para esse campo nesta PR. Uma eventual descrição complementar deverá ser tratada como requisito futuro separado.
 
-O módulo `src/groups/group-admin.mjs` usa exclusivamente `SUPABASE_SECRET_KEY` no servidor para invocar RPCs. A chave não é exposta ao browser. A identidade passada às RPCs vem de `authorization.session.user.id`; o banco também confirma que o perfil é TI e está ativo.
+O parecer do PO delimita o escopo funcional; não substitui a revisão do SQA, não representa aprovação integral da PR e não autoriza merge.
 
-As policies RLS da Issue #101 permanecem habilitadas e inalteradas para o acesso normal via Data API. **Limite importante:** por serem `SECURITY DEFINER` e executadas com a chave privilegiada, as RPCs administrativas não são filtradas pelas policies RLS durante sua execução. A barreira dessas operações é a combinação de execução concedida somente a `service_role`, chave restrita ao servidor, validação da role JWT `service_role` e verificação independente de perfil TI ativo dentro de cada função. As funções usam `search_path` vazio e não concedem execução a `public`, `anon` ou `authenticated`. A revisão técnica deve confirmar explicitamente que esse padrão privilegiado é aceitável para o projeto.
+## Autorização, persistência e auditoria
 
-## Auditoria e atomicidade
+As rotas usam `authorizeNextRequest` com `allowedRoles: ["ti"]` e `enforceDeviceCompatibility: true`. A sessão, o perfil e o estado da conta são validados no servidor.
 
-As funções SQL de criação/edição chamam `public.write_privileged_audit_event` no mesmo corpo transacional da mutação. O writer existente valida os eventos `group.created` e `group.updated`, exige ator TI ativo e sanitiza metadados. Se o insert de auditoria falhar, a transação inteira falha e a mutação do grupo é revertida.
+O módulo `src/groups/group-admin.mjs` usa `SUPABASE_SECRET_KEY` exclusivamente no servidor para invocar RPCs. A identidade passada às RPCs vem da sessão validada; o banco também confirma que o perfil é TI e está ativo.
 
-A função JavaScript `recordPrivilegedAuditEvent` faz uma chamada RPC separada e, portanto, não é usada como etapa posterior da mutação. Fazer isso quebraria a atomicidade exigida pela Issue #124. A integração reaproveita o writer SQL e seu catálogo de eventos dentro da RPC transacional.
+As RPCs administrativas executam mutação e auditoria na mesma transação PostgreSQL, reutilizando `public.write_privileged_audit_event` para `group.created` e `group.updated`. Se a gravação da auditoria falhar, a mutação é revertida. As policies RLS existentes não foram alteradas. As RPCs privilegiadas são restritas a `service_role`, com validação independente do perfil TI ativo no banco.
 
-Metadados registrados são mínimos: operação e, na edição, lista do campo alterado. Nenhum conteúdo de mensagem, credencial ou dado pessoal é enviado.
+Metadados de auditoria são mínimos; conteúdo de mensagens, credenciais e dados pessoais não são enviados.
 
-## Limites e pendências
+## Testes e evidências no HEAD atual
 
-- Campo `description`: pendente de decisão formal do produto.
-- Membership inicial: não definida para a criação na Issue #112; permanece fora do escopo.
-- Ciclo de vida `disabled/closed`: não implementado nesta issue.
-- Integração real com projeto Supabase e testes RLS/transacionais em ambiente autorizado ainda precisam ser executados.
-- A dependência da Issue #105 foi resolvida pela integração da PR #175 à `main` em 26/11/2026. Esta branch também depende da política de compatibilidade da Issue #106, implementada na PR #176; por isso, a PR #178 está empilhada sobre `feat/issue-106-device-restriction`, e não deve ser retargeted para `main` antes da integração da #176.
+HEAD da PR #178: `396b1682c2425073fdf1fb45c4eb41ba7653c1ec`  
+Base da PR: `main` — base SHA `dd53c7f3684319fb2f0a0a91abe5a564701d606e`.
 
-## Testes
+### CI
 
-`tests/group-admin.test.mjs` cobre validação de entradas, chamadas RPC, identidade do ator, mapeamento de erros, configuração ausente e falha de auditoria reportada pela RPC. Esses testes unitários simulam a API PostgREST; não substituem os testes de integração SQL/RLS em Supabase.
+No HEAD acima, concluíram com sucesso:
 
-### Cobertura da camada HTTP
+- `npm test`
+- `npm run lint`
+- `npm run typecheck`
+- `npm run build`
+- Smoke test do Next.js
 
-A camada de handlers foi extraída para `src/groups/group-routes.mjs`, mantendo as rotas App Router como adaptadores finos. Isso permite testar os contratos HTTP com dependências simuladas, sem credenciais Supabase:
+Execução: [GitHub Actions — CI #46058621518](https://github.com/Aluvioz/Polychat/actions/runs/46058621518).
 
-- `tests/group-routes.test.mjs` cobre criação (201), atualização (200), sessão ausente (401), perfil sem permissão (403), JSON inválido, campos não permitidos e erros de domínio.
-- Os testes verificam que cookies de sessão renovados são enviados também nas respostas 400/403/404/503 após uma sessão válida ter sido renovada.
-- `authorizeNextRequest` ganhou a opção explícita `preserveSessionOnForbidden`, desativada por padrão. As rotas de grupos a habilitam para persistir a rotação de sessão sem conceder acesso ao perfil User.
-- A autorização continua sendo decidida pelo adaptador existente; a opção preserva somente os dados da sessão validada para atualizar cookies na resposta 403.
+### Instalação limpa Supabase
 
-### Reforço adicional da validação
+O workflow iniciou uma stack Supabase local descartável, aplicou todas as migrations em banco vazio, executou `supabase/tests/issue_112_group_admin.integration.sql`, verificou o histórico e encerrou a stack.
 
-A suíte unitária também cobre falhas de rede, respostas RPC sem UUID válido e erros SQL de validação, garantindo mensagens genéricas sem detalhes internos do provedor.
+Execução: [GitHub Actions — clean install #46058621588](https://github.com/Aluvioz/Polychat/actions/runs/46058621588).
 
-O roteiro SQL de integração foi ampliado para verificar que:
-- perfis TI inativos não conseguem executar a criação privilegiada;
-- falhas na gravação do evento `group.updated` revertem também a alteração do nome, preservando a atomicidade entre mutação e auditoria.
+Essa execução local não substitui a validação no projeto Supabase hospedado de homologação.
 
+### Homologação no projeto hospedado Polyfordtest
 
-## Estado de conclusão da implementação
+O ambiente correto de homologação é **Polyfordtest** (projeto Supabase `rferhswvesmoyaqvkoet`). **Polyford** (`oixifpdfvrenlhvycszy`) é produção e não deve ser usado para esta homologação.
 
-A implementação da Issue #112 está desenvolvida no branch da PR #178. A PR #175 já está integrada à `main`, mas esta implementação reutiliza `enforceDeviceCompatibility` da PR #176. Portanto, a base atual da #178 permanece `feat/issue-106-device-restriction`; após a integração da #176, a #178 poderá ser retargeted para `main`.
+Em 27/11/2026, a consulta ao histórico do projeto Polyfordtest confirmou as 19 migrations do repositório aplicadas, incluindo `20261127181145_issue_112_group_admin` (registrada no histórico como versão `20261127193633`).
 
-A conclusão técnica ainda depende das verificações finais:
-- CI completo da PR #178 sobre a base final após a integração da PR #176 em `main`: testes, lint, typecheck, build e smoke test;
-- execução do roteiro `supabase/tests/issue_112_group_admin.integration.sql` em projeto Supabase de homologação, com migrations aplicadas;
-- revisão técnica das RPCs privilegiadas e confirmação do modelo de segurança descrito acima.
+O roteiro `supabase/tests/issue_112_group_admin.integration.sql` foi enviado para execução no Polyfordtest em uma transação que termina em `ROLLBACK`. A chamada retornou sem erro SQL. A verificação posterior confirmou:
+- zero usuários de fixture em `auth.users`;
+- zero conversas de fixture;
+- zero triggers temporários do roteiro;
+- migration da Issue #112 presente no histórico.
 
-A aprovação da PR #175 não equivale à aprovação da PR #178. O status de implementação não deve ser confundido com validação final de CI/Supabase. A Issue #112 só deve ser marcada como concluída após essas verificações.
+A execução não deixou dados sintéticos persistidos. O resultado comprova a execução SQL sem erro reportado e a limpeza da fixture; não equivale a um teste HTTP autenticado com uma conta TI real, que não foi realizado nesta etapa.
 
-## Validação contínua após integração com `main`
+### Esclarecimento sobre registro anterior em Polyford
 
-Na execução anterior, o CI identificou um erro de resolução ESM ao importar `next/server` diretamente no Node.js. O import foi ajustado para `next/server.js` no commit `90b721a`. No commit `6418b97`, a execução completa de CI (testes automatizados, ESLint, TypeScript, build Next.js e smoke test) concluiu com sucesso. Essa evidência é histórica e não comprova a validação do HEAD atual `76e0990`; a PR permanece empilhada sobre a #176 e os workflows configurados para PRs direcionadas a `main` ainda precisam ser executados após a integração da dependência.
+O comentário [#7225495638](https://github.com/Aluvioz/Polychat/pull/178#issuecomment-7225495638) relatou uma execução no projeto **Polyford**. Esse projeto é produção, não o ambiente de homologação. Portanto, aquele registro não é usado como evidência de homologação em Polyfordtest. O histórico do comentário é mantido; este esclarecimento corrige explicitamente a identificação do ambiente. Nenhuma nova alteração foi realizada em Polyford para esta validação.
 
-O workflow de instalação limpa foi corrigido para preparar o ambiente somente com as migrations presentes no checkout da PR, sem contagem fixa de arquivos nem dependência de outra branch. Na execução anterior registrada para o commit `6418b97`, a instalação aplicou as 19 migrations em um Supabase local vazio; o teste SQL identificou um delimitador inválido na função temporária que simula falha de auditoria, corrigido nesse commit. Essa evidência é histórica e não comprova o HEAD atual `e6a8554`; a validação do roteiro SQL desta PR deve ser repetida sobre a base final após a integração da PR #176.
+## Estado da revisão e próximos critérios
 
-A execução do roteiro em projeto Supabase de homologação continua pendente. A validação automatizada local cobre a instalação limpa e as asserções SQL incluídas no workflow, mas não substitui a validação no ambiente de homologação nem a revisão técnica das RPCs privilegiadas. A revisão da PR #178 foi solicitada ao Tech Lead `luizme7`.
+- Tech Lead: aprovação técnica registrada nos comentários da PR.
+- PO: escopo funcional formalmente delimitado; `description` fora do escopo.
+- CI e instalação limpa: aprovados no HEAD informado acima.
+- Homologação SQL hospedada: executada em Polyfordtest, sem erro SQL reportado e com verificação de rollback/ausência de fixtures.
+- SQA: último parecer registrado em [#7226910611](https://github.com/Aluvioz/Polychat/pull/178#issuecomment-7226910611) ainda não aprovou integralmente a PR; solicitou comprovação da homologação no projeto autorizado e atualização desta documentação.
+
+A PR #178 permanece aberta e não mesclada. A Issue #112 não deve ser encerrada até que o SQA registre aprovação integral. Esta documentação e as evidências não constituem autorização de merge.
