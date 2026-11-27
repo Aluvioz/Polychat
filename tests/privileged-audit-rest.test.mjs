@@ -32,7 +32,7 @@ test("registra login administrativo com RPC server-side e metadados sanitizados"
   assert.equal(result, "event-id");
   assert.equal(request.url, "https://polychat-test.supabase.co/rest/v1/rpc/write_privileged_audit_event");
   assert.equal(request.init.headers.apikey, env.SUPABASE_SECRET_KEY);
-  assert.equal(request.init.headers.Authorization, `Bearer ${env.SUPABASE_SECRET_KEY}`);
+  assert.equal("Authorization" in request.init.headers, false);
   const body = JSON.parse(request.init.body);
   assert.equal(body.p_actor_profile_id, ti.id);
   assert.deepEqual(body.p_metadata, { channel: "password" });
@@ -111,6 +111,7 @@ test("pesquisa eventos usando filtros no PostgREST e paginação", async () => {
   assert.equal(request.url.searchParams.get("limit"), "10");
   assert.equal(request.url.searchParams.get("offset"), "10");
   assert.equal(request.init.headers.apikey, env.SUPABASE_SECRET_KEY);
+  assert.equal("Authorization" in request.init.headers, false);
 });
 
 test("não expõe detalhes do provedor quando a consulta falha", async () => {
