@@ -39,13 +39,22 @@ Execução local sobre a integração simulada de `main` com a branch da PR:
 
 A verificação de formatação foi executada sem aplicar `prettier --write` ao repositório, para evitar alterações em massa fora do escopo desta PR. O workflow CI do repositório não inclui atualmente `format:check`.
 
-O GitHub Actions reportou dois runs de CI concluídos com sucesso para o commit `98bd340819d29c81c7c4e84cd36122fe3da13698` (runs 46062731208 e 46062730975). Esses resultados não substituem a pendência de formatação nem a homologação manual.
+O GitHub Actions reportou dois runs de CI concluídos com sucesso para o commit `f952a9087e08ea0862cd27b874349c8e58114b28` (runs 46062988880 e 46062988898). Ambos terminaram com conclusão `success`.
 
 Testes unitários simulados não substituem integração Supabase real ou homologação com conta TI autorizada.
 
-## Homologação manual
+## Homologação desktop — execução parcial
 
-Pendente: validar em desktop, com sessão TI real autorizada, a navegação do Console TI e os estados de carregamento, erro, acesso negado, sessão expirada e indisponibilidade. Nenhuma homologação visual é declarada concluída neste documento até que haja evidência reproduzível no ambiente de preview autorizado.
+Foi executada uma verificação automatizada de interface em Chromium com viewport desktop de 1440×900, sobre o build local resultante da integração com `main`:
+
+| Cenário acessível sem conta TI | Resultado |
+| --- | --- |
+| Login com `?motivo=sessao-expirada` | PASS — aviso de sessão expirada exibido |
+| Página `/acesso-negado` | PASS — título de acesso não autorizado exibido |
+| Página `/indisponivel` | PASS — mensagem de indisponibilidade exibida |
+| Acesso não autenticado a `/ti` | PASS — redirecionado para login com motivo de sessão expirada |
+
+**Limitações ainda pendentes:** não foi possível autenticar uma conta TI real; portanto, navegação interna autenticada, menu e Dashboard, carregamento real do console e os fluxos de erro do servidor/provedor não foram homologados. Os estados de loading e error boundary não foram forçados nesta execução. Essa verificação parcial não equivale à homologação manual integral solicitada pelo SQA.
 
 ## Fora do escopo
 
