@@ -49,19 +49,21 @@ Usar [matriz FORD v2](./issue-94-matriz-aderencia-ford-v2.md) para verificar ade
 
 ## 4. Revisão visual documental das capturas automatizadas — 26/11/2026
 
-**Escopo:** análise visual das três capturas produzidas pelo workflow Playwright/Chromium no commit `9f226667686cbb115b9613032103d6fbad040995`. [Execução UX #45834039735 e artefato #15123311900](https://github.com/Aluvioz/Polychat/actions/runs/45834039735/artifacts/15123311900).
+**Escopo:** análise visual das três capturas produzidas pelo workflow Playwright/Chromium no commit `fb398c2d31e328844b5a60fd0f97a4f672824ffa`. [Execução UX #45916050608 e artefato #15162546926](https://github.com/Aluvioz/Polychat/actions/runs/45916050608/artifacts/15162546926).
 
 Esta revisão das imagens não equivale a percorrer manualmente os fluxos no navegador e não é a inspeção independente do SQA/UI/UX. Os itens M94-01 a M94-15 e A94-01 a A94-10 permanecem pendentes até que seus procedimentos sejam executados por responsável identificado, com ambiente e evidências próprios.
 
 | Captura | Observação visual | Limite da evidência |
 |---|---|---|
 | `mobile-conversas-390.png` | A tela exibe o marcador U-02, a lista de conversas e os elementos principais no viewport de 390 px; não há corte horizontal aparente na imagem. | Não demonstra que uma pessoa concluiu a tarefa nem valida outros navegadores/dispositivos. |
-| `mobile-anexos-320.png` | Os marcadores U-06/U-07 e os controles de exemplo aparecem no viewport de 320 px; os rótulos quebram linha sem corte horizontal aparente. Uma notificação fixa ocupa a parte inferior e sobrepõe conteúdo/rodapé na captura. | A duração da notificação e o impacto após a interação não podem ser avaliados por uma imagem isolada; confirmar em inspeção interativa antes de classificar como defeito. |
+| `mobile-anexos-320.png` | Os marcadores U-06/U-07 e os controles de exemplo aparecem no viewport de 320 px; o limite está atualizado para 10 MiB (10.485.760 bytes), e os rótulos quebram linha sem corte horizontal aparente. Uma notificação fixa ocupa a parte inferior e sobrepõe conteúdo/rodapé na captura. | A duração da notificação e o impacto após a interação não podem ser avaliados por uma imagem isolada; confirmar em inspeção interativa antes de classificar como defeito. |
 | `ti-dashboard-1280.png` | O dashboard TI está identificado visualmente como etapa auxiliar; navegação e cartões aparecem no viewport de 1280 px, sem corte aparente na imagem. | Não demonstra execução das tarefas T-01 a T-06 nem compatibilidade fora do Chromium. |
 
-**Conclusão desta revisão limitada:** não foi confirmado defeito que justifique alteração de HTML/CSS/JS apenas com base nas capturas. O comportamento da notificação fixa fica registrado para confirmação interativa. As imagens oferecem evidência visual pontual de renderização, não substituem a inspeção humana completa nem autorizam marcar itens do checklist como PASS.
+**Execução automatizada associada:** o workflow UX #45916050608 concluiu **8 testes PASS, 0 FAIL e 0 SKIPPED** no commit `fb398c2d31e328844b5a60fd0f97a4f672824ffa`, cobrindo as jornadas e telas selecionadas em Chromium, inclusive axe-core nas telas representativas. [Log da execução](https://github.com/Aluvioz/Polychat/actions/runs/45916050608).
 
-**Defasagem de versão:** as três capturas citadas foram geradas no commit `9f226667686cbb115b9613032103d6fbad040995`, anterior à harmonização do limite de anexos para 10 MiB no commit `fb398c2d31e328844b5a60fd0f97a4f672824ffa`. Portanto, não usar a captura de anexos como evidência da apresentação atual desse limite; a nova execução Playwright da versão corrigida deve produzir capturas atualizadas.
+**Conclusão desta revisão visual limitada:** a nova captura confirma a apresentação de 10 MiB (10.485.760 bytes) na tela de anexos. Não foi confirmado defeito de código apenas pelas imagens. O comportamento da notificação fixa permanece como observação a confirmar interativamente. As imagens e os testes automatizados oferecem evidência pontual de renderização e navegação, mas não substituem a inspeção humana completa nem autorizam marcar itens do checklist como PASS.
+
+**Versão da evidência:** as capturas correspondem à versão do protótipo após a harmonização para 10 MiB. Os itens M94-01 a M94-15 e A94-01 a A94-10 continuam pendentes de execução humana por responsável identificado.
 
 ## 5. Trilha de execução (em branco)
 
