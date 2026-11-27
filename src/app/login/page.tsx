@@ -1,23 +1,20 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { FormEvent, Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("motivo") === "sessao-expirada") {
-      setNotice("Sua sessão expirou. Entre novamente para continuar.");
-    }
-  }, []);
+  const notice =
+    searchParams.get("motivo") === "sessao-expirada"
+      ? "Sua sessão expirou. Entre novamente para continuar."
+      : "";
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -89,5 +86,13 @@ export default function LoginPage() {
         </p>
       </section>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main className="login-shell" aria-busy="true" />}>
+      <LoginForm />
+    </Suspense>
   );
 }
