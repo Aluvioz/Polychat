@@ -454,7 +454,8 @@ A execução deve ocorrer por fatias, acompanhando a disponibilidade das funcion
 - 20/11/2026 — v0.2: amplia cenários de anexos e download, corrige a classificação dos testes por dispositivo, completa rastreabilidade de dependências e formaliza autoridade para aceitação de risco residual.
 - 24/11/2026 — v0.3: alinha o plano à baseline POLY-REQ-001 v0.5 e à ADR-003 Accepted; esclarece que Q-025 trata de compatibilidade/configuração da stack Supabase + Vercel, sem substituição por inferência.
 - 24/11/2026 — v0.4: acrescenta ao catálogo os casos TC-E2E-016 a TC-E2E-020 e corrige a rastreabilidade de RF-023, removendo a referência sem correspondência a TC-UX-002 e mantendo TC-E2E-020.
-- 24/11/2026 — v0.5: acrescenta a correspondência dos cinco critérios de aceite da Issue #126 com as seções e evidências documentais; explicita a distinção entre documentação, execução e aprovação, e consolida as referências à ADR-003 Accepted, ADR-005 Proposed e Q-025.\n- 26/11/2026 — v0.6: acrescenta snapshot de testes versionados, execuções SQL comprovadas em Polyford, estado real de E2E e validação de anexos na PR #185, mantendo separadas as evidências integradas e as ainda em revisão.
+- 24/11/2026 — v0.5: acrescenta a correspondência dos cinco critérios de aceite da Issue #126 com as seções e evidências documentais; explicita a distinção entre documentação, execução e aprovação, e consolida as referências à ADR-003 Accepted, ADR-005 Proposed e Q-025.
+- 26/11/2026 — v0.6: acrescenta snapshot de testes versionados, execuções SQL comprovadas em Polyford, estado real de E2E e validação de anexos na PR #185, mantendo separadas as evidências integradas e as ainda em revisão.
 
 
 ## 18. Snapshot de implementação e execução — 26/11/2026
