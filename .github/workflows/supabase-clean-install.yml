@@ -121,6 +121,76 @@ jobs:
           echo "CLI migration entries: $actual"
           test "$actual" -eq "$expected"
 
+      - name: Verify real local HTTP login and client bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/polychat-clean"
+          set -a
+          source <(supabase status -o env)
+          set +a
+          export NEXT_PUBLIC_SUPABASE_URL="$API_URL"
+          export NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="${PUBLISHABLE_KEY:-$ANON_KEY}"
+          export SUPABASE_SECRET_KEY="${SECRET_KEY:-$SERVICE_ROLE_KEY}"
+          [[ "$API_URL" == http://127.0.0.1:* || "$API_URL" == http://localhost:* ]]
+          echo "::add-mask::$SUPABASE_SECRET_KEY"
+          cd "$GITHUB_WORKSPACE"
+          npm ci
+          npm run build
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const secret = process.env.SUPABASE_SECRET_KEY;
+          function walk(dir) {
+            return fs.readdirSync(dir,{withFileTypes:true}).flatMap(d=>d.isDirectory()?walk(path.join(dir,d.name)):[path.join(dir,d.name)]);
+          }
+          const files=walk('.next/static');
+          if(!files.length) throw Error('Empty client bundle');
+          if(files.some(f=>fs.readFileSync(f).includes(secret))) throw Error('Local server secret found in client static assets');
+          console.log('PASS: no exact local server secret in '+files.length+' client static assets');
+          NODE
+          npm run start -- --hostname 127.0.0.1 --port 3000 > "$RUNNER_TEMP/polychat-http-server.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for i in $(seq 1 60); do curl -fsS http://127.0.0.1:3000/login >/dev/null && break; sleep 2; done
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {randomUUID} from 'node:crypto';
+          import {execFileSync} from 'node:child_process';
+          const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
+          const secret=process.env.SUPABASE_SECRET_KEY;
+          const legacy=process.env.SERVICE_ROLE_KEY;
+          const username='qa127_'+randomUUID().replaceAll('-','').slice(0,12);
+          const password='Qa127!'+randomUUID();
+          const adminHeaders={apikey:secret,'Content-Type':'application/json',...(secret.startsWith('eyJ')?{Authorization:'Bearer '+secret}:{})};
+          const create=await fetch(url+'/auth/v1/admin/users',{method:'POST',headers:adminHeaders,body:JSON.stringify({email:username+'@example.invalid',password,email_confirm:true})});
+          assert.ok(create.ok,'Admin fixture HTTP '+create.status);
+          const user=await create.json();
+          assert.match(user.id,/^[0-9a-f-]{36}$/);
+          const db=execFileSync('docker',['ps','--format','{{.Names}}'],{encoding:'utf8'}).split('\n').find(n=>n.startsWith('supabase_db_'));
+          assert.ok(db);
+          const update=execFileSync('docker',['exec',db,'psql','-U','postgres','-d','postgres','-v','ON_ERROR_STOP=1','-Atc',"update public.profiles set username='"+username+"',role='user',is_active=true where id='"+user.id+"' returning id"],{encoding:'utf8'});
+          assert.ok(update.includes(user.id),'Expected profile fixture');
+          const login=async(u,p)=>fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+          const res=await login(username,password);
+          assert.equal(res.status,200,'Positive HTTP login status');
+          const body=await res.json();
+          assert.deepEqual(body.user,{id:user.id,username,role:'user'});
+          assert.deepEqual(Object.keys(body),['user']);
+          const cookies=res.headers.getSetCookie();
+          for(const name of ['polychat_access_token','polychat_refresh_token']) {
+            const c=cookies.find(x=>x.startsWith(name+'='));
+            assert.ok(c && /HttpOnly/i.test(c) && /Secure/i.test(c) && /SameSite=Lax/i.test(c),'Secure cookie attributes');
+          }
+          assert.equal(res.headers.get('cache-control'),'no-store');
+          console.log('PASS: real positive HTTP login, sanitized body, session cookies and no-store');
+          const wrong=await login(username,'not-the-password');
+          const unknown=await login('unknown_'+username,password);
+          assert.equal(wrong.status,401); assert.equal(unknown.status,401);
+          assert.deepEqual(await wrong.json(),await unknown.json());
+          console.log('PASS: same generic HTTP rejection for wrong password and unknown account');
+          NODE
+
       - name: Stop disposable Supabase stack
         if: always()
         working-directory: ${{ runner.temp }}/polychat-clean
