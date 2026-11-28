@@ -55,37 +55,30 @@ export default function ConversationHistoryPage() {
     setLoading(true);
     setError("");
     try {
-      const sessionResponse = await fetch("/api/auth/session", { cache: "no-store" });
-      if (sessionResponse.status === 401) {
-        router.replace("/login");
-        return;
-      }
-      const sessionData = await sessionResponse.json().catch(() => null);
-      if (!sessionResponse.ok || !sessionData?.user || sessionData.user.role !== "user") {
-        router.replace(sessionData?.user ? "/" : "/login");
-        return;
-      }
-      setUser(sessionData.user);
-
       const response = await fetch(
         `/api/conversations/${conversationId}/messages?limit=50`,
         { cache: "no-store" },
       );
       const data = await response.json().catch(() => null);
-      if (!response.ok || !Array.isArray(data?.messages)) {
-        if (response.status === 401) {
-          router.replace("/login");
-          return;
-        }
+      if (response.status === 401) {
+        router.replace("/login");
+        return;
+      }
+      if (data?.user && data.user.role !== "user") {
+        router.replace("/");
+        return;
+      }
+      if (!response.ok || !data?.user || !Array.isArray(data?.messages)) {
         setError(data?.error ?? "Não foi possível carregar o histórico.");
         return;
       }
+      setUser(data.user);
 
       const chronological = [...data.messages].reverse() as Message[];
       setMessages(chronological);
       setHasMore(Boolean(data.hasMore));
       setCursor(data.nextCursor ?? null);
-      await markRead(chronological, sessionData.user.id);
+      await markRead(chronological, data.user.id);
     } catch {
       setError("Não foi possível conectar ao serviço de mensagens.");
     } finally {
@@ -142,6 +135,10 @@ export default function ConversationHistoryPage() {
         <div className="conversations-account">
           <span>{user?.username ?? "Usuário"}</span>
           <Link className="history-back" href="/conversations">Conversas</Link>
+          <button className="conversations-logout" type="button" onClick={async () => {
+            try { await fetch("/api/auth/logout", { method: "POST" }); }
+            finally { router.replace("/login"); router.refresh(); }
+          }}>Sair</button>
         </div>
       </header>
 
