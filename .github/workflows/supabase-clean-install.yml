@@ -42,6 +42,16 @@ jobs:
             supabase/tests/issue_112_group_admin.integration.sql
             supabase/tests/issue_115_private_bucket.integration.sql
           )
+          required_127=(
+            supabase/tests/issue_101_rls.integration.sql
+            supabase/tests/issue_101_direct_conversation_creation.sql
+            supabase/tests/issue_102_audit_retention.integration.sql
+            supabase/tests/issue_102_discard_retention.integration.sql
+          )
+          for test_file in "${required_127[@]}"; do
+            test -f "$test_file"
+            cp "$test_file" "$workspace/supabase/tests/"
+          done
           for test_file in "${integration_tests[@]}"; do
             if [[ -f "$test_file" ]]; then
               cp "$test_file" "$workspace/supabase/tests/"
@@ -79,6 +89,25 @@ jobs:
               docker cp "$test_file" "$db_container:$container_file"
               docker exec "$db_container" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$container_file"
             fi
+          done
+
+      - name: Run required Issue 127 fixtures on isolated container
+        working-directory: ${{ runner.temp }}/polychat-clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_container=$(docker ps --format '{{.Names}}' | grep '^supabase_db_' | head -n 1)
+          test -n "$db_container"
+          for test_file in \
+            supabase/tests/issue_101_rls.integration.sql \
+            supabase/tests/issue_101_direct_conversation_creation.sql \
+            supabase/tests/issue_102_audit_retention.integration.sql \
+            supabase/tests/issue_102_discard_retention.integration.sql; do
+            test -f "$test_file"
+            container_file="/tmp/$(basename "$test_file")"
+            docker cp "$test_file" "$db_container:$container_file"
+            docker exec "$db_container" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$container_file"
+            echo "PASS: $test_file"
           done
 
       - name: Verify CLI migration history
