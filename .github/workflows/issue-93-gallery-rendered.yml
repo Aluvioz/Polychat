@@ -56,3 +56,90 @@ jobs:
           name: issue-93-rendered-evidence
           path: evidence-93/
           retention-days: 14
+
+  cross-engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: e169ef3de96a644df663ea025ce63e1cf0e50cac
+          path: prototype-94-original
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.57.0
+          npx playwright install --with-deps chromium firefox webkit
+      - run: |
+          mkdir -p evidence-cross
+          node --input-type=module <<'JS'
+          import { chromium, firefox, webkit } from 'playwright';
+          import { writeFileSync } from 'node:fs';
+          import { pathToFileURL } from 'node:url';
+          const results=[];
+          const url=(p)=>pathToFileURL(process.cwd()+'/'+p).href;
+          const overlap=(page,screen)=>page.evaluate(screen=>{
+            const t=document.querySelector('#feedback').getBoundingClientRect();
+            return [...document.querySelectorAll('[data-screen="'+screen+'"] button')].filter(b=>{
+              const r=b.getBoundingClientRect();
+              return r.width>0&&r.height>0&&r.left<t.right&&r.right>t.left&&r.top<t.bottom&&r.bottom>t.top;
+            }).map(b=>b.textContent.trim());
+          },screen);
+          for(const engine of [chromium,firefox,webkit]){
+            let browser;
+            try {
+              browser=await engine.launch();
+              for(const width of [320,390,768,1280]){
+                const name=engine.name()+'-'+width;
+                const page=await browser.newPage({viewport:{width,height:900}});
+                const errors=[], network=[];
+                page.on('pageerror',e=>errors.push(e.message));
+                page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+                page.on('requestfailed',r=>network.push({url:r.url(),failure:r.failure()?.errorText}));
+                await page.goto(url('public/design-system/issue-93-galeria.html'),{waitUntil:'load'});
+                const gallery=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,logoLoaded:document.querySelector('img').naturalWidth>0,buttons:[...document.querySelectorAll('button:not(:disabled)')].map(e=>({text:e.textContent.trim(),height:e.getBoundingClientRect().height}))}));
+                await page.keyboard.press('Tab');
+                gallery.firstFocus=await page.evaluate(()=>document.activeElement.textContent.trim());
+                await page.screenshot({path:'evidence-cross/gallery-'+name+'.png',fullPage:true});
+                results.push({issue:93,name,version:browser.version(),...gallery,errors:[...errors],network:[...network]});
+                await page.close();
+                const p=await browser.newPage({viewport:{width,height:720}});
+                const external=[],consoleErrors=[];
+                p.on('pageerror',e=>consoleErrors.push(e.message));
+                p.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+                p.on('request',r=>{if(/^https?:/.test(r.url()))external.push(r.url())});
+                await p.goto(url('prototype-94-original/public/prototipos/issue-94/index.html'));
+                for(const sel of ['[data-go="u-login"]','[data-go="u-monitor"]','[data-go="u-conversations"]','[data-screen="u-conversations"] [data-user]']){
+                  await p.locator(sel).filter({visible:true}).first().click();
+                }
+                await p.locator('[data-action="fail-message"]').click();
+                const before=await p.locator('#chat-messages .bubble').count();
+                // Programmatic activation isolates handler behavior from any overlay.
+                await p.locator('[data-action="retry-message"]').evaluate(e=>e.click());
+                const after=await p.locator('#chat-messages .bubble').count();
+                const failedRemaining=await p.locator('#chat-messages .failed').count();
+                const chatOverlap=await overlap(p,'u-chat');
+                await p.screenshot({path:'evidence-cross/retry-'+name+'.png'});
+                await p.locator('[data-screen="u-chat"] [data-go="u-attach"]').evaluate(e=>e.click());
+                await p.locator('[data-action="attach-scanner-offline"]').evaluate(e=>{e.scrollIntoView({block:'center'});e.click()});
+                const attachmentOverlap=await overlap(p,'u-attach');
+                await p.screenshot({path:'evidence-cross/toast-'+name+'.png'});
+                const overflow=await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+                results.push({issue:94,name,version:browser.version(),before,after,failedRemaining,chatOverlap,attachmentOverlap,overflow,external,consoleErrors});
+                await p.close();
+              }
+            }catch(e){results.push({engine:engine.name(),failure:String(e)});}
+            finally{await browser?.close()}
+          }
+          writeFileSync('evidence-cross/results.json',JSON.stringify({version94:'e169ef3de96a644df663ea025ce63e1cf0e50cac',results},null,2));
+          console.log(JSON.stringify(results,null,2));
+          if(results.length!==24||results.some(r=>r.failure||r.overflow>0||r.external?.length||r.consoleErrors?.length))process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cross-engine-technical-evidence-93-94
+          path: evidence-cross/
+          retention-days: 14
