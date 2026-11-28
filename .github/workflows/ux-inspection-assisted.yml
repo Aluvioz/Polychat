@@ -1,0 +1,28 @@
+name: UX inspection assisted evidence
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ux-inspection-assisted.yml'
+      - 'scripts/issue-94-assisted-inspection.py'
+      - 'public/prototipos/issue-94/**'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/issue-94-assisted-inspection.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-94-assisted-inspection
+          path: |
+            public/prototipos/issue-94/evidence/
+            public/prototipos/issue-94/results.json
+          retention-days: 14

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Polychat — Protótipo de jornadas UX (#94)</title>
+  <link rel="stylesheet" href="./app.css">
+  <script defer src="./app.js"></script>
+</head>
+<body data-mode="start">
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">P</span><span>Polychat <small>Laboratório de UX</small></span></div>
+      <div class="top-actions"><span class="pill">Protótipo fictício v0.1</span><button type="button" class="top-link" data-go="start">Escolher perfil</button></div>
+    </div>
+  </header>
+  <div class="demo-warning" role="note"><strong>Atenção:</strong> apenas uma demonstração de navegação com dados inventados. Não há autenticação, servidor, envio real, auditoria persistida, upload ou controle de permissões. Não digite dados da FORD nem senhas reais.</div>
+  <nav class="ti-menu" id="ti-menu" aria-label="Áreas do console TI" hidden>
+    <button type="button" data-go="t-dashboard">Dashboard</button>
+    <button type="button" data-go="t-users">Usuários</button>
+    <button type="button" data-go="t-groups">Grupos</button>
+    <button type="button" data-go="t-consult">Consulta</button>
+    <button type="button" data-go="t-alerts">Alertas</button>
+    <button type="button" data-go="t-audit">Auditoria</button>
+    <button type="button" data-go="t-settings">Configurações</button>
+  </nav>
+  <main id="conteudo" tabindex="-1">
+    <section class="screen" data-screen="start" aria-labelledby="start-title">
+      <div class="intro">
+        <p class="eyebrow">ISSUE #94 · PROTOTIPAÇÃO E TESTES DE USABILIDADE</p>
+        <h1 id="start-title">Explore as jornadas do Polychat</h1>
+        <p>Selecione o perfil para percorrer cenários fictícios baseados nos fluxos documentados nas issues #91 e #92. As interações são locais e servem exclusivamente para avaliar rótulos, decisões e feedback.</p>
+      </div>
+      <div class="choice-grid">
+        <article class="choice"><span class="choice-icon" aria-hidden="true">▣</span><h2>Usuário mobile</h2><p>Login, aviso de monitoramento, conversas, grupos, mensagens, anexos e recuperação de erros.</p><button class="btn primary" type="button" data-go="u-login">Explorar jornada mobile</button><p class="detail">Tela simulada de smartphone; uso real restrito a Android/iOS.</p></article>
+        <article class="choice"><span class="choice-icon" aria-hidden="true">▤</span><h2>TI desktop</h2><p>Dashboard, contas, grupos, consulta de conversas, alertas, auditoria e configurações permitidas.</p><button class="btn primary" type="button" data-go="t-login">Explorar jornada TI</button><p class="detail">Console simulado; uso real restrito a computadores.</p></article>
+      </div>
+      <p class="footnote">Paleta provisória Q-019; não é identidade oficial aprovada. Nenhuma imagem do Ford Oval é usada.</p>
+    </section>
+
+    <section class="screen" data-screen="u-login" data-task="U-01" aria-labelledby="u-login-title" hidden>
+      <div class="phone"><div class="phone-top"><strong>Polychat</strong><span>Usuário · Demonstração</span></div>
+        <div class="phone-content">
+          <p class="eyebrow">U-01 · ACESSO</p><h1 id="u-login-title">Entrar</h1>
+          <p class="subtitle">O acesso real utiliza credenciais entregues pela TI. Nesta simulação, não digite sua senha.</p>
+          <div class="field"><label for="u-user">Nome de usuário fictício</label><input id="u-user" value="usuario.exemplo" readonly></div>
+          <div class="field"><label for="u-password">Senha fictícia</label><input id="u-password" type="text" value="••••••••" readonly></div>
+          <button class="btn primary wide" type="button" data-go="u-monitor">Entrar na demonstração</button>
+          <button class="btn text wide" type="button" data-action="bad-login">Simular credenciais inválidas</button>
+          <p class="detail">Sem cadastro público, redefinição de senha pelo usuário ou login verdadeiro.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-monitor" aria-labelledby="u-monitor-title" hidden>
+      <div class="phone"><div class="phone-top"><strong>Polychat</strong><span>Primeiro acesso</span></div>
+        <div class="phone-content">
+          <p class="eyebrow">ETAPA AUXILIAR · AVISO DE MONITORAMENTO</p><h1 id="u-monitor-title">Aviso de monitoramento</h1>
+          <div class="callout">As comunicações corporativas podem estar sujeitas a monitoramento e consulta pela TI conforme as regras institucionais aplicáveis.</div>
+          <p>Este é um aviso de apresentação, não uma etapa adicional de consentimento.</p>
+          <button class="btn primary wide" type="button" data-go="u-conversations">Continuar para conversas</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-conversations" data-task="U-02" aria-labelledby="u-conversations-title" hidden>
+      <div class="phone"><div class="phone-top"><strong>Polychat</strong><span>Conversas recentes</span></div>
+        <div class="phone-content">
+          <p class="eyebrow">U-02 · LOCALIZAR CONVERSA RECENTE</p><h1 id="u-conversations-title">Conversas recentes</h1>
+          <p class="subtitle">Conversas e grupos aos quais você tem acesso.</p>
+          <button class="btn primary wide" type="button" data-go="u-contacts">Iniciar conversa individual</button>
+          <ul class="conversation-list">
+            <li><button type="button" class="list-button" data-go="u-chat" data-chat="individual" data-user="Marina (exemplo)"><span><strong>Marina (exemplo)</strong><small>Recebido às 09:41 · Vamos revisar o documento?</small></span><span class="count" aria-label="2 mensagens não lidas">2</span></button></li>
+            <li><button type="button" class="list-button" data-go="u-chat" data-chat="group"><span><strong>Equipe técnica (exemplo)</strong><small>Grupo · Atualização de plantão</small></span><span class="count" aria-label="1 mensagem não lida">1</span></button></li>
+          </ul>
+          <button class="btn text wide" type="button" data-go="u-empty">Ver estado sem conversas</button>
+          <button class="btn text wide" type="button" data-action="offline">Simular perda de conexão</button>
+          <button class="btn text wide" type="button" data-go="u-session">Simular sessão expirada</button>
+          <p class="detail">Não há abas permanentes de Contatos ou Perfil; iniciar conversa é uma ação contextual.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-contacts" data-task="U-03" aria-labelledby="u-contacts-title" hidden>
+      <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-conversations">← Conversas</button><span>Novo contato</span></div>
+        <div class="phone-content">
+          <p class="eyebrow">U-03 · INICIAR CONVERSA INDIVIDUAL</p><h1 id="u-contacts-title">Selecionar usuário ativo</h1>
+          <label for="contact-search">Pesquisar</label><input id="contact-search" type="search" placeholder="Nome de usuário" autocomplete="off">
+          <ul class="conversation-list" id="contacts-list"><li><button class="list-button" type="button" data-chat="individual" data-user="Marina (exemplo)" data-go="u-chat">Marina (exemplo) · Ativa</button></li><li><button class="list-button" type="button" data-chat="individual" data-user="Rafael (exemplo)" data-go="u-chat">Rafael (exemplo) · Ativo</button></li></ul>
+          <p id="contacts-empty" class="callout" hidden>Nenhum usuário fictício corresponde à busca.</p><p class="detail">Contatos exclusivamente fictícios. A busca apenas filtra o conteúdo deste protótipo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-chat" data-task="U-05" aria-labelledby="u-chat-title" hidden>
+      <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-conversations">← Conversas</button><span>Conversa</span></div>
+        <div class="phone-content">
+          <p class="eyebrow">U-05 · MENSAGEM E FEEDBACK</p><h1 id="u-chat-title">Marina (exemplo)</h1><p id="chat-kind" class="subtitle">Conversa individual · dados fictícios</p>
+          <button id="group-info-link" class="btn text" type="button" data-go="u-group" hidden>Ver participantes do grupo</button>
+          <div id="offline-indicator" class="callout" hidden>Sem conexão (simulação). Novos envios não podem ser confirmados.</div><div class="chat-messages" id="chat-messages" aria-label="Histórico fictício"><p class="bubble incoming">Vamos revisar o documento?</p><p class="bubble outgoing">Claro, pode mandar. <small>Lido às 09:41</small></p></div>
+          <form id="message-form"><label for="message-text">Escrever mensagem fictícia</label><textarea id="message-text" rows="2" maxlength="280" placeholder="Escreva uma mensagem de teste…"></textarea><div class="inline-actions"><button class="btn primary" type="submit">Simular envio</button><button class="btn secondary" type="button" data-go="u-attach">Anexo</button></div></form>
+          <div class="inline-actions"><button class="btn text" type="button" data-action="fail-message">Simular falha no envio</button><button class="btn text" type="button" data-action="retry-message">Tentar novamente</button><button class="btn text" type="button" data-action="access-denied">Simular acesso negado</button></div>
+          <p class="detail">Mensagens não são enviadas, persistidas nem entregues. Indicadores são exemplos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-group" data-task="U-04" aria-labelledby="u-group-title" hidden>
+      <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-chat">← Conversa</button><span>Grupo</span></div>
+        <div class="phone-content"><p class="eyebrow">U-04 · CONSULTAR GRUPO</p><h1 id="u-group-title">Equipe técnica (exemplo)</h1><p>Participantes fictícios: Marina, Rafael e você.</p><div class="callout">Somente a TI pode criar, encerrar e administrar participantes de grupos. Ao remover alguém, o acesso às mensagens e anexos anteriores deve ser revogado no sistema real.</div><button class="btn primary" type="button" data-go="u-chat">Voltar à conversa</button></div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-attach" data-task="U-06" aria-labelledby="u-attach-title" hidden>
+      <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-chat">← Conversa</button><span>Anexos</span></div>
+        <div class="phone-content">
+          <p class="eyebrow">U-06 · ANEXAR PDF OU JPEG</p><h1 id="u-attach-title">Selecionar anexo</h1>
+          <p>Simule um dos estados sem escolher nem carregar um arquivo de verdade.</p>
+          <div class="stack"><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: documento.pdf (permitido)</button><button class="btn secondary wide" type="button" data-action="attach-valid">Exemplo: foto.jpg da galeria (permitida)</button><p class="eyebrow" data-task="U-07">U-07 · ERROS E RECUPERAÇÃO DE ANEXOS</p><button class="btn secondary wide" type="button" data-action="attach-invalid">Exemplo: vídeo.mp4 (não permitido)</button><button class="btn secondary wide" type="button" data-action="attach-over-limit">Exemplo: PDF de 12 MiB (acima de 10 MiB)</button><button class="btn secondary wide" type="button" data-action="attach-too-many">Exemplo: 6 arquivos na mensagem (acima de 5)</button><button class="btn secondary wide" type="button" data-action="attach-protected">Exemplo: PDF protegido por senha</button><button class="btn secondary wide" type="button" data-action="attach-error">Exemplo: falha de upload</button><button class="btn secondary wide" type="button" data-action="attach-retry">Tentar novamente após falha</button><button class="btn secondary wide" type="button" data-action="attach-blocked">Exemplo: arquivo bloqueado pela verificação</button><button class="btn secondary wide" type="button" data-action="attach-scanner-offline">Exemplo: scanner antimalware indisponível</button></div>
+          <p class="detail">Regras do produto: PDF/JPEG; até 10 MiB (10.485.760 bytes) por arquivo e 5 arquivos por mensagem. PDFs com senha não são aceitos. JPEG deve ter metadados EXIF/GPS removidos pelo sistema real. Sem câmera, áudio ou vídeo. Scanner indisponível mantém anexos bloqueados, mas mensagens de texto continuam. Em produção, proteção e autorização são requisitos do servidor.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="u-empty" aria-labelledby="u-empty-title" hidden>
+      <div class="phone"><div class="phone-top"><button class="back" type="button" data-go="u-conversations">← Conversas</button></div><div class="phone-content"><p class="eyebrow">ESTADO · VAZIO</p><h1 id="u-empty-title">Ainda não há conversas</h1><p>Quando você iniciar uma conversa individual ou for incluído em um grupo, ela aparecerá aqui.</p><button class="btn primary" type="button" data-go="u-contacts">Iniciar conversa</button></div></div>
+    </section>
+    <section class="screen" data-screen="u-session" data-task="U-08" aria-labelledby="u-session-title" hidden>
+      <div class="phone"><div class="phone-top"><strong>Polychat</strong></div><div class="phone-content"><p class="eyebrow">U-08 · SESSÃO EXPIRADA OU DESCONECTADA</p><h1 id="u-session-title">Sessão expirada</h1><p>Por segurança, é necessário entrar novamente.</p><button class="btn primary" type="button" data-go="u-login">Ir para o login demonstrativo</button></div></div>
+    </section>
+
+    <section class="screen" data-screen="t-login" data-task="T-01" aria-labelledby="t-login-title" hidden>
+      <div class="admin-card narrow"><p class="eyebrow">T-01 · ACESSO AO CONSOLE</p><h1 id="t-login-title">Console administrativo</h1><p>Somente a TI utiliza esta área, em computador. A demonstração não autentica nem autoriza ações.</p><div class="field"><label for="t-username">Nome de usuário fictício</label><input id="t-username" readonly value="ti.exemplo"></div><div class="field"><label for="t-pass">Senha fictícia</label><input id="t-pass" readonly value="••••••••"></div><button class="btn primary" type="button" data-go="t-dashboard">Entrar na demonstração TI</button></div>
+    </section>
+    <section class="screen" data-screen="t-dashboard" aria-labelledby="t-dashboard-title" hidden>
+      <div class="admin-card"><p class="eyebrow">ETAPA AUXILIAR · PAINEL INICIAL</p><h1 id="t-dashboard-title">Dashboard TI</h1><p>Escolha uma área. Indicadores de produção não são exibidos porque não existem dados operacionais reais.</p>
+        <div class="dash-grid"><button class="tile" type="button" data-go="t-users"><strong>Usuários</strong><small>Contas, credenciais, status</small></button><button class="tile" type="button" data-go="t-groups"><strong>Grupos</strong><small>Participantes e gestão</small></button><button class="tile" type="button" data-go="t-consult"><strong>Consulta de conversas</strong><small>Consulta e exportação auditáveis</small></button><button class="tile" type="button" data-go="t-alerts"><strong>Alertas</strong><small>Revisão humana sem bloqueio automático</small></button><button class="tile" type="button" data-go="t-audit"><strong>Auditoria</strong><small>Registros administrativos</small></button><button class="tile" type="button" data-go="t-settings"><strong>Configurações</strong><small>Lista de termos e quotas de anexos</small></button></div>
+      </div>
+    </section>
+    <section class="screen" data-screen="t-users" data-task="T-02" aria-labelledby="t-users-title" hidden>
+      <div class="admin-card"><p class="eyebrow">T-02 · CONSULTA DE CONTAS</p><h1 id="t-users-title">Usuários</h1><p>Contas fictícias; qualquer ação abaixo é uma simulação local.</p>
+        <label for="ti-user-search">Buscar conta</label><input type="search" id="ti-user-search" placeholder="Buscar nome de usuário">
+        <p id="ti-users-empty" class="callout" hidden>Nenhuma conta fictícia corresponde à busca.</p><div class="table-wrap"><table><caption>Exemplos de contas</caption><thead><tr><th>Conta</th><th>Status</th><th>Ação</th></tr></thead><tbody><tr><td>marina.exemplo</td><td>Ativa</td><td><button class="btn small danger" type="button" data-confirm="Desativar conta fictícia marina.exemplo?">Desativar</button></td></tr><tr><td>rafael.exemplo</td><td>Ativa</td><td><button class="btn small secondary" type="button" data-action="reset-user">Simular reset</button></td></tr></tbody></table></div>
+        <button class="btn primary" type="button" data-action="create-user">Simular provisionamento</button>
+        <p class="detail">No produto real: somente TI, operações no servidor, auditoria e revogação de acesso após desativação.</p></div>
+    </section>
+    <section class="screen" data-screen="t-groups" data-task="T-03" aria-labelledby="t-groups-title" hidden>
+      <div class="admin-card"><p class="eyebrow">T-03 · CRIAÇÃO E GESTÃO DE GRUPOS</p><h1 id="t-groups-title">Grupos</h1><p>Controle de grupos e integrantes, apenas para TI.</p>
+        <div class="info-block"><strong>Equipe técnica (grupo fictício)</strong><p>Participantes: Marina, Rafael.</p><div class="inline-actions"><button class="btn secondary" type="button" data-action="add-member">Simular inclusão</button><button class="btn danger" type="button" data-confirm="Remover Rafael do grupo fictício? No produto real, a remoção revoga acesso imediato ao histórico e anexos anteriores.">Simular remoção</button></div></div>
+        <button class="btn primary" type="button" data-action="create-group">Simular criação de grupo</button>
+        <p class="detail">Também existem encerramento e desativação/reativação, sujeitos a confirmação e auditoria real.</p></div>
+    </section>
+    <section class="screen" data-screen="t-consult" data-task="T-04" aria-labelledby="t-consult-title" hidden>
+      <div class="admin-card"><p class="eyebrow">T-04 · CONSULTA ADMINISTRATIVA</p><h1 id="t-consult-title">Consulta de conversas</h1><p>TI pode consultar qualquer conversa individual ou em grupo a qualquer momento, sem justificativa ou segunda aprovação. A consulta deve gerar trilha de auditoria no produto real.</p>
+        <div class="info-block"><strong>Conversa de exemplo</strong><p>Marina ↔ Rafael · Conteúdo fictício: “Revisar documento amanhã”.</p><div class="inline-actions"><button class="btn primary" type="button" data-action="view-chat">Simular consulta</button><button class="btn secondary" type="button" data-action="export-chat">Simular exportação</button><button class="btn secondary" type="button" data-action="edit-message">Simular edição TI</button><button class="btn danger" type="button" data-confirm="Excluir mensagem fictícia? A ação real exigiria autorização e auditoria no servidor.">Simular exclusão</button></div></div><p class="detail">Não há conteúdo real, arquivo exportado ou log persistente nesta demonstração.</p></div>
+    </section>
+    <section class="screen" data-screen="t-alerts" data-task="T-05" aria-labelledby="t-alerts-title" hidden>
+      <div class="admin-card"><p class="eyebrow">T-05 · REVISÃO DE ALERTAS</p><h1 id="t-alerts-title">Fila de alertas</h1><p>A sinalização não bloqueia o envio, não suspende contas e não aplica punição automática.</p>
+        <div class="alert-list"><div class="info-block"><div class="inline-actions"><span class="tag danger-tag">Alta · imediatamente / até 1 hora</span></div><p>Exemplo de alerta sobre termo sinalizado em uma mensagem fictícia.</p><button type="button" class="btn secondary" data-action="review-alert">Revisar contexto</button><button type="button" class="btn primary" data-confirm="Encerrar alerta fictício de severidade alta?">Simular encerramento</button></div><div class="info-block"><span class="tag">Média · até 1 dia útil</span><p>Item de exemplo aguardando revisão.</p></div><div class="info-block"><span class="tag">Baixa · até 3 dias úteis</span><p>Item de exemplo aguardando revisão.</p></div></div>
+        <p class="detail">O encerramento pela TI não exige justificativa obrigatória. Eventos reais devem ser auditados.</p></div>
+    </section>
+    <section class="screen" data-screen="t-audit" aria-labelledby="t-audit-title" hidden>
+      <div class="admin-card"><p class="eyebrow">ETAPA AUXILIAR · AUDITORIA</p><h1 id="t-audit-title">Auditoria</h1><p>Somente administradores TI podem consultar e gerenciar registros conforme política. Dados abaixo são exemplos fabricados.</p><table><caption>Exemplos de eventos</caption><thead><tr><th>Evento</th><th>Tipo</th><th>Registro</th></tr></thead><tbody><tr><td>Consulta fictícia</td><td>Conversa</td><td>Simulação, não log</td></tr><tr><td>Alteração fictícia</td><td>Conta</td><td>Simulação, não log</td></tr></tbody></table></div>
+    </section>
+    <section class="screen" data-screen="t-settings" data-task="T-06" aria-labelledby="t-settings-title" hidden>
+      <div class="admin-card"><p class="eyebrow">T-06 · CONFIGURAÇÕES</p><h1 id="t-settings-title">Configurações</h1><p>Somente os parâmetros aprovados de lista de termos/regras de detecção e quotas de anexos.</p>
+        <div class="dash-grid"><div class="info-block"><h2>Termos e regras</h2><label for="term-example">Termo fictício</label><input id="term-example" value="exemplo de teste" readonly><button class="btn secondary" type="button" data-action="terms">Simular edição</button></div><div class="info-block"><h2>Quotas de anexos</h2><label for="quota-example">Quota ilustrativa de usuário</label><input id="quota-example" value="Definida pela TI" readonly><button class="btn secondary" type="button" data-confirm="Simular alteração fictícia de quota?">Simular alteração</button></div></div>
+        <p class="detail">As regras fixas de PDF/JPEG, 10 MiB (10.485.760 bytes) por arquivo e 5 arquivos por mensagem não são editáveis aqui nesta demonstração.</p></div>
+    </section>
+  </main>
+  <div id="feedback" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="confirm-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description"><h2 id="dialog-title">Confirmação demonstrativa</h2><p id="dialog-description"></p><div class="inline-actions"><button id="cancel-dialog" type="button" class="btn secondary">Cancelar</button><button id="accept-dialog" type="button" class="btn danger">Confirmar simulação</button></div><p class="detail">Nenhuma alteração real será executada.</p></dialog>
+  <footer><p>Protótipo UX #94 · dados exclusivamente fictícios · HTML/CSS/JS sem chamadas de rede · não substitui SQA, autorização server-side nem sessões com usuários reais.</p><p>Referências: <a href="https://github.com/Aluvioz/Polychat/issues/91">#91</a>, <a href="https://github.com/Aluvioz/Polychat/issues/92">#92</a>, <a href="https://github.com/Aluvioz/Polychat/issues/94">#94</a>.</p></footer>
+</body>
+</html>
