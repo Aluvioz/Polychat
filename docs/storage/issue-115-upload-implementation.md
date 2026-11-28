@@ -9,7 +9,7 @@
 - Upload permitido somente quando o usuário autenticado é o remetente da mensagem, em alinhamento com a policy `attachments_insert_member` da #101.
 - Bucket `attachments` usado como privado; a chave secreta permanece exclusivamente no servidor.
 - Validação de extensão, MIME declarado e assinatura binária PDF/JPEG.
-- Limite de 10 MiB aplicado antes do upload.
+- Limite de 10 MiB aplicado antes do upload e imposto pelo Supabase Storage conforme a configuração descrita na PR.
 - Registro dos metadados em `public.attachments` usando o JWT do usuário, preservando o enforcement RLS.
 - Remoção compensatória do objeto Storage se o registro do metadado falhar.
 - Testes unitários da validação de arquivo, incluindo aceitação explícita de exatamente 10.485.760 bytes e rejeição de 10.485.761 bytes.
@@ -37,7 +37,15 @@ O endpoint recebe um `messageId` existente e só aceita anexos em mensagem criad
 
 A migration que provisiona o bucket privado está na PR #181 e já foi aplicada ao projeto de desenvolvimento Polyford. Esta PR contém somente a camada de upload; a integração deve respeitar a ordem de revisão/merge da PR #181. Não executar `db push` nem alterar o histórico remoto de migrations nesta entrega.
 
-## Testes
+## Testes automatizados
 
-O arquivo `tests/attachment-validation.test.mjs` cobre os casos positivos PDF/JPEG e rejeições de MIME, extensão, assinatura, arquivo vazio e tamanho acima do limite. Os resultados de CI, lint, typecheck e build devem ser confirmados no head desta PR antes de aprovação.
+O arquivo `tests/attachment-validation.test.mjs` cobre os casos positivos PDF/JPEG e rejeições de MIME, extensão, assinatura, arquivo vazio e tamanho acima do limite. No HEAD consultado (`2856de42bb01bda7c2e09df123a49a287cd2fd47`), os workflows CI #46065653051 e #46065653126 estavam concluídos com sucesso. A descrição atual da PR registra que testes automatizados, ESLint, TypeScript, build Next.js e smoke test passaram. Consultar os checks novamente após qualquer novo commit.
+
+## Validação ponta a ponta — bloqueio confirmado em 28/11/2026
+
+- A implantação de produção consultada foi `https://polyford-ly3arbm8t-polychat1.vercel.app`, deploy READY da branch `main`, commit `7c351f3c12918de8dab686192273c5912226e4e0`. Esse commit não contém a branch desta PR.
+- A rota de conversas `/conversations` respondeu HTTP 404 na implantação de produção. A página inicial informa que o acesso de usuários ainda será liberado após a implementação e validação da autenticação.
+- Não foi possível autenticar, selecionar uma conversa nem realizar upload real de PDF no Polyford de produção. Consequentemente, transferência Storage, finalização, metadados e recuperação não foram testados ponta a ponta nesta validação.
+- Não foram usadas credenciais de usuário, chamadas de upload isoladas, migrations de produção ou deploy de produção para simular uma evidência ponta a ponta.
+- A pendência do SQA permanece: executar o fluxo real em produção quando a funcionalidade estiver disponível no deploy e registrar evidências de cada etapa. A limitação da implantação atual não demonstra falha do código da PR.
 
