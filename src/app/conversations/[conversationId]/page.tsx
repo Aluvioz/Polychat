@@ -313,7 +313,6 @@ export default function ConversationHistoryPage() {
                   onKeyDown={handleComposerKeyDown}
                   placeholder="Escreva uma mensagem..."
                   rows={2}
-                  maxLength={10000}
                   disabled={sending}
                   aria-describedby="message-composer-hint"
                 />
@@ -324,7 +323,6 @@ export default function ConversationHistoryPage() {
               </div>
               <div className="message-composer-footer">
                 <span id="message-composer-hint">Enter para enviar · Shift + Enter para quebrar linha</span>
-                <span>{draft.length}/10.000</span>
               </div>
               {sendError ? <p className="message-send-error" role="alert">{sendError}</p> : null}
             </form>

@@ -1033,7 +1033,7 @@ h2 {
 }
 .message-composer-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   color: var(--muted);
   font-size: 10px;
