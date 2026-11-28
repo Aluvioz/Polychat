@@ -44,6 +44,7 @@ jobs:
             supabase/tests/issue_107_active_profile_search.integration.sql
             supabase/tests/issue_107_recent_conversations.integration.sql
             supabase/tests/issue_115_private_bucket.integration.sql
+            supabase/tests/issue_109_message_idempotency.integration.sql
           )
           for test_file in "${integration_tests[@]}"; do
             if [[ -f "$test_file" ]]; then
@@ -80,6 +81,7 @@ jobs:
             supabase/tests/issue_107_active_profile_search.integration.sql
             supabase/tests/issue_107_recent_conversations.integration.sql
             supabase/tests/issue_115_private_bucket.integration.sql
+            supabase/tests/issue_109_message_idempotency.integration.sql
           )
           for test_file in "${integration_tests[@]}"; do
             if [[ -f "$test_file" ]]; then
