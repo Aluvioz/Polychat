@@ -39,22 +39,15 @@ export default function ConversationsPage() {
     setLoading(true);
     setError("");
     try {
-      const sessionResponse = await fetch("/api/auth/session", { cache: "no-store" });
-      if (sessionResponse.status === 401) { router.replace("/login"); return; }
-      const sessionData = await sessionResponse.json().catch(() => null);
-      if (!sessionResponse.ok || !sessionData?.user) {
-        setError(sessionData?.error ?? "Não foi possível validar sua sessão.");
-        return;
-      }
-      if (sessionData.user.role !== "user") { router.replace("/"); return; }
-      setUser(sessionData.user);
       const response = await fetch("/api/conversations", { cache: "no-store" });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !Array.isArray(data?.conversations)) {
-        if (response.status === 401) { router.replace("/login"); return; }
+      if (response.status === 401) { router.replace("/login"); return; }
+      if (data?.user && data.user.role !== "user") { router.replace("/"); return; }
+      if (!response.ok || !data?.user || !Array.isArray(data?.conversations)) {
         setError(data?.error ?? "Não foi possível carregar as conversas.");
         return;
       }
+      setUser(data.user);
       setConversations(data.conversations);
     } catch {
       setError("Não foi possível conectar ao serviço de conversas.");
