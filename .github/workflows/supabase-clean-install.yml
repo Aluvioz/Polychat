@@ -135,7 +135,7 @@ jobs:
           [[ "$API_URL" == http://127.0.0.1:* || "$API_URL" == http://localhost:* ]]
           echo "::add-mask::$SUPABASE_SECRET_KEY"
           cd "$GITHUB_WORKSPACE"
-          npm ci
+          npm install --no-package-lock --no-audit --no-fund
           npm run build
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
