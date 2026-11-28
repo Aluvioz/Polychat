@@ -1,0 +1,58 @@
+name: Issue 93 gallery rendered QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/issue-93-gallery-rendered.yml'
+      - 'public/design-system/**'
+      - 'tests/issue-93-a11y.test.mjs'
+permissions:
+  contents: read
+jobs:
+  gallery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/issue-93-a11y.test.mjs
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - run: |
+          mkdir -p evidence-93
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import { writeFileSync } from 'node:fs';
+          import { pathToFileURL } from 'node:url';
+          const browser = await chromium.launch();
+          const results = [];
+          function lum(rgb){const a=rgb.match(/\d+/g).slice(0,3).map(v=>{const n=+v/255;return n<=.04045?n/12.92:((n+.055)/1.055)**2.4});return a[0]*.2126+a[1]*.7152+a[2]*.0722}
+          function ratio(a,b){const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+          for(const width of [320,390,768,1280]){
+            const page=await browser.newPage({viewport:{width,height:900}});
+            const errors=[];page.on('requestfailed',r=>errors.push({url:r.url,error:r.failure()?.errorText}));
+            await page.goto(pathToFileURL(process.cwd()+'/public/design-system/issue-93-galeria.html').href,{waitUntil:'load'});
+            await page.waitForTimeout(1000);
+            await page.screenshot({path:'evidence-93/gallery-'+width+'.png',fullPage:true});
+            const data=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,logoLoaded:document.querySelector('img').naturalWidth>0,buttons:[...document.querySelectorAll('button:not(:disabled)')].map(e=>({text:e.innerText,height:e.getBoundingClientRect().height,color:getComputedStyle(e).color,background:getComputedStyle(e).backgroundColor})),inputBorder:getComputedStyle(document.querySelector('input')).borderTopColor,inputBG:getComputedStyle(document.querySelector('input')).backgroundColor}));
+            data.buttons.forEach(b=>b.contrast=ratio(b.color,b.background));data.inputBorderContrast=ratio(data.inputBorder,data.inputBG);
+            data.tabOrder=[];
+            for(let i=0;i<10;i++){await page.keyboard.press('Tab');data.tabOrder.push(await page.evaluate(()=>({tag:document.activeElement.tagName,id:document.activeElement.id,text:document.activeElement.innerText?.slice(0,65),outline:getComputedStyle(document.activeElement).outline})));await page.screenshot({path:'evidence-93/tab-'+width+'-'+i+'.png'});}
+            await page.keyboard.press('Shift+Tab');
+            data.reverse=await page.evaluate(()=>({tag:document.activeElement.tagName,id:document.activeElement.id,text:document.activeElement.innerText?.slice(0,65)}));
+            data.requestFailures=errors;results.push(data);await page.close();
+          }
+          const version=browser.version();await browser.close();
+          writeFileSync('evidence-93/results.json',JSON.stringify({version,commit:process.env.GITHUB_SHA,results},null,2));
+          console.log(JSON.stringify({version,results},null,2));
+          if(results.some(d=>d.scrollWidth>d.width||d.buttons.some(b=>b.height<44||b.contrast<4.5)||d.inputBorderContrast<3||!d.tabOrder[0]?.text?.includes('conteúdo')))process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-93-rendered-evidence
+          path: evidence-93/
+          retention-days: 14
