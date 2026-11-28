@@ -1,0 +1,60 @@
+TAP version 13
+# chromium-mobile-320: browser 143.0.7499.4, viewport 320x720
+# chromium-mobile-320: input border contrast 4.76:1
+# chromium-mobile-320: initial axe {"violations":[],"incomplete":[]}
+# chromium-mobile-320: error axe {"violations":[],"incomplete":[]}
+# Subtest: 129-chromium-mobile-320: navigation, layout, keyboard, contrast and mocked login error
+ok 1 - 129-chromium-mobile-320: navigation, layout, keyboard, contrast and mocked login error
+  ---
+  duration_ms: 2169.690115
+  type: 'test'
+  ...
+# chromium-mobile-390: browser 143.0.7499.4, viewport 390x844
+# chromium-mobile-390: input border contrast 4.76:1
+# chromium-mobile-390: initial axe {"violations":[],"incomplete":[]}
+# chromium-mobile-390: error axe {"violations":[],"incomplete":[]}
+# Subtest: 129-chromium-mobile-390: navigation, layout, keyboard, contrast and mocked login error
+ok 2 - 129-chromium-mobile-390: navigation, layout, keyboard, contrast and mocked login error
+  ---
+  duration_ms: 1929.010601
+  type: 'test'
+  ...
+# webkit-mobile-390: browser 26.0, viewport 390x844
+# webkit-mobile-390: input border contrast 4.76:1
+# webkit-mobile-390: initial axe {"violations":[],"incomplete":[]}
+# webkit-mobile-390: error axe {"violations":[],"incomplete":[]}
+# Subtest: 129-webkit-mobile-390: navigation, layout, keyboard, contrast and mocked login error
+ok 3 - 129-webkit-mobile-390: navigation, layout, keyboard, contrast and mocked login error
+  ---
+  duration_ms: 10683.471095
+  type: 'test'
+  ...
+# chromium-desktop-1280: browser 143.0.7499.4, viewport 1280x900
+# chromium-desktop-1280: input border contrast 4.76:1
+# chromium-desktop-1280: initial axe {"violations":[],"incomplete":[]}
+# chromium-desktop-1280: error axe {"violations":[],"incomplete":[]}
+# Subtest: 129-chromium-desktop-1280: navigation, layout, keyboard, contrast and mocked login error
+ok 4 - 129-chromium-desktop-1280: navigation, layout, keyboard, contrast and mocked login error
+  ---
+  duration_ms: 2236.494134
+  type: 'test'
+  ...
+# firefox-desktop-1280: browser 144.0.2, viewport 1280x900
+# firefox-desktop-1280: input border contrast 4.76:1
+# firefox-desktop-1280: initial axe {"violations":[],"incomplete":[]}
+# firefox-desktop-1280: error axe {"violations":[],"incomplete":[]}
+# Subtest: 129-firefox-desktop-1280: navigation, layout, keyboard, contrast and mocked login error
+ok 5 - 129-firefox-desktop-1280: navigation, layout, keyboard, contrast and mocked login error
+  ---
+  duration_ms: 4419.683135
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21823.460166
