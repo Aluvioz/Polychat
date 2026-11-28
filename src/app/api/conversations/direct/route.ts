@@ -50,7 +50,8 @@ export async function POST(request: NextRequest) {
   });
 
   if ("status" in result) {
-    return json(result.status, {
+    const status = result.status ?? 503;
+    return json(status, {
       error: result.status === 401
         ? "Sessão inválida ou expirada."
         : result.status === 403
