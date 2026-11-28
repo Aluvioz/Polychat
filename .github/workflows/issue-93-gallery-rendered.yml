@@ -1,0 +1,145 @@
+name: Issue 93 gallery rendered QA
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/issue-93-gallery-rendered.yml'
+      - 'public/design-system/**'
+      - 'tests/issue-93-a11y.test.mjs'
+permissions:
+  contents: read
+jobs:
+  gallery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/issue-93-a11y.test.mjs
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.57.0
+          npx playwright install --with-deps chromium
+      - run: |
+          mkdir -p evidence-93
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import { writeFileSync } from 'node:fs';
+          import { pathToFileURL } from 'node:url';
+          const browser = await chromium.launch();
+          const results = [];
+          function lum(rgb){const a=rgb.match(/\d+/g).slice(0,3).map(v=>{const n=+v/255;return n<=.04045?n/12.92:((n+.055)/1.055)**2.4});return a[0]*.2126+a[1]*.7152+a[2]*.0722}
+          function ratio(a,b){const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+          for(const width of [320,390,768,1280]){
+            const page=await browser.newPage({viewport:{width,height:900}});
+            const errors=[];page.on('requestfailed',r=>errors.push({url:r.url,error:r.failure()?.errorText}));
+            await page.goto(pathToFileURL(process.cwd()+'/public/design-system/issue-93-galeria.html').href,{waitUntil:'load'});
+            await page.waitForTimeout(1000);
+            await page.screenshot({path:'evidence-93/gallery-'+width+'.png',fullPage:true});
+            const data=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,logoLoaded:document.querySelector('img').naturalWidth>0,buttons:[...document.querySelectorAll('button:not(:disabled)')].map(e=>({text:e.innerText,height:e.getBoundingClientRect().height,color:getComputedStyle(e).color,background:getComputedStyle(e).backgroundColor})),inputBorder:getComputedStyle(document.querySelector('input')).borderTopColor,inputBG:getComputedStyle(document.querySelector('input')).backgroundColor}));
+            data.buttons.forEach(b=>b.contrast=ratio(b.color,b.background));data.inputBorderContrast=ratio(data.inputBorder,data.inputBG);
+            data.tabOrder=[];
+            for(let i=0;i<10;i++){await page.keyboard.press('Tab');data.tabOrder.push(await page.evaluate(()=>({tag:document.activeElement.tagName,id:document.activeElement.id,text:document.activeElement.innerText?.slice(0,65),outline:getComputedStyle(document.activeElement).outline})));await page.screenshot({path:'evidence-93/tab-'+width+'-'+i+'.png'});}
+            await page.keyboard.press('Shift+Tab');
+            data.reverse=await page.evaluate(()=>({tag:document.activeElement.tagName,id:document.activeElement.id,text:document.activeElement.innerText?.slice(0,65)}));
+            data.requestFailures=errors;results.push(data);await page.close();
+          }
+          const version=browser.version();await browser.close();
+          writeFileSync('evidence-93/results.json',JSON.stringify({version,commit:process.env.GITHUB_SHA,results},null,2));
+          console.log(JSON.stringify({version,results},null,2));
+          if(results.some(d=>d.scrollWidth>d.width||d.buttons.some(b=>b.height<44||b.contrast<4.5)||d.inputBorderContrast<3||!d.tabOrder[0]?.text?.includes('conteúdo')))process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-93-rendered-evidence
+          path: evidence-93/
+          retention-days: 14
+
+  cross-engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: e169ef3de96a644df663ea025ce63e1cf0e50cac
+          path: prototype-94-original
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.57.0
+          npx playwright install --with-deps chromium firefox webkit
+      - run: |
+          mkdir -p evidence-cross
+          node --input-type=module <<'JS'
+          import { chromium, firefox, webkit } from 'playwright';
+          import { writeFileSync } from 'node:fs';
+          import { pathToFileURL } from 'node:url';
+          const results=[];
+          const url=(p)=>pathToFileURL(process.cwd()+'/'+p).href;
+          const overlap=(page,screen)=>page.evaluate(screen=>{
+            const t=document.querySelector('#feedback').getBoundingClientRect();
+            return [...document.querySelectorAll('[data-screen="'+screen+'"] button')].filter(b=>{
+              const r=b.getBoundingClientRect();
+              return r.width>0&&r.height>0&&r.left<t.right&&r.right>t.left&&r.top<t.bottom&&r.bottom>t.top;
+            }).map(b=>b.textContent.trim());
+          },screen);
+          for(const engine of [chromium,firefox,webkit]){
+            let browser;
+            try {
+              browser=await engine.launch();
+              for(const width of [320,390,768,1280]){
+                const name=engine.name()+'-'+width;
+                const page=await browser.newPage({viewport:{width,height:900}});
+                const errors=[], network=[];
+                page.on('pageerror',e=>errors.push(e.message));
+                page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+                page.on('requestfailed',r=>network.push({url:r.url(),failure:r.failure()?.errorText}));
+                await page.goto(url('public/design-system/issue-93-galeria.html'),{waitUntil:'load'});
+                const gallery=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,logoLoaded:document.querySelector('img').naturalWidth>0,buttons:[...document.querySelectorAll('button:not(:disabled)')].map(e=>({text:e.textContent.trim(),height:e.getBoundingClientRect().height}))}));
+                await page.keyboard.press('Tab');
+                gallery.firstFocus=await page.evaluate(()=>document.activeElement.textContent.trim());
+                await page.screenshot({path:'evidence-cross/gallery-'+name+'.png',fullPage:true});
+                results.push({issue:93,name,version:browser.version(),...gallery,errors:[...errors],network:[...network]});
+                await page.close();
+                const p=await browser.newPage({viewport:{width,height:720}});
+                const external=[],consoleErrors=[];
+                p.on('pageerror',e=>consoleErrors.push(e.message));
+                p.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+                p.on('request',r=>{if(/^https?:/.test(r.url()))external.push(r.url())});
+                await p.goto(url('prototype-94-original/public/prototipos/issue-94/index.html'));
+                for(const sel of ['[data-go="u-login"]','[data-go="u-monitor"]','[data-go="u-conversations"]','[data-screen="u-conversations"] [data-user]']){
+                  await p.locator(sel).filter({visible:true}).first().click();
+                }
+                await p.locator('[data-action="fail-message"]').click();
+                const before=await p.locator('#chat-messages .bubble').count();
+                // Programmatic activation isolates handler behavior from any overlay.
+                await p.locator('[data-action="retry-message"]').evaluate(e=>e.click());
+                const after=await p.locator('#chat-messages .bubble').count();
+                const failedRemaining=await p.locator('#chat-messages .failed').count();
+                const chatOverlap=await overlap(p,'u-chat');
+                await p.screenshot({path:'evidence-cross/retry-'+name+'.png'});
+                await p.locator('[data-screen="u-chat"] [data-go="u-attach"]').evaluate(e=>e.click());
+                await p.locator('[data-action="attach-scanner-offline"]').evaluate(e=>{e.scrollIntoView({block:'center'});e.click()});
+                const attachmentOverlap=await overlap(p,'u-attach');
+                await p.screenshot({path:'evidence-cross/toast-'+name+'.png'});
+                const overflow=await p.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+                results.push({issue:94,name,version:browser.version(),before,after,failedRemaining,chatOverlap,attachmentOverlap,overflow,external,consoleErrors});
+                await p.close();
+              }
+            }catch(e){results.push({engine:engine.name(),failure:String(e)});}
+            finally{await browser?.close()}
+          }
+          writeFileSync('evidence-cross/results.json',JSON.stringify({version94:'e169ef3de96a644df663ea025ce63e1cf0e50cac',results},null,2));
+          console.log(JSON.stringify(results,null,2));
+          if(results.length!==24||results.some(r=>r.failure||r.overflow>0||r.external?.length||r.consoleErrors?.length))process.exitCode=1;
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cross-engine-technical-evidence-93-94
+          path: evidence-cross/
+          retention-days: 14
