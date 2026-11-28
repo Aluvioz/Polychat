@@ -25,10 +25,14 @@
 - `issue_107_direct_conversation_rpc.integration.sql` cobre criação/reutilização e rejeições da RPC de abertura.
 - `issue_107_active_profile_search.integration.sql` cobre retorno mínimo, exclusão do próprio usuário/contas inativas, limite e negação de execução anônima.
 - `issue_107_recent_conversations.integration.sql` cobre a RPC de listagem sob JWT autenticado, prévia da última mensagem e contador de não lidas.
+- No HEAD consultado antes desta atualização (`1941368349772c1276c504854d948c9d5bdf6825`), os workflows GitHub Actions #46075058684 (CI), #46075058950 (CI) e #46075059068 (Supabase clean migration install) estavam concluídos com sucesso. A nova atualização documental gerará um novo HEAD; consultar novamente os checks associados a ele antes de declarar CI validado.
 - O resultado válido de cada execução deve ser consultado no check mais recente da PR; esta documentação não substitui o status publicado pelo GitHub.
 
-## Validação manual ainda necessária
+## Validação manual — bloqueio confirmado em 28/11/2026
 
-- Smoke test autenticado no Polyford (produção), com conta autorizada, para confirmar login, listagem, abertura/reutilização de conversa e carregamento do histórico. Não executar migrations nem alterar dados de produção para esse teste sem autorização específica.
-- Preview Vercel continua sujeito ao limite diário do plano; falha por quota não equivale a falha de build. Nenhum upgrade de plano ou deploy de produção está autorizado por esta documentação.
+- A implantação de produção consultada foi `https://polyford-ly3arbm8t-polychat1.vercel.app`, deploy READY da branch `main`, commit `7c351f3c12918de8dab686192273c5912226e4e0`. Esse commit não contém a branch desta PR.
+- A rota `/login` respondeu HTTP 200, mas a rota `/conversations` respondeu HTTP 404 na mesma implantação de produção.
+- A página inicial de produção ainda informa que o acesso de usuários será liberado após a implementação e validação da autenticação.
+- Portanto, não foi possível executar smoke test autenticado de conversas no Polyford de produção: a funcionalidade desta PR não está publicada no deploy de produção consultado. Não foram feitas tentativas de login com credenciais de usuário, alterações de dados, aplicação de migrations ou deploy de produção.
+- O Preview da PR permanece sujeito à limitação diária de deploy da Vercel (`api-deployments-free-per-day`). Falha por quota não equivale a falha de build. Nenhum upgrade de plano ou deploy de produção está autorizado por esta documentação.
 - Revisão formal SQA e aprovação do Tech Lead permanecem necessárias. Manter a PR em Draft e não fechar a Issue #107 até a conclusão das validações e aprovações.
