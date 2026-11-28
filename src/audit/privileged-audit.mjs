@@ -67,8 +67,15 @@ function assertPrivilegedActor(actor, eventType) {
   return actor.id;
 }
 
+function assertRpcClient(supabase) {
+  if (!supabase?.rpc) {
+    throw new TypeError("Cliente Supabase server-side inválido.");
+  }
+}
+
 function assertSupabase(supabase) {
-  if (!supabase?.rpc || !supabase?.from) {
+  assertRpcClient(supabase);
+  if (!supabase?.from) {
     throw new TypeError("Cliente Supabase server-side inválido.");
   }
 }
@@ -82,7 +89,7 @@ export async function recordPrivilegedAuditEvent({
   outcome = "success",
   metadata = {},
 }) {
-  assertSupabase(supabase);
+  assertRpcClient(supabase);
   if (!EVENT_TYPES.has(eventType)) throw new TypeError("Tipo de evento de auditoria inválido.");
   if (!OUTCOMES.has(outcome)) throw new TypeError("Resultado de auditoria inválido.");
   if (typeof resourceType !== "string" || !/^[a-z_]{1,64}$/.test(resourceType)) {

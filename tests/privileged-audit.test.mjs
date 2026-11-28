@@ -96,3 +96,24 @@ test("limita paginação a 100 registros", async () => {
   const supabase = { from() { return {}; }, rpc() {} };
   await assert.rejects(searchPrivilegedAuditEvents({ supabase, actor: ti, limit: 101 }), /entre 1 e 100/);
 });
+
+test("registro de auditoria aceita adaptador RPC server-side sem cliente de consulta", async () => {
+  let called = false;
+  const result = await recordPrivilegedAuditEvent({
+    supabase: {
+      async rpc(name, payload) {
+        called = true;
+        assert.equal(name, "write_privileged_audit_event");
+        assert.equal(payload.p_event_type, "account.updated");
+        return { data: "event-rpc-only", error: null };
+      },
+    },
+    actor: ti,
+    eventType: "account.updated",
+    resourceType: "profile",
+    resourceId: "profile-1",
+    metadata: { operation: "password_reset" },
+  });
+  assert.equal(called, true);
+  assert.equal(result, "event-rpc-only");
+});
