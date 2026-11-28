@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authorizeNextRequest } from "@/auth/next-authorization.mjs";
 import { listConversationMessages } from "@/conversations/conversation-messages-service.mjs";
+import { applyRefreshedSessionCookies } from "@/auth/next-session-cookies.mjs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -52,9 +53,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
     });
   }
 
-  return json(200, {
+  const response = json(200, {
+    user: authorization.session.user,
     messages: result.messages,
     hasMore: result.hasMore,
     nextCursor: result.nextCursor,
   });
+  return applyRefreshedSessionCookies(response, authorization.session);
 }
