@@ -79,7 +79,13 @@ export default function NewConversationPage() {
           <span className="conversations-brand-mark">P</span>
           <span>polychat</span>
         </Link>
-        <Link className="history-back" href="/conversations">Conversas</Link>
+        <div className="conversations-account">
+          <Link className="history-back" href="/conversations">Conversas</Link>
+          <button className="conversations-logout" type="button" onClick={async () => {
+            try { await fetch("/api/auth/logout", { method: "POST" }); }
+            finally { router.replace("/login"); router.refresh(); }
+          }}>Sair</button>
+        </div>
       </header>
 
       <section className="conversations-content" aria-labelledby="new-conversation-title">
